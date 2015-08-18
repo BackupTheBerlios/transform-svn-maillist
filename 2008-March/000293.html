@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r357%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181426.m2IEQqnG027427%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000292.html">
+   <LINK REL="Next"  HREF="000294.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r357%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181426.m2IEQqnG027427%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 15:26:52 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000292.html">[Transform-svn] r356 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000294.html">[Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#293">[ date ]</a>
+              <a href="thread.html#293">[ thread ]</a>
+              <a href="subject.html#293">[ subject ]</a>
+              <a href="author.html#293">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 15:26:49 +0100 (Tue, 18 Mar 2008)
+New Revision: 357
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSCoderException.java
+Log:
+Added serialVersionUID and corrected spelling mistakes.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSCoderException.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSCoderException.java	2008-03-18 14:25:21 UTC (rev 356)
++++ dev/dev-2-4/src/com/flagstone/transform/FSCoderException.java	2008-03-18 14:26:49 UTC (rev 357)
+@@ -1,107 +1,123 @@
+ package com.flagstone.transform;
+ 
+ import java.io.IOException;
++
+ /**
+- * This exception is thrown when parse errors are encountered. 
+- * ParseExceptions contain information about the error that prevented 
+- * a file from being read and decoded. 
++ * This exception is thrown when parse errors are encountered. ParseExceptions
++ * contain information about the error that prevented a file from being read and
++ * decoded.
+  */
+ public class FSCoderException extends IOException
+ {
+-    private int type = 0;
+-    private int start = 0;
+-    private int length = 0;
+-    private int delta = 0;
++	static final long serialVersionUID = 1;
++	
++	private int type = 0;
++	private int start = 0;
++	private int length = 0;
++	private int delta = 0;
+ 
+-    /**
+-     * Constructs an FSCoderException to report where a problem occured when 
+-     * encoding or decoding a Flash (.swf) file.
+-     * 
+-     * @param type the type of object or action that was being encoded/decoded
+-     * when the problem occurred.
+-     * 
+-     * @param start the address in the file where the data structure being 
+-     * encoded/decoded is located. This is only valid for files being decoded
+-     * since the encoded file will not be written if an exception occurs.
+-     * 
+-     * @param length the size in bytes that the data structure should take 
+-     * when encoded.
+-     * 
+-     * @param delta the difference between the actual number of byes and the 
+-     * expected length. This is negative for underflow errors and postive when
+-     * the takes more bytes to encode/decode that the expected length.
+-     * 
+-     * @param message a message indicating the type of error - overflow or 
+-     * underflow.
+-     */
+-    public FSCoderException(int type, int start, int length, int delta, String message)
+-    {
+-        super(message);
+-        this.type = type;
+-        this.start = start;
+-        this.length = length;
+-        this.delta = delta;
+-    }
+-    /**
+-     * Returns the type identifying the FSMovieObject or FSActionObject that 
+-     * caused the error.
+-     * 
+-     * @return the object type.
+-     */
+-    public int getType()
+-    {
+-        return type;
+-    }
+-    /**
+-     * The byte address of the start of the object in the file being decoded.
+-     * This address is not valid when encoding a Flash file since the file will
+-     * probably not be encoded - though this is under the control of the software
+-     * using Transform.
+-     * 
+-     * @return the address (offset) in bytes where the object is encoded.
+-     */
+-    public int getStart()
+-    {
+-        return start;
+-    }
+-    /**
+-     * The calculated number of bytes the object will occupy when encoded.
+-     * 
+-     * @return the length in bytes that the object is expected to occupy when 
+-     * encoded.
+-     * 
+-     */
+-    public int getLength()
+-    {
+-        return length;
+-    }
+-    /**
+-     * The difference between the calculated number of bytes and the actual 
+-     * number of bytes when the object was encoded or decoded.
+-     * 
+-     * @return the difference between the actual and expected number of bytes
+-     * encoded/decoded.
+-     */
+-    public int getDelta()
+-    {
+-        return delta;
+-    }
+-    /**
+-     * Return a description of the error.
+-     * 
+-     * @return a string desscribing the error that caused the exception.
+-     */
+-    public String toString()
+-    {
+-        StringBuffer buffer = new StringBuffer();
+-        
+-        buffer.append(&quot;FSCoderException: { &quot;);
+-        buffer.append(&quot;type = &quot;).append(type).append(&quot;, &quot;);
+-        buffer.append(&quot;location = &quot;).append(start).append(&quot;, &quot;);
+-        buffer.append(&quot;length = &quot;).append(length).append(&quot;, &quot;);
+-        buffer.append(&quot;delta = &quot;).append(delta).append(&quot;, &quot;);
+-        buffer.append(&quot;message = \&quot;&quot;).append(getMessage()).append(&quot;\&quot; }&quot;);
+-        
+-        return buffer.toString();
+-    }
++	/**
++	 * Constructs an FSCoderException to report where a problem occurred when
++	 * encoding or decoding a Flash (.swf) file.
++	 * 
++	 * @param type
++	 *            the type of object or action that was being encoded/decoded
++	 *            when the problem occurred.
++	 * 
++	 * @param start
++	 *            the address in the file where the data structure being
++	 *            encoded/decoded is located. This is only valid for files being
++	 *            decoded since the encoded file will not be written if an
++	 *            exception occurs.
++	 * 
++	 * @param length
++	 *            the size in bytes that the data structure should take when
++	 *            encoded.
++	 * 
++	 * @param delta
++	 *            the difference between the actual number of byes and the
++	 *            expected length. This is negative for underflow errors and
++	 *            positive when the takes more bytes to encode/decode that the
++	 *            expected length.
++	 * 
++	 * @param message
++	 *            a message indicating the type of error - overflow or
++	 *            underflow.
++	 */
++	public FSCoderException(int type, int start, int length, int delta,
++							String message)
++	{
++		super(message);
++		this.type = type;
++		this.start = start;
++		this.length = length;
++		this.delta = delta;
++	}
++
++	/**
++	 * Returns the type identifying the FSMovieObject or FSActionObject that
++	 * caused the error.
++	 * 
++	 * @return the object type.
++	 */
++	public int getType()
++	{
++		return type;
++	}
++
++	/**
++	 * The byte address of the start of the object in the file being decoded.
++	 * This address is not valid when encoding a Flash file since the file will
++	 * probably not be encoded - though this is under the control of the
++	 * software using Transform.
++	 * 
++	 * @return the address (offset) in bytes where the object is encoded.
++	 */
++	public int getStart()
++	{
++		return start;
++	}
++
++	/**
++	 * The calculated number of bytes the object will occupy when encoded.
++	 * 
++	 * @return the length in bytes that the object is expected to occupy when
++	 *         encoded.
++	 * 
++	 */
++	public int getLength()
++	{
++		return length;
++	}
++
++	/**
++	 * The difference between the calculated number of bytes and the actual
++	 * number of bytes when the object was encoded or decoded.
++	 * 
++	 * @return the difference between the actual and expected number of bytes
++	 *         encoded/decoded.
++	 */
++	public int getDelta()
++	{
++		return delta;
++	}
++
++	/**
++	 * Return a description of the error.
++	 * 
++	 * @return a string describing the error that caused the exception.
++	 */
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSCoderException: { &quot;);
++		buffer.append(&quot;type = &quot;).append(type).append(&quot;, &quot;);
++		buffer.append(&quot;location = &quot;).append(start).append(&quot;, &quot;);
++		buffer.append(&quot;length = &quot;).append(length).append(&quot;, &quot;);
++		buffer.append(&quot;delta = &quot;).append(delta).append(&quot;, &quot;);
++		buffer.append(&quot;message = \&quot;&quot;).append(getMessage()).append(&quot;\&quot; }&quot;);
++
++		return buffer.toString();
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000292.html">[Transform-svn] r356 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000294.html">[Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#293">[ date ]</a>
+              <a href="thread.html#293">[ thread ]</a>
+              <a href="subject.html#293">[ subject ]</a>
+              <a href="author.html#293">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,802 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r395%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200803272140.m2RLe8mO032009%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000328.html">
+   <LINK REL="Next"  HREF="000332.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r395%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200803272140.m2RLe8mO032009%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar 27 22:40:08 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000328.html">[Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000332.html">[Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#331">[ date ]</a>
+              <a href="thread.html#331">[ thread ]</a>
+              <a href="subject.html#331">[ subject ]</a>
+              <a href="author.html#331">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-27 22:39:50 +0100 (Thu, 27 Mar 2008)
+New Revision: 395
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/Definition.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineObject.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineFont.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineMorphShape.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineMovieClip.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineShape.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineShape2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineShape3.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineSound.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineVideo.java
+   dev/dev-2-4/src/com/flagstone/transform/FSFrame.java
+   dev/dev-2-4/src/com/flagstone/transform/FSLayer.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Image.java
+Log:
+Renamed FSDefineObject to Definition
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/Definition.java (from rev 385, dev/dev-2-4/src/com/flagstone/transform/FSDefineObject.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineObject.java	2008-03-26 15:26:42 UTC (rev 385)
++++ dev/dev-2-4/src/com/flagstone/transform/Definition.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -0,0 +1,115 @@
++/*
++ * FSDefineObject.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++/**
++ * Definition is a base class for the different types of object used to create 
++ * images, buttons, shapes and sounds. Each such object contains a unique
++ * identifier that is used to reference the object when performing operations
++ * such as placing it in the display list using the FSPlaceObject class, etc.
++ * The FSDefineObject manages the encoding and decoding of this identifier.
++ * 
++ * Identifiers are unique within a given movie. The FSMovie class is maintains
++ * an internal counter which is used to generate the identifiers that are
++ * assigned to classes derived from FSDefineObject.
++ * 
++ * Two accessor methods, getIdentifier() and setIdentifier() are used to
++ * retrieve and update the unique identifier assigned to an object.
++ */
++public abstract class Definition extends FSMovieObject
++{
++	protected int identifier;
++
++	Definition(int type, int anIdentifier)
++	{
++		super(type);
++		setIdentifier(anIdentifier);
++	}
++
++	// TODO consider removing.
++	protected Definition(Definition obj)
++	{
++		super(obj);
++		identifier = obj.identifier;
++	}
++
++	/**
++	 * Returns the unique identifier assigned to this Define tag.
++	 * 
++	 * @return the unique identifier for the object.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
++
++	/**
++	 * Sets the identifier used to uniquely identify the object within a given
++	 * FSMovie.
++	 * 
++	 * @param anIdentifier
++	 *            a unique identifier for the object.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 */
++	public void setIdentifier(int anIdentifier)
++	{
++		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
++		}
++		identifier = anIdentifier;
++	}
++
++	public int length(FSContext context)
++	{
++		super.length(context);
++
++		length += 2;
++
++		return length;
++	}
++
++	public void encode(FSCoder coder, FSContext context)
++	{
++		super.encode(coder, context);
++
++		coder.writeWord(identifier, 2);
++		context.identifier = identifier;
++	}
++
++	public void decode(FSCoder coder, FSContext context)
++	{
++		super.decode(coder, context);
++
++		identifier = coder.readWord(2, false);
++		context.identifier = identifier;
++	}
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -181,7 +181,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineButton extends FSDefineObject
++public class FSDefineButton extends Definition
+ {
+ 	private ArrayList&lt;FSButtonShape&gt; buttonRecords;
+ 	private ArrayList&lt;FSActionObject&gt; actions;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -147,7 +147,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineButton2 extends FSDefineObject
++public class FSDefineButton2 extends Definition
+ {
+ 	/**
+ 	 * Defines whether a FSDefineButton2 object is configured as a momentary,
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineFont.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineFont.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -81,7 +81,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineFont extends FSDefineObject
++public class FSDefineFont extends Definition
+ {
+ 	private ArrayList&lt;FSShape&gt; shapes;
+ 
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -176,7 +176,7 @@
+  * size fonts was added in Flash 7.
+  * &lt;/p&gt;
+  */
+-public class FSDefineFont2 extends FSDefineObject
++public class FSDefineFont2 extends Definition
+ {
+ 	private int encoding;
+ 	private boolean small;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -140,7 +140,7 @@
+  * 2.
+  * &lt;/p&gt;
+  */
+-public class FSDefineImage extends FSDefineObject implements Displayable
++public class FSDefineImage extends Definition implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -122,7 +122,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineImage2 extends FSDefineObject implements Displayable
++public class FSDefineImage2 extends Definition implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -117,7 +117,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineJPEGImage extends FSDefineObject implements Displayable
++public class FSDefineJPEGImage extends Definition implements Displayable
+ {
+ 	private byte[] image;
+ 	private int width;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -118,7 +118,7 @@
+  * 2.
+  * &lt;/p&gt;
+  */
+-public class FSDefineJPEGImage2 extends FSDefineObject implements Displayable
++public class FSDefineJPEGImage2 extends Definition implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -146,7 +146,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineJPEGImage3 extends FSDefineObject implements Displayable
++public class FSDefineJPEGImage3 extends Definition implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineMorphShape.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineMorphShape.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -202,7 +202,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineMorphShape extends FSDefineObject
++public class FSDefineMorphShape extends Definition
+ {
+ 	private FSBounds startBounds;
+ 	private FSBounds endBounds;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineMovieClip.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineMovieClip.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -87,7 +87,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineMovieClip extends FSDefineObject
++public class FSDefineMovieClip extends Definition
+ {
+ 	private ArrayList&lt;FSMovieObject&gt; objects;
+ 
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/FSDefineObject.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineObject.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineObject.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -1,113 +0,0 @@
+-/*
+- * FSDefineObject.java
+- * Transform
+- * 
+- * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-
+-package com.flagstone.transform;
+-
+-/**
+- * The FSDefineObject is a base class for the different types of object used to
+- * create images, buttons, shapes and sounds. Each such object contains a unique
+- * identifier that is used to reference the object when performing operations
+- * such as placing it in the display list using the FSPlaceObject class, etc.
+- * The FSDefineObject manages the encoding and decoding of this identifier.
+- * 
+- * Identifiers are unique within a given movie. The FSMovie class is maintains
+- * an internal counter which is used to generate the identifiers that are
+- * assigned to classes derived from FSDefineObject.
+- * 
+- * Two accessor methods, getIdentifier() and setIdentifier() are used to
+- * retrieve and update the unique identifier assigned to an object.
+- */
+-public abstract class FSDefineObject extends FSMovieObject
+-{
+-	protected int identifier;
+-
+-	FSDefineObject(int type, int anIdentifier)
+-	{
+-		super(type);
+-		setIdentifier(anIdentifier);
+-	}
+-
+-	// TODO consider removing.
+-	protected FSDefineObject(FSDefineObject obj)
+-	{
+-		super(obj);
+-		identifier = obj.identifier;
+-	}
+-
+-	/**
+-	 * Returns the unique identifier assigned to this Define tag.
+-	 * 
+-	 * @return the unique identifier for the object.
+-	 */
+-	public int getIdentifier()
+-	{
+-		return identifier;
+-	}
+-
+-	/**
+-	 * Sets the identifier used to uniquely identify the object within a given
+-	 * FSMovie.
+-	 * 
+-	 * @param anIdentifier
+-	 *            a unique identifier for the object.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 */
+-	public void setIdentifier(int anIdentifier)
+-	{
+-		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
+-		}
+-		identifier = anIdentifier;
+-	}
+-
+-	public int length(FSContext context)
+-	{
+-		super.length(context);
+-
+-		length += 2;
+-
+-		return length;
+-	}
+-
+-	public void encode(FSCoder coder, FSContext context)
+-	{
+-		super.encode(coder, context);
+-
+-		coder.writeWord(identifier, 2);
+-	}
+-
+-	public void decode(FSCoder coder, FSContext context)
+-	{
+-		super.decode(coder, context);
+-
+-		identifier = coder.readWord(2, false);
+-	}
+-}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineShape.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineShape.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -135,7 +135,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineShape extends FSDefineObject
++public class FSDefineShape extends Definition
+ {
+ 	private FSBounds bounds;
+ 	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineShape2.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineShape2.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -137,7 +137,7 @@
+  * 2.
+  * &lt;/p&gt;
+  */
+-public class FSDefineShape2 extends FSDefineObject
++public class FSDefineShape2 extends Definition
+ {
+ 	private FSBounds bounds;
+ 	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineShape3.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineShape3.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -137,7 +137,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineShape3 extends FSDefineObject
++public class FSDefineShape3 extends Definition
+ {
+ 	private FSBounds bounds;
+ 	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineSound.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineSound.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineSound.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -143,7 +143,7 @@
+  * Flash 6.
+  * &lt;/p&gt;
+  */
+-public class FSDefineSound extends FSDefineObject
++public class FSDefineSound extends Definition
+ {
+ 	private int format;
+ 	private int playbackRate;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -149,7 +149,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineText extends FSDefineObject
++public class FSDefineText extends Definition
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -150,7 +150,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineText2 extends FSDefineObject
++public class FSDefineText2 extends Definition
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -244,7 +244,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 4.
+  * &lt;/p&gt;
+  */
+-public class FSDefineTextField extends FSDefineObject
++public class FSDefineTextField extends Definition
+ {
+ 	/** Key used to identify the wordWrapped attribute. */
+ 	public static final String WordWrapped = &quot;WordWrapped&quot;;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineVideo.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineVideo.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -114,7 +114,7 @@
+  * ScreenVideo format was introduced in Flash 7.
+  * &lt;/p&gt;
+  */
+-public class FSDefineVideo extends FSDefineObject
++public class FSDefineVideo extends Definition
+ {
+ 	// / The video data was encoded using the Sorenson modified H263 format.
+ 	public static final int H263 = 2;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSFrame.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSFrame.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSFrame.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -112,9 +112,9 @@
+ 			{
+ 				currentFrame.label = ((FSFrameLabel) currentObject).getLabel();
+ 			} 
+-			else if (currentObject instanceof FSDefineObject)
++			else if (currentObject instanceof Definition)
+ 			{
+-				currentFrame.addDefinition((FSDefineObject) currentObject);
++				currentFrame.addDefinition((Definition) currentObject);
+ 			} 
+ 			else if (currentObject instanceof FSShowFrame)
+ 			{
+@@ -130,7 +130,7 @@
+ 	}
+ 
+ 	private String label;
+-	private ArrayList&lt;FSDefineObject&gt; definitions;
++	private ArrayList&lt;Definition&gt; definitions;
+ 	private ArrayList&lt;FSMovieObject&gt; commands;
+ 	private ArrayList&lt;FSActionObject&gt; actions;
+ 
+@@ -140,7 +140,7 @@
+ 	 */
+ 	public FSFrame()
+ 	{
+-		definitions = new ArrayList&lt;FSDefineObject&gt;();
++		definitions = new ArrayList&lt;Definition&gt;();
+ 		commands = new ArrayList&lt;FSMovieObject&gt;();
+ 		actions = new ArrayList&lt;FSActionObject&gt;();
+ 	}
+@@ -168,7 +168,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if any of the arrays are null.
+ 	 */
+-	public FSFrame(String label, ArrayList&lt;FSDefineObject&gt; definitions, ArrayList&lt;FSMovieObject&gt; commands,
++	public FSFrame(String label, ArrayList&lt;Definition&gt; definitions, ArrayList&lt;FSMovieObject&gt; commands,
+ 					ArrayList&lt;FSActionObject&gt; actions)
+ 	{
+ 		setLabel(label);
+@@ -206,14 +206,14 @@
+ 	 *            
+ 	 * @throws NullPointerException if the definition is null.
+ 	 */
+-	public void addDefinition(FSDefineObject anObject)
++	public void addDefinition(Definition anObject)
+ 	{
+ 		if (anObject == null) {
+ 			throw new NullPointerException(&quot;Definition cannot be null.&quot;);
+ 		}
+ 		
+ 		if (definitions == null)
+-			definitions = new ArrayList&lt;FSDefineObject&gt;();
++			definitions = new ArrayList&lt;Definition&gt;();
+ 
+ 		definitions.add(anObject);
+ 	}
+@@ -253,7 +253,7 @@
+ 	 * 
+ 	 * @return the array of definitions.
+ 	 */
+-	public ArrayList&lt;FSDefineObject&gt; getDefinitions()
++	public ArrayList&lt;Definition&gt; getDefinitions()
+ 	{
+ 		return definitions;
+ 	}
+@@ -298,7 +298,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setDefinitions(ArrayList&lt;FSDefineObject&gt; anArray)
++	public void setDefinitions(ArrayList&lt;Definition&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of definition objects cannot be null.&quot;);
+@@ -355,7 +355,7 @@
+ 	{
+ 		if (definitions != null || definitions.size() &gt; 0)
+ 		{
+-			for (Iterator&lt;FSDefineObject&gt; i = definitions.iterator(); i.hasNext();)
++			for (Iterator&lt;Definition&gt; i = definitions.iterator(); i.hasNext();)
+ 				aMovie.add(i.next());
+ 		}
+ 
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSLayer.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSLayer.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/FSLayer.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -255,7 +255,7 @@
+ 	 * @param definition
+ 	 *            an object defining an image, shape, text, sound or video.
+ 	 */
+-	public void add(FSDefineObject definition)
++	public void add(Definition definition)
+ 	{
+ 		displayList.add(definition);
+ 	}
+@@ -287,7 +287,7 @@
+ 	 *            an object definition, FSDefineShape, FSDefineImage, etc. that
+ 	 *            will be added to the display list.
+ 	 */
+-	public void select(FSDefineObject definition)
++	public void select(Definition definition)
+ 	{
+ 		add(definition);
+ 		select(definition.getIdentifier());
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -113,7 +113,7 @@
+ 
+         try
+         {
+-            FSDefineObject image = Image.defineImage(0, new File(sourceDir, files[0]).getAbsolutePath());
++            Definition image = Image.defineImage(0, new File(sourceDir, files[0]).getAbsolutePath());
+ 
+             int screenWidth = ((Displayable)image).getWidth();
+             int screenHeight = ((Displayable)image).getHeight();
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -8,7 +8,6 @@
+ import com.flagstone.transform.util.*;
+ 
+ import junit.framework.TestCase;
+-import junit.framework.Assert;
+ 
+ public class ImageTest extends TestCase
+ {
+@@ -88,14 +87,14 @@
+         int imageId = movie.newIdentifier();
+         int shapeId = movie.newIdentifier();
+         
+-        FSDefineObject image = Image.defineImage(imageId, path);
++        Definition image = Image.defineImage(imageId, path);
+ 
+         int xOrigin = ((Displayable)image).getWidth()/2;
+         int yOrigin = ((Displayable)image).getHeight()/2;
+ 
+         FSLineStyle borderStyle = new FSLineStyle(20, FSColorTable.black());
+ 
+-         FSDefineShape3 shape = Image.defineEnclosingShape(shapeId, image, -xOrigin, -yOrigin, borderStyle);
++        FSDefineShape3 shape = Image.defineEnclosingShape(shapeId, image, -xOrigin, -yOrigin, borderStyle);
+ 
+         movie.setFrameRate(1.0f);
+         movie.setFrameSize(shape.getBounds());
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Image.java	2008-03-27 12:16:57 UTC (rev 394)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Image.java	2008-03-27 21:39:50 UTC (rev 395)
+@@ -35,7 +35,7 @@
+ import java.util.zip.*;
+ 
+ import com.flagstone.transform.Displayable;
+-import com.flagstone.transform.FSDefineObject;
++import com.flagstone.transform.Definition;
+ import com.flagstone.transform.FSDefineImage;
+ import com.flagstone.transform.FSDefineImage2;
+ import com.flagstone.transform.FSDefineJPEGImage;
+@@ -219,9 +219,9 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+     
+-    public static FSDefineObject defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
++    public static Definition defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
+     {
+-    	FSDefineObject object = null;
++    	Definition object = null;
+     	
+     	ImageInfo ii = new ImageInfo();
+     	ii.setInput(new RandomAccessFile(path, &quot;r&quot;));
+@@ -421,7 +421,7 @@
+      * @param borderStyle the style drawn around the border of the image. May be null if no 
+      * border is drawn.
+      */
+-    public static FSDefineShape3 defineEnclosingShape(int identifier, FSDefineObject image, int xOrigin, int yOrigin, FSLineStyle borderStyle)
++    public static FSDefineShape3 defineEnclosingShape(int identifier, Definition image, int xOrigin, int yOrigin, FSLineStyle borderStyle)
+     {
+     	int width = ((Displayable)image).getWidth();
+     	int height = ((Displayable)image).getHeight();
+@@ -468,7 +468,7 @@
+ 	public static ArrayList&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, String path) throws FileNotFoundException, IOException, DataFormatException
+ 	{
+ 		ArrayList&lt;FSImageBlock&gt; blocks = new ArrayList&lt;FSImageBlock&gt;();
+-    	FSDefineObject object = null;
++    	Definition object = null;
+     	
+     	ImageInfo ii = new ImageInfo();
+     	ii.setInput(new RandomAccessFile(path, &quot;r&quot;));
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000328.html">[Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000332.html">[Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#331">[ date ]</a>
+              <a href="thread.html#331">[ thread ]</a>
+              <a href="subject.html#331">[ subject ]</a>
+              <a href="author.html#331">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

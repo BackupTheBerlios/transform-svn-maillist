@@ -1,0 +1,1710 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r348%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181102.m2IB24WB015540%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000283.html">
+   <LINK REL="Next"  HREF="000285.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r348%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181102.m2IB24WB015540%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 12:02:04 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000283.html">[Transform-svn] r347 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000285.html">[Transform-svn] r349 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#284">[ date ]</a>
+              <a href="thread.html#284">[ thread ]</a>
+              <a href="subject.html#284">[ subject ]</a>
+              <a href="author.html#284">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 12:01:59 +0100 (Tue, 18 Mar 2008)
+New Revision: 348
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSColorTransform.java
+Log:
+Updated to use new interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSColorTransform.java	2008-03-18 10:21:14 UTC (rev 347)
++++ dev/dev-2-4/src/com/flagstone/transform/FSColorTransform.java	2008-03-18 11:01:59 UTC (rev 348)
+@@ -31,727 +31,983 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSColorTransform is used to change the colour of a shape or button without changing 
+-the values in the original definition of the object.
+- 
+-&lt;p&gt;Two types of transformation are supported: &lt;b&gt;Add&lt;/b&gt; and &lt;b&gt;Multiply&lt;/b&gt;&lt;/p&gt;
+-
+-&lt;p&gt;In Add transformations a value is added to each colour channel:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-newRed = red + addRedTerm
+-newGreen = green + addGreenTerm
+-newBlue = blue + addBlueTerm
+-newAlpha = alpha + addAlphaTerm
+-&lt;/pre&gt;
+-
+-&lt;p&gt;In Multiply transformations each colour channel is multiplied by a given value:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-newRed = red * multiplyRedTerm
+-newGreen = green * multiplyGreenTerm
+-newBlue = blue * multiplyBlueTerm
+-newAlpha = alpha * multiplyAlphaTerm
+-&lt;/pre&gt;
+-
+-&lt;p&gt;Add and Multiply transforms may be combined in which case the multiply terms are
+-applied to the colour channel before the add terms.&lt;/p&gt;
+-
+-&lt;pre&gt;
+-newRed = (red * multiplyRedTerm) + addRedTerm
+-newGreen = (green * multiplyGreenTerm) + addGreenTerm
+-newBlue = (blue * multiplyBlueTerm) + addBlueTerm
+-newAlpha = (alpha * multiplyAlphaTerm) + addAlphaTerm
+-&lt;/pre&gt;
+-
+-&lt;p&gt;For each type of transform the result of the calculation is limited to the range 0..255. If the result is less than 0 or greater than 255 then it is clamped at 0 and 255 respectively.&lt;/p&gt;
+-
+-&lt;table class=&quot;datasheet&quot;&gt;
+-
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_0&quot;&gt;multiplyRed&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The multiply term for the red colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_1&quot;&gt;multiplyGreen&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The multiply term for the green colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_2&quot;&gt;multiplyBlue&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The multiply term for the blue colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_3&quot;&gt;multiplyAlpha&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The optional multiply term for the alpha colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_4&quot;&gt;addRed&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The add term for the red colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_5&quot;&gt;addGreen&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The add term for the green colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_6&quot;&gt;addBlue&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The add term for the blue colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSColorTransform_7&quot;&gt;addAlpha&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The optional add term for the alpha colour channel.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;/table&gt;
+-
+-&lt;p&gt;Not all objects containing a colour transform use the add or multiply terms defined for the alpha channel. The colour objects defined in an FSDefineButton, FSButtonColorTransform or FSPlaceObject object do not use the alpha channel. Transparent colours was introduced in Flash 3. The &quot;parent&quot; object that contains the colour transform controls whether the alpha channel information is encoded or not. Simplifying the alpha channel is not sufficient.&lt;/p&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
+-
+-&lt;p&gt;The class provides a range of constructors to support the different colour transformations. To create a colour transform object specify the values for colour channels in the following order: red, green, blue and optionally alpha:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-float multRed = 1.5f;
+-float multGreen = 1.5f;
+-float multBlue = 1.5f;
+-float multAlpha = 1.5f;
+-
+-FSColorTransform multiply = new FSColorTransform(multRed, multGreen, multBlue);
+-
+-FSColorTransform multiplyWithAlpha = new FSColorTransform(multRed, multGreen, multBlue, multAlpha);
+-&lt;/pre&gt;
+-
+-&lt;pre&gt;
+-int addRed = 128;
+-int addGreen = 128;
+-int addBlue = 128;
+-int addAlpha = 128;
+-
+-FSColorTransform add = new FSColorTransform(addRed, addGreen, addBlue);
+-
+-FSColorTransform addWithAlpha = new FSColorTransform(addRed, addGreen, addBlue, addAlpha);
+-&lt;/pre&gt;
+-
+-&lt;p&gt;For transforms combining both multiply and add terms:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-int addRed = 128;
+-int addGreen = 128;
+-int addBlue = 128;
+-int addAlpha = 128;
+-
+-float multRed = 1.5f;
+-float multGreen = 1.5f;
+-float multBlue = 1.5f;
+-float multAlpha = 1.5f;
+-
+-FSColorTransform combined = new FSColorTransform(multRed, multGreen, multBlue,
+-    addRed, addGreen, addBlue);
+-
+-FSColorTransform combinedWithAlpha = new FSColorTransform(multRed, multGreen, multBlue, multAlpha, 
+-    addRed, addGreen, addBlue, addAlpha); 
+-&lt;/pre&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSCoordTransform class represents the CXForm and CXFormWithAlpha data structures from the Macromedia Flash (SWF) File Format Specification. They were introduced in Flash 1 and Flash 3 respectively.&lt;/P&gt;
++ * The FSColorTransform is used to change the colour of a shape or button
++ * without changing the values in the original definition of the object.
++ * 
++ * &lt;p&gt;
++ * Two types of transformation are supported: &lt;b&gt;Add&lt;/b&gt; and &lt;b&gt;Multiply&lt;/b&gt;
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * In Add transformations a value is added to each colour channel:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  newRed = red + addRedTerm
++ *  newGreen = green + addGreenTerm
++ *  newBlue = blue + addBlueTerm
++ *  newAlpha = alpha + addAlphaTerm
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * In Multiply transformations each colour channel is multiplied by a given
++ * value:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  newRed = red * multiplyRedTerm
++ *  newGreen = green * multiplyGreenTerm
++ *  newBlue = blue * multiplyBlueTerm
++ *  newAlpha = alpha * multiplyAlphaTerm
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Add and Multiply transforms may be combined in which case the multiply terms
++ * are applied to the colour channel before the add terms.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  newRed = (red * multiplyRedTerm) + addRedTerm
++ *  newGreen = (green * multiplyGreenTerm) + addGreenTerm
++ *  newBlue = (blue * multiplyBlueTerm) + addBlueTerm
++ *  newAlpha = (alpha * multiplyAlphaTerm) + addAlphaTerm
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * For each type of transform the result of the calculation is limited to the
++ * range 0..255. If the result is less than 0 or greater than 255 then it is
++ * clamped at 0 and 255 respectively.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;multiplyRed&lt;/td&gt;
++ * &lt;td&gt;The multiply term for the red colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;multiplyGreen&lt;/td&gt;
++ * &lt;td&gt;The multiply term for the green colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;multiplyBlue&lt;/td&gt;
++ * &lt;td&gt;The multiply term for the blue colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;multiplyAlpha&lt;/td&gt;
++ * &lt;td&gt;The optional multiply term for the alpha colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;addRed&lt;/td&gt;
++ * &lt;td&gt;The add term for the red colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;addGreen&lt;/td&gt;
++ * &lt;td&gt;The add term for the green colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;addBlue&lt;/td&gt;
++ * &lt;td&gt;The add term for the blue colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;addAlpha&lt;/td&gt;
++ * &lt;td&gt;The optional add term for the alpha colour channel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Not all objects containing a colour transform use the add or multiply terms
++ * defined for the alpha channel. The colour objects defined in an
++ * FSDefineButton, FSButtonColorTransform or FSPlaceObject object do not use the
++ * alpha channel. Transparent colours was introduced in Flash 3. The &quot;parent&quot;
++ * object that contains the colour transform controls whether the alpha channel
++ * information is encoded or not. Simplifying the alpha channel is not
++ * sufficient.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The class provides a range of constructors to support the different colour
++ * transformations. To create a colour transform object specify the values for
++ * colour channels in the following order: red, green, blue and optionally
++ * alpha:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * float multRed = 1.5f;
++ * 
++ * float multGreen = 1.5f;
++ * 
++ * float multBlue = 1.5f;
++ * 
++ * float multAlpha = 1.5f;
++ * 
++ * FSColorTransform multiply = new FSColorTransform(multRed, multGreen, multBlue);
++ * 
++ * FSColorTransform multiplyWithAlpha = new FSColorTransform(multRed, multGreen,
++ * 				multBlue, multAlpha);
++ * &lt;/pre&gt;
++ * 
++ * &lt;pre&gt;
++ * int addRed = 128;
++ * 
++ * int addGreen = 128;
++ * 
++ * int addBlue = 128;
++ * 
++ * int addAlpha = 128;
++ * 
++ * FSColorTransform add = new FSColorTransform(addRed, addGreen, addBlue);
++ * 
++ * FSColorTransform addWithAlpha = new FSColorTransform(addRed, addGreen, addBlue,
++ * 				addAlpha);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * For transforms combining both multiply and add terms:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * int addRed = 128;
++ * 
++ * int addGreen = 128;
++ * 
++ * int addBlue = 128;
++ * 
++ * int addAlpha = 128;
++ * 
++ * float multRed = 1.5f;
++ * 
++ * float multGreen = 1.5f;
++ * 
++ * float multBlue = 1.5f;
++ * 
++ * float multAlpha = 1.5f;
++ * 
++ * FSColorTransform combined = new FSColorTransform(multRed, multGreen, multBlue,
++ * 				addRed, addGreen, addBlue);
++ * 
++ * FSColorTransform combinedWithAlpha = new FSColorTransform(multRed, multGreen,
++ * 				multBlue, multAlpha, addRed, addGreen, addBlue, addAlpha);
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSCoordTransform class represents the CXForm and CXFormWithAlpha data
++ * structures from the Macromedia Flash (SWF) File Format Specification. They
++ * were introduced in Flash 1 and Flash 3 respectively.
++ * &lt;/P&gt;
+  */
+-public class FSColorTransform extends FSTransformObject
++public class FSColorTransform implements Cloneable, Codeable
+ {
+-    private float multiplyRed = 1.0f;
+-    private float multiplyGreen = 1.0f;
+-    private float multiplyBlue = 1.0f;
+-    private float multiplyAlpha = 1.0f;
+-    private int addRed = 0;
+-    private int addGreen = 0;
+-    private int addBlue = 0;
+-    private int addAlpha = 0;
++	private float mulRed;
++	private float mulGreen;
++	private float mulBlue;
++	private float mulAlpha;
++	private int addRed;
++	private int addGreen;
++	private int addBlue;
++	private int addAlpha;
++	
++	private int size;
++	private boolean hasMul;
++	private boolean hasAdd;
+ 
+-    /**
+-     * Construct an FSColorTransform object an initialize with the values 
+-     * decoded from an encoded colour transform
+-     * 
+-     * @param coder an FSCoder object containing the encoded colour transform.
+-     */
+-    public FSColorTransform(FSCoder coder)
+-    {
+-        decode(coder);
+-    }    
+-    /** 
+-     * Constructs an FSColorTransform object defining a unity transform. If the 
+-     * transform is applied to a shape its colour will not change.
+-     */
+-    public FSColorTransform()
+-    {
+-    }    
+-    /** Constructs an FSColorTransform object with the specified add terms.
++	/**
++	 * Construct an FSColorTransform object an initialise with the values
++	 * decoded from an encoded colour transform
++	 * 
++	 * @param coder
++	 *            an FSCoder object containing the encoded colour transform.
++	 */
++	public FSColorTransform(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-        Each colour channel is transformed by the following calculation:
++	/**
++	 * Constructs an FSColorTransform object defining a unity transform. If the
++	 * transform is applied to a shape its colour will not change.
++	 */
++	public FSColorTransform()
++	{
++		mulRed = 1.0f;
++	    mulGreen = 1.0f;
++		mulBlue = 1.0f;
++		mulAlpha = 1.0f;
++		addRed = 0;
++		addGreen = 0;
++		addBlue = 0;
++		addAlpha = 0;
++	}
+ 
+-        &lt;pre&gt;
+-        newRed = red + addRedTerm
+-        newGreen = green + addGreenTerm
+-        newBlue = blue + addBlueTerm
+-        &lt;/pre&gt;
++	/**
++	 * Constructs an FSColorTransform object with the specified add terms.
++	 * 
++	 * Each colour channel is transformed by the following calculation:
++	 * 
++	 * &lt;pre&gt;
++	 * 	    newRed = red + addRedTerm
++	 * 	    newGreen = green + addGreenTerm
++	 * 	    newBlue = blue + addBlueTerm
++	 * 	
++	 * &lt;/pre&gt;
++	 * 
++	 * The add term value for the alpha channel defaults to 0 so if the
++	 * transform is added to an object that uses alpha channel information then
++	 * the alpha channel will remain unchanged.
++	 * 
++	 * In the Flash Player the value assigned to the respective colour channel
++	 * is clamped to the range 0..255.
++	 * 
++	 * @param ar
++	 *            value to add to the red colour channel.
++	 * @param ag
++	 *            value to add to the green colour channel.
++	 * @param ab
++	 *            value to add to the blue colour channel.
++	 */
++	public FSColorTransform(int ar, int ag, int ab)
++	{
++		mulRed = 1.0f;
++	    mulGreen = 1.0f;
++		mulBlue = 1.0f;
++		mulAlpha = 1.0f;
++		addRed = ar;
++		addGreen = ag;
++		addBlue = ab;
++		addAlpha = 0;
++	}
+ 
+-        The add term value for the alpha channel defaults to 0 so if the transform is added to an object that uses alpha channel information then the alpha channel will remain unchanged.
++	/**
++	 * Constructs an FSColorTransform object with the specified add terms,
++	 * including the alpha channel.
++	 * 
++	 * Each colour channel is transformed by the following calculation:
++	 * 
++	 * &lt;pre&gt;
++	 * 	    newRed = red + addRedTerm
++	 * 	    newGreen = green + addGreenTerm
++	 * 	    newBlue = blue + addBlueTerm
++	 * 	    newAlpha = alpha + addAlphaTerm
++	 * 	
++	 * &lt;/pre&gt;
++	 * 
++	 * In the Flash Player the value assigned to the respective colour channel
++	 * is clamped to the range 0..255.
++	 * 
++	 * @param ar
++	 *            value to add to the red colour channel.
++	 * @param ag
++	 *            value to add to the green colour channel.
++	 * @param ab
++	 *            value to add to the blue colour channel.
++	 * @param aa
++	 *            value to add to the alpha colour channel.
++	 */
++	public FSColorTransform(int ar, int ag, int ab, int aa)
++	{
++		mulRed = 1.0f;
++	    mulGreen = 1.0f;
++		mulBlue = 1.0f;
++		mulAlpha = 1.0f;
++		addRed = ar;
++		addGreen = ag;
++		addBlue = ab;
++		addAlpha = aa;
++	}
+ 
+-        In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
++	/**
++	 * Constructs a FSColorTransform object initialised with the specified
++	 * multiply terms.
++	 * 
++	 * Each colour channel is transformed by the following calculation:
++	 * 
++	 * &lt;pre&gt;
++	 * 	    newRed = red * multiplyRedTerm
++	 * 	    newGreen = green * multiplyGreenTerm
++	 * 	    newBlue = blue * multiplyBlueTerm
++	 * 	
++	 * &lt;/pre&gt;
++	 * 
++	 * The multiply term value for the alpha channel defaults to 1.0 so if the
++	 * transform is added to an object that uses alpha channel information then
++	 * the alpha channel will remain unchanged.
++	 * 
++	 * In the Flash Player the value assigned to the respective colour channel
++	 * is clamped to the range 0..255.
++	 * 
++	 * @param mr
++	 *            value to multiply the red colour channel by.
++	 * @param mg
++	 *            value to multiply the green colour channel by.
++	 * @param mb
++	 *            value to multiply the blue colour channel by.
++	 */
++	public FSColorTransform(float mr, float mg, float mb)
++	{
++		mulRed = mr;
++	    mulGreen = mg;
++		mulBlue = mb;
++		mulAlpha = 1.0f;
++		addRed = 0;
++		addGreen = 0;
++		addBlue = 0;
++		addAlpha = 0;
++	}
+ 
+-        @param redTerm value to add to the red colour channel.
+-        @param greenTerm value to add to the green colour channel.
+-        @param blueTerm value to add to the blue colour channel.
+-        */
+-    public FSColorTransform(int redTerm, int greenTerm, int blueTerm)
+-    {
+-        setAddRed(redTerm);
+-        setAddGreen(greenTerm);
+-        setAddBlue(blueTerm);
+-    }
++	/**
++	 * Constructs a FSColorTransform object initialised with the specified
++	 * multiply terms, including the alpha channel.
++	 * 
++	 * Each colour channel is transformed by the following calculation:
++	 * 
++	 * &lt;pre&gt;
++	 * 	    newRed = red * multiplyRedTerm
++	 * 	    newGreen = green * multiplyGreenTerm
++	 * 	    newBlue = blue * multiplyBlueTerm
++	 * 	    newAlpha = alpha * multiplyAlphaTerm
++	 * 	
++	 * &lt;/pre&gt;
++	 * 
++	 * In the Flash Player the value assigned to the respective colour channel
++	 * is clamped to the range 0..255.
++	 * 
++	 * @param mr
++	 *            value to multiply the red colour channel by.
++	 * @param mg
++	 *            value to multiply the green colour channel by.
++	 * @param mb
++	 *            value to multiply the blue colour channel by.
++	 * @param ma
++	 *            value to multiply the alpha colour channel by.
++	 */
++	public FSColorTransform(float mr, float mg, float mb, float ma)
++	{
++		mulRed = mr;
++	    mulGreen = mg;
++		mulBlue = mb;
++		mulAlpha = ma;
++		addRed = 0;
++		addGreen = 0;
++		addBlue = 0;
++		addAlpha = 0;
++	}
+ 
+-    /** Constructs an FSColorTransform object with the specified add terms, including the alpha channel.
++	/**
++	 * Constructs a FSColorTransform object initialised with the specified
++	 * addition and multiplication terms.
++	 * 
++	 * Each colour channel is transformed by the following calculation:
++	 * 
++	 * &lt;pre&gt;
++	 * 	    newRed = (red * multiplyRedTerm) + addRedTerm
++	 * 	    newGreen = (green * multiplyGreenTerm) + addGreenTerm
++	 * 	    newBlue = (blue * multiplyBlueTerm) + addBlueTerm
++	 * 	
++	 * &lt;/pre&gt;
++	 * 
++	 * The multiply and add terms for the alpha channel default to 1.0 and 0
++	 * respectively so for objects that use the alpha channel information then
++	 * the alpha channel will remain unchanged.
++	 * 
++	 * In the Flash Player the value assigned to the respective colour channel
++	 * is clamped to the range 0..255.
++	 * 
++	 * @param mr
++	 *            value to multiply the red colour channel by.
++	 * @param mg
++	 *            value to multiply the green colour channel by.
++	 * @param mb
++	 *            value to multiply the blue colour channel by.
++	 * @param ar
++	 *            value to add to the red colour channel.
++	 * @param ag
++	 *            value to add to the green colour channel.
++	 * @param ab
++	 *            value to add to the blue colour channel.
++	 */
++	public FSColorTransform(float mr, float mg, float mb, int ar, int ag, int ab)
++	{
++		mulRed = mr;
++	    mulGreen = mg;
++		mulBlue = mb;
++		mulAlpha = 1.0f;
++		addRed = ar;
++		addGreen = ag;
++		addBlue = ab;
++		addAlpha = 0;
++	}
+ 
+-        Each colour channel is transformed by the following calculation:
++	/**
++	 * Constructs a FSColorTransform object initialised with the specified
++	 * addition and multiplication terms, including alpha channel values.
++	 * 
++	 * Each colour channel is transformed by the following calculation:
++	 * 
++	 * &lt;pre&gt;
++	 * 	    newRed = (red * multiplyRedTerm) + addRedTerm
++	 * 	    newGreen = (green * multiplyGreenTerm) + addGreenTerm
++	 * 	    newBlue = (blue * multiplyBlueTerm) + addBlueTerm
++	 * 	    newAlpha = (alpha * multiplyAlphaTerm) + addAlphaTerm
++	 * 	
++	 * &lt;/pre&gt;
++	 * 
++	 * In the Flash Player the value assigned to the respective colour channel
++	 * is clamped to the range 0..255.
++	 * 
++	 * @param mr
++	 *            value to multiply the red colour channel by.
++	 * @param mg
++	 *            value to multiply the green colour channel by.
++	 * @param mb
++	 *            value to multiply the blue colour channel by.
++	 * @param ma
++	 *            value to multiply the alpha colour channel by.
++	 * @param ar
++	 *            value to add to the red colour channel.
++	 * @param ag
++	 *            value to add to the green colour channel.
++	 * @param ab
++	 *            value to add to the blue colour channel.
++	 * @param aa
++	 *            value to add to the alpha colour channel.
++	 */
++	public FSColorTransform(float mr, float mg, float mb, float ma,
++							int ar, int ag, int ab, int aa)
++	{
++		mulRed = mr;
++	    mulGreen = mg;
++		mulBlue = mb;
++		mulAlpha = ma;
++		addRed = ar;
++		addGreen = ag;
++		addBlue = ab;
++		addAlpha = aa;
++	}
+ 
+-        &lt;pre&gt;
+-        newRed = red + addRedTerm
+-        newGreen = green + addGreenTerm
+-        newBlue = blue + addBlueTerm
+-        newAlpha = alpha + addAlphaTerm
+-        &lt;/pre&gt;
++	/**
++	 * Construct an FSColorTansform object and initialise it using a copy of the
++	 * values from another colour transform.
++	 * 
++	 * @param obj
++	 *            a colour transform.
++	 */
++	public FSColorTransform(FSColorTransform obj)
++	{
++		mulRed = obj.mulRed;
++		mulGreen = obj.mulGreen;
++		mulBlue = obj.mulBlue;
++		mulAlpha = obj.mulAlpha;
++		addRed = obj.addRed;
++		addGreen = obj.addGreen;
++		addBlue = obj.addBlue;
++		addAlpha = obj.addAlpha;
++	}
+ 
+-        In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
++	/**
++	 * Gets the value of the multiply term for the red channel.
++	 * 
++	 * @return the value that will be multiplied with the red colour channel's
++	 *         value.
++	 */
++	public float getMultiplyRed()
++	{
++		return mulRed;
++	}
+ 
+-        @param redTerm value to add to the red colour channel.
+-        @param greenTerm value to add to the green colour channel.
+-        @param blueTerm value to add to the blue colour channel.
+-        @param alphaTerm value to add to the alpha colour channel.
+-        */
+-    public FSColorTransform(int redTerm, int greenTerm, int blueTerm, int alphaTerm)
+-    {
+-        setAddRed(redTerm);
+-        setAddGreen(greenTerm);
+-        setAddBlue(blueTerm);
+-        setAddAlpha(alphaTerm);
+-    }
++	/**
++	 * Gets the value of the multiply term for the green channel.
++	 * 
++	 * @return the value that will be multiplied with the green colour channel's
++	 *         value.
++	 */
++	public float getMultiplyGreen()
++	{
++		return mulGreen;
++	}
+ 
+-    /** Constructs a FSColorTransform object initialised with the specified multiply terms.
++	/**
++	 * Gets the value of the multiply term for the blue channel.
++	 * 
++	 * @return the value that will be multiplied with the blue colour channel's
++	 *         value.
++	 */
++	public float getMultiplyBlue()
++	{
++		return mulBlue;
++	}
+ 
+-        Each colour channel is transformed by the following calculation:
++	/**
++	 * Gets the value of the multiply term for the alpha channel.
++	 * 
++	 * @return the value that will be multiplied with the alpha colour channel's
++	 *         value.
++	 */
++	public float getMultiplyAlpha()
++	{
++		return mulAlpha;
++	}
+ 
+-        &lt;pre&gt;
+-        newRed = red * multiplyRedTerm
+-        newGreen = green * multiplyGreenTerm
+-        newBlue = blue * multiplyBlueTerm
+-        &lt;/pre&gt;
++	/**
++	 * Gets the value of the add term for the red channel.
++	 * 
++	 * @return the value that will be added to the red colour channel's value.
++	 */
++	public int getAddRed()
++	{
++		return addRed;
++	}
+ 
+-        The multiply term value for the alpha channel defaults to 1.0 so if the transform is added to an object that uses alpha channel information then the alpha channel will remain unchanged.
++	/**
++	 * Gets the value of the add term for the green channel.
++	 * 
++	 * @return the value that will be added to the green colour channel's value.
++	 */
++	public int getAddGreen()
++	{
++		return addGreen;
++	}
+ 
+-        In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
++	/**
++	 * Gets the value of the add term for the blue channel.
++	 * 
++	 * @return the value that will be added to the blue colour channel's value.
++	 */
++	public int getAddBlue()
++	{
++		return addBlue;
++	}
+ 
+-        @param redTerm value to multiply the red colour channel by.
+-        @param greenTerm value to multiply the green colour channel by.
+-        @param blueTerm value to multiply the blue colour channel by.
+-        */
+-    public FSColorTransform(float redTerm, float greenTerm, float blueTerm)
+-    {
+-        setMultiplyRed(redTerm);
+-        setMultiplyGreen(greenTerm);
+-        setMultiplyBlue(blueTerm);
+-    }
++	/**
++	 * Gets the value of the add term for the alpha channel.
++	 * 
++	 * @return the value that will be added to the alpha colour channel's value.
++	 */
++	public int getAddAlpha()
++	{
++		return addAlpha;
++	}
+ 
+-    /** Constructs a FSColorTransform object initialised with the specified multiply terms, including the alpha channel.
++	/**
++	 * Sets the value for the multiplyTerm which will be applied to the red
++	 * colour channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be multiplied with the red colour channel's
++	 *            value.
++	 */
++	public void setMultiplyRed(float aNumber)
++	{
++		mulRed = aNumber;
++	}
+ 
+-        Each colour channel is transformed by the following calculation:
++	/**
++	 * Sets the value for the multiplyTerm which will be applied to the green
++	 * colour channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be multiplied with the green colour channel's
++	 *            value.
++	 */
++	public void setMultiplyGreen(float aNumber)
++	{
++		mulGreen = aNumber;
++	}
+ 
+-        &lt;pre&gt;
+-        newRed = red * multiplyRedTerm
+-        newGreen = green * multiplyGreenTerm
+-        newBlue = blue * multiplyBlueTerm
+-        newAlpha = alpha * multiplyAlphaTerm
+-        &lt;/pre&gt;
++	/**
++	 * Sets the value for the multiplyTerm which will be applied to the blue
++	 * colour channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be multiplied with the blue colour channel's
++	 *            value.
++	 */
++	public void setMultiplyBlue(float aNumber)
++	{
++		mulBlue = aNumber;
++	}
+ 
+-        In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
++	/**
++	 * Sets the value for the multiplyTerm which will be applied to the alpha
++	 * colour channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be multiplied with the alpha colour channel's
++	 *            value.
++	 */
++	public void setMultiplyAlpha(float aNumber)
++	{
++		mulAlpha = aNumber;
++	}
+ 
+-        @param redTerm value to multiply the red colour channel by.
+-        @param greenTerm value to multiply the green colour channel by.
+-        @param blueTerm value to multiply the blue colour channel by.
+-        @param alphaTerm value to multiply the alpha colour channel by.
+-        */
+-    public FSColorTransform(float redTerm, float greenTerm, float blueTerm, float alphaTerm)
+-    {
+-        setMultiplyRed(redTerm);
+-        setMultiplyGreen(greenTerm);
+-        setMultiplyBlue(blueTerm);
+-        setMultiplyAlpha(alphaTerm);
+-    }
++	/**
++	 * Sets the values for the multiply terms for the red, green and blue colour
++	 * channels
++	 * 
++	 * @param mr
++	 *            value to multiply the red colour channel by.
++	 * @param mg
++	 *            value to multiply the green colour channel by.
++	 * @param mb
++	 *            value to multiply the blue colour channel by.
++	 */
++	public void setMultiplyTerms(float mr, float mg, float mb)
++	{
++		mulRed = mr;
++		mulGreen = mg;
++		mulBlue = mb;
++	}
+ 
+-    /** Constructs a FSColorTransform object initialised with the specified addition and multiplication terms. 
++	/**
++	 * Sets the values for the multiply terms for each of the colour channels
++	 * 
++	 * @param mr
++	 *            value to multiply the red colour channel by.
++	 * @param mg
++	 *            value to multiply the green colour channel by.
++	 * @param mb
++	 *            value to multiply the blue colour channel by.
++	 * @param ma
++	 *            value to multiply the alpha colour channel by.
++	 */
++	public void setMultiplyTerms(float mr, float mg, float mb, float ma)
++	{
++		mulRed = mr;
++		mulGreen = mg;
++		mulBlue = mb;
++		mulAlpha = ma;
++	}
+ 
+-        Each colour channel is transformed by the following calculation:
++	/**
++	 * Sets the value for the addTerm which will be applied to the red colour
++	 * channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be added to the red colour channel's value.
++	 */
++	public void setAddRed(int aNumber)
++	{
++		addRed = aNumber;
++	}
+ 
+-        &lt;pre&gt;
+-        newRed = (red * multiplyRedTerm) + addRedTerm
+-        newGreen = (green * multiplyGreenTerm) + addGreenTerm
+-        newBlue = (blue * multiplyBlueTerm) + addBlueTerm
+-        &lt;/pre&gt;
++	/**
++	 * Sets the value for the addTerm which will be applied to the green colour
++	 * channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be added to the green colour channel's value.
++	 */
++	public void setAddGreen(int aNumber)
++	{
++		addGreen = aNumber;
++	}
+ 
+-        The multiply and add terms for the alpha channel default to 1.0 and 0 respectively so for objects that use the alpha channel information then the alpha channel will remain unchanged.
++	/**
++	 * Sets the value for the addTerm which will be applied to the blue colour
++	 * channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be added to the blue colour channel's value.
++	 */
++	public void setAddBlue(int aNumber)
++	{
++		addBlue = aNumber;
++	}
+ 
+-        In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
++	/**
++	 * Sets the value for the addTerm which will be applied to the alpha colour
++	 * channel.
++	 * 
++	 * @param aNumber
++	 *            the value to be added to the alpha colour channel's value.
++	 */
++	public void setAddAlpha(int aNumber)
++	{
++		addAlpha = aNumber;
++	}
+ 
+-        @param multRedTerm value to multiply the red colour channel by.
+-        @param multGreenTerm value to multiply the green colour channel by.
+-        @param multBlueTerm value to multiply the blue colour channel by.
+-        @param addRedTerm value to add to the red colour channel.
+-        @param addGreenTerm value to add to the green colour channel.
+-        @param addBlueTerm value to add to the blue colour channel.
+-        */
+-    public FSColorTransform(float multRedTerm, float multGreenTerm, float multBlueTerm, int addRedTerm, int addGreenTerm, int addBlueTerm)
+-    {
+-        setMultiplyRed(multRedTerm);
+-        setMultiplyGreen(multGreenTerm);
+-        setMultiplyBlue(multBlueTerm);
+-        setAddRed(addRedTerm);
+-        setAddGreen(addGreenTerm);
+-        setAddBlue(addBlueTerm);
+-    }
++	/**
++	 * Sets the values for the add terms for each of the colour channels.
++	 * 
++	 * @param ar
++	 *            value to add to the red colour channel.
++	 * @param ag
++	 *            value to add to the green colour channel.
++	 * @param ab
++	 *            value to add to the blue colour channel.
++	 * @param aa
++	 *            value to add to the alpha colour channel.
++	 */
++	public void setAddTerms(int ar, int ag, int ab, int aa)
++	{
++		addRed = ar;
++		addGreen = ag;
++		addBlue = ab;
++		addAlpha = aa;
++	}
+ 
+-    /** Constructs a FSColorTransform object initialised with the specified addition and multiplication terms, including alpha channel values. 
++	/**
++	 * Sets the values for the add terms for the red, green and blue colour
++	 * channels.
++	 * 
++	 * @param ar
++	 *            value to add to the red colour channel.
++	 * @param ag
++	 *            value to add to the green colour channel.
++	 * @param ab
++	 *            value to add to the blue colour channel.
++	 */
++	public void setAddTerms(int ar, int ag, int ab)
++	{
++		addRed = ar;
++		addGreen = ag;
++		addBlue = ab;
++	}
+ 
+-        Each colour channel is transformed by the following calculation:
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-        &lt;pre&gt;
+-        newRed = (red * multiplyRedTerm) + addRedTerm
+-        newGreen = (green * multiplyGreenTerm) + addGreenTerm
+-        newBlue = (blue * multiplyBlueTerm) + addBlueTerm
+-        newAlpha = (alpha * multiplyAlphaTerm) + addAlphaTerm
+-        &lt;/pre&gt;
++		if (obj == null) {
++			return false;
++		}
+ 
+-        In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
++		if (obj == this) {
++			return true;
++		}
+ 
+-        @param multRedTerm value to multiply the red colour channel by.
+-        @param multGreenTerm value to multiply the green colour channel by.
+-        @param multBlueTerm value to multiply the blue colour channel by.
+-        @param multAlphaTerm value to multiply the alpha colour channel by.
+-        @param addRedTerm value to add to the red colour channel.
+-        @param addGreenTerm value to add to the green colour channel.
+-        @param addBlueTerm value to add to the blue colour channel.
+-        @param addAlphaTerm value to add to the alpha colour channel.
+-        */
+-    public FSColorTransform(float multRedTerm, float multGreenTerm, float multBlueTerm, float multAlphaTerm, int addRedTerm, int addGreenTerm, int addBlueTerm, int addAlphaTerm)
+-    {
+-        setMultiplyRed(multRedTerm);
+-        setMultiplyGreen(multGreenTerm);
+-        setMultiplyBlue(multBlueTerm);
+-        setMultiplyAlpha(multAlphaTerm);
+-        setAddRed(addRedTerm);
+-        setAddGreen(addGreenTerm);
+-        setAddBlue(addBlueTerm);
+-        setAddAlpha(addAlphaTerm);
+-    }
+-    /**
+-     * Construct an FSColorTansform object and initialize it using a copy of 
+-     * the values from another colour transform.
+-     * 
+-     * @param obj a colour transform.
+-     */
+-    public FSColorTransform(FSColorTransform obj)
+-    {
+-        multiplyRed = obj.multiplyRed;
+-        multiplyGreen = obj.multiplyGreen;
+-        multiplyBlue = obj.multiplyBlue;
+-        multiplyAlpha = obj.multiplyAlpha;
+-        addRed = obj.addRed;
+-        addGreen = obj.addGreen;
+-        addBlue = obj.addBlue;
+-        addAlpha = obj.addAlpha;
+-    }
++		if (obj instanceof FSColorTransform)
++		{
++			FSColorTransform cx = (FSColorTransform) obj;
+ 
+-    /** Gets the value of the multiply term for the red channel. 
++			result = mulRed == cx.mulRed;
++			result = result &amp;&amp; mulGreen == cx.mulGreen;
++			result = result &amp;&amp; mulBlue == cx.mulBlue;
++			result = result &amp;&amp; mulAlpha == cx.mulAlpha;
++			result = result &amp;&amp; addRed == cx.addRed;
++			result = result &amp;&amp; addGreen == cx.addGreen;
++			result = result &amp;&amp; addBlue == cx.addBlue;
++			result = result &amp;&amp; addAlpha == cx.addAlpha;
++		}
++		return result;
++	}
+ 
+-        @return the value that will be multiplied with the red colour channel's value.
+-        */
+-    public float getMultiplyRed() { return multiplyRed; }    
++	/**
++	 * Creates a copy of the object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
+ 
+-    /** Gets the value of the multiply term for the green channel. 
++		try {
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
+ 
+-        @return the value that will be multiplied with the green colour channel's value.
+-        */
+-    public float getMultiplyGreen() { return multiplyGreen; }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Gets the value of the multiply term for the blue channel. 
++		buffer.append(&quot;FSColorTransform: { &quot;);
++		buffer.append(&quot;multiply = [&quot;+mulRed+&quot;,&quot;+mulGreen+&quot;,&quot;+mulBlue+&quot;,&quot; + mulAlpha+ &quot;]; &quot;);
++		buffer.append(&quot;add = [&quot;+addRed+&quot;,&quot;+addGreen+&quot;,&quot;+ addBlue+&quot;,&quot;+addAlpha+&quot;]; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @return the value that will be multiplied with the blue colour channel's value.
+-        */
+-    public float getMultiplyBlue() { return multiplyBlue; }
++		return buffer.toString();
++	}
+ 
+-    /** Gets the value of the multiply term for the alpha channel. 
++	public int length(FSCoder coder)
++	{
++		int numberOfBits = 13; // include extra 7 bits for byte alignment
++		int numberOfTerms = coder.context[FSCoder.TransparentColors] != 0 ? 4: 3;
+ 
+-        @return the value that will be multiplied with the alpha colour channel's value.
+-        */
+-    public float getMultiplyAlpha() { return multiplyAlpha; }
++		size = fieldSize(coder);
++		hasMul = containsMultiplyTerms(coder);
++		hasAdd = containsAddTerms(coder);
++		
+ 
+-    /** Gets the value of the add term for the red channel. 
++		if (hasMul) {
++			numberOfBits += size*numberOfTerms;
++		}
+ 
+-        @return the value that will be added to the red colour channel's value.
+-        */
+-    public int getAddRed() { return addRed; }
++		if (hasAdd) {
++			numberOfBits += size*numberOfTerms;
++		}
+ 
+-    /** Gets the value of the add term for the green channel. 
++		return numberOfBits &gt;&gt; 3;
++	}
+ 
+-        @return the value that will be added to the green colour channel's value.
+-        */
+-    public int getAddGreen() { return addGreen; }
++	public void encode(FSCoder coder)
++	{
++		coder.alignToByte();
+ 
+-    /** Gets the value of the add term for the blue channel. 
++		coder.writeBits(hasAdd ? 1 : 0, 1);
++		coder.writeBits(hasMul ? 1 : 0, 1);
++		coder.writeBits(size, 4);
+ 
+-        @return the value that will be added to the blue colour channel's value.
+-        */
+-    public int getAddBlue() { return addBlue; }
++		if (hasMul)
++		{
++			coder.writeFixedBits(mulRed, size, 8);
++			coder.writeFixedBits(mulGreen, size, 8);
++			coder.writeFixedBits(mulBlue, size, 8);
+ 
+-    /** Gets the value of the add term for the alpha channel. 
++			if (coder.context[FSCoder.TransparentColors] != 0)
++				coder.writeFixedBits(mulAlpha, size, 8);
++		}
++		
++		if (hasAdd)
++		{
++			coder.writeBits(addRed, size);
++			coder.writeBits(addGreen, size);
++			coder.writeBits(addBlue, size);
+ 
+-        @return the value that will be added to the alpha colour channel's value.
+-        */
+-    public int getAddAlpha() { return addAlpha; }
++			if (coder.context[FSCoder.TransparentColors] != 0)
++				coder.writeBits(addAlpha, size);
++		}
++		
++		coder.alignToByte();
++	}
+ 
+-    /** Sets the value for the multiplyTerm which will be applied to the red colour channel.
++	public void decode(FSCoder coder)
++	{
++		coder.alignToByte();
+ 
+-        @param aNumber the value to be multiplied with the red colour channel's value.
+-        */
+-    public void setMultiplyRed(float aNumber) 
+-    {
+-        multiplyRed = aNumber;
+-    }
++		hasAdd = coder.readBits(1, false) != 0 ? true : false;
++		hasMul = coder.readBits(1, false) != 0 ? true : false;
++		size = coder.readBits(4, false);
+ 
+-    /** Sets the value for the multiplyTerm which will be applied to the green colour channel.
++		if (hasMul)
++		{
++			mulRed = coder.readFixedBits(size, 8);
++			mulGreen = coder.readFixedBits(size, 8);
++			mulBlue = coder.readFixedBits(size, 8);
+ 
+-        @param aNumber the value to be multiplied with the green colour channel's value.
+-        */
+-    public void setMultiplyGreen(float aNumber) 
+-    {
+-        multiplyGreen = aNumber;
+-    }
++			if (coder.context[FSCoder.TransparentColors] != 0)
++				mulAlpha = coder.readFixedBits(size, 8);
++		}
++		else 
++		{
++			mulRed = 1.0f;
++			mulGreen = 1.0f;
++			mulBlue = 1.0f;
++			mulAlpha = 1.0f;
++		}
+ 
+-    /** Sets the value for the multiplyTerm which will be applied to the blue colour channel.
++		if (hasAdd)
++		{
++			addRed = coder.readBits(size, true);
++			addGreen = coder.readBits(size, true);
++			addBlue = coder.readBits(size, true);
+ 
+-        @param aNumber the value to be multiplied with the blue colour channel's value.
+-        */
+-    public void setMultiplyBlue(float aNumber) 
+-    {
+-        multiplyBlue = aNumber;
+-    }
++			if (coder.context[FSCoder.TransparentColors] != 0)
++				addAlpha = coder.readBits(size, true);
++		}
++		else 
++		{
++			addRed = 0;
++			addGreen = 0;
++			addBlue = 0;
++			addAlpha = 0;
++		}
++		
++		coder.alignToByte();
++	}
+ 
+-    /** Sets the value for the multiplyTerm which will be applied to the alpha colour channel.
++	private boolean containsAddTerms(FSCoder coder)
++	{
++		int sum = addRed + addGreen + addBlue;
+ 
+-        @param aNumber the value to be multiplied with the alpha colour channel's value.
+-        */     
+-    public void setMultiplyAlpha(float aNumber) 
+-    {
+-        multiplyAlpha = aNumber;
+-    }
++		if (coder.context[FSCoder.TransparentColors] != 0)
++			sum += addAlpha;
+ 
+-    /** Sets the values for the multiply terms for the red, green and blue colour channels
++		return sum != 0;
++	}
+ 
+-        @param redTerm value to multiply the red colour channel by.
+-        @param greenTerm value to multiply the green colour channel by.
+-        @param blueTerm value to multiply the blue colour channel by.
+-        */
+-    public void setMultiplyTerms(float redTerm, float greenTerm, float blueTerm)
+-    {
+-        setMultiplyRed(redTerm);
+-        setMultiplyGreen(greenTerm);
+-        setMultiplyBlue(blueTerm);
+-    }
++	private boolean containsMultiplyTerms(FSCoder coder)
++	{
++		float sum = mulRed + mulGreen + mulBlue;
++		
++		if (sum == 3.0f) {
++			sum = 0.0f;
++		}
+ 
+-    /** Sets the values for the multiply terms for each of the colour channels
++		if (coder.context[FSCoder.TransparentColors] != 0)
++			sum += mulAlpha;
+ 
+-        @param redTerm value to multiply the red colour channel by.
+-        @param greenTerm value to multiply the green colour channel by.
+-        @param blueTerm value to multiply the blue colour channel by.
+-        @param alphaTerm value to multiply the alpha colour channel by.
+-        */
+-    public void setMultiplyTerms(float redTerm, float greenTerm, float blueTerm, float alphaTerm)
+-    {
+-        setMultiplyRed(redTerm);
+-        setMultiplyGreen(greenTerm);
+-        setMultiplyBlue(blueTerm);
+-        setMultiplyAlpha(alphaTerm);
+-    }
++		return sum != 1.0f;
++	}
+ 
+-    /** Sets the value for the addTerm which will be applied to the red colour channel.
++	private int addFieldSize(FSCoder coder)
++	{
++		int[] values;
+ 
+-        @param aNumber the value to be added to the red colour channel's value.
+-        */
+-    public void setAddRed(int aNumber) 
+-    {
+-        addRed = aNumber;
+-    }
++		if (coder.context[FSCoder.TransparentColors] != 0)
++			values = new int[] { addRed, addGreen, addBlue, addAlpha };
++		else
++			values = new int[] { addRed, addGreen, addBlue };
+ 
+-    /** Sets the value for the addTerm which will be applied to the green colour channel.
++		return FSCoder.size(values, true);
++	}
+ 
+-        @param aNumber the value to be added to the green colour channel's value.
+-        */
+-    public void setAddGreen(int aNumber) 
+-    {
+-        addGreen = aNumber;
+-    }
++	private int multiplyFieldSize(FSCoder coder)
++	{
++		float[] values;
+ 
+-    /** Sets the value for the addTerm which will be applied to the blue colour channel.
++		if (coder.context[FSCoder.TransparentColors] != 0)
++			values = new float[] { mulRed, mulGreen, mulBlue, mulAlpha };
++		else
++			values = new float[] { mulRed, mulGreen, mulBlue };
+ 
+-        @param aNumber the value to be added to the blue colour channel's value.
+-        */
+-    public void setAddBlue(int aNumber) 
+-    {
+-        addBlue = aNumber;
+-    }
++		return FSCoder.fixedShortSize(values);
++	}
+ 
+-    /** Sets the value for the addTerm which will be applied to the alpha colour channel.
++	private int fieldSize(FSCoder coder)
++	{
++		boolean containsMultiplyTerms = containsMultiplyTerms(coder);
++		boolean containsAddTerms = containsAddTerms(coder);
++		int numberOfBits = 0;
+ 
+-        @param aNumber the value to be added to the alpha colour channel's value.
+-        */
+-    public void setAddAlpha(int aNumber) 
+-    {
+-        addAlpha = aNumber;
+-    }
++		if (containsAddTerms &amp;&amp; !containsMultiplyTerms)
++			numberOfBits = addFieldSize(coder);
++		else if (!containsAddTerms &amp;&amp; containsMultiplyTerms)
++			numberOfBits = multiplyFieldSize(coder);
++		else if (containsAddTerms &amp;&amp; containsMultiplyTerms)
++			numberOfBits = Math.max(addFieldSize(coder),
++							multiplyFieldSize(coder));
++		else
++			numberOfBits = 1;
+ 
+-    /** Sets the values for the add terms for each of the colour channels.
+-
+-        @param redTerm value to add to the red colour channel.
+-        @param greenTerm value to add to the green colour channel.
+-        @param blueTerm value to add to the blue colour channel.
+-        @param alphaTerm value to add to the alpha colour channel.
+-        */
+-    public void setAddTerms(int redTerm, int greenTerm, int blueTerm, int alphaTerm)
+-    {
+-        setAddRed(redTerm);
+-        setAddGreen(greenTerm);
+-        setAddBlue(blueTerm);
+-        setAddAlpha(alphaTerm);
+-    }
+-
+-    /** Sets the values for the add terms for the red, green and blue colour channels.
+-
+-        @param redTerm value to add to the red colour channel.
+-        @param greenTerm value to add to the green colour channel.
+-        @param blueTerm value to add to the blue colour channel.
+-        */
+-    public void setAddTerms(int redTerm, int greenTerm, int blueTerm)
+-    {
+-        setAddRed(redTerm);
+-        setAddGreen(greenTerm);
+-        setAddBlue(blueTerm);
+-    }
+-
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSColorTransform typedObject = (FSColorTransform)anObject;
+-            
+-            result = multiplyRed == typedObject.multiplyRed;
+-            result = result &amp;&amp; multiplyGreen == typedObject.multiplyGreen;
+-            result = result &amp;&amp; multiplyBlue == typedObject.multiplyBlue;
+-            result = result &amp;&amp; multiplyAlpha == typedObject.multiplyAlpha;
+-            result = result &amp;&amp; addRed == typedObject.addRed;
+-            result = result &amp;&amp; addGreen == typedObject.addGreen;
+-            result = result &amp;&amp; addBlue == typedObject.addBlue;
+-            result = result &amp;&amp; addAlpha == typedObject.addAlpha;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            buffer.append(&quot;multiply = [&quot; + multiplyRed + &quot;, &quot; + multiplyGreen + &quot;, &quot; + multiplyBlue + &quot;, &quot; + multiplyAlpha + &quot;]; &quot;);
+-            buffer.append(&quot;add = [&quot; + addRed + &quot;, &quot; + addGreen + &quot;, &quot; + addBlue + &quot;, &quot; + addAlpha + &quot;]; &quot;);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int numberOfBits = 6;
+-        int fieldSize = fieldSize(coder);
+-        boolean containsMultiplyTerms = containsMultiplyTerms(coder);
+-        boolean containsAddTerms = containsAddTerms(coder);
+-    
+-        if (containsMultiplyTerms)
+-            numberOfBits += fieldSize * ((coder.context[FSCoder.TransparentColors] != 0) ? 4 : 3);
+-            
+-        if (containsAddTerms)
+-            numberOfBits += fieldSize * ((coder.context[FSCoder.TransparentColors] != 0) ? 4 : 3);
+-
+-        numberOfBits += (numberOfBits % 8 &gt; 0) ? 8 - (numberOfBits % 8) : 0;
+-    
+-        return numberOfBits&gt;&gt;3;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        int numberOfBits = fieldSize(coder);
+-        boolean containsMultiplyTerms = containsMultiplyTerms(coder);
+-        boolean containsAddTerms = containsAddTerms(coder);
+-        
+-        coder.alignToByte();
+-        
+-        coder.writeBits(containsAddTerms ? 1 : 0, 1);
+-        coder.writeBits(containsMultiplyTerms ? 1 : 0, 1);
+-        coder.writeBits(numberOfBits, 4);
+-    
+-        if (containsMultiplyTerms)
+-        {
+-            coder.writeFixedBits(multiplyRed, numberOfBits, 8);
+-            coder.writeFixedBits(multiplyGreen, numberOfBits, 8);
+-            coder.writeFixedBits(multiplyBlue, numberOfBits, 8);
+-    
+-            if (coder.context[FSCoder.TransparentColors] != 0)
+-                coder.writeFixedBits(multiplyAlpha, numberOfBits, 8);
+-        }
+-        if (containsAddTerms)
+-        {
+-            coder.writeBits(addRed, numberOfBits);
+-            coder.writeBits(addGreen, numberOfBits);
+-            coder.writeBits(addBlue, numberOfBits);
+-    
+-            if (coder.context[FSCoder.TransparentColors] != 0)
+-                coder.writeBits(addAlpha, numberOfBits);
+-        }
+-        coder.alignToByte();
+-    }
+-     
+-    public void decode(FSCoder coder)
+-    {
+-        boolean containsAddTerms = false;
+-        boolean containsMultiplyTerms = false;
+-        int fieldSize = 0;
+-                
+-        coder.alignToByte();
+-
+-        containsAddTerms = coder.readBits(1, false) != 0 ? true : false;
+-        containsMultiplyTerms = coder.readBits(1, false) != 0 ? true : false;
+-        fieldSize = coder.readBits(4, false);
+-        
+-        if (containsMultiplyTerms)
+-        {
+-            multiplyRed = coder.readFixedBits(fieldSize, 8);
+-            multiplyGreen = coder.readFixedBits(fieldSize, 8);
+-            multiplyBlue = coder.readFixedBits(fieldSize, 8);
+-            
+-            if (coder.context[FSCoder.TransparentColors] != 0)
+-                multiplyAlpha = coder.readFixedBits(fieldSize, 8);
+-        }
+-        
+-        if (containsAddTerms)
+-        {
+-            addRed = coder.readBits(fieldSize, true);
+-            addGreen = coder.readBits(fieldSize, true);
+-            addBlue = coder.readBits(fieldSize, true);
+-            
+-            if (coder.context[FSCoder.TransparentColors] != 0)
+-                addAlpha = coder.readBits(fieldSize, true);
+-        }
+-        coder.alignToByte();
+-    }
+-
+-    /** Returns true if the values for the add and multiply terms represent a unity transform - one which will not change the colour of a shape. Whether the alpha channel is included is determined by the context associated with the FSCoder object.
+-    
+-        @param coder the FSCoder used to encoded the transform.
+-        @return true if the object represents a unity transform, false otherwise.
+-        */
+-    public boolean isUnityTransform(FSCoder coder)
+-    {
+-        return ! (containsAddTerms(coder) || containsMultiplyTerms(coder));
+-    }
+-
+-    private boolean containsAddTerms(FSCoder coder) 
+-    {
+-        boolean containsTerms = addRed != 0 || addGreen != 0 || addBlue != 0;
+-        
+-        if (coder.context[FSCoder.TransparentColors] != 0)
+-            containsTerms = containsTerms || addAlpha != 0;
+-            
+-        return containsTerms;
+-    }
+-
+-    private boolean containsMultiplyTerms(FSCoder coder) 
+-    {
+-        boolean containsTerms = multiplyRed != 1.0 || multiplyGreen != 1.0 || multiplyBlue != 1.0;
+-        
+-        if (coder.context[FSCoder.TransparentColors] != 0)
+-            containsTerms = containsTerms || multiplyAlpha != 1.0;
+-        
+-        return containsTerms;
+-    }
+-
+-    private int addFieldSize(FSCoder coder)
+-    {
+-        int[] values;
+-        int size = 0;
+-
+-        if (coder.context[FSCoder.TransparentColors] != 0)
+-            values = new int[] { addRed, addGreen, addBlue, addAlpha };
+-        else
+-            values = new int[] { addRed, addGreen, addBlue };
+-
+-        size = FSCoder.size(values, true);
+-        
+-        return size;
+-    }
+-
+-    private int multiplyFieldSize(FSCoder coder)
+-    {
+-        float[] values;
+-        int size = 0;
+-
+-        if (coder.context[FSCoder.TransparentColors] != 0)
+-            values = new float[] { multiplyRed, multiplyGreen, multiplyBlue, multiplyAlpha };
+-        else
+-            values = new float[] { multiplyRed, multiplyGreen, multiplyBlue };
+-
+-        size = FSCoder.fixedShortSize(values);
+-        
+-        return size;
+-    }
+-
+-    private int fieldSize(FSCoder coder)
+-    {
+-        boolean containsMultiplyTerms = containsMultiplyTerms(coder);
+-        boolean containsAddTerms = containsAddTerms(coder);
+-        int numberOfBits = 0;
+-
+-        if (containsAddTerms &amp;&amp; !containsMultiplyTerms)
+-            numberOfBits = addFieldSize(coder);
+-        else if (!containsAddTerms &amp;&amp; containsMultiplyTerms)
+-            numberOfBits = multiplyFieldSize(coder);
+-        else if (containsAddTerms &amp;&amp; containsMultiplyTerms)
+-            numberOfBits = Math.max(addFieldSize(coder), multiplyFieldSize(coder));
+-        else
+-            numberOfBits = 1;
+-
+-        return numberOfBits;
+-    }    
++		return numberOfBits;
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000283.html">[Transform-svn] r347 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000285.html">[Transform-svn] r349 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#284">[ date ]</a>
+              <a href="thread.html#284">[ thread ]</a>
+              <a href="subject.html#284">[ subject ]</a>
+              <a href="author.html#284">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

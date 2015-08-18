@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r139 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r139%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200603271150.k2RBoF3E009306%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000078.html">
+   <LINK REL="Next"  HREF="000080.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r139 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r139%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200603271150.k2RBoF3E009306%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r139 - trunk/src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Mon Mar 27 13:50:15 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000078.html">[Transform-svn] r138 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000080.html">[Transform-svn] r140 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-27 13:49:44 +0200 (Mon, 27 Mar 2006)
+New Revision: 139
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+Log:
+FSImageConstructor now displays transparent, indexed, png files correctly.
+
+Modified: trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-03-27 11:44:39 UTC (rev 138)
++++ trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-03-27 11:49:44 UTC (rev 139)
+@@ -1241,6 +1241,15 @@
+         attributes[INTERLACE_METHOD] = coder.readWord(1, false);
+         
+         coder.readWord(4, false); // crc
++
++        switch (attributes[COLOUR_TYPE])
++        {
++            case GREYSCALE: format = (attributes[TRANSPARENT_GREY] != -1) ? RGBA : RGB8; attributes[COLOUR_COMPONENTS] = 1; break;
++            case TRUE_COLOUR: format = (attributes[TRANSPARENT_RED] != -1) ? RGBA : RGB8; attributes[COLOUR_COMPONENTS] = 3; break;
++            case INDEXED_COLOUR: format = IDX8; attributes[COLOUR_COMPONENTS] = 1; break;
++            case ALPHA_GREYSCALE: format = RGBA; attributes[COLOUR_COMPONENTS] = 2; break;
++            case ALPHA_TRUECOLOUR: format = RGBA; attributes[COLOUR_COMPONENTS] = 4; break;
++        }  
+     }
+ 
+     private void decodePLTE(FSCoder coder, int length)
+@@ -1279,8 +1288,10 @@
+                 attributes[TRANSPARENT_BLUE] = coder.readWord(2, false);
+                 break;
+             case INDEXED_COLOUR:
+-                for (int i=0; i&lt;length; i++)
++                format = IDXA;
++                for (int i=0; i&lt;length; i++) {
+                     colourTable[i][3] = (byte)coder.readWord(1, false);
++                }
+                 break;
+             default:
+                 break;
+@@ -1307,15 +1318,6 @@
+ 
+     private void decodeImage() throws DataFormatException
+     {
+-        switch (attributes[COLOUR_TYPE])
+-        {
+-            case GREYSCALE: format = (attributes[TRANSPARENT_GREY] != -1) ? RGBA : RGB8; attributes[COLOUR_COMPONENTS] = 1; break;
+-            case TRUE_COLOUR: format = (attributes[TRANSPARENT_RED] != -1) ? RGBA : RGB8; attributes[COLOUR_COMPONENTS] = 3; break;
+-            case INDEXED_COLOUR: format = IDX8; attributes[COLOUR_COMPONENTS] = 1; break;
+-            case ALPHA_GREYSCALE: format = RGBA; attributes[COLOUR_COMPONENTS] = 2; break;
+-            case ALPHA_TRUECOLOUR: format = RGBA; attributes[COLOUR_COMPONENTS] = 4; break;
+-        }
+-        
+         if (format == RGB8 &amp;&amp; attributes[BIT_DEPTH] &lt;= 5)
+             format = RGB5;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000078.html">[Transform-svn] r138 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000080.html">[Transform-svn] r140 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

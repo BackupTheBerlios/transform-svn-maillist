@@ -1,0 +1,368 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r455 - dev/dev-3-0/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r455%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804161153.m3GBr07L016269%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000390.html">
+   <LINK REL="Next"  HREF="000392.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r455 - dev/dev-3-0/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r455%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804161153.m3GBr07L016269%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r455 - dev/dev-3-0/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr 16 13:53:00 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000390.html">[Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+        <LI>Next message: <A HREF="000392.html">[Transform-svn] r456 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#391">[ date ]</a>
+              <a href="thread.html#391">[ thread ]</a>
+              <a href="subject.html#391">[ subject ]</a>
+              <a href="author.html#391">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-16 13:52:56 +0200 (Wed, 16 Apr 2008)
+New Revision: 455
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+Log:
+Added constructors for FSDefineFont with FSFontInfo or FSFontInfo2.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-10 21:14:58 UTC (rev 454)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-16 11:52:56 UTC (rev 455)
+@@ -23,11 +23,15 @@
+ import com.flagstone.transform.FSBounds;
+ import com.flagstone.transform.FSCoder;
+ import com.flagstone.transform.FSCoordTransform;
++import com.flagstone.transform.FSDefineFont;
+ import com.flagstone.transform.FSDefineFont2;
+ import com.flagstone.transform.FSDefineText;
++import com.flagstone.transform.FSFontInfo;
++import com.flagstone.transform.FSFontInfo2;
+ import com.flagstone.transform.FSKerning;
+ import com.flagstone.transform.FSMovie;
+ import com.flagstone.transform.FSMovieObject;
++import com.flagstone.transform.FSSerialNumber;
+ import com.flagstone.transform.FSShape;
+ import com.flagstone.transform.FSShapeStyle;
+ 
+@@ -71,7 +75,49 @@
+     private static final int WE_HAVE_AN_X_AND_Y_SCALE = 0x40;
+     private static final int WE_HAVE_A_TWO_BY_TWO     = 0x80;
+     private static final int MORE_COMPONENTS          = 0x10;
++    
++    public static Font[] fontsFromFile(File file) throws IOException, DataFormatException
++    {
++    	FSMovie movie = new FSMovie(file);
++    	List&lt;Font&gt;list = new ArrayList&lt;Font&gt;();
++    	
++        FSMovieObject obj;
+ 
++        for (Iterator&lt;FSMovieObject&gt; i = movie.getObjects().iterator(); i.hasNext();)
++        {
++        	obj = i.next();
++
++        	if (obj.getType() == FSMovieObject.DefineFont2) {
++        		list.add(new Font((FSDefineFont2)obj));
++        	}
++        }
++        return list.toArray(new Font[] {});
++    }
++
++    public static Font fontFromFile(File file, String name, boolean bold, boolean italic) throws IOException, DataFormatException
++    {
++    	FSMovie movie = new FSMovie(file);
++
++    	Font font = null;
++        FSMovieObject obj;
++        
++        for (Iterator&lt;FSMovieObject&gt; i = movie.getObjects().iterator(); i.hasNext();)
++        {
++        	obj = i.next();
++
++        	if (obj.getType() == FSMovieObject.DefineFont2) 
++        	{
++        		FSDefineFont2 fontObj = (FSDefineFont2)obj;
++        		
++        		if (fontObj.getName().equals(name) &amp;&amp; fontObj.isBold() == bold &amp;&amp; fontObj.isItalic() == italic) {
++        			font = new Font((FSDefineFont2)obj); 
++        			break;
++        		}
++         	}
++        }
++        return font;
++    }
++
+     private int key;
+ 
+     private String name;
+@@ -99,6 +145,159 @@
+     private int metrics;
+     private int glyphOffset;
+ 
++    public Font(String name, boolean bold, boolean italic)
++    {
++    	this.name = name;
++    	isBold = bold;
++    	isItalic = italic;
++    }
++    
++    public Font(FSDefineFont glyphs, FSFontInfo info)
++    {
++    	name = info.getName();
++    	isBold = info.isBold();
++    	isItalic = info.isItalic();
++
++    	encoding = info.getEncoding();   	
++    	
++    	if (encoding == FSDefineText.ANSI) {
++    		encoding = FSDefineText.Unicode;
++    	}
++
++    	key = generateKey(name, isBold, isItalic);
++
++    	//TODO ascent = info.getAscent();
++    	//TODO descent = info.getDescent();
++    	//TODO leading = info.getLeading();
++    	
++    	missingGlyph = 0;
++
++    	numberOfGlyphs = glyphs.getShapes().size();
++    	glyphTable = new Glyph[numberOfGlyphs];
++        glyphToChar = new short[numberOfGlyphs];
++        
++        highestChar = 0;
++        charToGlyph = new short[0];
++
++    	if (numberOfGlyphs &gt; 0)
++    	{
++        	int glyphIndex = 0;
++
++        	for (Iterator&lt;FSShape&gt; i=glyphs.getShapes().iterator(); i.hasNext(); glyphIndex++)
++        		glyphTable[glyphIndex] = new Glyph(i.next());
++
++        	int code;
++        	glyphIndex = 0;
++
++        	for (Iterator&lt;Integer&gt; i=info.getCodes().iterator(); i.hasNext();)
++        	{
++        		code = i.next();
++        		highestChar = code &gt; highestChar ? code : highestChar;
++        	}
++
++        	charToGlyph = new short[highestChar+1];
++
++        	for (Iterator&lt;Integer&gt; i=info.getCodes().iterator(); i.hasNext(); glyphIndex++)
++        	{
++        		code = i.next();
++
++        		charToGlyph[code] = (short) glyphIndex;
++        		glyphToChar[glyphIndex] = (short) code;
++        	}
++
++/* TODO
++            if (glyphs.getAdvances() != null)
++        	{
++            	glyphIndex = 0;  	
++            	
++            	for (Iterator&lt;Integer&gt; i = font.getAdvances().iterator(); i.hasNext(); glyphIndex++)
++            		glyphTable[glyphIndex].setAdvance(i.next());
++        	}
++        	
++        	if (font.getBounds() != null)
++        	{
++            	glyphIndex = 0;
++            	
++                	for (Iterator&lt;FSBounds&gt; i = font.getBounds().iterator(); i.hasNext(); glyphIndex++)
++                		glyphTable[glyphIndex].setBounds(i.next());
++        	}
++*/    	
++        }
++    }
++
++    public Font(FSDefineFont glyphs, FSFontInfo2 info)
++    {
++    	name = info.getName();
++    	isBold = info.isBold();
++    	isItalic = info.isItalic();
++
++    	encoding = info.getEncoding();   	
++    	
++    	if (encoding == FSDefineText.ANSI) {
++    		encoding = FSDefineText.Unicode;
++    	}
++
++    	key = generateKey(name, isBold, isItalic);
++
++    	//TODO ascent = info.getAscent();
++    	//TODO descent = info.getDescent();
++    	//TODO leading = info.getLeading();
++    	
++    	missingGlyph = 0;
++
++    	numberOfGlyphs = glyphs.getShapes().size();
++    	glyphTable = new Glyph[numberOfGlyphs];
++        glyphToChar = new short[numberOfGlyphs];
++        
++        highestChar = 0;
++        charToGlyph = new short[0];
++
++    	if (numberOfGlyphs &gt; 0)
++    	{
++        	int glyphIndex = 0;
++
++        	for (Iterator&lt;FSShape&gt; i=glyphs.getShapes().iterator(); i.hasNext(); glyphIndex++)
++        		glyphTable[glyphIndex] = new Glyph(i.next());
++
++        	int code;
++        	glyphIndex = 0;
++
++        	for (Iterator&lt;Integer&gt; i=info.getCodes().iterator(); i.hasNext();)
++        	{
++        		code = i.next();
++        		highestChar = code &gt; highestChar ? code : highestChar;
++        	}
++
++        	charToGlyph = new short[highestChar+1];
++
++        	for (Iterator&lt;Integer&gt; i=info.getCodes().iterator(); i.hasNext(); glyphIndex++)
++        	{
++        		code = i.next();
++
++        		charToGlyph[code] = (short) glyphIndex;
++        		glyphToChar[glyphIndex] = (short) code;
++        	}
++
++/* TODO
++            if (glyphs.getAdvances() != null)
++        	{
++            	glyphIndex = 0;  	
++            	
++            	for (Iterator&lt;Integer&gt; i = font.getAdvances().iterator(); i.hasNext(); glyphIndex++)
++            		glyphTable[glyphIndex].setAdvance(i.next());
++        	}
++        	
++        	if (font.getBounds() != null)
++        	{
++            	glyphIndex = 0;
++            	
++                	for (Iterator&lt;FSBounds&gt; i = font.getBounds().iterator(); i.hasNext(); glyphIndex++)
++                		glyphTable[glyphIndex].setBounds(i.next());
++        	}
++*/    	
++        }
++    }
++
+     public Font(FSDefineFont2 font)
+     {
+     	name = font.getName();
+@@ -123,8 +322,8 @@
+     	glyphTable = new Glyph[numberOfGlyphs];
+         glyphToChar = new short[numberOfGlyphs];
+         
+-        highestChar = font.getCodes().get(font.getCodes().size()-1);
+-        charToGlyph = new short[highestChar];
++        highestChar = 0;
++        charToGlyph = new short[0];
+ 
+     	if (numberOfGlyphs &gt; 0)
+     	{
+@@ -136,6 +335,14 @@
+         	int code;
+         	glyphIndex = 0;
+ 
++        	for (Iterator&lt;Integer&gt; i=font.getCodes().iterator(); i.hasNext();)
++        	{
++        		code = i.next();
++        		highestChar = code &gt; highestChar ? code : highestChar;
++        	}
++
++            charToGlyph = new short[highestChar+1];
++
+         	for (Iterator&lt;Integer&gt; i=font.getCodes().iterator(); i.hasNext(); glyphIndex++)
+         	{
+         		code = i.next();
+@@ -144,7 +351,7 @@
+         		glyphToChar[glyphIndex] = (short) code;
+         	}
+ 
+-        	if (font.getAdvances() != null)
++            if (font.getAdvances() != null)
+         	{
+             	glyphIndex = 0;  	
+             	
+@@ -355,6 +562,23 @@
+ 	{
+ 		return isItalic;
+ 	}
++	
++	public int getStyle()
++	{
++		int style = java.awt.Font.PLAIN;
++		
++		if (isBold &amp;&amp; !isItalic) {
++			style = java.awt.Font.BOLD;
++		}
++		else if (isBold &amp;&amp; isItalic) {
++			style = java.awt.Font.BOLD + java.awt.Font.ITALIC;	
++		}
++		else if (!isBold &amp;&amp; isItalic) {
++			style = java.awt.Font.ITALIC;	
++		}
++		
++		return style;
++	}
+ 
+     public int getEncoding()
+ 	{
+@@ -805,6 +1029,7 @@
+             coder.readWord(2, false); // maximum level of recursion
+         }
+     }
++ 
+     private void decodeHMTX(FSCoder coder)
+     {
+         int i = 0;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000390.html">[Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+	<LI>Next message: <A HREF="000392.html">[Transform-svn] r456 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#391">[ date ]</a>
+              <a href="thread.html#391">[ thread ]</a>
+              <a href="subject.html#391">[ subject ]</a>
+              <a href="author.html#391">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

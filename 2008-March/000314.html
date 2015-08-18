@@ -1,0 +1,489 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r378 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r378%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182152.m2ILqSB3004671%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000313.html">
+   <LINK REL="Next"  HREF="000315.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r378 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r378%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182152.m2ILqSB3004671%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r378 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 22:52:28 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000313.html">[Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000315.html">[Transform-svn] r379 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#314">[ date ]</a>
+              <a href="thread.html#314">[ thread ]</a>
+              <a href="subject.html#314">[ subject ]</a>
+              <a href="author.html#314">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 22:52:25 +0100 (Tue, 18 Mar 2008)
+New Revision: 378
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSEnvelope.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSEnvelope.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSEnvelope.java	2008-03-18 21:47:59 UTC (rev 377)
++++ dev/dev-2-4/src/com/flagstone/transform/FSEnvelope.java	2008-03-18 21:52:25 UTC (rev 378)
+@@ -30,182 +30,256 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.ArrayList;
+-import java.util.Iterator;
+-
+ /**
+-FSEnvelope is used to define an envelope which controls how a particular sound is 
+-played over time. 
+- 
+-&lt;p&gt;Each FSEnvelope object defines a point in the envelope. The FSSound object contains an array of FSEnvelope objects which define the complete envelope.&lt;/p&gt;
++ * FSEnvelope is used to define an envelope which controls how a particular
++ * sound is played over time.
++ * 
++ * &lt;p&gt;
++ * Each FSEnvelope object defines a point in the envelope. The FSSound object
++ * contains an array of FSEnvelope objects which define the complete envelope.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;mark&lt;/td&gt;
++ * &lt;td&gt;The location in the playback sound data stream where the following level
++ * information applies.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;left&lt;/td&gt;
++ * &lt;td&gt;The sound level for the left channel, in the range 0..65535.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;right&lt;/td&gt;
++ * &lt;td&gt;The sound level for the right channel, in the range 0..65535..&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The Flash Player plays sounds at a fixed rate of 44.1KHz, therefore sounds
++ * sampled at a lower frequency are interpolated with each sample repeated to
++ * generated the 44.1Khz playback rate. For example each sample in a sound
++ * sampled at 22KHz is played twice to generated the 44.1Khz playback rate.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The envelope defines the sample number (and hence the time) in the playback
++ * data stream where the level information applies and &lt;b&gt;not&lt;/b&gt; the sample
++ * number in the original sound data. For example to set the level 0.1 seconds
++ * into a sound that plays for 1 second the value for the mark attribute in the
++ * envelope object would be 44100 * 0.1/1.0 = 4410.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSEnvelope class represents the SoundEnvelope structure from the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 1.
++ * &lt;/p&gt;
++ */
++public class FSEnvelope implements Cloneable, Codeable
++{
++	private int mark = 0;
++	private int left = 0;
++	private int right = 0;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSEnvelope object, initialising it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSEnvelope(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an envelope specifying the mark, left and right values.
++	 * 
++	 * @param markValue
++	 *            the sample number in the 44.1KHz playback data stream where
++	 *            the levels for the channels is applied.
++	 * @param leftValue
++	 *            the level for the left sound channel, in the range 0..65535.
++	 * @param rightValue
++	 *            the level for the right sound channel, in the range 0..65535.
++	 */
++	public FSEnvelope(int markValue, int leftValue, int rightValue)
++	{
++		setMark(markValue);
++		setLeft(leftValue);
++		setRight(rightValue);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnvelope_0&quot;&gt;mark&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The location in the playback sound data stream where the following level information applies.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSEnvelope object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSEnvelope object.
++	 */
++	public FSEnvelope(FSEnvelope obj)
++	{
++		mark = obj.mark;
++		left = obj.left;
++		right = obj.right;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnvelope_1&quot;&gt;left&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The sound level for the left channel, in the range 0..65535.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the sample number in the 44.1KHz playback data stream where the
++	 * level information is applied.
++	 * 
++	 * @return the mark value.
++	 */
++	public int getMark()
++	{
++		return mark;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnvelope_2&quot;&gt;right&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The sound level for the right channel, in the range 0..65535..&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Gets the level of the sound played in the left channel.
++	 * 
++	 * @return the left value.
++	 */
++	public int getLeft()
++	{
++		return left;
++	}
+ 
+-&lt;p&gt;The Flash Player plays sounds at a fixed rate of 44.1KHz, therefore sounds sampled at a lower frequency are interpolated with each sample repeated to generated the 44.1Khz playback rate. For example each sample in a sound sampled at 22KHz is played twice to generated the 44.1Khz playback rate.&lt;/p&gt;
++	/**
++	 * Gets the level of the sound played in the right channel.
++	 * 
++	 * @return the right value.
++	 */
++	public int getRight()
++	{
++		return right;
++	}
+ 
+-&lt;p&gt;The envelope defines the sample number (and hence the time) in the playback data stream where the level information applies and &lt;b&gt;not&lt;/b&gt; the sample number in the original sound data. For example to set the level 0.1 seconds into a sound that plays for 1 second the value for the mark attribute in the envelope object would be 44100 * 0.1/1.0 = 4410.&lt;/p&gt;
++	/**
++	 * Sets the sample number in the 44.1KHz playback data stream where the
++	 * levels for the channels is applied.
++	 * 
++	 * @param aNumber
++	 *            the mark value.
++	 */
++	public void setMark(int aNumber)
++	{
++		mark = aNumber;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Sets the level for the left sound channel.
++	 * 
++	 * @param level
++	 *            the level for the left sound channel.
++	 *            
++	 * @throws IllegalArgumentException if the level is not in the range 0..65535.
++	 */
++	public void setLeft(int level)
++	{
++		if (level &lt; 0 || level &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Sound level must be in range 0..65535.&quot;);
++		}
++		left = level;
++	}
+ 
+-&lt;p&gt;The FSEnvelope class represents the SoundEnvelope structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSEnvelope extends FSTransformObject
+-{
+-    private int mark = 0;
+-    private int left = 0;
+-    private int right = 0;
++	/**
++	 * Sets the level for the right sound channel.
++	 * 
++	 * @param level
++	 *            the level for the right sound channel.
++	 *            
++	 * @throws IllegalArgumentException if the level is not in the range 0..65535.
++	 */
++	public void setRight(int level)
++	{
++		if (level &lt; 0 || level &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Sound level must be in range 0..65535.&quot;);
++		}
++		right = level;
++	}
+ 
+-    /**
+-     * Construct an FSEnvelope object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSEnvelope(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an envelope specifying the mark, left and right values.
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-        @param markValue the sample number in the 44.1KHz playback data stream where the levels for the channels is applied.
+-        @param leftValue the level for the left sound channel, in the range 0..65535.
+-        @param rightValue the level for the right sound channel, in the range 0..65535.
+-        */
+-    public FSEnvelope(int markValue, int leftValue, int rightValue)
+-    {
+-        setMark(markValue);
+-        setLeft(leftValue);
+-        setRight(rightValue);
+-    }
+-    /**
+-     * Constructs an FSEnvelope object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSEnvelope object.
+-     */
+-    public FSEnvelope(FSEnvelope obj)
+-    {
+-        mark = obj.mark;
+-        left = obj.left;
+-        right = obj.right;
+-    }    
++		if (super.equals(anObject))
++		{
++			FSEnvelope typedObject = (FSEnvelope) anObject;
+ 
+-    /** Gets the sample number in the 44.1KHz playback data stream where the level information is applied.
++			result = mark == typedObject.mark;
++			result = result &amp;&amp; left == typedObject.left;
++			result = result &amp;&amp; right == typedObject.right;
++		}
++		return result;
++	}
+ 
+-        @return the mark value.
+-        */
+-    public int getMark()  { return mark; }
++	/**
++	 * Creates a deep copy of the entire object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
+ 
+-    /** Gets the level of the sound played in the left channel.
++		try {
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
+ 
+-        @return the left value.
+-        */
+-    public int getLeft()  { return left; }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Gets the level of the sound played in the right channel.
++		buffer.append(&quot;FSEnvelope: {&quot;);
++		buffer.append(&quot;mark = &quot;).append(mark).append(&quot;; &quot;);
++		buffer.append(&quot;left = &quot;).append(left).append(&quot;; &quot;);
++		buffer.append(&quot;right = &quot;).append(right).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @return the right value.
+-        */
+-    public int getRight()  { return right; }
++		return buffer.toString();
++	}
+ 
+-    /** Sets the sample number in the 44.1KHz playback data stream where the levels for the channels is applied.
++	public int length(FSCoder coder)
++	{
++		int length = 8;
++		return length;
++	}
+ 
+-        @param aNumber the mark value.
+-        */
+-    public void setMark(int aNumber)
+-    {
+-        mark = aNumber;
+-    }
++	public void encode(FSCoder coder)
++	{
++		coder.writeWord(mark, 4);
++		coder.writeWord(left, 2);
++		coder.writeWord(right, 2);
++	}
+ 
+-    /** Sets the level for the left sound channel.
+-
+-        @param leftValue the level for the left sound channel.
+-        */
+-    public void setLeft(int leftValue)
+-    {
+-        left = leftValue;
+-    }
+-
+-    /** Sets the level for the right sound channel.
+-
+-        @param rightValue the level for the right sound channel.
+-        */
+-    public void setRight(int rightValue)
+-    {
+-        right = rightValue;
+-    }
+-
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSEnvelope typedObject = (FSEnvelope)anObject;
+-            
+-            result = mark == typedObject.mark;
+-            result = result &amp;&amp; left == typedObject.left;
+-            result = result &amp;&amp; right == typedObject.right;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(name() + &quot;: {&quot;);
+-            Transform.append(buffer, &quot;mark&quot;, mark);
+-            Transform.append(buffer, &quot;left&quot;, left);
+-            Transform.append(buffer, &quot;right&quot;, right);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = 8;
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        coder.writeWord(mark, 4);
+-        coder.writeWord(left, 2);
+-        coder.writeWord(right, 2);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        mark = coder.readWord(4, false);
+-        left = coder.readWord(2, false);
+-        right = coder.readWord(2, false);
+-    }
++	public void decode(FSCoder coder)
++	{
++		mark = coder.readWord(4, false);
++		left = coder.readWord(2, false);
++		right = coder.readWord(2, false);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000313.html">[Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000315.html">[Transform-svn] r379 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#314">[ date ]</a>
+              <a href="thread.html#314">[ thread ]</a>
+              <a href="subject.html#314">[ subject ]</a>
+              <a href="author.html#314">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

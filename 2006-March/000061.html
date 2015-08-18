@@ -1,0 +1,585 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r120 - in trunk: . doc doc/releases test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r120%20-%20in%20trunk%3A%20.%20doc%20doc/releases%20test/suites&In-Reply-To=%3C200603051841.k25IfOf0031601%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000060.html">
+   <LINK REL="Next"  HREF="000062.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r120 - in trunk: . doc doc/releases test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r120%20-%20in%20trunk%3A%20.%20doc%20doc/releases%20test/suites&In-Reply-To=%3C200603051841.k25IfOf0031601%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r120 - in trunk: . doc doc/releases test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Sun Mar  5 19:41:24 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000060.html">[Transform-svn] r119 - in trunk/test/data/images: bmp jpg png
+</A></li>
+        <LI>Next message: <A HREF="000062.html">[Transform-svn] r121 - trunk/test/data
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-05 19:40:40 +0100 (Sun, 05 Mar 2006)
+New Revision: 120
+
+Added:
+   trunk/doc/releases/transform-2.1.html
+Modified:
+   trunk/developer.xml
+   trunk/doc/CHANGES.txt
+   trunk/test/suites/FSMovie.xml
+   trunk/test/suites/FSMovieReference.xml
+Log:
+Added release notes.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2006-03-05 16:40:09 UTC (rev 119)
++++ trunk/developer.xml	2006-03-05 18:40:40 UTC (rev 120)
+@@ -74,8 +74,9 @@
+ 
+         &lt;copy todir=&quot;${dist.dir}/test&quot; overwrite=&quot;true&quot;&gt;
+             &lt;fileset dir=&quot;test&quot;&gt;
+-                &lt;include name=&quot;data/movies/README.txt&quot; /&gt;
++                &lt;include name=&quot;data/readme.txt&quot; /&gt;
+                 &lt;include name=&quot;suites/*&quot; /&gt;
++                &lt;include name=&quot;benchmarks/*&quot; /&gt;
+             &lt;/fileset&gt;
+         &lt;/copy&gt;
+ 
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-05 16:40:09 UTC (rev 119)
++++ trunk/doc/CHANGES.txt	2006-03-05 18:40:40 UTC (rev 120)
+@@ -1,3 +1,7 @@
++2006-03-04 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Property values are now cloned when FSPush objects are cloned.
++
+ 2006-03-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Added canonical version of objects that can be safely shared since they
+@@ -6,7 +10,7 @@
+ 
+ 2006-03-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+-    * Updated FSMovieText.java and added a new test folder, benchmarks, for 
++    * Updated FSMovieTest.java and added a new test folder, benchmarks, for 
+       holding TestNG files to run performance test on Transform classes.
+       
+     * Split benchmark suite for FSMovie into separate suites for encoding and 
+@@ -16,7 +20,7 @@
+     
+     * Added the benchmark target to test.xml to run specific benchmarks.
+     
+-    * Made constructors that initialize attributes from an FSCoder public. These
++    * Made constructors that initialise attributes from an FSCoder public. These
+       methods will be used for testing. All classes.
+       
+     * Added copy constructors to all classes.
+@@ -24,7 +28,7 @@
+     * Removed private copies of constants used to identify different types of 
+       object. This was left over from supporting different versions of Flash.
+       
+-    * cleaned up initialization of attributes.
++    * cleaned up initialisation of attributes.
+     
+     * Methods used to encode and decode objects:
+    
+@@ -32,7 +36,7 @@
+           void decode(FSCoder)
+           void encode(FSCoder)
+           
+-      along with the construtor &lt;class&gt;(FSCoder) are all &quot;upgraded&quot; to public
++      along with the constructor &lt;class&gt;(FSCoder) are all &quot;upgraded&quot; to public
+       to support testing.
+ 
+ 2006-03-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+
+Added: trunk/doc/releases/transform-2.1.html
+===================================================================
+--- trunk/doc/releases/transform-2.1.html	2006-03-05 16:40:09 UTC (rev 119)
++++ trunk/doc/releases/transform-2.1.html	2006-03-05 18:40:40 UTC (rev 120)
+@@ -0,0 +1,284 @@
++&lt;html&gt;
++&lt;head&gt;
++&lt;title&gt;Release Notes for Transform SWF for Java, Version 2.1&lt;/title&gt;
++&lt;style type=&quot;text/CSS&quot;&gt;
++&lt;!--
++a:link { text-decoration: none; }
++a:visited { color: darkred; text-decoration: none; }
++a:active { text-decoration: none; }
++a:hover { color: #000066; text-decoration: none; }
++
++h1 { font-size: 140%; background-color: darkgray; padding: 3px 10px; }
++h2 { font-size: 120%; background-color: darkgray; padding: 3px 10px; }
++h3 { font-size: 110%; margin-bottom: 0px; }
++
++div.section { margin-left: 10px; margin-right: 10px; }
++
++p { margin-top: 0px; }
++pre { font-size: 90%; }
++ul { margin-left: 10px; }
++ul ol { margin-left: 10px; }
++table { margin-left: 10px;}
++--&gt;
++&lt;/style&gt;
++&lt;/head&gt;
++&lt;body&gt;
++
++&lt;h1&gt;Release Notes for Transform SWF for Java, Version 2.1.&lt;/h1&gt;
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;P&gt;This release brings forward a lot of changes discussed in the roadmap for 
++Version 3.0. The two most important ones are:
++&lt;ol&gt;
++&lt;li&gt;Transform Utilities classes are included in the package structure.&lt;/li&gt;
++&lt;li&gt;Lazy decoding of actions and shape offers huge performance gains.&lt;/li&gt;
++&lt;/ol&gt;
++Other changes are mostly administrative, cleaning up code and generally resolving
++minor technical issues and improving support and use of TestNG for testing and
++verification.&lt;/P&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;ul&gt;
++&lt;li&gt;Bug Fixes     
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#fix1&quot;&gt;FSPush: FSProperty objects are cloned correctly.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#fix2&quot;&gt;FSTextConstructor handles file names in upper case.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;New Classes 
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#new1&quot;&gt;FSCharacterTable providing character sets for FSTextConstructor&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#new2&quot;&gt;FSCoderException to handle encoding or decoding errors.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;Class Changes     
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#class1&quot;&gt;FSMovieTest: Added benchmark methods.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#class2&quot;&gt;FSTransformObject: methods used to encode/decode classes are public.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#class3&quot;&gt;Added copy constructors on all classes.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#class4&quot;&gt;Removed redundant exception declarations.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#class5&quot;&gt;Added the constructor public FSTextConstructor(int, Font).&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#class6&quot;&gt;FSTextConstructor: added reset method.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#class7&quot;&gt;FSTextConstructor: added willDisplay method.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#class8&quot;&gt;Tidied up FSCoder class and deprecated FSCodec.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#class9&quot;&gt;TransformUtil is deprecated.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#class10&quot;&gt;Deprecated the FSMovieListener interface.&lt;/a&gt;&lt;/li&gt;
++&lt;/ol&gt;
++&lt;/li&gt;
++&lt;li&gt;Internal Class Changes 
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#int1&quot;&gt;Canonical objects are now used.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#int2&quot;&gt;Added lazy decoding of shapes and actions.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#int3&quot;&gt;Improved decoding of JPEG image data.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;Package Changes 
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#package1&quot;&gt;Merged Transform and Transform Utilities.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;/ul&gt;  
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Bug Fixes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;fix1&quot;&gt;1. FSPush: FSProperty objects are cloned correctly.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;FSProperty objects are now copied into the cloned array. Previously the 
++cloned array &quot;dropped&quot; any FSPropert objects.&lt;/P&gt; 
++
++&lt;h3&gt;&lt;a name=&quot;fix1&quot;&gt;2. FSTextConstructor handles file names in upper case.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;File names in upper case are now handled - this makes using TrueType files 
++from Windows systems much easier.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;New Classes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;new1&quot;&gt;1. FSCharacterTable providing character sets for FSTextConstructor&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;The willDisplay() method on FSTextConstructor (see below) is used to 
++define the characters that will be encoded in a font. The FSCharacterTable 
++class provided arrays of characters that can be used with the willDisplay
++method. Different character sets are provided for ISO 8859-1 as well as 
++characters for the main European languages.&lt;/P&gt; 
++
++&lt;h3&gt;&lt;a name=&quot;new2&quot;&gt;2. FSCoderException to handle encoding or decoding errors.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;Added a new exception class, FSCoderException to report when underflow or
++overflow errors occur when encoding or decoding objects. Previously only the 
++more general IOException was reported. FSCoderException contains information on 
++the location of the data structure in the file that caused the error making 
++diagnosis much easier.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Class Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;class1&quot;&gt;1. FSMovieTest: added benchmark methods.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Updated FSMovieTest.java to record the time taken to decode and encode
++Flash files. TestNG scripts for running the tests were added to the directory
++test\benchmarks. The benchmark tests use Flash files stored in the directories
++text\data\movies\swf&lt;x&gt;&lt;/P&gt;
++
++&lt;p&gt;The benchmarks measure the time taken to decode or encode a given Flash file
++100 times and are best suited to measure relative improvements when optimizing 
++the code in the Transform classes.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class2&quot;&gt;2. FSTransformObject: methods used to encode/decode classes are public.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt; The methods used to encode and decode objects:
++
++&lt;pre&gt;   
++    int length(FSCoder)
++    void decode(FSCoder)
++    void encode(FSCoder)
++&lt;/pre&gt;
++
++along with the constructor &lt;class&gt;(FSCoder) are all &quot;upgraded&quot; to public to 
++support testing with TestNG.&lt;/P&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class3&quot;&gt;3. Added copy constructors on all classes.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;All of the classes now have copy constructors to complement the clone()
++method.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class4&quot;&gt;4. Removed redundant exception declarations.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Removed redundant exceptions declarations from method signatures:
++FileNotFoundException is covered by IOException. Applies to FSMovie,
++FSSoundConstructor, FSImageConstructor. This change is simply aesthetic all the 
++removed exceptions are subclasses of IOException.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class5&quot;&gt;5. Added the constructor public FSTextConstructor(int, Font).&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;FSTextConstructor had a single constructor FSTextConstructor(int, String)
++which was used to pass names of files and names of fonts. This new constructor
++was added to clearly differentiate fonts from files. Existing code is unaffected.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class6&quot;&gt;6. FSTextConstructor: added reset method.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Added a reset(int) method to allow FSTextConstructor objects to be reused 
++when generating objects for more than one Flash file. The reset method clears
++the internal table used to track the order in which characters are used. This 
++allows the same FSTextConstructor object to be used to generate multiple font
++definitions. This is particularly useful when using AWT based fonts where the 
++time taken to decode the font definitions is relatively large.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class7&quot;&gt;7. FSTextConstructor: added willDisplay method.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Added the method, willDisplay(char[]) to allow sets of characters to be 
++defined before creating any text objects.&lt;/p&gt;
++
++&lt;p&gt;This solves the bug where characters were encoded in the order they were used 
++but not in ascending order of character code. This also simplifies using 
++FSTextCOnstructor class where previously text objects had to be defined before 
++the font definition was created.&lt;/p&gt;
++
++&lt;p&gt;A corresponding canDisplay(char[]) method was added to verify that a given
++font can display all of the characters in a given set.&lt;/P&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class8&quot;&gt;8. Tidied up FSCoder class and deprecated FSCodec.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Tidied up the FSCoder class, making all methods more reliable and merging in
++functionality from Transform Utilities FSCodec. All decoding and encoding of 
++data is now performed using FSCoder. FSCodec is deprecated.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class9&quot;&gt;9. TransformUtil is now deprecated.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;with the merging of the Transform and Transform Utilities packages the 
++class TransformUtil is no longer required to provide basic version information
++and is now deprecated.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;class10&quot;&gt;10. Deprecated the FSMovieListener interface.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Deprecated the FSMovieListener interface, FSMovieEvent class and the methods 
++on the FSMovie class that used them.&lt;/p&gt;
++
++&lt;p&gt;The FSMovieListener interface was originally used to support Describe. When 
++a movie was parsed the values decoded were reported to a FSMovieListener. This 
++allowed Describe to build a tree of objects so the contents of a Flash file 
++could be browsed.&lt;/p&gt;
++
++&lt;p&gt;The interface also allowed errors to be reported so a file could be decoded 
++even if part of it was corrupted - some third-party tools are known to contain 
++bugs that generate errors. The Flash Player is robust when encountering this 
++type of error so the Movie Listener interface was an attempt to introduce 
++robustness into Transform.&lt;/p&gt;
++
++&lt;p&gt;In practice the value of the interface was limited. Files containing errors
++ which would cause errors were relatively unusual and when an error was detected 
++ it was not obvious that recovering form the error was useful.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Internal Class Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;int1&quot;&gt;1. Canonical objects are now used.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;Added canonical version of objects that can be safely shared since they 
++contain no editable attributes: FSNull, FSVoid, FSAction, FSCall, FSShowFrame
++and FSPathsArePostscript. The most significant is for FSAction which contains 
++the byte-codes for stack-based actions -this will boost performance when 
++decoding files. The numbers of objects involved for other classes are much
++smaller in comparison but are included for completeness.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;int2&quot;&gt;2. Added lazy decoding of shapes and actions.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Added lazy decoding of actions to FSButtonEvent, FSClipEvent, FSDoAction, 
++FSDefineButton and FSInitialize. Lazy decoding of the commands to draw a shape
++was added to FSShape - this affects FSDefineShape, FSDefineShape2, 
++FSDefineShape3, FSDefineMorphShape, FSDefineFont and FSDefineFont2.&lt;/p&gt;
++
++&lt;p&gt;Lazy decoding provides an enormous increase in performance. Benchmark tests
++when decoding files gave average performance increases of 15 times - with a 
++range between 0 and 420 times. Larger files gave larger performance gains.&lt;p&gt;
++
++&lt;p&gt;This is particularly important when using existing Flash files as a 
++template for customization. Simply replacing images, text and sound in a file
++does not typically need font glyphs and shapes to be decoded and using lazy 
++decoding can dramatically increase performance.&lt;/p&gt;
++
++&lt;P&gt;Lazy decoding and encoding does not require any API changes.&lt;/p&gt;
++
++&lt;h3&gt;&lt;a name=&quot;int3&quot;&gt;3. Improved decoding of JPEG image data.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;p&gt;Improved the algorithm when decoding the encoding table in the classes
++FSDefineJPEGImage2 and FSDefineJPEGImage3. The encoding table is now processed 
++correctly.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++
++&lt;h2&gt;Package Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++
++&lt;h3&gt;&lt;a name=&quot;package1&quot;&gt;1. Merged Transform and Tranform Utilities.&lt;/a&gt;&lt;/h3&gt;
++
++&lt;p&gt;Merged the classes from Transform Utilities into the Transform framework to 
++create a single release.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Additional Information&lt;/h2&gt;
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;p&gt;For Further Information please contact:&lt;/p&gt;
++
++&lt;p&gt;Stuart MacKay&lt;br/&gt;
++Flagstone Software Ltd.&lt;br/&gt;
++92 High Street&lt;br/&gt;
++Wick, Caithness KW1 4LY&lt;br/&gt;
++Scotland&lt;br/&gt;&lt;br/&gt;
++www.flagstonesoftware.com
++&lt;/div&gt;&lt;!-- section --&gt;
++&lt;/body&gt;
++&lt;/html&gt;
+
+Modified: trunk/test/suites/FSMovie.xml
+===================================================================
+--- trunk/test/suites/FSMovie.xml	2006-03-05 16:40:09 UTC (rev 119)
++++ trunk/test/suites/FSMovie.xml	2006-03-05 18:40:40 UTC (rev 120)
+@@ -267,7 +267,7 @@
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyDecoding&quot;/&gt;
++      				&lt;include name=&quot;lazyDecode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -279,7 +279,7 @@
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyDecoding&quot;/&gt;
++      				&lt;include name=&quot;lazyDecode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -291,7 +291,7 @@
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyDecoding&quot;/&gt;
++      				&lt;include name=&quot;lazyDecode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -303,7 +303,7 @@
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyDecoding&quot;/&gt;
++      				&lt;include name=&quot;lazyDecode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -314,11 +314,11 @@
+     --&gt;
+     &lt;test name=&quot;Lazy Encoding SWF4&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf4&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyEncoding&quot;/&gt;
++      				&lt;include name=&quot;lazyEncode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -326,11 +326,11 @@
+ 
+     &lt;test name=&quot;Lazy Encoding SWF5&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf5&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyEncoding&quot;/&gt;
++      				&lt;include name=&quot;lazyEncode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -338,11 +338,11 @@
+ 
+     &lt;test name=&quot;Lazy Encoding SWF6&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf6&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyEncoding&quot;/&gt;
++      				&lt;include name=&quot;lazyEncode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -350,11 +350,11 @@
+ 
+     &lt;test name=&quot;Lazy Encoding SWF7&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf7&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyEncoding&quot;/&gt;
++      				&lt;include name=&quot;lazyEncode&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+@@ -365,8 +365,8 @@
+         the reference files. 
+     --&gt;
+     &lt;test name=&quot;Encode ToText SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf4&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf4&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -377,8 +377,8 @@
+   	&lt;/test&gt;
+ 
+     &lt;test name=&quot;Encode ToText SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf5&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf5&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -389,8 +389,8 @@
+   	&lt;/test&gt;
+ 
+     &lt;test name=&quot;Encode ToText SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf6&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf6&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -401,8 +401,8 @@
+   	&lt;/test&gt;
+ 
+     &lt;test name=&quot;Encode ToText SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncoding/swf7&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyEncode/swf7&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+
+Modified: trunk/test/suites/FSMovieReference.xml
+===================================================================
+--- trunk/test/suites/FSMovieReference.xml	2006-03-05 16:40:09 UTC (rev 119)
++++ trunk/test/suites/FSMovieReference.xml	2006-03-05 18:40:40 UTC (rev 120)
+@@ -2,6 +2,8 @@
+   
+ &lt;suite name=&quot;FSMovie&quot;&gt;
+ 	
++    &lt;parameter name=&quot;logFile&quot; value=&quot;&quot;/&gt;
++
+ 	&lt;!--
+ 	    Create text dumps of the movies to use as a reference for comparing
+ 	    the files saved by the encode and clone tests.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000060.html">[Transform-svn] r119 - in trunk/test/data/images: bmp jpg png
+</A></li>
+	<LI>Next message: <A HREF="000062.html">[Transform-svn] r121 - trunk/test/data
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

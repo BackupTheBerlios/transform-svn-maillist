@@ -1,0 +1,1715 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r397%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200803280857.m2S8v3Bt027791%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000332.html">
+   <LINK REL="Next"  HREF="000334.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r397%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200803280857.m2S8v3Bt027791%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 28 09:57:03 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000332.html">[Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000334.html">[Transform-svn] r398 - in trunk: . doc doc/releases src	src/com/flagstone/transform src/com/flagstone/transform/test	src/com/flagstone/transform/util test/data test/data/scv
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#333">[ date ]</a>
+              <a href="thread.html#333">[ thread ]</a>
+              <a href="subject.html#333">[ subject ]</a>
+              <a href="author.html#333">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-28 09:56:54 +0100 (Fri, 28 Mar 2008)
+New Revision: 397
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/test/AWTFontTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/TrueTypeFontTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/WindowsFontTest.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/util/CharacterTable.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java
+   dev/dev-2-4/src/com/flagstone/transform/util/CharacterSet.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Font.java
+Log:
+Moved characters sets from CharacerTable into CharacterSet. Added new constructor to FSDefineTextField. Started refactoring tests.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineTextField.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -354,6 +354,11 @@
+ 		decode(coder, context);
+ 	}
+ 
++	public FSDefineTextField(int anIdentifier)
++	{
++		super(DefineTextField, 0);
++	}
++
+ 	/**
+ 	 * Constructs an FSDefineTextField object with the specified identifier and
+ 	 * with the size defined by the bounding rectangle. All other attributes are
+
+Added: dev/dev-2-4/src/com/flagstone/transform/test/AWTFontTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/AWTFontTest.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/test/AWTFontTest.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -0,0 +1,45 @@
++package com.flagstone.transform.test;
++
++import java.io.File;
++import java.awt.GraphicsEnvironment;
++
++import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.fail;
++
++import org.junit.BeforeClass;
++import org.junit.Test;
++
++import com.flagstone.transform.util.CharacterSet;
++import com.flagstone.transform.util.Font;
++
++public class AWTFontTest extends FontTest
++{
++	@BeforeClass
++	public static void setup()
++	{
++        destDir = new File(&quot;test/results/Font/awt&quot;);
++        
++        if (destDir.exists() == false)
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++	}
++	
++	@Test
++    public void AWTFont()
++    {
++        try
++        {
++        	CharacterSet set = new CharacterSet();
++        	set.add('a', 'z');
++        	
++            java.awt.Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
++
++            for (int i=0; i&lt;fonts.length; i++) {
++                encodeFontToFile(new Font(fonts[i]), set, new File(destDir, fonts[i].getFontName() + &quot;.swf&quot;));
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -1,144 +1,36 @@
+ package com.flagstone.transform.test;
+ 
+ import java.io.*;
+-import java.util.*;
+-import java.awt.GraphicsEnvironment;
+ 
+-import junit.framework.TestCase;
+-
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.util.*;
+ 
+-public class FontTest extends TestCase
++public class FontTest
+ {
+-    public void testAWTFont()
+-    {
+-        try
+-        {
+-            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/awt&quot;);
+-            java.awt.Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
++	protected static File destDir;
++	
++	private static int fontSize = 280;   
++	private static int width = 8000;
++	private static int height = 4000;
++	private static int margin = 400;
++    
++	private static int screenWidth = width + margin;
++	private static int screenHeight = height + margin;
+ 
+-            for (int i=0; i&lt;fonts.length; i++)
+-            {
+-                String fontName = fonts[i].getFontName();
+-
+-                File destFile = new File(destDir, fontName + &quot;.swf&quot;);
+-
+-                if (destDir.exists() == false)
+-                    assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-                encodeFontToFile(new Font(fonts[i]), destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testTrueTypeFont()
++    protected static void encodeFontToFile(Font font, CharacterSet set, File file) throws Exception
+     {
+-        FilenameFilter filter = new FilenameFilter() {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(&quot;.ttf&quot;);
+-            }
+-        };
+-
+-        try
+-        {
+-            File sourceDir = new File(&quot;test/data/ttf&quot;);
+-            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/ttf&quot;);
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-            File sourceFile = null;
+-            File destFile = null;
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	sourceFile = new File(sourceDir, files[i]);
+-            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-
+-                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testWindowsFont()
+-    {
+-        FilenameFilter filter = new FilenameFilter() {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(&quot;.ttf&quot;);
+-            }
+-        };
+-
+-        try
+-        {
+-            File sourceDir = new File(&quot;/windows/fonts&quot;);
+-            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/win&quot;);
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-            File sourceFile = null;
+-            File destFile = null;
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	sourceFile = new File(sourceDir, files[i]);
+-            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-
+-                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    private void encodeFontToFile(Font font, File file) throws Exception
+-    {
+-        int fontSize = 280;
+-        int lineSpacing = fontSize;
+-        int margin = fontSize;
+-
+         FSMovie movie = new FSMovie();
+-        ArrayList&lt;String&gt; lines = new ArrayList&lt;String&gt;();
+-        CharacterSet set = new CharacterSet();
+-        char c = 0;
+ 
+-        for (int i=0; i&lt;32; i++)
+-        {
+-            StringBuffer line = new StringBuffer();
+-
+-            for (int j=0; j&lt;64; j++, c++) {
+-                line.append((char)c);
+-            }
+-
+-            lines.add(line.toString());
+-            set.add(line.toString());
+-        }
+-
+-        int fontId = movie.newIdentifier();
+-
+-        FSDefineFont2 definition = font.defineFont(fontId, set.getCharacters());
+-        FSDefineText2 text = Text.defineTextBlock(movie.newIdentifier(), lines, definition, fontSize, FSColorTable.black(), lineSpacing);
+-
+-        int screenWidth = text.getBounds().getWidth() + margin + margin;
+-        int screenHeight = text.getBounds().getHeight() + margin + margin;
+-
++        FSDefineFont2 definition = font.defineFont(movie.newIdentifier(), set.getCharacters());    
++        FSDefineTextField text = new FSDefineTextField(movie.newIdentifier());
++        
++        text.setBounds(new FSBounds(0, 0, width, height));
++        text.setUseFontGlyphs(true);
++        text.setFontIdentifier(definition.getIdentifier());
++        text.setFontHeight(fontSize);
++        text.setColor(FSColorTable.black());
++        text.setInitialText(new String(set.getCharacters()));
++        
+         movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
+         movie.setFrameRate(1.0f);
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+
+Added: dev/dev-2-4/src/com/flagstone/transform/test/TrueTypeFontTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/TrueTypeFontTest.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/test/TrueTypeFontTest.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -0,0 +1,152 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.*;
++import java.awt.GraphicsEnvironment;
++
++import junit.framework.TestCase;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class TrueTypeFontTest extends TestCase
++{
++    public void testAWTFont()
++    {
++        try
++        {
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/awt&quot;);
++            java.awt.Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
++
++            for (int i=0; i&lt;fonts.length; i++)
++            {
++                String fontName = fonts[i].getFontName();
++
++                File destFile = new File(destDir, fontName + &quot;.swf&quot;);
++
++                if (destDir.exists() == false)
++                    assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++                encodeFontToFile(new Font(fonts[i]), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testTrueTypeFont()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;test/data/ttf&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/ttf&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testWindowsFont()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;/windows/fonts&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/win&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    private void encodeFontToFile(Font font, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;
++        int margin = fontSize;
++
++        FSMovie movie = new FSMovie();
++        ArrayList&lt;String&gt; lines = new ArrayList&lt;String&gt;();
++        CharacterSet set = new CharacterSet();
++        char c = 0;
++
++        for (int i=0; i&lt;32; i++)
++        {
++            StringBuffer line = new StringBuffer();
++
++            for (int j=0; j&lt;64; j++, c++) {
++                line.append((char)c);
++            }
++
++            lines.add(line.toString());
++            set.add(line.toString());
++        }
++
++        int fontId = movie.newIdentifier();
++
++        FSDefineFont2 definition = font.defineFont(fontId, set.getCharacters());
++        FSDefineText2 text = Text.defineTextBlock(movie.newIdentifier(), lines, definition, fontSize, FSColorTable.black(), lineSpacing);
++
++        int screenWidth = text.getBounds().getWidth() + margin + margin;
++        int screenHeight = text.getBounds().getHeight() + margin + margin;
++
++        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(definition);
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+Added: dev/dev-2-4/src/com/flagstone/transform/test/WindowsFontTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/WindowsFontTest.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/test/WindowsFontTest.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -0,0 +1,152 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.*;
++import java.awt.GraphicsEnvironment;
++
++import junit.framework.TestCase;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class WindowsFontTest extends TestCase
++{
++    public void testAWTFont()
++    {
++        try
++        {
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/awt&quot;);
++            java.awt.Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
++
++            for (int i=0; i&lt;fonts.length; i++)
++            {
++                String fontName = fonts[i].getFontName();
++
++                File destFile = new File(destDir, fontName + &quot;.swf&quot;);
++
++                if (destDir.exists() == false)
++                    assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++                encodeFontToFile(new Font(fonts[i]), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testTrueTypeFont()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;test/data/ttf&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/ttf&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testWindowsFont()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;/windows/fonts&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/win&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    private void encodeFontToFile(Font font, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;
++        int margin = fontSize;
++
++        FSMovie movie = new FSMovie();
++        ArrayList&lt;String&gt; lines = new ArrayList&lt;String&gt;();
++        CharacterSet set = new CharacterSet();
++        char c = 0;
++
++        for (int i=0; i&lt;32; i++)
++        {
++            StringBuffer line = new StringBuffer();
++
++            for (int j=0; j&lt;64; j++, c++) {
++                line.append((char)c);
++            }
++
++            lines.add(line.toString());
++            set.add(line.toString());
++        }
++
++        int fontId = movie.newIdentifier();
++
++        FSDefineFont2 definition = font.defineFont(fontId, set.getCharacters());
++        FSDefineText2 text = Text.defineTextBlock(movie.newIdentifier(), lines, definition, fontSize, FSColorTable.black(), lineSpacing);
++
++        int screenWidth = text.getBounds().getWidth() + margin + margin;
++        int screenHeight = text.getBounds().getHeight() + margin + margin;
++
++        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(definition);
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/CharacterSet.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/CharacterSet.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/util/CharacterSet.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -33,13 +33,266 @@
+ 
+ public class CharacterSet 
+ {
+-	private static HashMap&lt;String,CharacterSet&gt; sets;
++    public final static char[] ISO646 = {
++        '\u0020', // space
++        '\u0021', // exclamation mark
++        '\u0022', // quotation mark
++        '\u0023', // number sign
++        '\u0024', // dollar sign
++        '\u0025', // percent sign
++        '\u0026', // ampersand
++        '\'',     // apostrophe
++        '\u0028', // left parenthesis
++        '\u0029', // right parenthesis
++        '\u002A', // asterisk
++        '\u002B', // plus sign
++        '\u002C', // comma
++        '\u002D', // hyphen or minus
++        '\u002E', // full stop
++        '\u002F', // forward slash
++        '\u0030', // digit zero
++        '\u0031', // digit one
++        '\u0032', // digit two
++        '\u0033', // digit three
++        '\u0034', // digit four
++        '\u0035', // digit five
++        '\u0036', // digit six
++        '\u0037', // digit seven
++        '\u0038', // digit eight
++        '\u0039', // digit nine
++        '\u003A', // colon
++        '\u003B', // semicolon
++        '\u003C', // less than sign
++        '\u003D', // equals sign
++        '\u003E', // greater than sign
++        '\u003F', // question mark
++        '\u0040', // commercial at
++        '\u0041', // upper case A
++        '\u0042', // upper case B
++        '\u0043', // upper case C
++        '\u0044', // upper case D
++        '\u0045', // upper case E
++        '\u0046', // upper case F
++        '\u0047', // upper case G
++        '\u0048', // upper case H
++        '\u0049', // upper case I
++        '\u004A', // upper case J
++        '\u004B', // upper case K
++        '\u004C', // upper case L
++        '\u004D', // upper case M
++        '\u004E', // upper case N
++        '\u004F', // upper case O
++        '\u0050', // upper case P
++        '\u0051', // upper case Q
++        '\u0052', // upper case R
++        '\u0053', // upper case S
++        '\u0054', // upper case T
++        '\u0055', // upper case U
++        '\u0056', // upper case V
++        '\u0057', // upper case W
++        '\u0058', // upper case X
++        '\u0059', // upper case Y
++        '\u005A', // upper case Z
++        '\u005B', // left square bracket
++        '\\',     // backslash
++        '\u005D', // right square bracket
++        '\u005E', // circumflex
++        '\u005F', // underscore
++        '\u0060', // grave
++        '\u0061', // lower case A
++        '\u0062', // lower case B
++        '\u0063', // lower case C
++        '\u0064', // lower case D
++        '\u0065', // lower case E
++        '\u0066', // lower case F
++        '\u0067', // lower case G
++        '\u0068', // lower case H
++        '\u0069', // lower case I
++        '\u006A', // lower case J
++        '\u006B', // lower case K
++        '\u006C', // lower case L
++        '\u006D', // lower case M
++        '\u006E', // lower case N
++        '\u006F', // lower case O
++        '\u0070', // lower case P
++        '\u0071', // lower case Q
++        '\u0072', // lower case R
++        '\u0073', // lower case S
++        '\u0074', // lower case T
++        '\u0075', // lower case U
++        '\u0076', // lower case V
++        '\u0077', // lower case W
++        '\u0078', // lower case X
++        '\u0079', // lower case Y
++        '\u007A', // lower case Z
++        '\u007B', // left curly bracket
++        '\u007C', // vertical line
++        '\u007D', // right curly bracket
++        '\u007E', // tilde
++    };
++
++    public final static char[] DE = {
++        '\u00A2', // cent sign
++        '\u00C1', // upper case letter A with acute
++        '\u00D6', // upper case letter O with diaresis
++        '\u00DC', // upper case letter U with diaresis
++        '\u00DF', // lower case letter Sharp S (German)
++        '\u00E1', // lower case letter A with acute
++        '\u00F6', // lower case letter O with diaresis
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] DK = {
++        '\u00C5', // upper case letter A with ring above
++        '\u00C6', // upper case letter AE
++        '\u00D8', // upper case letter O with stroke
++        '\u00E5', // lower case letter A with ring above
++        '\u00E6', // lower case letter AE
++        '\u00F8', // lower case letter O with stroke
++    };
++
++    public final static char[] GB = {
++        '\u00A2', // cent sign
++        '\u00A3', // pound sign
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] ES = {
++        '\u00A2', // cent sign
++        '\u00C1', // upper case letter A with acute
++        '\u00C9', // upper case letter E with acute
++        '\u00CD', // upper case letter I with acute
++        '\u00D1', // upper case letter N with tilde
++        '\u00D3', // upper case letter O with acute
++        '\u00DA', // upper case letter U with acute
++        '\u00DC', // upper case letter U with diaresis
++        '\u00E1', // lower case letter A with acute
++        '\u00E9', // lower case letter E with acute
++        '\u00ED', // lower case letter I with acute
++        '\u00F1', // lower case letter N with tilde
++        '\u00F3', // lower case letter O with acute
++        '\u00FA', // lower case letter U with acute
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] FI = { 
++        '\u00A2', // cent sign
++        '\u00C4', // upper case letter A with diaresis
++        '\u00C5', // upper case letter A with ring above
++        '\u00D6', // upper case letter O with diaresis
++        '\u00E4', // lower case letter A with diaresis
++        '\u00E5', // lower case letter A with ring above
++        '\u00F6', // lower case letter O with diaresis
++        '\u0160', // upper case letter S with caron
++        '\u0161', // lower case letter S with caron
++        '\u017D', // upper case letter Z with caron
++        '\u017E', // lower case letter z with caron
++        '\u20AC', // Euro currency symbol
++    };
++    
++    public final static char[] FR = {
++        '\u00A2', // cent sign
++        '\u00C0', // upper case letter A with grave
++        '\u00C2', // upper case letter A with circumflex
++        '\u00C7', // upper case letter C with cedilla
++        '\u00C8', // upper case letter E with grave
++        '\u00C9', // upper case letter E with acute
++        '\u00CA', // upper case letter E with circumflex
++        '\u00CB', // upper case letter E with diaresis
++        '\u00CE', // upper case letter I with circumflex
++        '\u00CF', // upper case letter I with diaresis
++        '\u00D4', // upper case letter O with circumflex
++        '\u00DA', // upper case letter U with acute
++        '\u00DC', // upper case letter U with diaresis
++        '\u00E0', // lower case letter A with grave
++        '\u00E2', // lower case letter A with circumflex
++        '\u00E7', // lower case letter C with cedilla
++        '\u00E8', // lower case letter E with grave
++        '\u00E9', // lower case letter E with acute
++        '\u00EA', // lower case letter E with circumflex
++        '\u00EB', // lower case letter E with diaresis
++        '\u00EE', // lower case letter I with circumflex
++        '\u00EF', // lower case letter I with diaresis
++        '\u00F4', // lower case letter O with circumflex
++        '\u00FA', // lower case letter U with acute
++        '\u00FC', // lower case letter U with diaresis
++        '\u0152', // upper case oE ligature
++        '\u0153', // lower case oE ligature
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] IT = {
++        '\u00A2', // cent sign
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] NL = {
++        '\u0132', // upper case IJ ligature
++        '\u0133', // lower case IJ ligature
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] NO = {
++        '\u00C5', // upper case letter A with ring above
++        '\u00C6', // upper case letter AE
++        '\u00D8', // upper case letter O with stroke
++        '\u00E5', // lower case letter A with ring above
++        '\u00E6', // lower case letter AE
++        '\u00F8', // lower case letter O with stroke
++    };
++
++    public final static char[] PT = {
++        '\u00A2', // cent sign
++        '\u00C0', // upper case letter A with grave
++        '\u00C1', // upper case letter A with acute
++        '\u00C2', // upper case letter A with circumflex
++        '\u00C3', // upper case letter A with tilde
++        '\u00C7', // upper case letter C with cedilla
++        '\u00C9', // upper case letter E with acute
++        '\u00CA', // upper case letter E with circumflex
++        '\u00CD', // upper case letter I with acute
++        '\u00D3', // upper case letter O with acute
++        '\u00D4', // upper case letter O with circumflex
++        '\u00D5', // upper case letter O with tilde
++        '\u00DA', // upper case letter U with acute
++        '\u00DC', // upper case letter U with diaresis
++        '\u00E0', // lower case letter A with grave
++        '\u00E1', // lower case letter A with acute
++        '\u00E2', // lower case letter A with circumflex
++        '\u00E3', // lower case letter A with tilde
++        '\u00E7', // lower case letter C with cedilla
++        '\u00E9', // lower case letter E with acute
++        '\u00EA', // lower case letter E with circumflex
++        '\u00ED', // lower case letter I with acute
++        '\u00F3', // lower case letter O with acute
++        '\u00F4', // lower case letter O with circumflex
++        '\u00F5', // lower case letter O with tilde
++        '\u00FA', // lower case letter U with acute
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    public final static char[] SE = {
++        '\u00A2', // cent sign
++        '\u00C4', // upper case letter A with diaresis
++        '\u00C5', // upper case letter A with ring above
++        '\u00D6', // upper case letter O with diaresis
++        '\u00DF', // lower case letter Sharp S (German)
++        '\u00E4', // lower case letter A with diaresis
++        '\u00E5', // lower case letter A with ring above
++        '\u00F6', // lower case letter O with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    private static HashMap&lt;String,CharacterSet&gt; sets;
+ 	
+ 	static {
+ 		sets = new HashMap&lt;String,CharacterSet&gt;();
+ 	}
+ 	
+-	public static void addSet(String language, CharacterSet set)
++	public static void setAlphabet(String language, CharacterSet set)
+ 	{
+ 		if (language == null) {
+ 			throw new IllegalArgumentException(&quot;Language for character set cannot be null&quot;);
+@@ -50,7 +303,7 @@
+ 		sets.put(language, new CharacterSet(set));
+ 	}
+ 	
+-	public CharacterSet getCharacterSet(String language)
++	public CharacterSet getAlphabet(String language)
+ 	{
+ 		CharacterSet set = null;
+ 		
+@@ -64,13 +317,24 @@
+ 	
+ 	public CharacterSet()
+ 	{
++		table = new int[256];
+ 	}
+ 	
+-	public CharacterSet(char c)
++	public CharacterSet(int size)
+ 	{
+-		table = new int[c];
++		table = new int[size];
+ 	}
+ 	
++	public CharacterSet(char from, char to)
++	{
++		add(from, to);
++	}
++	
++	public CharacterSet(char[] array)
++	{
++		add(array);
++	}
++	
+ 	public CharacterSet(CharacterSet set)
+ 	{
+ 		table = new int[set.table.length];
+@@ -115,11 +379,11 @@
+ 		return has;
+ 	}
+ 	
+-	public void add(char c) 
++	public CharacterSet add(char c) 
+ 	{
+ 		if (c &gt; table.length)
+ 		{
+-			int[] newTable = new int[c];
++			int[] newTable = new int[c+1];
+ 			
+ 			for (int i=0; i&lt;table.length; i++) {
+ 				newTable[i] = table[i];
+@@ -134,16 +398,24 @@
+ 			table = newTable;
+ 		}
+ 		table[c] = 1;
++		
++		return this;
+ 	}
+ 	
+-	public void add(char from, char to)
++	public CharacterSet add(char from, char to)
+ 	{
+ 		if (to &lt; from) {
+ 			throw new IllegalArgumentException(&quot;End of character range is before the start.&quot;);
+ 		}
++		
++		for (int i=from; i&lt;to; i++) {
++			add((char)i);
++		}
++		
++		return this;
+ 	}
+ 	
+-	public void add(char[] array)
++	public CharacterSet add(char[] array)
+ 	{
+ 		if (array == null) {
+ 			throw new IllegalArgumentException(&quot;Array of characters cannot be null.&quot;);
+@@ -152,13 +424,16 @@
+ 		for (char c : array) {
+ 			add(c);
+ 		}
++		
++		return this;
+ 	}
+ 	
+-	public void add(String s) 
++	public CharacterSet add(String s) 
+ 	{
+ 		for (int i=0; i&lt;s.length(); i++) {
+ 			add(s.charAt(i));
+ 		}
++		return this;
+ 	}
+ 	
+ 	public void remove(char c) 
+@@ -179,6 +454,27 @@
+ 		}
+ 	}
+ 	
++	public CharacterSet remove(char[] array)
++	{
++		if (array == null) {
++			throw new IllegalArgumentException(&quot;Array of characters cannot be null.&quot;);
++		}
++		
++		for (char c : array) {
++			remove(c);
++		}
++		
++		return this;
++	}
++	
++	public CharacterSet remove(String s) 
++	{
++		for (int i=0; i&lt;s.length(); i++) {
++			remove(s.charAt(i));
++		}
++		return this;
++	}
++	
+ 	public char[] getCharacters()
+ 	{
+ 		int count = 0;
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/util/CharacterTable.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/CharacterTable.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/util/CharacterTable.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -1,664 +0,0 @@
+-/*
+- *  FSCharacterTable.java
+- *  Transform Utilities
+- *
+- * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-package com.flagstone.transform.util;
+-
+-import java.util.Locale;
+-
+-/**
+- * The FSCharacterTable class provides predefined arrays of characters that can
+- * be used with the FSTextConstructor's willDisplay() method to predefine the 
+- * characters that will be displayed using a given font.
+- * 
+- * Character sets are simply list of characters to use. The names used to 
+- * identify collections of characters use official character set names, such
+- * as iso_8859_1. However they do NOT indicate how the characters are encoded
+- * as such (all strings are encoded using UTF-8) they are simply a way of 
+- * naming a group of characters in a recognized (and standard) way.
+- * 
+- * Other sets that use characters appropriate for a specific country and 
+- * language also use ISO designations for a specific locale such as en_US
+- * or pt_BR.
+- *
+- */
+-public class CharacterTable 
+-{
+-    /*
+-     * List of character sets supported. 
+-     */
+-    
+-    /**
+-     * Code identifying a set containing the single character for the euro
+-     * currency symbol. It is included as a separate set as manly formal 
+-     * coded character sets do not include it. A separate set makes it easier
+-     * to match different sets of characters together.
+-     * 
+-     * The (Unicode) character code for this symbol is 0x20AC so it will
+-     * typically be the last character set passed to the FSTextConstructor's
+-     * willDisplay() method.
+-     */
+-    public static final int euro = 0;
+-    /**
+-     * Code identifying formal the characters defined in ISO 646.
+-     * 
+-     * Alias: ASCII
+-     */
+-    public static final int iso_646 = 1;
+-    /**
+-     * Code identifying formal the characters defined in ISO-8859-1.
+-     * 
+-     * Alias: Latin-1
+-     */
+-    public static final int iso_8859_1 = 2;
+-    
+-    /*
+-     * The ISO 646 character set is used as a base for other characters sets.
+-     * Other character sets are created by including these characters in the 
+-     * array returned by the characterSetWithCode() method. This saves space
+-     * and more importantly makes it easier to correct errors.
+-     */
+-    private final static char[] iso_646_chars = {
+-        '\u0020', // space
+-        '\u0021', // exclamation mark
+-        '\u0022', // quotation mark
+-        '\u0023', // number sign
+-        '\u0024', // dollar sign
+-        '\u0025', // percent sign
+-        '\u0026', // ampersand
+-        '\'',     // apostrophe
+-        '\u0028', // left parenthesis
+-        '\u0029', // right parenthesis
+-        '\u002A', // asterisk
+-        '\u002B', // plus sign
+-        '\u002C', // comma
+-        '\u002D', // hyphen or minus
+-        '\u002E', // full stop
+-        '\u002F', // forward slash
+-        '\u0030', // digit zero
+-        '\u0031', // digit one
+-        '\u0032', // digit two
+-        '\u0033', // digit three
+-        '\u0034', // digit four
+-        '\u0035', // digit five
+-        '\u0036', // digit six
+-        '\u0037', // digit seven
+-        '\u0038', // digit eight
+-        '\u0039', // digit nine
+-        '\u003A', // colon
+-        '\u003B', // semicolon
+-        '\u003C', // less than sign
+-        '\u003D', // equals sign
+-        '\u003E', // greater than sign
+-        '\u003F', // question mark
+-        '\u0040', // commercial at
+-        '\u0041', // upper case A
+-        '\u0042', // upper case B
+-        '\u0043', // upper case C
+-        '\u0044', // upper case D
+-        '\u0045', // upper case E
+-        '\u0046', // upper case F
+-        '\u0047', // upper case G
+-        '\u0048', // upper case H
+-        '\u0049', // upper case I
+-        '\u004A', // upper case J
+-        '\u004B', // upper case K
+-        '\u004C', // upper case L
+-        '\u004D', // upper case M
+-        '\u004E', // upper case N
+-        '\u004F', // upper case O
+-        '\u0050', // upper case P
+-        '\u0051', // upper case Q
+-        '\u0052', // upper case R
+-        '\u0053', // upper case S
+-        '\u0054', // upper case T
+-        '\u0055', // upper case U
+-        '\u0056', // upper case V
+-        '\u0057', // upper case W
+-        '\u0058', // upper case X
+-        '\u0059', // upper case Y
+-        '\u005A', // upper case Z
+-        '\u005B', // left square bracket
+-        '\\',     // backslash
+-        '\u005D', // right square bracket
+-        '\u005E', // circumflex
+-        '\u005F', // underscore
+-        '\u0060', // grave
+-        '\u0061', // lower case A
+-        '\u0062', // lower case B
+-        '\u0063', // lower case C
+-        '\u0064', // lower case D
+-        '\u0065', // lower case E
+-        '\u0066', // lower case F
+-        '\u0067', // lower case G
+-        '\u0068', // lower case H
+-        '\u0069', // lower case I
+-        '\u006A', // lower case J
+-        '\u006B', // lower case K
+-        '\u006C', // lower case L
+-        '\u006D', // lower case M
+-        '\u006E', // lower case N
+-        '\u006F', // lower case O
+-        '\u0070', // lower case P
+-        '\u0071', // lower case Q
+-        '\u0072', // lower case R
+-        '\u0073', // lower case S
+-        '\u0074', // lower case T
+-        '\u0075', // lower case U
+-        '\u0076', // lower case V
+-        '\u0077', // lower case W
+-        '\u0078', // lower case X
+-        '\u0079', // lower case Y
+-        '\u007A', // lower case Z
+-        '\u007B', // left curly bracket
+-        '\u007C', // vertical line
+-        '\u007D', // right curly bracket
+-        '\u007E', // tilde
+-    };
+-    
+-    private static final char[] iso_8859_1_chars = new char[] {
+-        '\u00A0', // non-breaking space
+-        '\u00A1', // inverted exclamation mark
+-        '\u00A2', // cent sign
+-        '\u00A3', // pound sign
+-        '\u00A4', // currency sign
+-        '\u00A5', // yen sign
+-        '\u00A6', // broken BAR
+-        '\u00A7', // section sign
+-        '\u00A8', // diaresis
+-        '\u00A9', // copyright sign
+-        '\u00AA', // feminine ordinal indicator
+-        '\u00AB', // left pointing double angle quotation mark
+-        '\u00AC', // not sign
+-        '\u00AD', // soft hyphen
+-        '\u00AE', // registered trademark sign
+-        '\u00AF', // macron
+-        '\u00B0', // degree sign
+-        '\u00B1', // plus-minus sign
+-        '\u00B2', // superscript two
+-        '\u00B3', // superscript three
+-        '\u00B4', // acute accent
+-        '\u00B5', // micro sign
+-        '\u00B6', // pilcrow sign
+-        '\u00B7', // middle dot
+-        '\u00B8', // cedilla
+-        '\u00B9', // superscript ONE
+-        '\u00BA', // masculine ordinal indicator
+-        '\u00BB', // right pointing double angle quotation mark
+-        '\u00BC', // vulgar fraction one quarter
+-        '\u00BD', // vulgar fraction one half
+-        '\u00BE', // vulgar fraction three quarters
+-        '\u00BF', // inverted question mark
+-        '\u00C0', // upper case letter A with grave
+-        '\u00C1', // upper case letter A with acute
+-        '\u00C2', // upper case letter A with circumflex
+-        '\u00C3', // upper case letter A with tilde
+-        '\u00C4', // upper case letter A with diaresis
+-        '\u00C5', // upper case letter A with ring above
+-        '\u00C6', // upper case letter AE
+-        '\u00C7', // upper case letter C with cedilla
+-        '\u00C8', // upper case letter E with grave
+-        '\u00C9', // upper case letter E with acute
+-        '\u00CA', // upper case letter E with circumflex
+-        '\u00CB', // upper case letter E with diaresis
+-        '\u00CC', // upper case letter I with grave
+-        '\u00CD', // upper case letter I with acute
+-        '\u00CE', // upper case letter I with circumflex
+-        '\u00CF', // upper case letter I with diaresis
+-        '\u00D0', // upper case letter Eth (Icelandic)
+-        '\u00D1', // upper case letter N with tilde
+-        '\u00D2', // upper case letter O with grave
+-        '\u00D3', // upper case letter O with acute
+-        '\u00D4', // upper case letter O with circumflex
+-        '\u00D5', // upper case letter O with tilde
+-        '\u00D6', // upper case letter O with diaresis
+-        '\u00D7', // multiplication sign
+-        '\u00D8', // upper case letter O with stroke
+-        '\u00D9', // upper case letter U with grave
+-        '\u00DA', // upper case letter U with acute
+-        '\u00DB', // upper case letter U with circumflex
+-        '\u00DC', // upper case letter U with diaresis
+-        '\u00DD', // upper case letter Y with acute
+-        '\u00DE', // upper case letter Thorn (Icelandic)
+-        '\u00DF', // lower case letter Sharp S (German)
+-        '\u00E0', // lower case letter A with grave
+-        '\u00E1', // lower case letter A with acute
+-        '\u00E2', // lower case letter A with circumflex
+-        '\u00E3', // lower case letter A with tilde
+-        '\u00E4', // lower case letter A with diaresis
+-        '\u00E5', // lower case letter A with ring above
+-        '\u00E6', // lower case letter AE
+-        '\u00E7', // lower case letter C with cedilla
+-        '\u00E8', // lower case letter E with grave
+-        '\u00E9', // lower case letter E with acute
+-        '\u00EA', // lower case letter E with circumflex
+-        '\u00EB', // lower case letter E with diaresis
+-        '\u00EC', // lower case letter I with grave
+-        '\u00ED', // lower case letter I with acute
+-        '\u00EE', // lower case letter I with circumflex
+-        '\u00EF', // lower case letter I with diaresis
+-        '\u00F0', // lower case letter Eth (Icelandic)
+-        '\u00F1', // lower case letter N with tilde
+-        '\u00F2', // lower case letter O with grave
+-        '\u00F3', // lower case letter O with acute
+-        '\u00F4', // lower case letter O with circumflex
+-        '\u00F5', // lower case letter O with tilde
+-        '\u00F6', // lower case letter O with diaresis
+-        '\u00F7', // division sign
+-        '\u00F8', // lower case letter O with stroke
+-        '\u00F9', // lower case letter U with grave
+-        '\u00FA', // lower case letter U with acute
+-        '\u00FB', // lower case letter U with circumflex
+-        '\u00FC', // lower case letter U with diaresis
+-        '\u00FD', // lower case letter Y with acute
+-        '\u00FE', // lower case letter Thorn (Icelandic)
+-        '\u00FF', // lower case letter Y with diaresis
+-    };
+-
+-    private final static char[] euroChar = { 
+-        '\u20AC', // Euro currency symbol
+-    };
+-    
+-    private final static char[] de_DE = {
+-        '\u00A2', // cent sign
+-        '\u00C1', // upper case letter A with acute
+-        '\u00D6', // upper case letter O with diaresis
+-        '\u00DC', // upper case letter U with diaresis
+-        '\u00DF', // lower case letter Sharp S (German)
+-        '\u00E1', // lower case letter A with acute
+-        '\u00F6', // lower case letter O with diaresis
+-        '\u00FC', // lower case letter U with diaresis
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] dk_DK = {
+-        '\u00C5', // upper case letter A with ring above
+-        '\u00C6', // upper case letter AE
+-        '\u00D8', // upper case letter O with stroke
+-        '\u00E5', // lower case letter A with ring above
+-        '\u00E6', // lower case letter AE
+-        '\u00F8', // lower case letter O with stroke
+-    };
+-
+-    private final static char[] en_GB = {
+-        '\u00A2', // cent sign
+-        '\u00A3', // pound sign
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] en_US = {
+-    };
+-    
+-    private final static char[] es_ES = {
+-        '\u00A2', // cent sign
+-        '\u00C1', // upper case letter A with acute
+-        '\u00C9', // upper case letter E with acute
+-        '\u00CD', // upper case letter I with acute
+-        '\u00D1', // upper case letter N with tilde
+-        '\u00D3', // upper case letter O with acute
+-        '\u00DA', // upper case letter U with acute
+-        '\u00DC', // upper case letter U with diaresis
+-        '\u00E1', // lower case letter A with acute
+-        '\u00E9', // lower case letter E with acute
+-        '\u00ED', // lower case letter I with acute
+-        '\u00F1', // lower case letter N with tilde
+-        '\u00F3', // lower case letter O with acute
+-        '\u00FA', // lower case letter U with acute
+-        '\u00FC', // lower case letter U with diaresis
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] fi_FI = { 
+-        '\u00A2', // cent sign
+-        '\u00C4', // upper case letter A with diaresis
+-        '\u00C5', // upper case letter A with ring above
+-        '\u00D6', // upper case letter O with diaresis
+-        '\u00E4', // lower case letter A with diaresis
+-        '\u00E5', // lower case letter A with ring above
+-        '\u00F6', // lower case letter O with diaresis
+-        '\u0160', // upper case letter S with caron
+-        '\u0161', // lower case letter S with caron
+-        '\u017D', // upper case letter Z with caron
+-        '\u017E', // lower case letter z with caron
+-        '\u20AC', // Euro currency symbol
+-    };
+-    
+-    private final static char[] fr_FR = {
+-        '\u00A2', // cent sign
+-        '\u00C0', // upper case letter A with grave
+-        '\u00C2', // upper case letter A with circumflex
+-        '\u00C7', // upper case letter C with cedilla
+-        '\u00C8', // upper case letter E with grave
+-        '\u00C9', // upper case letter E with acute
+-        '\u00CA', // upper case letter E with circumflex
+-        '\u00CB', // upper case letter E with diaresis
+-        '\u00CE', // upper case letter I with circumflex
+-        '\u00CF', // upper case letter I with diaresis
+-        '\u00D4', // upper case letter O with circumflex
+-        '\u00DA', // upper case letter U with acute
+-        '\u00DC', // upper case letter U with diaresis
+-        '\u00E0', // lower case letter A with grave
+-        '\u00E2', // lower case letter A with circumflex
+-        '\u00E7', // lower case letter C with cedilla
+-        '\u00E8', // lower case letter E with grave
+-        '\u00E9', // lower case letter E with acute
+-        '\u00EA', // lower case letter E with circumflex
+-        '\u00EB', // lower case letter E with diaresis
+-        '\u00EE', // lower case letter I with circumflex
+-        '\u00EF', // lower case letter I with diaresis
+-        '\u00F4', // lower case letter O with circumflex
+-        '\u00FA', // lower case letter U with acute
+-        '\u00FC', // lower case letter U with diaresis
+-        '\u0152', // upper case oE ligature
+-        '\u0153', // lower case oE ligature
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] it_IT = {
+-        '\u00A2', // cent sign
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] nl_NL = {
+-        '\u0132', // upper case IJ ligature
+-        '\u0133', // lower case IJ ligature
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] no_NO = {
+-        '\u00C5', // upper case letter A with ring above
+-        '\u00C6', // upper case letter AE
+-        '\u00D8', // upper case letter O with stroke
+-        '\u00E5', // lower case letter A with ring above
+-        '\u00E6', // lower case letter AE
+-        '\u00F8', // lower case letter O with stroke
+-    };
+-
+-    private final static char[] pt_PT = {
+-        '\u00A2', // cent sign
+-        '\u00C0', // upper case letter A with grave
+-        '\u00C1', // upper case letter A with acute
+-        '\u00C2', // upper case letter A with circumflex
+-        '\u00C3', // upper case letter A with tilde
+-        '\u00C7', // upper case letter C with cedilla
+-        '\u00C9', // upper case letter E with acute
+-        '\u00CA', // upper case letter E with circumflex
+-        '\u00CD', // upper case letter I with acute
+-        '\u00D3', // upper case letter O with acute
+-        '\u00D4', // upper case letter O with circumflex
+-        '\u00D5', // upper case letter O with tilde
+-        '\u00DA', // upper case letter U with acute
+-        '\u00DC', // upper case letter U with diaresis
+-        '\u00E0', // lower case letter A with grave
+-        '\u00E1', // lower case letter A with acute
+-        '\u00E2', // lower case letter A with circumflex
+-        '\u00E3', // lower case letter A with tilde
+-        '\u00E7', // lower case letter C with cedilla
+-        '\u00E9', // lower case letter E with acute
+-        '\u00EA', // lower case letter E with circumflex
+-        '\u00ED', // lower case letter I with acute
+-        '\u00F3', // lower case letter O with acute
+-        '\u00F4', // lower case letter O with circumflex
+-        '\u00F5', // lower case letter O with tilde
+-        '\u00FA', // lower case letter U with acute
+-        '\u00FC', // lower case letter U with diaresis
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    private final static char[] se_SE = {
+-        '\u00A2', // cent sign
+-        '\u00C4', // upper case letter A with diaresis
+-        '\u00C5', // upper case letter A with ring above
+-        '\u00D6', // upper case letter O with diaresis
+-        '\u00DF', // lower case letter Sharp S (German)
+-        '\u00E4', // lower case letter A with diaresis
+-        '\u00E5', // lower case letter A with ring above
+-        '\u00F6', // lower case letter O with diaresis
+-        '\u20AC', // Euro currency symbol
+-    };
+-
+-    /**
+-     * Return a predefined set of characters. An integer code is used to select 
+-     * the set to avoid possible formatting issues with names of character sets
+-     * specified as strings.
+-     * 
+-     * @param code a predefine constant identifying the character set to 
+-     * return.
+-     * 
+-     * @return an char[] contains all the characters for a given character 
+-     * set. If an unknown code is used then an empty array will be returned.
+-     */
+-    public static final char[] characterSet(int code)
+-    {
+-        char[] set = new char[0];
+-        int index = 0;
+-        
+-        switch (code)
+-        {
+-            case euro: set=euroChar; break;
+-            case iso_646: set=iso_646_chars; break;
+-            case iso_8859_1:
+-                set = new char[iso_646_chars.length+iso_8859_1_chars.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;iso_8859_1_chars.length; i++, index++)
+-                    set[index] = iso_8859_1_chars[i];
+-                 
+-                break;
+-            default:
+-                break;
+-        }
+-        
+-        return set;
+-    }
+-    /**
+-     * Return a character set for a given country and language. This method is
+-     * used to generate smaller character sets which will also reduce the size 
+-     * of the font definitions.
+-     * 
+-     * @param locale a Locale identifying the country and optional language 
+-     * used to select a character set.
+-     * 
+-     * @return an array containing all the characters suitable for display
+-     * using the specified country and language.
+-     */
+-    public static final char[] characterSetForLocale(Locale locale)
+-    {
+-        char[] set = new char[0];
+-        
+-        String country = locale.getCountry();
+-        String language = locale.getLanguage();
+-        
+-        int index = 0;
+-
+-        if (language.equals(&quot;de&quot;))
+-        {
+-            if (country.equals(&quot;DE&quot;))
+-            {
+-                set = new char[iso_646_chars.length+de_DE.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;de_DE.length; i++, index++)
+-                    set[index] = de_DE[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;dk&quot;))
+-        {
+-            if (country.equals(&quot;DK&quot;))
+-            {
+-                set = new char[iso_646_chars.length+dk_DK.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;dk_DK.length; i++, index++)
+-                    set[index] = dk_DK[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;en&quot;))
+-        {
+-            if (country.equals(&quot;US&quot;))
+-            {
+-                set = new char[iso_646_chars.length+en_US.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;en_US.length; i++, index++)
+-                    set[index] = en_US[i];            
+-            }
+-            else if (country.equals(&quot;GB&quot;) || country.equals(&quot;UK&quot;))
+-            {
+-                set = new char[iso_646_chars.length+en_GB.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;en_GB.length; i++, index++)
+-                    set[index] = en_GB[i];            
+-            }
+-            else
+-            {
+-                set = new char[iso_646_chars.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-            }
+-        }
+-        else if (language.equals(&quot;es&quot;))
+-        {
+-            if (country.equals(&quot;ES&quot;))
+-            {
+-                set = new char[iso_646_chars.length+es_ES.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;es_ES.length; i++, index++)
+-                    set[index] = es_ES[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;fi&quot;))
+-        {
+-            if (country.equals(&quot;FI&quot;))
+-            {
+-                set = new char[iso_646_chars.length+fi_FI.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;fi_FI.length; i++, index++)
+-                    set[index] = fi_FI[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;fr&quot;))
+-        {
+-            if (country.equals(&quot;FR&quot;))
+-            {
+-                set = new char[iso_646_chars.length+fr_FR.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;fr_FR.length; i++, index++)
+-                    set[index] = fr_FR[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;it&quot;))
+-        {
+-            if (country.equals(&quot;IT&quot;))
+-            {
+-                set = new char[iso_646_chars.length+it_IT.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;it_IT.length; i++, index++)
+-                    set[index] = it_IT[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;nl&quot;))
+-        {
+-            if (country.equals(&quot;NL&quot;))
+-            {
+-                set = new char[iso_646_chars.length+nl_NL.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;nl_NL.length; i++, index++)
+-                    set[index] = nl_NL[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;no&quot;))
+-        {
+-            if (country.equals(&quot;N0&quot;))
+-            {
+-                set = new char[iso_646_chars.length+no_NO.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;no_NO.length; i++, index++)
+-                    set[index] = no_NO[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;pt&quot;))
+-        {
+-            if (country.equals(&quot;PT&quot;))
+-            {
+-                set = new char[iso_646_chars.length+pt_PT.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;pt_PT.length; i++, index++)
+-                    set[index] = pt_PT[i];            
+-            }
+-        }
+-        else if (language.equals(&quot;se&quot;))
+-        {
+-            if (country.equals(&quot;SE&quot;))
+-            {
+-                set = new char[iso_646_chars.length+se_SE.length];
+-                
+-                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
+-                    set[index] = iso_646_chars[i];
+-                
+-                for (int i=0; i&lt;se_SE.length; i++, index++)
+-                    set[index] = se_SE[i];            
+-            }
+-        }
+-        return set;
+-    }
+-
+-}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Font.java	2008-03-27 21:48:05 UTC (rev 396)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Font.java	2008-03-28 08:56:54 UTC (rev 397)
+@@ -198,6 +198,8 @@
+         int characterCode = 0;
+     
+         glyphTable = new Glyph[numGlyphs];
++        charToGlyph = new short[numGlyphs];
++        glyphToChar = new short[numGlyphs];
+     
+         /*
+          * Run through all the unicode character codes looking for a corresponding glyph.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000332.html">[Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000334.html">[Transform-svn] r398 - in trunk: . doc doc/releases src	src/com/flagstone/transform src/com/flagstone/transform/test	src/com/flagstone/transform/util test/data test/data/scv
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#333">[ date ]</a>
+              <a href="thread.html#333">[ thread ]</a>
+              <a href="subject.html#333">[ subject ]</a>
+              <a href="author.html#333">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

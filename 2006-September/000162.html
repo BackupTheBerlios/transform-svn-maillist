@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r224 - trunk/doc/web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r224%20-%20trunk/doc/web&In-Reply-To=%3C200609231002.k8NA2RNj030733%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000161.html">
+   <LINK REL="Next"  HREF="000163.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r224 - trunk/doc/web</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r224%20-%20trunk/doc/web&In-Reply-To=%3C200609231002.k8NA2RNj030733%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r224 - trunk/doc/web">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Sep 23 12:02:27 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000161.html">[Transform-svn] r223 - in trunk/test: reports results
+</A></li>
+        <LI>Next message: <A HREF="000163.html">[Transform-svn] r225 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#162">[ date ]</a>
+              <a href="thread.html#162">[ thread ]</a>
+              <a href="subject.html#162">[ subject ]</a>
+              <a href="author.html#162">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-23 12:02:08 +0200 (Sat, 23 Sep 2006)
+New Revision: 224
+
+Modified:
+   trunk/doc/web/issues.html
+Log:
+Added details of encoding argument bug to web site.
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-09-22 13:41:20 UTC (rev 223)
++++ trunk/doc/web/issues.html	2006-09-23 10:02:08 UTC (rev 224)
+@@ -45,6 +45,13 @@
+ 
+ &lt;TBODY&gt;
+ 
++&lt;TR&gt;
++&lt;TD&gt;8866&lt;/TD&gt;
++&lt;TD&gt;FSImageConstructor: encoding argument is not checked.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;/TR&gt;
++
+ &lt;TR&gt;
+ &lt;TD&gt;8776&lt;/TD&gt;
+ &lt;TD&gt;Indexed PNG images lose alpha.&lt;/TD&gt;
+@@ -164,6 +171,40 @@
+ 
+ &lt;h2&gt;Current Issues&lt;/h2&gt;
+ 
++&lt;H3&gt;8866. FSImageConstructor: encoding argument is not checked..&lt;/H3&gt;
++
++&lt;P&gt;The setIndexedImage() and setColorImage() methods incorrectly check the format 
++attribute rather than the argument passed to the method. The logic of the check 
++is flawed and an IllegalargumentException will be thrown.&lt;/P&gt;
++
++&lt;H4&gt;Root Cause&lt;/H4&gt;
++
++&lt;P&gt;Programming error.&lt;/P&gt;
++
++&lt;H4&gt;Workaround?&lt;/H4&gt;
++
++&lt;P&gt;In the file, FSImageConstructor.java replace line 568:&lt;/P&gt;
++
++&lt;pre&gt;        if (format != IDX8 || encoding != IDXA)&lt;/pre&gt;
++
++&lt;p&gt;with:&lt;/p&gt;
++ 
++&lt;pre&gt;        if (encoding != IDX8 &amp;&amp; encoding != IDXA)&lt;/pre&gt;
++
++and replace line 605
++
++&lt;pre&gt;        if (format != RGB5 || format != RGB8 || format != RGBA)&lt;/pre&gt;
++
++&lt;p&gt;with:&lt;/p&gt;
++ 
++&lt;pre&gt;        if (encoding != RGB5 &amp;&amp; encoding != RGB8 &amp;&amp; encoding != RGBA)&lt;/pre&gt;
++
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
++
++&lt;P&gt;This fix will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
++
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
+ &lt;H3&gt;8751. Indexed PNG images lose alpha.&lt;/H3&gt;
+ 
+ &lt;P&gt;If an indexed PNG image is loaded into the FSImageConstructor class then any 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000161.html">[Transform-svn] r223 - in trunk/test: reports results
+</A></li>
+	<LI>Next message: <A HREF="000163.html">[Transform-svn] r225 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#162">[ date ]</a>
+              <a href="thread.html#162">[ thread ]</a>
+              <a href="subject.html#162">[ subject ]</a>
+              <a href="author.html#162">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

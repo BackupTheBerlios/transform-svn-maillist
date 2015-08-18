@@ -1,0 +1,478 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r331 - dev/dev-2-3/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r331%20-%20dev/dev-2-3/src/com/flagstone/transform/test&In-Reply-To=%3C200803141354.m2EDsJj3009328%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000266.html">
+   <LINK REL="Next"  HREF="000268.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r331 - dev/dev-2-3/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r331%20-%20dev/dev-2-3/src/com/flagstone/transform/test&In-Reply-To=%3C200803141354.m2EDsJj3009328%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r331 - dev/dev-2-3/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 14 14:54:19 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000266.html">[Transform-svn] r330 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000268.html">[Transform-svn] r332 - dev/dev-2-3/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#267">[ date ]</a>
+              <a href="thread.html#267">[ thread ]</a>
+              <a href="subject.html#267">[ subject ]</a>
+              <a href="author.html#267">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-14 14:54:15 +0100 (Fri, 14 Mar 2008)
+New Revision: 331
+
+Added:
+   dev/dev-2-3/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+   dev/dev-2-3/src/com/flagstone/transform/test/FSVideoTest.java
+   dev/dev-2-3/src/com/flagstone/transform/test/VideoTests.java
+Modified:
+   dev/dev-2-3/src/com/flagstone/transform/test/AllTests.java
+Log:
+Added unit tests and suite for video classes.
+
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/test/AllTests.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/test/AllTests.java	2008-03-14 13:53:38 UTC (rev 330)
++++ dev/dev-2-3/src/com/flagstone/transform/test/AllTests.java	2008-03-14 13:54:15 UTC (rev 331)
+@@ -11,6 +11,7 @@
+         suite.addTest(DataTypeTests.suite());
+         suite.addTest(MovieObjectTests.suite());
+         suite.addTest(MovieTests.suite());
++        suite.addTest(VideoTests.suite());
+         suite.addTest(ConstructorTests.suite());
+         suite.addTest(UtilityTests.suite());
+         return suite;
+
+Added: dev/dev-2-3/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-14 13:53:38 UTC (rev 330)
++++ dev/dev-2-3/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-14 13:54:15 UTC (rev 331)
+@@ -0,0 +1,184 @@
++/*
++ * FSVideoTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.ArrayList;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++import junit.framework.Test;
++import junit.framework.TestCase;
++import junit.framework.TestSuite;
++
++public class FSScreenVideoPacketTest extends TestCase
++{
++    /**
++     * The main method allows the tests to be run from the command line:
++     *
++     *  FSScreenVideoPacketTest &lt;source&gt; &lt;dest&gt;
++     *
++     *  where,
++     *
++     *   &lt;source&gt; the source directory where the image files may be found.
++     *   &lt;dest&gt;   the destination directory where files will be written to.
++     *
++     * @param args arguments passed to the class when executed.
++     */
++    public static void main(String[] args)
++    {
++        junit.textui.TestRunner.run(suite(args[0], args[1]));
++    }
++
++    public static Test suite(String source, String dest)
++    {
++        TestSuite suite= new TestSuite();
++
++        suite.addTest(new FSScreenVideoPacketTest(source, dest, &quot;testEncode&quot;));
++
++        return suite;
++    }
++
++    private File sourceDir = null;
++    private File destDir = null;
++    private String[] files = null;
++
++    public FSScreenVideoPacketTest()
++    {
++        sourceDir = new File(&quot;test/data/scv&quot;);
++        destDir = new File(&quot;test/results/FSVideoConstructor&quot;);
++    }
++
++    public FSScreenVideoPacketTest(String srcDir, String dstDir, String method)
++    {
++    	super(method);
++
++    	sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++    }
++
++    protected void setUp()
++    {
++        FilenameFilter filter = new FilenameFilter()
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.png&quot;);
++            }
++        };
++
++        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
++
++        files = sourceDir.list(filter);
++
++        if (destDir.exists() == false) {
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++        }
++    }
++
++    public void testEncode()
++    {
++		File dir = new File(destDir, &quot;encode&quot;);
++
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++        try
++        {
++            FSImageConstructor imageConstructor = new FSImageConstructor(new File(sourceDir, files[0]).getAbsolutePath());
++
++            int screenWidth = imageConstructor.getWidth();
++            int screenHeight = imageConstructor.getHeight();
++
++            int blockWidth = 64;
++            int blockHeight = 64;
++
++            int numberOfFrames = files.length;
++            int deblocking = 0;
++            boolean smoothing = false;
++            int codec = FSVideo.ScreenVideo;
++
++            File destFile = new File(dir, sourceDir.getName()+&quot;.swf&quot;);
++            
++            FSMovie movie = new FSMovie();
++            int identifier = movie.newIdentifier();
++            
++            movie.setFrameSize(new FSBounds(0,0,screenWidth*20,screenHeight*20));
++            movie.setFrameRate(4.0f);
++            movie.add(new FSSetBackgroundColor(FSColorTable.aliceblue()));
++                          
++            movie.add(new FSDefineVideo(identifier, numberOfFrames, screenWidth, screenHeight, deblocking, smoothing, codec));     
++            
++            ArrayList prev = imageConstructor.getImageAsBlocks(blockWidth, blockHeight);
++            ArrayList next;
++            ArrayList delta;
++            
++        	FSScreenVideoPacket packet = new FSScreenVideoPacket(true, codec, screenWidth, screenHeight, blockWidth, blockHeight, prev);
++            
++        	movie.add(new FSPlaceObject2(identifier, 1, 0,0));
++            movie.add(new FSVideoFrame(identifier, 0, packet.encode()));
++            movie.add(new FSShowFrame());
++  
++        	for (int i=1; i&lt;numberOfFrames; i++)
++	    	{
++                File srcFile = new File(sourceDir, files[i]);
++
++                imageConstructor.setImageFromFile(srcFile.getAbsolutePath());                                
++                next = imageConstructor.getImageAsBlocks(blockWidth, blockHeight);
++                
++        		delta = new ArrayList(prev.size());
++        		
++        		for (int j=0; j&lt;prev.size(); j++)
++        		{
++        			if (!prev.get(j).equals(next.get(j))) {
++        				delta.add(next.get(j));
++        			}
++        			else {
++        				delta.add(new FSImageBlock(0,0,null));
++        			}
++        		}
++                
++            	packet = new FSScreenVideoPacket(false, codec, screenWidth, screenHeight, blockWidth, blockHeight, delta);
++                
++            	movie.add(new FSPlaceObject2(1, i/65535.0f, 0,0));
++                movie.add(new FSVideoFrame(identifier, i, packet.encode()));
++                movie.add(new FSShowFrame());
++	    	}
++            
++            movie.encodeToFile(destFile.getAbsolutePath());
++        }
++        catch (Exception e)
++        {
++        	e.printStackTrace();
++            fail(e.toString());
++        }
++    }
++}
+
+Added: dev/dev-2-3/src/com/flagstone/transform/test/FSVideoTest.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/test/FSVideoTest.java	2008-03-14 13:53:38 UTC (rev 330)
++++ dev/dev-2-3/src/com/flagstone/transform/test/FSVideoTest.java	2008-03-14 13:54:15 UTC (rev 331)
+@@ -0,0 +1,173 @@
++/*
++ * FSVideoTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.io.*;
++
++import com.flagstone.transform.*;
++
++import junit.framework.Test;
++import junit.framework.TestCase;
++import junit.framework.TestSuite;
++
++public class FSVideoTest extends TestCase
++{
++    /**
++     * The main method allows the tests to be run from the command line:
++     *
++     *  FSVideoTest &lt;source&gt; &lt;dest&gt;
++     *
++     *  where,
++     *
++     *   &lt;source&gt; the source directory where the flash files may be found.
++     *   &lt;dest&gt;   the destination directory where files will be written to.
++     *
++     * @param args arguments passed to the class when executed.
++     */
++    public static void main(String[] args)
++    {
++        junit.textui.TestRunner.run(suite(args[0], args[1]));
++    }
++
++    public static Test suite(String source, String dest)
++    {
++        TestSuite suite= new TestSuite();
++
++        suite.addTest(new FSVideoTest(source, dest, &quot;testDecode&quot;));
++        suite.addTest(new FSVideoTest(source, dest, &quot;testEncode&quot;));
++        suite.addTest(new FSVideoTest(source, dest, &quot;testClone&quot;));
++
++        return suite;
++    }
++
++    private File sourceDir = null;
++    private File destDir = null;
++    private String[] files = null;
++
++    public FSVideoTest()
++    {
++        sourceDir = new File(&quot;test/data/flv&quot;);
++        destDir = new File(&quot;test/results/FSVideo&quot;);
++    }
++
++    public FSVideoTest(String srcDir, String dstDir, String method)
++    {
++    	super(method);
++
++    	sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++    }
++
++    protected void setUp()
++    {
++        FilenameFilter filter = new FilenameFilter()
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.flv&quot;);
++            }
++        };
++
++        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
++
++        files = sourceDir.list(filter);
++
++        if (destDir.exists() == false) {
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++        }
++    }
++
++    public void testDecode()
++    {
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                new FSVideo(new File(sourceDir, files[i]).getPath());
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testEncode()
++    {
++		File dir = new File(destDir, &quot;encode&quot;);
++
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++		for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSVideo video = new FSVideo(srcFile.getPath());
++
++                video.encodeToFile(destFile.getPath());
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testClone()
++    {
++		File dir = new File(destDir, &quot;clone&quot;);
++
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSVideo video = new FSVideo(srcFile.getPath());
++
++                FSVideo clone = (FSVideo)video.clone();
++                clone.encodeToFile(destFile.getPath());
++           }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++}
+
+Added: dev/dev-2-3/src/com/flagstone/transform/test/VideoTests.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/test/VideoTests.java	2008-03-14 13:53:38 UTC (rev 330)
++++ dev/dev-2-3/src/com/flagstone/transform/test/VideoTests.java	2008-03-14 13:54:15 UTC (rev 331)
+@@ -0,0 +1,15 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class VideoTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSVideoTest.class);
++        suite.addTestSuite(FSScreenVideoPacketTest.class);
++        return suite;
++    }
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000266.html">[Transform-svn] r330 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000268.html">[Transform-svn] r332 - dev/dev-2-3/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#267">[ date ]</a>
+              <a href="thread.html#267">[ thread ]</a>
+              <a href="subject.html#267">[ subject ]</a>
+              <a href="author.html#267">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

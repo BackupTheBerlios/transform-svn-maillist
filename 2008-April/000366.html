@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r430%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804022122.m32LMdEC006334%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000365.html">
+   <LINK REL="Next"  HREF="000367.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r430%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804022122.m32LMdEC006334%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  2 23:22:39 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000365.html">[Transform-svn] r429 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000367.html">[Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#366">[ date ]</a>
+              <a href="thread.html#366">[ thread ]</a>
+              <a href="subject.html#366">[ subject ]</a>
+              <a href="author.html#366">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-02 23:22:37 +0200 (Wed, 02 Apr 2008)
+New Revision: 430
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+Log:
+Added methods to read compiled actionscript from a file. 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-02 21:22:00 UTC (rev 429)
++++ dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-02 21:22:37 UTC (rev 430)
+@@ -30,6 +30,10 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.io.File;
++import java.io.FileInputStream;
++import java.io.IOException;
++
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.HashMap;
+@@ -496,6 +500,36 @@
+ 	};
+ 
+ 	/**
++	 * Get an array of encoded actions from a file.
++	 * 
++	 * @param path
++	 *            the path to the file containing the compiled actionscript.
++	 */
++	public static byte[] actionsFromFile(String path) throws IOException
++	{
++		return actionsFromFile(new File(path));
++	}
++	
++	/**
++	 * Get an array of encoded actions from a file.
++	 * 
++	 * @param file
++	 *            the file containing the compiled actionscript.
++	 */
++	public static byte[] actionsFromFile(File file) throws IOException
++	{
++		FileInputStream fileContents = new FileInputStream(file);
++
++		int fileLength = (int) file.length();
++		byte[] contents = new byte[fileLength];
++
++		fileContents.read(contents);
++		fileContents.close();
++		
++		return contents;
++	}
++	
++	/**
+ 	 * Create a copy of an array of actions.
+ 	 * 
+ 	 * Use this method if you are writing a plug-in class that contains an array
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000365.html">[Transform-svn] r429 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000367.html">[Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#366">[ date ]</a>
+              <a href="thread.html#366">[ thread ]</a>
+              <a href="subject.html#366">[ subject ]</a>
+              <a href="author.html#366">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

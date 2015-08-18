@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r209 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r209%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200609030248.k832mc6w026910%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000148.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r209 - trunk/src/com/flagstone/transform</H1>
+    <B>denis_bohm at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r209%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200609030248.k832mc6w026910%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r209 - trunk/src/com/flagstone/transform">denis_bohm at mail.berlios.de
+       </A><BR>
+    <I>Sun Sep  3 04:48:38 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000148.html">[Transform-svn] r210 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#147">[ date ]</a>
+              <a href="thread.html#147">[ thread ]</a>
+              <a href="subject.html#147">[ subject ]</a>
+              <a href="author.html#147">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: denis_bohm
+Date: 2006-09-03 04:47:36 +0200 (Sun, 03 Sep 2006)
+New Revision: 209
+
+Modified:
+   trunk/src/com/flagstone/transform/FSVideoFrame.java
+Log:
+fix improperly initialize identifier
+
+Modified: trunk/src/com/flagstone/transform/FSVideoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-07-07 09:35:41 UTC (rev 208)
++++ trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-09-03 02:47:36 UTC (rev 209)
+@@ -95,7 +95,9 @@
+     public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
+     {
+         super(VideoFrame);
+-        setIdentifier(identifier);
++// -denis
++//        setIdentifier(identifier);
++        setIdentifier(anIdentifier);
+         setFrameNumber(frameNumber);
+         setData(data);
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000148.html">[Transform-svn] r210 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#147">[ date ]</a>
+              <a href="thread.html#147">[ thread ]</a>
+              <a href="subject.html#147">[ subject ]</a>
+              <a href="author.html#147">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

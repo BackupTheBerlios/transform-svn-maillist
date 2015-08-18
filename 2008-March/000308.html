@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r372%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181710.m2IHAJRD011547%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000307.html">
+   <LINK REL="Next"  HREF="000309.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r372%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181710.m2IHAJRD011547%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 18:10:19 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000307.html">[Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000309.html">[Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#308">[ date ]</a>
+              <a href="thread.html#308">[ thread ]</a>
+              <a href="subject.html#308">[ subject ]</a>
+              <a href="author.html#308">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 18:10:17 +0100 (Tue, 18 Mar 2008)
+New Revision: 372
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSQuicktimeMovie.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSQuicktimeMovie.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSQuicktimeMovie.java	2008-03-18 17:06:28 UTC (rev 371)
++++ dev/dev-2-4/src/com/flagstone/transform/FSQuicktimeMovie.java	2008-03-18 17:10:17 UTC (rev 372)
+@@ -31,130 +31,150 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSQuicktimeMovie defines the name of an external Quicktime movie to be played. 
++ * The FSQuicktimeMovie defines the name of an external Quicktime movie to be
++ * played.
++ * 
++ * &lt;p&gt;
++ * The name of the movie can be a reference to a file or to a URL.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;name&lt;/td&gt;
++ * &lt;td&gt;The name of a file or a URL referencing the file to be displayed by the
++ * Flash Player.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSQuicktimeMovie class represents the QuicktimeMovie structure from the
++ * Macromedia Flash (SWF) File Format Specification. This structure is
++ * undocumented in later versions of the specification. It is not known when it
++ * was introduced.
++ * &lt;/p&gt;
++ */
++public class FSQuicktimeMovie extends FSMovieObject
++{
++	private String path;
+ 
+-&lt;p&gt;The name of the movie can be a reference to a file or to a URL.&lt;/p&gt;
++	/**
++	 * Construct an FSQuicktimeMovie object, initialising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSQuicktimeMovie(FSCoder coder)
++	{
++		super(QuicktimeMovie);
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSQuicktimeMovie object referencing the specified file.
++	 * 
++	 * @param aString
++	 *            the file or URL where the file is located.
++	 */
++	public FSQuicktimeMovie(String aString)
++	{
++		super(QuicktimeMovie);
++		setName(aString);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSQuicktimeMovie object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSQuicktimeMovie object.
++	 */
++	public FSQuicktimeMovie(FSQuicktimeMovie obj)
++	{
++		super(obj);
++		path = new String(obj.path);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSQuicktimeMovie_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the reference to the file containing the movie.
++	 * 
++	 * @return the location of the file or URL.
++	 */
++	public String getName()
++	{
++		return path;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSQuicktimeMovie_0&quot;&gt;name&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The name of a file or a URL referencing the file to be displayed by the Flash Player.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Sets the reference to the file containing the movie.
++	 * 
++	 * @param aString
++	 *            the file or URL where the file is located.
++	 * 
++	 * throws NullPointerException if the argument is null.
++	 */
++	public void setName(String aString)
++	{
++		if (aString == null) {
++			throw new NullPointerException(&quot;Path to file cannot be null&quot;);
++		}
++		path = aString;
++	}
+ 
+-&lt;/table&gt;
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		if (super.equals(obj))
++		{
++			result = path.equals(((FSQuicktimeMovie)obj).path);
++		}
++		return result;
++	}
+ 
+-&lt;p&gt;The FSQuicktimeMovie class represents the QuicktimeMovie structure from the Macromedia Flash (SWF) File Format Specification. This structure is undocumented in later versions of the specification. It is not known when it was introduced.&lt;/p&gt;
+- */ 
+-public class FSQuicktimeMovie extends FSMovieObject
+-{
+-    private String name = null;
+-        
+-    /**
+-     * Construct an FSQuicktimeMovie object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSQuicktimeMovie(FSCoder coder)
+-    {
+-        super(QuicktimeMovie);
+-        decode(coder);
+-    }
+-    /** Constructs an FSQuicktimeMovie object referencing the specified file.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @param aString the file or URL where the file is located.
+-        */
+-    public FSQuicktimeMovie(String aString)
+-    {
+-        super(QuicktimeMovie);
+-        setName(aString);
+-    }
+-    /**
+-     * Constructs an FSQuicktimeMovie object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSQuicktimeMovie object.
+-     */
+-    public FSQuicktimeMovie(FSQuicktimeMovie obj)
+-    {
+-        super(obj);
+-        name = new String(obj.name);
+-    }    
++		buffer.append(&quot;FSQuicktimeMovie: { &quot;);
++		buffer.append(&quot;name = &quot;).append(path).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Gets the reference to the file containing the movie.
++		return buffer.toString();
++	}
+ 
+-        @return the location of the file or URL.
+-        */
+-    public String getName() { return name; }
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-    /** Sets the reference to the file containing the movie.
++		length += FSCoder.strlen(path, true);
+ 
+-        @param aString the file or URL where the file is located.
+-        */
+-    public void setName(String aString)
+-    {
+-        name = aString;
+-    }
++		return length;
++	}
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSQuicktimeMovie typedObject = (FSQuicktimeMovie)anObject;
+-            
+-            if (name != null)
+-                result = name.equals(typedObject.name);
+-            else
+-                result = name == typedObject.name;
+-        }
+-        return result;
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeString(path);
++		coder.writeWord(0, 1);
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;name&quot;, name);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-
+-        length += coder.strlen(name, true);
+-
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeString(name);
+-        coder.writeWord(0, 1);
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        name = coder.readString();
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		path = coder.readString();
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000307.html">[Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000309.html">[Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#308">[ date ]</a>
+              <a href="thread.html#308">[ thread ]</a>
+              <a href="subject.html#308">[ subject ]</a>
+              <a href="author.html#308">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

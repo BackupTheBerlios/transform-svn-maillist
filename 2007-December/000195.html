@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r259 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r259%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712211617.lBLGHXOH025343%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000194.html">
+   <LINK REL="Next"  HREF="000196.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r259 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r259%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712211617.lBLGHXOH025343%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r259 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Dec 21 17:17:33 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000194.html">[Transform-svn] r258 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000196.html">[Transform-svn] r260 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#195">[ date ]</a>
+              <a href="thread.html#195">[ thread ]</a>
+              <a href="subject.html#195">[ subject ]</a>
+              <a href="author.html#195">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-21 17:17:29 +0100 (Fri, 21 Dec 2007)
+New Revision: 259
+
+Modified:
+   trunk/src/com/flagstone/transform/FSFrameLabel.java
+Log:
+Corrected errors in documentation.
+
+Modified: trunk/src/com/flagstone/transform/FSFrameLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFrameLabel.java	2007-12-21 16:15:59 UTC (rev 258)
++++ trunk/src/com/flagstone/transform/FSFrameLabel.java	2007-12-21 16:17:29 UTC (rev 259)
+@@ -1,30 +1,30 @@
+ /*
+  * FSFrameLabel.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+@@ -34,8 +34,8 @@
+ import java.util.Iterator;
+ 
+ /**
+-FSFrameLabel defines a name for the current frame in a movie or movie clip. 
+-  
++FSFrameLabel defines a name for the current frame in a movie or movie clip.
++
+ &lt;p&gt;The name can be referenced from other objects such as FSGotoFrame2 to simplify the creation of scripts to control movies by using a predefined name rather than the frame number. The label assigned to a particular frame should be unique. Frames may also be reference externally when specifying the movie to play using a URL - similar to the way names links are used in HTML. When the Flash Player loaded a movie it will begin playing at the frame specified in the URL.&lt;/p&gt;
+ 
+ &lt;table class=&quot;datasheet&quot;&gt;
+@@ -149,14 +149,14 @@
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+ &lt;p&gt;The FSFrameLabel class represents the FrameLabel tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3. In Flash 6 the label can support named anchors which allows a frame to be specified as the starting point when displaying a Flash movie in a web browser.&lt;/p&gt;
+- */  
++ */
+ public class FSFrameLabel extends FSMovieObject
+ {
+     private String label = null;
+ // Flash 6
+     private boolean anchor = false;
+ // End Flash 6
+-        
++
+     FSFrameLabel()
+     {
+         super(FrameLabel);
+@@ -165,7 +165,7 @@
+     /**
+      * Construct an FSFrameLabel object, initalizing it with values decoded from
+      * an encoded object.
+-     * 
++     *
+      * @param coder an FSCoder containing the binary data.
+      */
+     public FSFrameLabel(FSCoder coder)
+@@ -173,7 +173,7 @@
+         super(FrameLabel);
+         decode(coder);
+     }
+-    /** Constructs an FSFrameLabel object with the specified name. 
++    /** Constructs an FSFrameLabel object with the specified name.
+ 
+         @param aString the string that defines the label that will be assigned to the current frame.
+         */
+@@ -183,10 +183,10 @@
+         setLabel(aString);
+     }
+ // Flash 6
+-    /** Constructs an FSFrameLabel object with the specified name. If the isAnchor 
+-     *  flag is true then the frame will be directly selectable by a URL and the 
++    /** Constructs an FSFrameLabel object with the specified name. If the isAnchor
++     *  flag is true then the frame will be directly selectable by a URL and the
+      *  Flash Player will begin playing the movie at the specified frame.
+-     * 
++     *
+      *  @param aString the string that defines the label that will be assigned to the current frame.
+      *  @param isAnchor if true the name will be used as an anchor when referencing the frame in a URL.
+      */
+@@ -198,7 +198,7 @@
+     }
+ // End Flash 6
+     /**
+-     * Constructs an FSFrameLabel object by copying values from an existing 
++     * Constructs an FSFrameLabel object by copying values from an existing
+      * object.
+      *
+      * @param obj an FSFrameLabel object.
+@@ -208,7 +208,7 @@
+         super(obj);
+         label = new String(label);
+         anchor = obj.anchor;
+-    }    
++    }
+ 
+     /** Gets the label.
+ 
+@@ -227,7 +227,7 @@
+ 
+ // Flash 6
+     /** Sets the label defining whether it will be referenced as an anchor or not.
+-     * 
++     *
+      *  @param aString the string that defines the label that will be assigned to the current frame.
+      *  @param isAnchor if true the name will be used as an anchor when referencing the frame in a URL.
+      */
+@@ -237,19 +237,19 @@
+         anchor = isAnchor;
+     }
+ 
+-    /** Gets the flag indicating whether the frame name is also used as an anchor 
++    /** Gets the flag indicating whether the frame name is also used as an anchor
+      *  so the frame can be referenced from outside of the movie.
+-     * 
++     *
+      *  @return true if the frame is an anchor frame, false otherwise.
+      */
+     public boolean getAnchor() { return anchor; }
+ 
+-    /** Sets the flag indicating whether the frame name is also used as an anchor 
++    /** Sets the flag indicating whether the frame name is also used as an anchor
+      *  so the frame can be referenced from outside of the movie.
+-     * 
+-     *  @return isAnchor true if the frame is an anchor frame, false otherwise.
++     *
++     *  @param isAnchor true if the frame is an anchor frame, false otherwise.
+      */
+-     public void setAnchor(boolean isAnchor)
++    public void setAnchor(boolean isAnchor)
+     {
+         anchor = isAnchor;
+     }
+@@ -258,18 +258,18 @@
+     public boolean equals(Object anObject)
+     {
+         boolean result = false;
+-        
++
+         if (super.equals(anObject))
+         {
+             FSFrameLabel typedObject = (FSFrameLabel)anObject;
+-            
++
+             if (label != null)
+                 result = label.equals(typedObject.label);
+             else
+                 result = typedObject.label == null;
+-                
++
+ // Flash 6
+-            result = result &amp;&amp;  anchor == typedObject.anchor;                
++            result = result &amp;&amp;  anchor == typedObject.anchor;
+ // Flash 7
+         }
+         return result;
+@@ -278,14 +278,14 @@
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+         buffer.append(name());
+-        
++
+         if (depth &gt; 0)
+         {
+             buffer.append(&quot;: { &quot;);
+             Transform.append(buffer, &quot;label&quot;, label);
+ // Flash 6
+             Transform.append(buffer, &quot;anchor&quot;, anchor);
+-// End Flash 6            
++// End Flash 6
+             buffer.append(&quot;}&quot;);
+         }
+     }
+@@ -299,32 +299,32 @@
+ // Flash 6
+         length += anchor ? 1 : 0;
+ // End Flash 6
+-            
++
+         return length;
+     }
+-    
++
+     public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeString(label);
+         coder.writeWord(0, 1);
+-        
++
+ // Flash 6
+         if (anchor)
+             coder.writeWord(1, 1);
+ // End Flash 6
+         coder.endObject(name());
+     }
+-    
++
+     public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+         int start = coder.getPointer();
+         int strlen = 0;
+-        
++
+         for (strlen=0; coder.scanWord(1, false) != 0; coder.adjustPointer(8), strlen++);
+-        
++
+         coder.setPointer(start);
+         label = coder.readString(strlen++);
+         coder.adjustPointer(8);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000194.html">[Transform-svn] r258 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000196.html">[Transform-svn] r260 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#195">[ date ]</a>
+              <a href="thread.html#195">[ thread ]</a>
+              <a href="subject.html#195">[ subject ]</a>
+              <a href="author.html#195">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

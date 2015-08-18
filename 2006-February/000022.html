@@ -1,0 +1,1006 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r82 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r82%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200602231232.k1NCWvSs017408%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000021.html">
+   <LINK REL="Next"  HREF="000024.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r82 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r82%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200602231232.k1NCWvSs017408%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r82 - in trunk: doc src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Thu Feb 23 13:32:57 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000021.html">[Transform-svn] r81 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000024.html">[Transform-svn] r83 - in trunk: doc src/com/flagstone/transform/tools
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-23 13:32:43 +0100 (Thu, 23 Feb 2006)
+New Revision: 82
+
+Added:
+   trunk/src/com/flagstone/transform/FSCoderException.java
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/src/com/flagstone/transform/FSNewFunction.java
+   trunk/src/com/flagstone/transform/FSNewFunction2.java
+   trunk/src/com/flagstone/transform/FSWith.java
+Log:
+    * Added a new exception class, FSCoderException to report when underflow or
+      overflow errors occur when encoding or decoding objects. Previously only
+      the more general IOException was reported. FSCoderException contains 
+      information on the location of the data structure in the file that caused
+      the error making diagnosis much easier.
+      
+    * Added new attributes to FSCoder so errors occurring during encoding or 
+      decoding can be reported to the top level methods in FSMovie without
+      having to report them using exceptions since not all encode(FSCoder) or
+      decode(FSCoder) methods check for errors.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/doc/CHANGES.txt	2006-02-23 12:32:43 UTC (rev 82)
+@@ -1,3 +1,24 @@
++2006-02-23 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Added a new exception class, FSCoderException to report when underflow or
++      overflow errors occur when encoding or decoding objects. Previously only
++      the more general IOException was reported. FSCoderException contains 
++      information on the location of the data structure in the file that caused
++      the error making diagnosis much easier.
++      
++    * Added new attributes to FSCoder so errors occurring during encoding or 
++      decoding can be reported to the top level methods in FSMovie without
++      having to report them using exceptions since not all encode(FSCoder) or
++      decode(FSCoder) methods check for errors.
++      
++    * Fixed an error is FSMovieTest so exceptions thrown when encoding or 
++      decoding files are now triggering assertions.
++
++2006-02-22 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Improved the algorithm when decoding the encoding table in the classes
++      FSDefineJPEGImage2 and FSDefineJPEGImage3.
++
+ 2006-02-21 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Added the remaining test classes from Tranform Utilities to the project
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -375,6 +375,7 @@
+             {
+                 FSActionObject action = (FSActionObject)i.next();
+                 
++                int objStart = coder.getPointer();
+                 int length = action.getLength();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+                 int next = start + (length &lt;&lt; 3);
+@@ -382,18 +383,15 @@
+                 action.encode(coder);
+                 coder.setPointer(next);
+             
+-                int delta = (next - coder.getPointer()) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+                 if (delta != 0)
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                        if (delta &lt; 0)
+-                            coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                        else if (delta &gt; 0)
+-                            coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
+                 }
+             }
+         }
+@@ -412,6 +410,8 @@
+         FSActionObject action = null;
+         
+         while ((action = FSMovie.decodeAction(coder)) != null)
+-            actions.add(action);     
++        {
++            actions.add(action);
++        }
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -503,6 +503,7 @@
+             {
+                 FSActionObject action = (FSActionObject)i.next();
+                 
++                int objStart = coder.getPointer();
+                 int length = action.getLength();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+                 int next = start + (length &lt;&lt; 3);
+@@ -510,18 +511,15 @@
+                 action.encode(coder);
+                 coder.setPointer(next);
+             
+-                int delta = (next - coder.getPointer()) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+                 if (delta != 0)
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                        if (delta &lt; 0)
+-                            coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                        else if (delta &gt; 0)
+-                            coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
+                 }
+             }
+         }
+@@ -549,6 +547,8 @@
+         FSActionObject anAction = null;
+ 
+         while ((anAction = FSMovie.decodeAction(coder)) != null)
++        {
+             actions.add(anAction);
++        }
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -55,6 +55,9 @@
+     public static final int WideCodes = 12;
+     public static final int Delta = 13;
+     public static final int CodingError = 14;
++    public static final int TypeInError = 15;
++    public static final int StartOfError = 16;
++    public static final int ExpectedLength = 17;
+     
+     static int size(int value, boolean signed)
+     {
+@@ -125,7 +128,7 @@
+     
+     String stringEncoding = &quot;UTF8&quot;;
+     
+-    public int[] context = new int[16];
++    public int[] context = new int[18];
+     
+     private byte[] data = null;
+     private int ptr = 0;
+
+Added: trunk/src/com/flagstone/transform/FSCoderException.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoderException.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSCoderException.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -0,0 +1,107 @@
++package com.flagstone.transform;
++
++import java.io.IOException;
++/**
++ * This exception is thrown when parse errors are encountered. 
++ * ParseExceptions contain information about the error that prevented 
++ * a file from being read and decoded. 
++ */
++public class FSCoderException extends IOException
++{
++    private int type = 0;
++    private int start = 0;
++    private int length = 0;
++    private int delta = 0;
++
++    /**
++     * Constructs an FSCoderException to report where a problem occured when 
++     * encoding or decoding a Flash (.swf) file.
++     * 
++     * @param type the type of object or action that was being encoded/decoded
++     * when the problem occurred.
++     * 
++     * @param start the address in the file where the data structure being 
++     * encoded/decoded is located. This is only valid for files being decoded
++     * since the encoded file will not be written if an exception occurs.
++     * 
++     * @param length the size in bytes that the data structure should take 
++     * when encoded.
++     * 
++     * @param delta the difference between the actual number of byes and the 
++     * expected length. This is negative for underflow errors and postive when
++     * the takes more bytes to encode/decode that the expected length.
++     * 
++     * @param message a message indicating the type of error - overflow or 
++     * underflow.
++     */
++    public FSCoderException(int type, int start, int length, int delta, String message)
++    {
++        super(message);
++        this.type = type;
++        this.start = start;
++        this.length = length;
++        this.delta = delta;
++    }
++    /**
++     * Returns the type identifying the FSMovieObject or FSActionObject that 
++     * caused the error.
++     * 
++     * @return the object type.
++     */
++    public int getType()
++    {
++        return type;
++    }
++    /**
++     * The byte address of the start of the object in the file being decoded.
++     * This address is not valid when encoding a Flash file since the file will
++     * probably not be encoded - though this is under the control of the software
++     * using Transform.
++     * 
++     * @return the address (offset) in bytes where the object is encoded.
++     */
++    public int getStart()
++    {
++        return start;
++    }
++    /**
++     * The calculated number of bytes the object will occupy when encoded.
++     * 
++     * @return the length in bytes that the object is expected to occupy when 
++     * encoded.
++     * 
++     */
++    public int getLength()
++    {
++        return length;
++    }
++    /**
++     * The difference between the calculated number of bytes and the actual 
++     * number of bytes when the object was encoded or decoded.
++     * 
++     * @return the difference between the actual and expected number of bytes
++     * encoded/decoded.
++     */
++    public int getDelta()
++    {
++        return delta;
++    }
++    /**
++     * Return a description of the error.
++     * 
++     * @return a string desscribing the error that caused the exception.
++     */
++    public String toString()
++    {
++        StringBuffer buffer = new StringBuffer();
++        
++        buffer.append(&quot;FSCoderException: { &quot;);
++        buffer.append(&quot;type = &quot;).append(type).append(&quot;, &quot;);
++        buffer.append(&quot;location = &quot;).append(start).append(&quot;, &quot;);
++        buffer.append(&quot;length = &quot;).append(length).append(&quot;, &quot;);
++        buffer.append(&quot;delta = &quot;).append(delta).append(&quot;, &quot;);
++        buffer.append(&quot;message = \&quot;&quot;).append(getMessage()).append(&quot;\&quot; }&quot;);
++        
++        return buffer.toString();
++    }
++}
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -361,24 +361,22 @@
+             {
+                 FSActionObject action = (FSActionObject)i.next();
+                     
++                int objStart = coder.getPointer();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+                 int next = start + (action.getLength() &lt;&lt; 3);
+                 
+                 action.encode(coder);
+                 coder.setPointer(next);
+                 
+-                int delta = (next - coder.getPointer()) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+                 
+                 if (delta != 0)
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+-    
+-/*
+-                        if (delta &lt; 0)
+-                            coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                        else if (delta &gt; 0)
+-                            coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
+                 }
+             }
+         }
+@@ -404,9 +402,10 @@
+         actions = new ArrayList();
+         FSActionObject action = null;
+         
+-        while ((action = FSMovie.decodeAction(coder)) != null)
++        while ((action = FSMovie.decodeAction(coder)) != null) 
++        {
+             actions.add(action);
+-        
++        }
+         coder.endObject(name());
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -192,33 +192,8 @@
+     {
+         super.encode(coder);
+         
+-        coder.writeWord(numberOfFrames(), 2);
+-    
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-        {
+-            FSMovieObject object = (FSMovieObject)i.next();
+-
+-            int objLength = object.getLength();
+-            int start = coder.getPointer() + ((object.getExtendLength() || objLength &gt;= 63) ? 48 : 16);
+-            int next = start + (objLength &lt;&lt; 3);
+-            
+-            object.encode(coder);
+-            coder.setPointer(next);
+-            
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
+-            
+-            if (delta != 0)
+-            {
+-                coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                    if (delta &lt; 0)
+-                        coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+-                    else if (delta &gt; 0)
+-                        coder.logError(&quot;ObjectUnderflow&quot;, next, delta);
+-*/
+-            }
+-        }
++        coder.writeWord(numberOfFrames(), 2);        
++        FSMovie.encodeObjects(coder, objects);
+         coder.writeWord(0, 2);
+         coder.endObject(name());
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -252,23 +252,21 @@
+             {
+                 FSActionObject action = (FSActionObject)i.next();
+                 
++                int objStart = coder.getPointer();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+                 int next = start + (action.getLength() &lt;&lt; 3);
+             
+                 action.encode(coder);
+             
+-                int delta = (next - coder.getPointer()) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+                 if (delta != 0)
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                        if (delta &lt; 0)
+-                            coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                        else if (delta &gt; 0)
+-                            coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
+                 }
+                 coder.setPointer(next);
+             }
+@@ -289,9 +287,10 @@
+         actions = new ArrayList();
+         FSActionObject action = null;
+         
+-        while ((action = FSMovie.decodeAction(coder)) != null)
++        while ((action = FSMovie.decodeAction(coder)) != null) 
++        {
+             actions.add(action);
+-
++        }
+         coder.endObject(name());
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -438,24 +438,22 @@
+         {
+             FSActionObject action = (FSActionObject)i.next();
+                 
++            int objStart = coder.getPointer();
+             int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+             int next = start + (action.getLength() &lt;&lt; 3);
+             
+             action.encode(coder);
+             coder.setPointer(next);
+             
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+             if (delta != 0)
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                    if (delta &lt; 0)
+-                        coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                    else if (delta &gt; 0)
+-                        coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                coder.context[FSCoder.TypeInError] = action.getType();
++                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                coder.context[FSCoder.Delta] = delta;
+             }
+         }
+ 
+@@ -465,24 +463,22 @@
+             {
+                 FSActionObject action = (FSActionObject)i.next();
+                 
++                int objStart = coder.getPointer();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+                 int next = start + (action.getLength() &lt;&lt; 3);
+             
+                 action.encode(coder);
+                 coder.setPointer(next);
+             
+-                int delta = (next - coder.getPointer()) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+                 if (delta != 0)
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                        if (delta &lt; 0)
+-                            coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                        else if (delta &gt; 0)
+-                            coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
+                 }
+             }
+         }
+@@ -493,24 +489,22 @@
+             {
+                 FSActionObject action = (FSActionObject)i.next();
+                 
++                int objStart = coder.getPointer();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+                 int next = start + (action.getLength() &lt;&lt; 3);
+             
+                 action.encode(coder);
+                 coder.setPointer(next);
+             
+-                int delta = (next - coder.getPointer()) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+                 if (delta != 0)
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                        if (delta &lt; 0)
+-                            coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                        else if (delta &gt; 0)
+-                            coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
+                 }
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -221,24 +221,22 @@
+         {
+             FSActionObject action = (FSActionObject)i.next();
+                 
++            int objStart = coder.getPointer();
+             int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+             int next = start + (action.getLength() &lt;&lt; 3);
+             
+             action.encode(coder);
+             coder.setPointer(next);
+             
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+             if (delta != 0)
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                    if (delta &lt; 0)
+-                        coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                    else if (delta &gt; 0)
+-                        coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                coder.context[FSCoder.TypeInError] = action.getType();
++                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                coder.context[FSCoder.Delta] = delta;
+             }
+         }
+         coder.writeWord(0, 1);
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -160,10 +160,37 @@
+ */  
+ public final class FSMovie implements Cloneable
+ {
++    static void encodeObjects(FSCoder coder, ArrayList array)
++    {
++        for (Iterator i = array.iterator(); i.hasNext();)
++        {
++            FSMovieObject object = (FSMovieObject)i.next();
++
++            int objStart = coder.getPointer();
++            int objLength = object.getLength();
++            int start = coder.getPointer() + ((object.getExtendLength() || objLength &gt;= 63) ? 48 : 16);
++            int next = start + (objLength &lt;&lt; 3);
++            
++            object.encode(coder);
++            coder.setPointer(next);
++            
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
++            
++            if (delta != 0)
++            {
++                coder.context[FSCoder.CodingError] = 1;
++                coder.context[FSCoder.TypeInError] = object.getType();
++                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                coder.context[FSCoder.Delta] = delta;
++            }
++        }
++    }
+     static FSMovieObject decodeObject(FSCoder coder)
+     {
+         FSMovieObject currentObject = null;
+         
++        int objStart = coder.getPointer();
+         int type = coder.scanWord(2, false) &gt;&gt; 6;
+         int length = coder.scanWord(2, false) &amp; 0x3F;
+         int next = coder.getPointer() + 16 + (length &lt;&lt; 3);
+@@ -368,14 +395,17 @@
+                 break;
+         }
+ 
+-        int delta = (next - coder.getPointer()) &gt;&gt; 3;
++        int delta = (coder.getPointer() - next) &gt;&gt; 3;
+ 
+-        if (delta &lt; 0)
+-            coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+-        else if (delta &gt; 0)
+-            coder.logError(&quot;ObjectUnderflow&quot;, next, delta);
+-            
+-        coder.context[FSCoder.Delta] = delta;
++        if (delta != 0)
++        {
++            coder.context[FSCoder.CodingError] = 1;
++            coder.context[FSCoder.TypeInError] = currentObject.getType();
++            coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++            coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++            coder.context[FSCoder.Delta] = delta;
++        }
++        
+         coder.setPointer(next);
+         
+         if (identifier != 0)
+@@ -388,6 +418,7 @@
+     {
+         FSActionObject anAction = null;
+         
++        int objStart = coder.getPointer();
+         int type = coder.scanWord(1, false);
+         int length = 0;
+         int start = coder.getPointer() + 8;
+@@ -575,14 +606,17 @@
+                 break;
+         }
+             
+-        int delta = (next - coder.getPointer()) &gt;&gt; 3;
++        int delta = (coder.getPointer() - next) &gt;&gt; 3;
+ 
+-        if (delta &lt; 0)
+-            coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+-        else if (delta &gt; 0)
+-            coder.logError(&quot;ObjectUnderflow&quot;, next, delta);
++        if (delta != 0)
++        {
++            coder.context[FSCoder.CodingError] = 1;
++            coder.context[FSCoder.TypeInError] = anAction.getType();
++            coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++            coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++            coder.context[FSCoder.Delta] = delta;
++        }
+ 
+-        coder.context[FSCoder.Delta] = delta;
+         coder.setPointer(next);
+ 
+         return anAction;
+@@ -658,12 +692,13 @@
+      * 	file to generate an array of objects representing the Flash file. If 
+      * an error occurs while reading and parsing the file then an exception is 
+      * thrown.
+-        
+-        @param fileName the path to the Flash file that will be parsed.
+-        @throws FileNotFoundException - if an error occurs while reading the file.
+-        @throws DataFormatException - if the file does not contain Flash data.
+-        @throws IOException - if an error occurs while reading and decoding the file.
+-        */
++     * 
++     * @param fileName the path to the Flash file that will be parsed.
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws DataFormatException - if the file does not contain Flash data.
++     * @throws FSCoderException - if an error occurs while decoding the file.
++     * @throws IOException - if an I/O error occurs while reading the file.
++     */
+     public FSMovie(String fileName) throws FileNotFoundException, DataFormatException, IOException
+     {
+         decodeFromFile(fileName);
+@@ -689,10 +724,11 @@
+      * Constructs an FSMovie object and decodes the binary data presented in the byte array to generate 
+      * an array of objects representing the Flash data. If an error occurs while parsing the data then 
+      * an Exception is thrown.
+-             
++     *      
+      * @param data an array of bytes containing the Flash binary data.
+-        @throws DataFormatException - if the file does not contain Flash data.
+-        @throws IOException - if an error occurs while reading and decoding the data.
++     * @throws DataFormatException - if the file does not contain Flash data.
++     * @throws FSCoderException - if an error occurs while decoding the file.
++     * @throws IOException - if an I/O error occurs while reading the file.
+      */
+     public FSMovie(byte[] data) throws DataFormatException, IOException
+     {
+@@ -930,9 +966,10 @@
+      * an error occurs while reading and parsing the file then an exception is thrown.
+      *
+      * @param fileName the path to the Flash file that will be parsed.
+-        @throws FileNotFoundException - if an error occurs while reading the file.
+-        @throws DataFormatException - if the file does not contain Flash data.
+-        @throws IOException - if an error occurs while reading and decoding the file.
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws DataFormatException - if the file does not contain Flash data.
++     * @throws FSCoderException - if an error occurs while decoding the file.
++     * @throws IOException - if an I/O error occurs while reading the file.
+      */
+     public void decodeFromFile(String fileName) throws FileNotFoundException, DataFormatException, IOException
+     {
+@@ -1005,9 +1042,10 @@
+     * contain the last tag successfully decoded.
+     *
+     * @param bytes an array of bytes that contain the encoded Flash objects.
+-    *
+-        @throws DataFormatException - if the file does not contain Flash data.
+-        @throws IOException - if an error occurs while reading and decoding the file.
++    * 
++    * @throws DataFormatException - if the file does not contain Flash data.
++    * @throws FSCoderException - if an error occurs while decoding the file.
++    * @throws IOException - if an I/O error occurs while reading the file.
+     */
+     public void decodeFromData(byte[] bytes) throws DataFormatException, IOException
+     {
+@@ -1029,13 +1067,20 @@
+         frameCount = coder.readWord(2, false);
+         
+         coder.context[FSCoder.Version] = version;
+-
++                      
+         while ((object = decodeObject(coder)) != null)
+         {
+             objects.add(object);
+             
+-            if (coder.context[FSCoder.Delta] != 0)
+-                throw new IOException(&quot;Movie object did not decode correctly.&quot;);
++            if (coder.context[FSCoder.CodingError] == 1)
++            {
++                throw new FSCoderException(
++                    coder.context[FSCoder.TypeInError],
++                    coder.context[FSCoder.StartOfError],
++                    coder.context[FSCoder.ExpectedLength],
++                    coder.context[FSCoder.Delta],
++                    (coder.context[FSCoder.Delta] &gt; 0) ? &quot;ObjectOverflow&quot; : &quot;ObjectUnderflow&quot;);
++            }
+         }
+         identifier = coder.context[FSCoder.Identifier];
+     }
+@@ -1106,8 +1151,9 @@
+      *
+      * @param fileName the path to the Flash file that the movie will be encoded to.
+      *
+-        @throws FileNotFoundException - if an error occurs while reading the file.
+-        @throws IOException - if an error occurs while encoding and writing the file.
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws FSCoderException - if an error occurs while encoding the file.
++     * @throws IOException - if an I/O error occurs while reading the file.
+      */
+     public void encodeToFile(String fileName) throws FileNotFoundException, IOException
+     {
+@@ -1166,15 +1212,13 @@
+      * If an error occurs while encoding the file then an exception is thrown.
+      *
+      * @return the array of bytes representing the encoded objects.
+-       @throws IOException - if an error occurs while encoding the file.
++     * @throws FSCoderException - if an error occurs while encoding the file.
++     * @throws IOException - if an I/O error occurs while encoding the file.
+      */
+     public byte[] encode() throws IOException
+     {
+         FSCoder coder = new FSCoder();
+         
+-//        if (version &gt; Transform.VERSION)
+-//            throw new IOException(&quot;Cannot encode a file later than version &quot; + Transform.VERSION + &quot;.&quot;);
+-        
+         coder.context[FSCoder.Action]  = FSMovieEvent.Encode;        
+         coder.context[FSCoder.Version] = version;
+ 
+@@ -1200,8 +1244,15 @@
+             object.encode(coder);
+             coder.setPointer(next);
+     
+-            if ((coder.context[FSCoder.CodingError] == 1) || ((next - coder.getPointer()) &gt;&gt; 3) != 0)
+-                throw new IOException(&quot;Movie object did not encode correctly.&quot;);
++            if (coder.context[FSCoder.CodingError] == 1)
++            {
++                throw new FSCoderException(
++                    coder.context[FSCoder.TypeInError],
++                    coder.context[FSCoder.StartOfError],
++                    coder.context[FSCoder.ExpectedLength],
++                    coder.context[FSCoder.Delta],
++                    (coder.context[FSCoder.Delta] &gt; 0) ? &quot;ObjectOverflow&quot; : &quot;ObjectUnderflow&quot;);
++            }
+         }
+         coder.writeWord(0, 2);
+ 
+@@ -1267,7 +1318,7 @@
+             object.encode(coder);
+             coder.setPointer(next);
+             
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+     
+             if (delta &lt; 0)
+                 coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+@@ -1283,13 +1334,6 @@
+ 
+         try
+         {
+-            // if the version of the Flash file is greater than the 
+-            // version supported by the framework then throw the 
+-            // exception first so the data returned will be null.
+-            
+-//            if (version &gt; Transform.VERSION)
+-//                throw new DataFormatException();
+-
+             if (signature.equals(&quot;CWS&quot;))
+                 data = zip(coder.getData(), fileLength);
+             else
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSNewFunction.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -368,29 +368,27 @@
+         }
+         
+         coder.writeWord(actionsLength, 2);
+-            
++        
+         for (Iterator i=actions.iterator(); i.hasNext();)
+         {
+             FSActionObject action = (FSActionObject)i.next();
+                 
++            int objStart = coder.getPointer();
+             int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+             int next = start + (action.getLength() &lt;&lt; 3);
+             
+             action.encode(coder);
+             coder.setPointer(next);
+             
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+             if (delta != 0)
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                    if (delta &lt; 0)
+-                        coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                    else if (delta &gt; 0)
+-                        coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                coder.context[FSCoder.TypeInError] = action.getType();
++                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                coder.context[FSCoder.Delta] = delta;
+             }
+         }
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -499,29 +499,27 @@
+             ((FSRegisterVariable)i.next()).encode(coder);
+ 
+         coder.writeWord(actionsLength, 2);
+-            
++           
+         for (Iterator i=actions.iterator(); i.hasNext();)
+         {
+             FSActionObject action = (FSActionObject)i.next();
+                 
++            int objStart = coder.getPointer();
+             int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+             int next = start + (action.getLength() &lt;&lt; 3);
+             
+             action.encode(coder);
+             coder.setPointer(next);
+             
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+             if (delta != 0)
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                    if (delta &lt; 0)
+-                        coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                    else if (delta &gt; 0)
+-                        coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                coder.context[FSCoder.TypeInError] = action.getType();
++                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                coder.context[FSCoder.Delta] = delta;
+             }
+         }
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWith.java	2006-02-23 12:32:07 UTC (rev 81)
++++ trunk/src/com/flagstone/transform/FSWith.java	2006-02-23 12:32:43 UTC (rev 82)
+@@ -193,25 +193,23 @@
+         for (Iterator i=actions.iterator(); i.hasNext();)
+         {
+             FSActionObject action = (FSActionObject)i.next();
+-                
++              
++            int objStart = coder.getPointer();
+             int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+             int next = start + (action.getLength() &lt;&lt; 3);
+             
+             action.encode(coder);
+             coder.setPointer(next);
+             
+-            int delta = (next - coder.getPointer()) &gt;&gt; 3;
++            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+             if (delta != 0)
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+-
+-/*
+-                    if (delta &lt; 0)
+-                        coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+-                    else if (delta &gt; 0)
+-                        coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-*/
++                coder.context[FSCoder.TypeInError] = action.getType();
++                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                coder.context[FSCoder.Delta] = delta;
+             }
+         }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000021.html">[Transform-svn] r81 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000024.html">[Transform-svn] r83 - in trunk: doc src/com/flagstone/transform/tools
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

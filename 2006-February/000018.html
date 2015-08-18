@@ -1,0 +1,962 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r77 - in trunk/src/com/flagstone/transform: . util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r77%20-%20in%20trunk/src/com/flagstone/transform%3A%20.%20util&In-Reply-To=%3C200602212200.k1LM0VkK019843%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000017.html">
+   <LINK REL="Next"  HREF="000019.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r77 - in trunk/src/com/flagstone/transform: . util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r77%20-%20in%20trunk/src/com/flagstone/transform%3A%20.%20util&In-Reply-To=%3C200602212200.k1LM0VkK019843%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r77 - in trunk/src/com/flagstone/transform: . util">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 23:00:31 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000017.html">[Transform-svn] r76 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000019.html">[Transform-svn] r78 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#18">[ date ]</a>
+              <a href="thread.html#18">[ thread ]</a>
+              <a href="subject.html#18">[ subject ]</a>
+              <a href="author.html#18">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 23:00:21 +0100 (Tue, 21 Feb 2006)
+New Revision: 77
+
+Modified:
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSNewFunction.java
+   trunk/src/com/flagstone/transform/FSNewFunction2.java
+   trunk/src/com/flagstone/transform/FSWith.java
+   trunk/src/com/flagstone/transform/Transform.java
+   trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+   trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+Log:
+Deprecated the flag Transform.DEBUG. Code using this flag was
+removed from FSCoder and commented out elsewhere.
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -388,13 +388,12 @@
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+ 
+-                    if (Transform.DEBUG)
+-                    {
++/*
+                         if (delta &lt; 0)
+                             coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                         else if (delta &gt; 0)
+                             coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                    }
++*/
+                 }
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -516,13 +516,12 @@
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+ 
+-                    if (Transform.DEBUG)
+-                    {
++/*
+                         if (delta &lt; 0)
+                             coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                         else if (delta &gt; 0)
+                             coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                    }
++*/
+                 }
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -200,16 +200,10 @@
+     {
+         if (location &lt; 0)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;PointerOutOfRange&quot;, location, 0);
+-                
+             location = 0;
+         }
+         else if (location &gt; end)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;PointerOutOfRange&quot;, location, 0);
+-                
+             location = end;
+         }
+         ptr = location;
+@@ -221,16 +215,10 @@
+         
+         if (ptr &lt; 0)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;PointerOutOfRange&quot;, ptr, 0);
+-                
+             ptr = 0;
+         }
+         else if (ptr &gt;= end)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;PointerOutOfRange&quot;, ptr, 0);
+-                
+             ptr = end;
+         }
+     }
+@@ -322,12 +310,6 @@
+         int value = 0;
+         int start = ptr;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        }
+-    
+         value = _readBits(numberOfBits, signed);
+         ptr = start;
+         
+@@ -339,12 +321,6 @@
+         int value = 0;
+         int start = ptr;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
+-                logError(&quot;ByteRangeError&quot;, ptr, numberOfBytes);
+-        }
+-    
+         value = _readWord(numberOfBytes*8, signed);
+         ptr = start;
+         
+@@ -356,17 +332,8 @@
+         int location = ptr;
+         int value = 0;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        }
+-    
+         value = _readBits(numberOfBits, signed);
+         
+-        if (Transform.DEBUG)
+-            logValue(new Integer(value), location, numberOfBits);
+-    
+         return value;
+     }
+     
+@@ -374,16 +341,7 @@
+     {
+         int location = ptr;
+     
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, location, numberOfBits);
+-        }
+-    
+         _writeBits(value, numberOfBits);
+-    
+-        if (Transform.DEBUG)
+-            logValue(new Integer(value), location, numberOfBits);
+     }
+ 
+     public int readWord(int numberOfBytes, boolean signed)
+@@ -391,17 +349,8 @@
+         int location = ptr;
+         int value = 0;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
+-                logError(&quot;ByteRangeError&quot;, ptr, numberOfBytes);
+-        }
+-    
+         value = _readWord(numberOfBytes*8, signed);
+         
+-        if (Transform.DEBUG)
+-            logValue(new Integer(value), location, numberOfBytes*8);
+-    
+         return value;
+     }
+         
+@@ -409,16 +358,7 @@
+     {
+         int location = ptr;
+     
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
+-                logError(&quot;ByteRangeError&quot;, location, numberOfBytes);
+-        }
+-    
+         _writeWord(value, numberOfBytes*8);
+-    
+-        if (Transform.DEBUG)
+-            logValue(new Integer(value), location, numberOfBytes*8);
+     }
+     
+     public float readFixedBits(int numberOfBits, int fractionSize)
+@@ -427,19 +367,7 @@
+         float value = 0;
+         float divisor = (float)(1 &lt;&lt; fractionSize);
+     
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-
+-            if (fractionSize &lt; 0 || fractionSize &gt; 32)
+-                logError(&quot;ByteRangeError&quot;, ptr, fractionSize);
+-        }
+-    
+         value = ((float)_readBits(numberOfBits, true)) / divisor;
+-        
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, numberOfBits);
+     
+         return value;
+     }
+@@ -449,16 +377,7 @@
+         int location = ptr; 
+         float multiplier = (float)(1 &lt;&lt; fractionSize);
+     
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        }
+-    
+         _writeBits((int)(value*multiplier), numberOfBits);
+-
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, numberOfBits);
+     }
+ 
+     public float readFixedWord(int mantissaSize, int fractionSize)
+@@ -470,21 +389,12 @@
+         float value = 0;
+         float divisor = (float)(1 &lt;&lt; fractionSize);
+     
+-        if (Transform.DEBUG)
+-        {
+-            if (mantissaSize &lt; 0 || fractionSize &lt; 0 || (mantissaSize+fractionSize) &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, mantissaSize);
+-        }
+-    
+         fraction = _readWord(fractionSize, false);
+         mantissa = _readWord(mantissaSize, true);
+             
+         mantissa &lt;&lt;= fractionSize;        
+         value = (mantissa + fraction) / divisor;
+         
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, mantissaSize+fractionSize);
+-    
+         return value;
+     }
+     
+@@ -496,92 +406,13 @@
+         
+         float multiplier = (float)(1 &lt;&lt; fractionSize);
+     
+-        if (Transform.DEBUG)
+-        {
+-            if (mantissaSize &lt; 0 || fractionSize &lt; 0 || (mantissaSize+fractionSize) &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, mantissaSize);
+-        }
+-    
+         fraction = (int)(value*multiplier);
+         mantissa = (int)value;
+ 
+         _writeWord(fraction, fractionSize);
+         _writeWord(mantissa, mantissaSize);
+-
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, mantissaSize+fractionSize);
+     }
+-/*
+-    float readShortFixed(int numberOfBits)
+-    {
+-        int location = ptr;
+-        float value = 0;
+-    
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 16)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        }
+-    
+-        value = ((float)_readBits(numberOfBits, true)) / 256.0f;
+ 
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, numberOfBits);
+-        
+-        return value;
+-    }
+-    
+-    void writeShortFixed(float value, int numberOfBits)
+-    {
+-        int location = ptr; 
+-    
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 16)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        }
+-    
+-        _writeBits((int)(value*256.0f), numberOfBits);
+-
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, numberOfBits);
+-    }
+-
+-    float readFixed(int numberOfBits)
+-    {
+-        int location = ptr;
+-        float value = 0;
+-    
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        }
+-    
+-        value = ((float)_readBits(numberOfBits, true)) / 65536.0f;
+-
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), ptr-numberOfBits, numberOfBits);
+-        
+-        return value;
+-    }
+-    
+-    void writeFixed(float value, int numberOfBits)
+-    {
+-        int location = ptr; 
+-    
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, location, numberOfBits);
+-        }
+-    
+-        _writeBits((int)(value*65536.0f), numberOfBits);
+-
+-        if (Transform.DEBUG)
+-            logValue(new Float(value), location, numberOfBits);
+-    }
+-*/
+     public double readDouble()
+     {
+         int location = ptr;
+@@ -597,9 +428,6 @@
+     
+         value = Double.longBitsToDouble(longValue);
+ 
+-        if (Transform.DEBUG)
+-            logValue(new Double(value), location, 64);
+-
+         return value;
+     }
+ 
+@@ -614,9 +442,6 @@
+     
+         _writeWord(upperInt, 32);
+         _writeWord(lowerInt, 32);
+-
+-        if (Transform.DEBUG)
+-            logValue(new Double(value), location, 64);
+     }
+ 
+     public int readBytes(byte[] bytes)
+@@ -626,9 +451,6 @@
+     
+         bytesRead = _readBytes(bytes);
+     
+-        if (Transform.DEBUG)
+-            logValue(&quot;&lt;Data&gt;&quot;, location, bytesRead &lt;&lt; 3);
+-
+         return bytesRead;
+     }
+ 
+@@ -639,9 +461,6 @@
+     
+         bytesWritten = _writeBytes(bytes);
+     
+-        if (Transform.DEBUG)
+-            logValue(&quot;&lt;Data&gt;&quot;, location, bytesWritten &lt;&lt; 3);
+-
+         return bytesWritten;
+     }
+     
+@@ -654,9 +473,6 @@
+     {
+         if (length == 0)
+         {
+-            if (Transform.DEBUG)
+-                logValue(&quot;&quot;, ptr, length&lt;&lt;3);
+-                
+             return &quot;&quot;;
+         }
+             
+@@ -673,10 +489,6 @@
+         {
+             value = &quot;&quot;;
+         }
+-    
+-        if (Transform.DEBUG)
+-            logValue(value, location, length&lt;&lt;3);
+-
+         return value;
+     }
+ 
+@@ -714,9 +526,6 @@
+         _readWord(8, false);
+         len++;
+     
+-        if (Transform.DEBUG)
+-            logValue(value, location, len&lt;&lt;3);
+-
+         return value;
+     }
+ 
+@@ -741,12 +550,6 @@
+         if (numberOfBits == 0)
+             return value;
+         
+-        if (Transform.DEBUG)
+-        {
+-            if (ptr &gt;= end)
+-                return 0;
+-        }
+-            
+         try 
+         {
+             int index = ptr &gt;&gt; 3;
+@@ -766,9 +569,6 @@
+         }
+         catch (ArrayIndexOutOfBoundsException e)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;DataReadOverflow&quot;, ptr, numberOfBits);
+-
+             value = 0;
+         }
+         return value;
+@@ -781,15 +581,6 @@
+         if (numberOfBits == 0)
+             return value;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (ptr &gt;= end)
+-                return 0;
+-                
+-            if (ptr % 8 &gt; 0)
+-                logError(&quot;NotByteAligned&quot;, ptr, 0);
+-        }
+-    
+         try 
+         {
+             int index = ptr &gt;&gt; 3;
+@@ -805,9 +596,6 @@
+         }
+         catch (ArrayIndexOutOfBoundsException e)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;DataReadOverflow&quot;, ptr, numberOfBits);
+-
+             value = 0;
+         }
+         return value;
+@@ -820,15 +608,6 @@
+         if (bytes == null || bytes.length == 0)
+             return bytesRead;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (ptr &gt;= end)
+-                return bytesRead;
+-                
+-            if (ptr % 8 &gt; 0)
+-                logError(&quot;NotByteAligned&quot;, ptr, 0);
+-        }    
+-        
+         try 
+         {
+             int index = ptr &gt;&gt;&gt; 3;
+@@ -839,8 +618,6 @@
+         }
+         catch (ArrayIndexOutOfBoundsException e)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;DataReadOverflow&quot;, ptr, bytes.length &lt;&lt; 3);
+         }        
+         return bytesRead;
+     }
+@@ -850,12 +627,6 @@
+         if (numberOfBits == 0)
+             return;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (ptr &gt;= end)
+-                return;
+-        }
+-            
+         try 
+         {
+             int index = ptr &gt;&gt; 3;
+@@ -875,22 +646,11 @@
+         }
+         catch (ArrayIndexOutOfBoundsException e)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;DataWriteOverflow&quot;, ptr, numberOfBits);
+         }
+     }
+     
+     private void _writeWord(int value, int numberOfBits)
+     {
+-        if (Transform.DEBUG)
+-        {
+-            if (ptr &gt;= end)
+-                return;
+-                
+-            if (ptr % 8 &gt; 0)
+-                logError(&quot;NotByteAligned&quot;, ptr, 0);
+-        }
+-    
+         try 
+         {
+             int index = ptr &gt;&gt;&gt; 3;
+@@ -900,8 +660,6 @@
+         }
+         catch (ArrayIndexOutOfBoundsException e)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;DataWriteOverflow&quot;, ptr, numberOfBits);
+         }
+     }
+ 
+@@ -912,15 +670,6 @@
+         if (bytes == null || bytes.length == 0)
+             return bytesWritten;
+ 
+-        if (Transform.DEBUG)
+-        {
+-            if (ptr &gt;= end)
+-                return bytesWritten;
+-                
+-            if (ptr % 8 &gt; 0)
+-                logError(&quot;NotByteAligned&quot;, ptr, 0);
+-        }
+-    
+         try 
+         {
+             int index = ptr &gt;&gt;&gt; 3;
+@@ -931,8 +680,6 @@
+         }
+         catch (ArrayIndexOutOfBoundsException e)
+         {
+-            if (Transform.DEBUG)
+-                logError(&quot;DataWriteOverflow&quot;, ptr, bytes.length &lt;&lt; 3);
+         }
+         
+         return bytesWritten;
+@@ -942,20 +689,11 @@
+     {
+         int currentLocation = ptr;
+         
+-        if (Transform.DEBUG)
+-        {
+-            if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
+-                logError(&quot;ByteRangeError&quot;, location, numberOfBytes);
+-        }
+-    
+         ptr = location;
+     
+         _writeWord(value, numberOfBytes*8);
+         
+         ptr = currentLocation;
+-    
+-        if (Transform.DEBUG)
+-            logValue(new Integer(value), location, numberOfBytes*8);
+     }
+     
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -373,13 +373,12 @@
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+     
+-                    if (Transform.DEBUG)
+-                    {
++/*
+                         if (delta &lt; 0)
+                             coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                         else if (delta &gt; 0)
+                             coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                    }
++*/
+                 }
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -211,13 +211,12 @@
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+ 
+-                if (Transform.DEBUG)
+-                {
++/*
+                     if (delta &lt; 0)
+                         coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+                     else if (delta &gt; 0)
+                         coder.logError(&quot;ObjectUnderflow&quot;, next, delta);
+-                }
++*/
+             }
+         }
+         coder.writeWord(0, 2);
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -263,13 +263,12 @@
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+ 
+-                    if (Transform.DEBUG)
+-                    {
++/*
+                         if (delta &lt; 0)
+                             coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                         else if (delta &gt; 0)
+                             coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                    }
++*/
+                 }
+                 coder.setPointer(next);
+             }
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -450,13 +450,12 @@
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+ 
+-                if (Transform.DEBUG)
+-                {
++/*
+                     if (delta &lt; 0)
+                         coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                     else if (delta &gt; 0)
+                         coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                }
++*/
+             }
+         }
+ 
+@@ -478,13 +477,12 @@
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+ 
+-                    if (Transform.DEBUG)
+-                    {
++/*
+                         if (delta &lt; 0)
+                             coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                         else if (delta &gt; 0)
+                             coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                    }
++*/
+                 }
+             }
+         }
+@@ -507,13 +505,12 @@
+                 {
+                     coder.context[FSCoder.CodingError] = 1;
+ 
+-                    if (Transform.DEBUG)
+-                    {
++/*
+                         if (delta &lt; 0)
+                             coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                         else if (delta &gt; 0)
+                             coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                    }
++*/
+                 }
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -233,13 +233,12 @@
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+ 
+-                if (Transform.DEBUG)
+-                {
++/*
+                     if (delta &lt; 0)
+                         coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                     else if (delta &gt; 0)
+                         coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                }
++*/
+             }
+         }
+         coder.writeWord(0, 1);
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSNewFunction.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -385,13 +385,12 @@
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+ 
+-                if (Transform.DEBUG)
+-                {
++/*
+                     if (delta &lt; 0)
+                         coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                     else if (delta &gt; 0)
+                         coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                }
++*/
+             }
+         }
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -516,13 +516,12 @@
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+ 
+-                if (Transform.DEBUG)
+-                {
++/*
+                     if (delta &lt; 0)
+                         coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                     else if (delta &gt; 0)
+                         coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                }
++*/
+             }
+         }
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWith.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/FSWith.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -206,13 +206,12 @@
+             {
+                 coder.context[FSCoder.CodingError] = 1;
+ 
+-                if (Transform.DEBUG)
+-                {
++/*
+                     if (delta &lt; 0)
+                         coder.logError(&quot;ActionOverflow&quot;, next, -delta);
+                     else if (delta &gt; 0)
+                         coder.logError(&quot;ActionUnderflow&quot;, next, delta);
+-                }
++*/
+             }
+         }
+ 
+
+Modified: trunk/src/com/flagstone/transform/Transform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/Transform.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/Transform.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -38,6 +38,8 @@
+ public final class Transform
+ {
+     /** 
++     * @deprecated No longer required for debugging.
++     * 
+      * DEBUG is used to turn on additional logging and error checking.
+      */
+     public static final boolean DEBUG = false;
+@@ -61,7 +63,7 @@
+      * This number is incremented when an enhancement or bug fix has been made 
+      * and the API is unchanged.
+      */
+-    public static final int RELEASE = 4;
++    public static final int RELEASE = 6;
+     /** 
+      * VALUE_NOT_SET is used to signify that a field has not yet assigned a value. Some Flash 
+      * tags contain optional fields to reduce the size of the binary data when a tag is encoded. 
+@@ -87,11 +89,8 @@
+         System.out.println(
+             &quot; * Transform For Flash &quot; + VERSION + &quot;, Version &quot; + version);
+         
+-        if (DEBUG)
+-            System.out.println(&quot; * Debug Edition.&quot;);
+-                    
+         System.out.println(&quot; * &quot;);
+-        System.out.println(&quot; * Copyright (c) Flagstone Software Limited, 2001-2005.&quot;);
++        System.out.println(&quot; * Copyright (c) Flagstone Software Limited, 2001-2006.&quot;);
+         System.out.println(&quot; * All Rights Reserved.&quot;);
+         System.out.println(&quot; * &quot;);
+         System.out.println(&quot; * Use of this software is subject to the terms in the license&quot;);
+
+Modified: trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -1217,25 +1217,23 @@
+                     break;
+             }         
+             length += 4; // include CRC at end of chunk
+-
+-            if (Transform.DEBUG)
+-            {
+-                int bytesRead = (coder.getPointer() - current) &gt;&gt; 3;
+-                
+-                byte[] chars = new byte[4];
+-                
+-                chars[3] = (byte)chunkType;
+-                chars[2] = (byte)(chunkType &gt;&gt; 8);
+-                chars[1] = (byte)(chunkType &gt;&gt; 16);
+-                chars[0] = (byte)(chunkType &gt;&gt; 24);
+-                
+-                String chunk = new String(chars);
+-                
+-                if (bytesRead &lt; length)
+-                    System.err.println(chunk + &quot; chunk underflowed by &quot; + (length - bytesRead) + &quot; bytes.&quot;);
+-                else if (bytesRead &gt; length)
+-                    System.err.println(chunk + &quot; chunk overflowed by &quot; + (bytesRead - length) + &quot; bytes.&quot;);
+-            }
++/*
++            int bytesRead = (coder.getPointer() - current) &gt;&gt; 3;
++            
++            byte[] chars = new byte[4];
++            
++            chars[3] = (byte)chunkType;
++            chars[2] = (byte)(chunkType &gt;&gt; 8);
++            chars[1] = (byte)(chunkType &gt;&gt; 16);
++            chars[0] = (byte)(chunkType &gt;&gt; 24);
++            
++            String chunk = new String(chars);
++            
++            if (bytesRead &lt; length)
++                System.err.println(chunk + &quot; chunk underflowed by &quot; + (length - bytesRead) + &quot; bytes.&quot;);
++            else if (bytesRead &gt; length)
++                System.err.println(chunk + &quot; chunk overflowed by &quot; + (bytesRead - length) + &quot; bytes.&quot;);
++*/
+             coder.setPointer(next);
+             
+             if (coder.eof())
+
+Modified: trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-02-21 20:11:15 UTC (rev 76)
++++ trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-02-21 22:00:21 UTC (rev 77)
+@@ -470,15 +470,14 @@
+ 
+             int nextBlock = blockStart + (length &lt;&lt; 3);
+ 
+-            if (Transform.DEBUG)
+-            {
+-                int bytesRead = (coder.getPointer() - blockStart) &gt;&gt; 3;
+-                
+-                if (bytesRead &lt; length)
+-                    System.err.println(chunkType + &quot; chunk underflowed by &quot; + (length - bytesRead) + &quot; bytes.&quot;);
+-                else if (bytesRead &gt; length)
+-                    System.err.println(chunkType + &quot; chunk overflowed by &quot; + (bytesRead - length) + &quot; bytes.&quot;);
+-            }
++/*
++            int bytesRead = (coder.getPointer() - blockStart) &gt;&gt; 3;
++            
++            if (bytesRead &lt; length)
++                System.err.println(chunkType + &quot; chunk underflowed by &quot; + (length - bytesRead) + &quot; bytes.&quot;);
++            else if (bytesRead &gt; length)
++                System.err.println(chunkType + &quot; chunk overflowed by &quot; + (bytesRead - length) + &quot; bytes.&quot;);
++ */
+             coder.setPointer(nextBlock);
+             moreChunks = coder.eof() == false;
+         }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000017.html">[Transform-svn] r76 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000019.html">[Transform-svn] r78 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#18">[ date ]</a>
+              <a href="thread.html#18">[ thread ]</a>
+              <a href="subject.html#18">[ subject ]</a>
+              <a href="author.html#18">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

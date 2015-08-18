@@ -1,0 +1,368 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r453 - dev/dev-3-0/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r453%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804102114.m3ALEanY027130%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000388.html">
+   <LINK REL="Next"  HREF="000390.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r453 - dev/dev-3-0/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r453%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804102114.m3ALEanY027130%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r453 - dev/dev-3-0/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Apr 10 23:14:36 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000388.html">[Transform-svn] r452 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000390.html">[Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#389">[ date ]</a>
+              <a href="thread.html#389">[ thread ]</a>
+              <a href="subject.html#389">[ subject ]</a>
+              <a href="author.html#389">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-10 23:14:32 +0200 (Thu, 10 Apr 2008)
+New Revision: 453
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/test/FSMovieTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/MovieTests.java
+Log:
+Updated FSMovieTest to use junit4 and simplified code.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSMovieTest.java	2008-04-10 21:13:58 UTC (rev 452)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSMovieTest.java	2008-04-10 21:14:32 UTC (rev 453)
+@@ -1,5 +1,5 @@
+ /*
+- * FSMovieTest.java
++ * EncodeTest.java
+  * Transform
+  *
+  * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+@@ -31,200 +31,95 @@
+ 
+ import java.io.*;
+ 
++import java.util.Arrays;
++import java.util.Collection;
++import java.util.zip.DataFormatException;
++
+ import com.flagstone.transform.*;
+ 
+-import junit.framework.Assert;
+-import junit.framework.Test;
+-import junit.framework.TestCase;
+-import junit.framework.TestSuite;
++import org.junit.Test;
+ 
+-public class FSMovieTest extends TestCase
++import org.junit.runner.RunWith;
++import org.junit.runners.Parameterized;
++import org.junit.runners.Parameterized.Parameters;
++
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">+ at RunWith</A>(Parameterized.class)
++public class FSMovieTest
+ {
+-    /**
+-     * The main method allows the tests to be run from the command line:
+-     *
+-     *  FSMovieTest &lt;source&gt; &lt;dest&gt;
+-     *
+-     *  where,
+-     *
+-     *   &lt;source&gt; the source directory where the flash files may be found.
+-     *   &lt;dest&gt;   the destination directory where files will be written to.
+-     *
+-     * @param args arguments passed to the class when executed.
+-     */
+-    public static void main(String[] args)
++    private static File sourceDir = new File(&quot;test/data/swf&quot;);
++    
++    private File source;
++ 
++    public FSMovieTest(String filename)
+     {
+-        junit.textui.TestRunner.run(suite(args[0], args[1]));
++    	super();
++    	
++    	source = new File(sourceDir, filename);
+     }
+ 
+-    public static Test suite(String source, String dest)
+-    {
+-        TestSuite suite= new TestSuite();
+-
+-        suite.addTest(new FSMovieTest(source, dest, &quot;testDecode&quot;));
+-        suite.addTest(new FSMovieTest(source, dest, &quot;testEncode&quot;));
+-        suite.addTest(new FSMovieTest(source, dest, &quot;testClone&quot;));
+-        suite.addTest(new FSMovieTest(source, dest, &quot;testLazyDecode&quot;));
+-        suite.addTest(new FSMovieTest(source, dest, &quot;testLazyEncode&quot;));
+-
+-        return suite;
+-    }
+-
+-    private File sourceDir = null;
+-    private File destDir = null;
+-    private String[] files = null;
+-
+-    public FSMovieTest()
+-    {
+-        sourceDir = new File(&quot;test/data/swf&quot;);
+-        destDir = new File(&quot;test/results/FSMovie&quot;);
+-    }
+-
+-    public FSMovieTest(String srcDir, String dstDir, String method)
+-    {
+-    	super(method);
+-
+-    	sourceDir = new File(srcDir);
+-        destDir = new File(dstDir);
+-    }
+-
+-    protected void setUp()
+-    {
++	@Parameters
++	public static Collection classes() 
++	{
+         FilenameFilter filter = new FilenameFilter()
+         {
+             public boolean accept(File directory, String name) {
+                 return name.endsWith(&quot;.swf&quot;);
+             }
+         };
++        
++        String[] files = sourceDir.list(filter);
+ 
+-        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
+-
+-        files = sourceDir.list(filter);
+-
+-        if (destDir.exists() == false) {
+-            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++        Object[][] elements = new Object[files.length][1];
++        
++        for (int i=0; i&lt;files.length; i++) {
++        	elements[i] = new Object[] { files[i] };
+         }
+-    }
+ 
+-    public void testDecode()
++        return Arrays.asList(elements);
++	}
++
++	@Test
++    public void testDecode() throws IOException, DataFormatException
+     {
+-    	for (int i=0; i&lt;files.length; i++)
+-    	{
+-            try
+-            {
+-                new FSMovie(new File(sourceDir, files[i]).getPath());
+-            }
+-            catch (Exception e)
+-            {
+-                fail(files[i]+&quot;: &quot;+e.toString());
+-            }
+-    	}
++        new FSMovie(source);
+     }
+ 
+-    public void testEncode()
++	@Test
++    public void testLazyDecode() throws IOException, DataFormatException
+     {
+-		File dir = new File(destDir, &quot;encode&quot;);
++        FSMovie movie = new FSMovie();
+ 
+-		if (!dir.exists()) {
+-			assertTrue(dir.mkdirs());
+-		}
++        movie.setDecodeActions(false);
++        movie.setDecodeShapes(false);
++        movie.setDecodeGlyphs(false);
+ 
+-		for (int i=0; i&lt;files.length; i++)
+-    	{
+-            try
+-            {
+-                File srcFile = new File(sourceDir, files[i]);
+-                File destFile = new File(dir, files[i]);
+-
+-                FSMovie movie = new FSMovie(srcFile.getPath());
+-
+-                movie.encodeToFile(destFile.getPath());
+-            }
+-            catch (Exception e)
+-            {
+-                fail(files[i]+&quot;: &quot;+e.toString());
+-            }
+-    	}
++        movie.decodeFromFile(source);
+     }
+ 
+-    public void testClone()
++	@Test
++    public void encode() throws IOException, DataFormatException
+     {
+-		File dir = new File(destDir, &quot;clone&quot;);
+-
+-		if (!dir.exists()) {
+-			assertTrue(dir.mkdirs());
+-		}
+-
+-    	for (int i=0; i&lt;files.length; i++)
+-    	{
+-            try
+-            {
+-                File srcFile = new File(sourceDir, files[i]);
+-                File destFile = new File(dir, files[i]);
+-
+-                FSMovie movie = new FSMovie(srcFile.getPath());
+-
+-                FSMovie clone = (FSMovie)movie.clone();
+-                clone.encodeToFile(destFile.getPath());
+-           }
+-            catch (Exception e)
+-            {
+-                fail(files[i]+&quot;: &quot;+e.toString());
+-            }
+-    	}
++        new FSMovie(source).encode();
+     }
+ 
+-    public void testLazyDecode()
++    @Test
++    public void lazyEncode() throws IOException, DataFormatException
+     {
+-    	for (int i=0; i&lt;files.length; i++)
+-    	{
+-            try
+-            {
+-                File srcFile = new File(sourceDir, files[i]);
++        FSMovie movie = new FSMovie();
+ 
+-                FSMovie movie = new FSMovie();
++        movie.setDecodeActions(false);
++        movie.setDecodeShapes(false);
++        movie.setDecodeGlyphs(false);
+ 
+-                movie.setDecodeActions(false);
+-                movie.setDecodeShapes(false);
+-                movie.setDecodeGlyphs(false);
+-
+-                movie.decodeFromFile(srcFile.getPath());
+-            }
+-            catch (Exception e)
+-            {
+-                fail(files[i]+&quot;: &quot;+e.toString());
+-            }
+-    	}
++        movie.decodeFromFile(source);
++        movie.encode();
+     }
+-
+-    public void testLazyEncode()
++    
++    @Test
++    public void copy() throws IOException, DataFormatException
+     {
+-		File dir = new File(destDir, &quot;lazyEncode&quot;);
+-
+-		if (!dir.exists()) {
+-			assertTrue(dir.mkdirs());
+-		}
+-
+-		for (int i=0; i&lt;files.length; i++)
+-    	{
+-            try
+-            {
+-                File srcFile = new File(sourceDir, files[i]);
+-                File destFile = new File(dir, files[i]);
+-
+-                FSMovie movie = new FSMovie();
+-
+-                movie.setDecodeActions(false);
+-                movie.setDecodeShapes(false);
+-                movie.setDecodeGlyphs(false);
+-
+-                movie.decodeFromFile(srcFile.getPath());
+-                movie.encodeToFile(destFile.getPath());
+-            }
+-            catch (Exception e)
+-            {
+-                fail(files[i]+&quot;: &quot;+e.toString());
+-            }
+-    	}
++        FSMovie movie = new FSMovie(source);
++        ((FSMovie)movie.clone()).encode();
+     }
++
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/MovieTests.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/MovieTests.java	2008-04-10 21:13:58 UTC (rev 452)
++++ dev/dev-3-0/src/com/flagstone/transform/test/MovieTests.java	2008-04-10 21:14:32 UTC (rev 453)
+@@ -1,14 +1,12 @@
+ package com.flagstone.transform.test;
+ 
+-import junit.framework.Test;
+-import junit.framework.TestSuite;
++import org.junit.runner.RunWith;
++import org.junit.runners.Suite;
+ 
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">+ at RunWith</A>(Suite.class)
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">+ at Suite.SuiteClasses</A>({
++	FSMovieTest.class,
++        })
+ public class MovieTests
+ {
+-    public static Test suite()
+-    {
+-        TestSuite suite= new TestSuite();
+-        suite.addTestSuite(FSMovieTest.class);
+-        return suite;
+-    }
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000388.html">[Transform-svn] r452 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000390.html">[Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#389">[ date ]</a>
+              <a href="thread.html#389">[ thread ]</a>
+              <a href="subject.html#389">[ subject ]</a>
+              <a href="author.html#389">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

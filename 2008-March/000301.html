@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r365 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r365%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181624.m2IGOGcQ007769%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000300.html">
+   <LINK REL="Next"  HREF="000302.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r365 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r365%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181624.m2IGOGcQ007769%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r365 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:24:16 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000300.html">[Transform-svn] r364 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000302.html">[Transform-svn] r366 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#301">[ date ]</a>
+              <a href="thread.html#301">[ thread ]</a>
+              <a href="subject.html#301">[ subject ]</a>
+              <a href="author.html#301">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:24:14 +0100 (Tue, 18 Mar 2008)
+New Revision: 365
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSPathsArePostscript.java
+Log:
+Tidied up documentation and removed methods that did not need to be overridden from FSMovieObject.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSPathsArePostscript.java	2008-03-18 16:22:47 UTC (rev 364)
++++ dev/dev-2-4/src/com/flagstone/transform/FSPathsArePostscript.java	2008-03-18 16:24:14 UTC (rev 365)
+@@ -31,102 +31,101 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSPathsArePostscript class is used to notify the Flash Player that the glyphs encoded
+-in a font definition were derived from a PostScript-based font definition.
++ * The FSPathsArePostscript class is used to notify the Flash Player that the
++ * glyphs encoded in a font definition were derived from a PostScript-based font
++ * definition.
++ * 
++ * &lt;p&gt;
++ * The PathsArePostscript is not documented in the current Macromedia Flash
++ * (SWF) File Format Specification. IT was referenced in earlier editions but
++ * its exact function was not known. It is thought that is used to signal to the
++ * Flash Player that the paths describing the outlines of the glyphs in a font
++ * were derived from a font defined using Postscript. The information can be
++ * used to provide better rendering of the glyphs.
++ * &lt;/P&gt;
++ * 
++ * &lt;p&gt;
++ * It does not affect the paths defined in FSCurve objects which describe
++ * quadratic Bezier curves. It is included in the package for completeness.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSPathsArePostscript class represents the PathsArePostscript tag from the
++ * Macromedia Flash (SWF) File Format Specification. It is not documented in
++ * later editions of the specification. It is not known when this tag was added.
++ * &lt;/p&gt;
++ */
++public class FSPathsArePostscript extends FSMovieObject
++{
++	private static final FSPathsArePostscript instance = new FSPathsArePostscript();
+ 
+-&lt;p&gt;The PathsArePostscript is not documented in the current Macromedia Flash (SWF) 
+-File Format Specification. IT was referenced in earlier editions but its exact
+-function was not known. It is thought that is used to signal to the Flash 
+-Player that the paths describing the outlines of the glyphs in a font were 
+-derived from a font defined using Postscript. The information can be used to 
+-provide better rendering of the glyphs.&lt;/P&gt;
++	/**
++	 * Returns a canonical FSPathsArePostscript object.
++	 * 
++	 * @return an object that can safely be shared among objects.
++	 */
++	public static FSPathsArePostscript getInstance()
++	{
++		return instance;
++	}
+ 
+-&lt;p&gt;It does not affect the paths defined in FSCurve objects which describe 
+-quadratic Bezier curves. It is included in the package for completeness.&lt;/p&gt;
++	/**
++	 * Construct an FSPathsArePostscript object, initalizing it with values
++	 * decoded from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSPathsArePostscript(FSCoder coder)
++	{
++		super(PathsArePostscript);
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/** Constructs an FSPathsArePostscript object. */
++	public FSPathsArePostscript()
++	{
++		super(PathsArePostscript);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSPathsArePostscript object by copying values from an
++	 * existing object.
++	 * 
++	 * @param obj
++	 *            an FSPathsArePostscript object.
++	 */
++	public FSPathsArePostscript(FSPathsArePostscript obj)
++	{
++		super(obj);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSPathsArePostscript_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	public String toString()
++	{
++		return &quot;FSPathsArePostscript&quot;;
++	}
+ 
+-&lt;/table&gt;
++	public void encode(FSCoder coder)
++	{
++		coder.context[FSCoder.Empty] = 1;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		super.encode(coder);
+ 
+-&lt;p&gt;The FSPathsArePostscript class represents the PathsArePostscript tag from the 
+-Macromedia Flash (SWF) File Format Specification. It is not documented in later 
+-editions of the specification. It is not known when this tag was added.&lt;/p&gt;
+- */  
+-public class FSPathsArePostscript extends FSMovieObject
+-{
+-    private static final FSPathsArePostscript instance = new FSPathsArePostscript();
+-    
+-    /**
+-     * Returns a canonical FSPathsArePostscript object.
+-     * 
+-     * @return an object that can safely be shared among objects.
+-     */
+-    public static FSPathsArePostscript getInstance()
+-    {
+-        return instance;
+-    }
+-    
+-   /**
+-     * Construct an FSPathsArePostscript object, initalizing it with values 
+-     * decoded from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSPathsArePostscript(FSCoder coder)
+-    {
+-        super(PathsArePostscript);
+-        decode(coder);
+-    }
+-    /** Constructs an FSPathsArePostscript object. */
+-    public FSPathsArePostscript()
+-    {
+-        super(PathsArePostscript);
+-    }
+-    /**
+-     * Constructs an FSPathsArePostscript object by copying values from an 
+-     * existing object.
+-     *
+-     * @param obj an FSPathsArePostscript object.
+-     */
+-    public FSPathsArePostscript(FSPathsArePostscript obj)
+-    {
+-        super(obj);
+-    }    
+-    
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-            
+-        return length;
+-    }    
+-
+-    public void encode(FSCoder coder)
+-    {
+-        coder.context[FSCoder.Empty] = 1;
+-        
+-        super.encode(coder);
+-        
+-        coder.context[FSCoder.Empty] = 0;
+-        coder.endObject(name());
+-    }
+-
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        coder.endObject(name());
+-    }
++		coder.context[FSCoder.Empty] = 0;
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000300.html">[Transform-svn] r364 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000302.html">[Transform-svn] r366 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#301">[ date ]</a>
+              <a href="thread.html#301">[ thread ]</a>
+              <a href="subject.html#301">[ subject ]</a>
+              <a href="author.html#301">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

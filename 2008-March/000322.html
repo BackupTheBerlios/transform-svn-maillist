@@ -1,0 +1,1987 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r387 - in dev/dev-2-4/src/com/flagstone/transform:	. util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r387%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200803261533.m2QFX4iN029427%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000321.html">
+   <LINK REL="Next"  HREF="000330.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r387 - in dev/dev-2-4/src/com/flagstone/transform:	. util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r387%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200803261533.m2QFX4iN029427%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r387 - in dev/dev-2-4/src/com/flagstone/transform:	. util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar 26 16:33:04 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000321.html">[Transform-svn] r386 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000330.html">[Transform-svn] r388 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#322">[ date ]</a>
+              <a href="thread.html#322">[ thread ]</a>
+              <a href="subject.html#322">[ subject ]</a>
+              <a href="author.html#322">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-26 16:32:58 +0100 (Wed, 26 Mar 2008)
+New Revision: 387
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/FSSpan.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/FSText.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java
+   dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Renamed FSText to FSSpan
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java	2008-03-26 15:32:05 UTC (rev 386)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineFont2.java	2008-03-26 15:32:58 UTC (rev 387)
+@@ -231,7 +231,7 @@
+ 		super(DefineFont2, anIdentifier);
+ 		setName(name);
+ 		
+-		encoding = FSText.Unicode;
++		encoding = FSSpan.Unicode;
+ 		small = false;
+ 		bold = false;
+ 		italic = false;
+@@ -890,7 +890,7 @@
+ 		if (context.version &gt; 5)
+ 			wideCodes = true;
+ 		else
+-			wideCodes = (encoding != FSText.ANSI) ? true : false;
++			wideCodes = (encoding != FSSpan.ANSI) ? true : false;
+ 
+ 		super.length(context);
+ 
+@@ -936,15 +936,15 @@
+ 		if (context.version &gt; 5)
+ 			wideCodes = true;
+ 		else
+-			wideCodes = encoding != FSText.ANSI;
++			wideCodes = encoding != FSSpan.ANSI;
+ 
+-		if (encoding == FSText.ANSI)
++		if (encoding == FSSpan.ANSI)
+ 			format = 1;
+ 		// Flash 7
+ 		else if (small)
+ 			format = 2;
+ 		// End Flash 7
+-		else if (encoding == FSText.SJIS)
++		else if (encoding == FSSpan.SJIS)
+ 			format = 4;
+ 
+ 		super.encode(coder, context);
+@@ -1030,16 +1030,16 @@
+ 		boolean containsLayout = coder.readBits(1, false) != 0 ? true : false;
+ 		int format = coder.readBits(3, false);
+ 
+-		encoding = FSText.Unicode;
++		encoding = FSSpan.Unicode;
+ 
+ 		if (format == 1)
+-			encoding = FSText.ANSI;
++			encoding = FSSpan.ANSI;
+ 		// Flash 7
+ 		else if (format == 2)
+ 			small = true;
+ 		// End Flash 7
+ 		else if (format == 4)
+-			encoding = FSText.SJIS;
++			encoding = FSSpan.SJIS;
+ 
+ 		boolean containsWideOffsets = coder.readBits(1, false) != 0 ? true : false;
+ 		boolean containsWideCodes = coder.readBits(1, false) != 0 ? true : false;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java	2008-03-26 15:32:05 UTC (rev 386)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineText.java	2008-03-26 15:32:58 UTC (rev 387)
+@@ -153,7 +153,7 @@
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+-	private ArrayList&lt;FSText&gt; objects;
++	private ArrayList&lt;FSSpan&gt; objects;
+ 
+ 	/**
+ 	 * Construct an FSDefineText object, initialising it with values decoded from
+@@ -190,7 +190,7 @@
+ 	 * @throws NullPointerException if the array of text objects is null.
+ 	 */
+ 	public FSDefineText(int anIdentifier, FSBounds aBounds,
+-						FSCoordTransform aTransform, ArrayList&lt;FSText&gt; array)
++						FSCoordTransform aTransform, ArrayList&lt;FSSpan&gt; array)
+ 	{
+ 		super(FSMovieObject.DefineText, anIdentifier);
+ 		setBounds(aBounds);
+@@ -211,10 +211,10 @@
+ 		bounds = new FSBounds(obj.bounds);
+ 		transform = new FSCoordTransform(obj.transform);
+ 
+-		objects = new ArrayList&lt;FSText&gt;(obj.objects.size());
++		objects = new ArrayList&lt;FSSpan&gt;(obj.objects.size());
+ 
+-		for (Iterator&lt;FSText&gt; i = obj.objects.iterator(); i.hasNext();)
+-			objects.add((FSText) i.next().clone());
++		for (Iterator&lt;FSSpan&gt; i = obj.objects.iterator(); i.hasNext();)
++			objects.add((FSSpan) i.next().clone());
+ 	}
+ 
+ 	/**
+@@ -225,7 +225,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the text object is null.
+ 	 */
+-	public void add(FSText anObject)
++	public void add(FSSpan anObject)
+ 	{
+ 		if (anObject == null) {
+ 			throw new NullPointerException(&quot;Text object cannot be null&quot;);
+@@ -260,7 +260,7 @@
+ 	 * 
+ 	 * @return the array of text records (FSTextStyle and FSText objects).
+ 	 */
+-	public ArrayList&lt;FSText&gt; getObjects()
++	public ArrayList&lt;FSSpan&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -308,7 +308,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of text objects is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSText&gt; anArray)
++	public void setObjects(ArrayList&lt;FSSpan&gt; anArray)
+ 	{
+ 		if (objects == null) {
+ 			throw new NullPointerException(&quot;Array of text objects cannot be null.&quot;);
+@@ -323,10 +323,10 @@
+ 		anObject.bounds = (FSBounds) bounds.clone();
+ 		anObject.transform = (FSCoordTransform) transform.clone();
+ 
+-		anObject.objects = new ArrayList&lt;FSText&gt;(objects.size());
++		anObject.objects = new ArrayList&lt;FSSpan&gt;(objects.size());
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
+-			anObject.objects.add((FSText) i.next().clone());
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
++			anObject.objects.add((FSSpan) i.next().clone());
+ 
+ 		return anObject;
+ 	}
+@@ -372,7 +372,7 @@
+ 		length += transform.length(context);
+ 		length += 2;
+ 
+-		for (Iterator&lt;FSText&gt; recordIterator = objects.iterator(); recordIterator.hasNext();)
++		for (Iterator&lt;FSSpan&gt; recordIterator = objects.iterator(); recordIterator.hasNext();)
+ 			length += recordIterator.next().length(context);
+ 
+ 		length += 1;
+@@ -396,7 +396,7 @@
+ 		coder.writeWord(context.glyphSize, 1);
+ 		coder.writeWord(context.advanceSize, 1);
+ 
+-		for (Iterator&lt;FSText&gt; recordIterator = objects.iterator(); recordIterator.hasNext();)
++		for (Iterator&lt;FSSpan&gt; recordIterator = objects.iterator(); recordIterator.hasNext();)
+ 			recordIterator.next().encode(coder, context);
+ 
+ 		coder.writeWord(0, 1);
+@@ -460,10 +460,10 @@
+ 		 * FSDefineText objects with no text records - this appears to be a bug
+ 		 * in the Flash file.
+ 		 */
+-		objects = new ArrayList&lt;FSText&gt;();
++		objects = new ArrayList&lt;FSSpan&gt;();
+ 
+ 		while (coder.scanBits(8, false) != 0)
+-			objects.add(new FSText(coder, context));
++			objects.add(new FSSpan(coder, context));
+ 
+ 		coder.readBits(8, false);
+ 
+@@ -475,7 +475,7 @@
+ 	{
+ 		int numberOfBits = 0;
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
+ 			numberOfBits = Math.max(numberOfBits, i.next().glyphBits());
+ 
+ 		return numberOfBits;
+@@ -485,7 +485,7 @@
+ 	{
+ 		int numberOfBits = 1;
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
+ 			numberOfBits = Math.max(numberOfBits, i.next().advanceBits());
+ 
+ 		return numberOfBits;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java	2008-03-26 15:32:05 UTC (rev 386)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineText2.java	2008-03-26 15:32:58 UTC (rev 387)
+@@ -154,7 +154,7 @@
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+-	private ArrayList&lt;FSText&gt; objects;
++	private ArrayList&lt;FSSpan&gt; objects;
+ 
+ 	/**
+ 	 * Construct an FSDefineText2 object, initialising it with values decoded
+@@ -191,7 +191,7 @@
+ 	 */
+ 	public FSDefineText2(int anIdentifier, FSBounds aBounds,
+ 							FSCoordTransform aTransform,
+-							ArrayList&lt;FSText&gt; textRecordArray)
++							ArrayList&lt;FSSpan&gt; textRecordArray)
+ 	{
+ 		super(DefineText2, anIdentifier);
+ 		setBounds(aBounds);
+@@ -212,10 +212,10 @@
+ 		bounds = new FSBounds(obj.bounds);
+ 		transform = new FSCoordTransform(obj.transform);
+ 
+-		objects = new ArrayList&lt;FSText&gt;(obj.objects.size());
++		objects = new ArrayList&lt;FSSpan&gt;(obj.objects.size());
+ 
+-		for (Iterator&lt;FSText&gt; i = obj.objects.iterator(); i.hasNext();)
+-			objects.add((FSText) i.next().clone());
++		for (Iterator&lt;FSSpan&gt; i = obj.objects.iterator(); i.hasNext();)
++			objects.add((FSSpan) i.next().clone());
+ 	}
+ 
+ 	/**
+@@ -226,7 +226,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the text object is null.
+ 	 */
+-	public void add(FSText anObject)
++	public void add(FSSpan anObject)
+ 	{
+ 		if (anObject == null) {
+ 			throw new NullPointerException(&quot;Text object cannot be null&quot;);
+@@ -261,7 +261,7 @@
+ 	 * 
+ 	 * @return the array of text records (FSTextStyle and FSText objects).
+ 	 */
+-	public ArrayList&lt;FSText&gt; getObjects()
++	public ArrayList&lt;FSSpan&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -309,7 +309,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of text objects is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSText&gt; anArray)
++	public void setObjects(ArrayList&lt;FSSpan&gt; anArray)
+ 	{
+ 		if (objects == null) {
+ 			throw new NullPointerException(&quot;Array of text objects cannot be null.&quot;);
+@@ -324,10 +324,10 @@
+ 		anObject.bounds = (FSBounds) bounds.clone();
+ 		anObject.transform = (FSCoordTransform) transform.clone();
+ 
+-		anObject.objects = new ArrayList&lt;FSText&gt;(objects.size());
++		anObject.objects = new ArrayList&lt;FSSpan&gt;(objects.size());
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
+-			anObject.objects.add((FSText) i.next().clone());
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
++			anObject.objects.add((FSSpan) i.next().clone());
+ 
+ 		return anObject;
+ 	}
+@@ -374,7 +374,7 @@
+ 		length += transform.length(context);
+ 		length += 2;
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
+ 			length += i.next().length(context);
+ 
+ 		length += 1;
+@@ -400,7 +400,7 @@
+ 		coder.writeWord(context.glyphSize, 1);
+ 		coder.writeWord(context.advanceSize, 1);
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
+ 			i.next().encode(coder, context);
+ 
+ 		coder.writeWord(0, 1);
+@@ -466,10 +466,10 @@
+ 		 * FSDefineText objects with no text records - this appears to be a bug
+ 		 * in the Flash file.
+ 		 */
+-		objects = new ArrayList&lt;FSText&gt;();
++		objects = new ArrayList&lt;FSSpan&gt;();
+ 
+ 		while (coder.scanBits(8, false) != 0)
+-			objects.add(new FSText(coder, context));
++			objects.add(new FSSpan(coder, context));
+ 
+ 		coder.readBits(8, false);
+ 
+@@ -482,8 +482,8 @@
+ 	{
+ 		int numberOfBits = 0;
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
+-			numberOfBits = Math.max(numberOfBits, ((FSText) i.next()).glyphBits());
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
++			numberOfBits = Math.max(numberOfBits, ((FSSpan) i.next()).glyphBits());
+ 
+ 		return numberOfBits;
+ 	}
+@@ -492,8 +492,8 @@
+ 	{
+ 		int numberOfBits = 0;
+ 
+-		for (Iterator&lt;FSText&gt; i = objects.iterator(); i.hasNext();)
+-			numberOfBits = Math.max(numberOfBits, ((FSText) i.next()).advanceBits());
++		for (Iterator&lt;FSSpan&gt; i = objects.iterator(); i.hasNext();)
++			numberOfBits = Math.max(numberOfBits, ((FSSpan) i.next()).advanceBits());
+ 
+ 		return numberOfBits;
+ 	}
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/FSSpan.java (from rev 385, dev/dev-2-4/src/com/flagstone/transform/FSText.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSText.java	2008-03-26 15:26:42 UTC (rev 385)
++++ dev/dev-2-4/src/com/flagstone/transform/FSSpan.java	2008-03-26 15:32:58 UTC (rev 387)
+@@ -0,0 +1,734 @@
++/*
++ * FSText.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++import java.util.*;
++
++/**
++ * FSText is used to display a line of text.
++ * 
++ * &lt;p&gt;
++ * It contains an array of FSCharacter objects which identify the glyphs that
++ * will be displayed along with style information that sets the colour of the
++ * text, the size of the font and the relative placement of the line within a
++ * block of text.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;identifier&lt;/td&gt;
++ * &lt;td&gt;The identifier, in the range 1..65535, of the font object which contains
++ * the glyphs representing each character displayed. Optional. Set to 0 if the
++ * font is not being changed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;color&lt;/td&gt;
++ * &lt;td&gt;An FSColor object describing colour of the text. Optional. Set to null
++ * if the colour is not being changed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;offsetX&lt;/td&gt;
++ * &lt;td&gt;The offset, in twips, relative to the left side bounding rectangle of
++ * the text block where the text will be displayed. Optional. Set to zero if no
++ * indent is being specified.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;offsetY&lt;/td&gt;
++ * &lt;td&gt;The offset, in twips, relative to the bottom of the bounding rectangle
++ * of the text block where the text will be displayed. Optional. Set to the
++ * height of the font if only a single line of text is being displayed so the
++ * characters are placed correctly within the bounding rectangle defined for the
++ * text object.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;height&lt;/td&gt;
++ * &lt;td&gt;The height of the font, in twips, used to render the characters.
++ * Optional. Set to zero if the font size is not being changed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;characters&lt;/td&gt;
++ * &lt;td&gt;An array of FSCharacter objects which identify the glyph that will be
++ * displayed along with the spacing to the next character in the line of text.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Whether the alpha channel in the colour needs to be specified depends on the
++ * class the FSText is added to. The FSDefineText2 class supports transparent
++ * text while FSDefineText class does not.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The x and y offsets are used to control how several FSText objects are laid
++ * out to create a block of text. The y offset is specified relative to the
++ * bottom edge of the bounding rectangle, which is actually closer to the top of
++ * the screen as the direction of the y-axis is from the top to the bottom of
++ * the screen. In this respect Flash is counter-intuitive. Lines with higher
++ * offset values are displayed below lines with lower offsets.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * When several FSText objects are used to define a block of text using the
++ * FSDefineText or FSDefineText2 classes the attributes such as the font
++ * selected, size and colour must be specified in the first FSText object. For
++ * the remaining FSText objects these may be set to null or zero. The attributes
++ * will apply to all following FSText object until explicitly changed.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The creation and layout of the glyphs to create the text is too onerous to
++ * perform from scratch. It is easier and more convenient to use existing font
++ * definitions either by parsing an existing Flash file or by converting a font
++ * definition from a specification such as TrueType in order to obtain the
++ * glyphs and layout information.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * 1. Creating a simple string.&lt;br/&gt; This examples assumes a font definition
++ * that contains glyphs for the following set of characters ' ', 'a', 'b', 'c'
++ * .... 'x', 'y', 'z'. The font used fixed size for the spacing between glyphs
++ * .e.g. Courier.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * ArrayList characters = new ArrayList();
++ * 
++ * characters.add(new FSCharacter(1, 120)); // 'a'
++ * characters.add(new FSCharacter(0, 120)); // ' '
++ * characters.add(new FSCharacter(19, 120)); // 's'
++ * characters.add(new FSCharacter(10, 120)); // 't'
++ * characters.add(new FSCharacter(18, 120)); // 'r'
++ * characters.add(new FSCharacter(9, 120)); // 'i'
++ * characters.add(new FSCharacter(14, 120)); // 'n'
++ * characters.add(new FSCharacter(6, 120)); // 'g'
++ * 
++ * // Create the string setting the height to be 12-point (240 twips) and displaying 
++ * // the characters in black. The text is not indented or offset.
++ * 
++ * int xOffset = 0;
++ * int yOffset = 240;
++ * int fontSize = 240;
++ * 
++ * FSText string = new FSText(font.getIdentifier(), FSColorTable.black(), xOffset,
++ * 				yOffset, fontSize, characters);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * 2. Creating a block of text.&lt;br/&gt; Again this examples assumes a fixed size
++ * font definition that contains glyphs for the set of characters.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * ArrayList line1 = new ArrayList();
++ * 
++ * line1.add(new FSCharacter(19, 120)); // 's'
++ * line1.add(new FSCharacter(10, 120)); // 't'
++ * line1.add(new FSCharacter(18, 120)); // 'r'
++ * line1.add(new FSCharacter(9, 120)); // 'i'
++ * line1.add(new FSCharacter(14, 120)); // 'n'
++ * line1.add(new FSCharacter(6, 120)); // 'g'
++ * line1.add(new FSCharacter(0, 120)); // ' '
++ * line1.add(new FSCharacter(28, 120)); // '1'
++ * 
++ * // Create the string setting the height to be 12-point (240 twips) and 
++ * // displaying the characters in black. The text is not indented or offset.
++ * 
++ * int fontSize = 240;
++ * int yOffset = 240;
++ * 
++ * FSText string1 = new FSText(font.getIdentifier(), FSColorTable.black(), 0,
++ * 				yOffset, fontSize, line1);
++ * 
++ * ArrayList line1 = new ArrayList();
++ * 
++ * line2.add(new FSCharacter(19, 120)); // 's'
++ * line2.add(new FSCharacter(10, 120)); // 't'
++ * line2.add(new FSCharacter(18, 120)); // 'r'
++ * line2.add(new FSCharacter(9, 120)); // 'i'
++ * line2.add(new FSCharacter(14, 120)); // 'n'
++ * line2.add(new FSCharacter(6, 120)); // 'g'
++ * line2.add(new FSCharacter(0, 120)); // ' '
++ * line2.add(new FSCharacter(29, 120)); // '2'
++ * 
++ * // Display the second string 'one line' height (240 twips) below the first. 
++ * // The font size and colour remain unchanged.
++ * 
++ * yOffset += fontSize;
++ * 
++ * FSText string2 = new FSText(0, yOffset, line2);
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSText class represents both the TextRecordType0 and TextRecordType1
++ * structures from the Macromedia Flash (SWF) File Format Specification. It was
++ * introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSSpan implements Cloneable, Codeable
++{
++	/** Defines that the font character set is based on the Unicode standard. */
++	public static final int Unicode = 0;
++
++	/**
++	 * Defines that the font character set is based on the SJIS standard for
++	 * representing Kanji characters.
++	 */
++	public static final int SJIS = 2;
++
++	/**
++	 * Defines that the font character set is based on the ANSI UTF-8 standard
++	 * which supports standard ASCII encoded strings.
++	 */
++	public static final int ANSI = 1;
++
++	// Flash 6
++	// / Code used to identify the spoken language for Latin fonts.
++	public static final int Latin = 1;
++
++	// / Code used to identify the spoken language for Japanese fonts.
++	public static final int Japanese = 2;
++
++	// / Code used to identify the spoken language for Japanese fonts.
++	public static final int Korean = 3;
++
++	// / Code used to identify the spoken language for simplified Chinese fonts.
++	public static final int SimplifiedChinese = 4;
++
++	// / Code used to identify the spoken language for traditional Chinese
++	// fonts.
++	public static final int TraditionalChinese = 5;
++
++	// End Flash 6
++
++	private int identifier;
++	private FSColor color;
++	private int offsetX;
++	private int offsetY;
++	private int height;
++
++	private ArrayList&lt;FSCharacter&gt; characters;
++
++	/**
++	 * Construct an FSText object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSSpan(FSCoder coder, FSContext context)
++	{
++		decode(coder, context);
++	}
++
++	// TODO check constructors to see if any can be removed or restructured.
++	/**
++	 * Constructs an FSText object specifying the array of characters to be
++	 * displayed and their relative placement within a block of text. The
++	 * selected font, colour of the text and height will remain unchanged from
++	 * previous settings.
++	 * 
++	 * @param xOffset
++	 *            the location of the text relative to the left edge of the
++	 *            bounding rectangle enclosing the block of text.
++	 * @param yOffset
++	 *            the location of the text relative to the bottom edge of the
++	 *            bounding rectangle enclosing the block of text.
++	 * @param anArray
++	 *            an array of FSCharacter objects.
++	 *  
++	 * @throws IllegalArgumentException if the x and y offsets are outside the 
++	 * range -32768..32767.
++	 * @throws NullPointerException if the character array is null.
++	 */
++	public FSSpan(int xOffset, int yOffset, ArrayList&lt;FSCharacter&gt; anArray)
++	{
++		setOffsetX(xOffset);
++		setOffsetY(yOffset);
++		setCharacters(anArray);
++	}
++
++	/**
++	 * Constructs an FSText object, specifying the colour and position of the
++	 * following FSText.
++	 * 
++	 * @param anIdentifier
++	 *            the identifier of the font that the text will be rendered in.
++	 * @param aColor
++	 *            the colour of the text.
++	 * @param xOffset
++	 *            the location of the text relative to the left edge of the
++	 *            bounding rectangle enclosing the text.
++	 * @param yOffset
++	 *            the location of the text relative to the bottom edge of the
++	 *            bounding rectangle enclosing the text.
++	 * @param aHeight
++	 *            the height of the text in the chosen font.
++	 * @param anArray
++	 *            an array of FSCharacter objects.
++	 *            
++	 * @throws IllegalArgumentException if the font identifier is outside the range 1..65535.
++	 * @throws IllegalArgumentException if the x and y offsets are outside the 
++	 * range -32768..32767.
++	 * @throws IllegalArgumentException if the font height is outside the range 0..65535.
++	 * @throws NullPointerException if the character array is null.
++	 */
++	public FSSpan(int anIdentifier, FSColor aColor, int xOffset, int yOffset,
++					int aHeight, ArrayList&lt;FSCharacter&gt; anArray)
++	{
++		setIdentifier(anIdentifier);
++		setColor(aColor);
++		setOffsetX(xOffset);
++		setOffsetY(yOffset);
++		setHeight(aHeight);
++		setCharacters(anArray);
++	}
++
++	/**
++	 * Constructs an FSText object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSText object.
++	 */
++	public FSSpan(FSSpan obj)
++	{
++		identifier = obj.identifier;
++		color = new FSColor(obj.color);
++		offsetX = obj.offsetX;
++		offsetY = obj.offsetY;
++		height = obj.height;
++
++		characters = new ArrayList&lt;FSCharacter&gt;(obj.characters.size());
++
++		for (Iterator&lt;FSCharacter&gt; i = obj.characters.iterator(); i.hasNext();) {
++			characters.add((FSCharacter)i.next().clone());			
++		}
++	}
++
++	/**
++	 * Gets the identifier of the font in which the text will be displayed.
++	 * 
++	 * @return the identifier of the font.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
++
++	/**
++	 * Gets the colour of the font in which the text will be displayed.
++	 * 
++	 * @return the colour of the text.
++	 */
++	public FSColor getColor()
++	{
++		return color;
++	}
++
++	/**
++	 * Gets the location of the start of the text relative to the left edge of
++	 * the bounding rectangle in twips.
++	 * 
++	 * @return the indentation applied to the text.
++	 */
++	public int getOffsetX()
++	{
++		return offsetX;
++	}
++
++	/**
++	 * Gets the location of the start of the text relative to the bottom edge of
++	 * the bounding rectangle in twips.
++	 * 
++	 * @return the location of the text relative to the bottom of the bounding
++	 *         rectangle.
++	 */
++	public int getOffsetY()
++	{
++		return offsetY;
++	}
++
++	/**
++	 * Gets the height of the text.
++	 * 
++	 * @return the height of the font used to displayed the text.
++	 */
++	public int getHeight()
++	{
++		return height;
++	}
++
++	/**
++	 * Sets the identifier of the font in which the text will be displayed.
++	 * 
++	 * @param anIdentifier
++	 *            the identifier of the font that the text will be rendered in.
++	 *            
++	 * @throws IllegalArgumentException if the font identifier is outside the range 1..65535.
++	 */
++	public void setIdentifier(int anIdentifier)
++	{
++		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Identifier for font must be in the range 1..65535.&quot;);
++		}
++		identifier = anIdentifier;
++	}
++
++	/**
++	 * Sets the colour of the font in which the text will be displayed.
++	 * 
++	 * @param aColor
++	 *            the colour of the text.
++	 */
++	public void setColor(FSColor aColor)
++	{
++		color = aColor;
++	}
++
++	/**
++	 * Sets the location of the start of the text relative to the left edge of
++	 * the bounding rectangle in twips.
++	 * 
++	 * @param offset
++	 *            the location of the text relative to the left edge of the
++	 *            bounding rectangle enclosing the text.
++	 *  
++	 * @throws IllegalArgumentException if the offset is outside the range -32768..32767.
++	 */
++	public void setOffsetX(int offset)
++	{
++		if (offset &lt; -32768 || offset &gt; 32767) {
++			throw new IllegalArgumentException(&quot;Offset must be in the range -32768..32767.&quot;);
++		}
++		offsetX = offset;
++	}
++
++	/**
++	 * Sets the location of the start of the text relative to the bottom edge of
++	 * the bounding rectangle in twips.
++	 * 
++	 * @param offset
++	 *            the location of the text relative to the bottom edge of the
++	 *            bounding rectangle enclosing the text.
++	 *  
++	 * @throws IllegalArgumentException if the offset is outside the range -32768..32767.
++	 */
++	public void setOffsetY(int offset)
++	{
++		if (offset &lt; -32768 || offset &gt; 32767) {
++			throw new IllegalArgumentException(&quot;Offset must be in the range -32768..32767.&quot;);
++		}
++		offsetY = offset;
++	}
++
++	/**
++	 * Sets the height of the text.
++	 * 
++	 * @param aHeight
++	 *            the height of the text in the chosen font.
++	 *            
++	 * @throws IllegalArgumentException if the font height is outside the range 0..65535.
++	 */
++	public void setHeight(int aHeight)
++	{
++		if (aHeight &lt; 0 || aHeight &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Offset must be in the range 0..65535.&quot;);
++		}
++		height = aHeight;
++	}
++
++	/**
++	 * Adds an FSCharacter object to the array of characters.
++	 * 
++	 * @param aCharacter
++	 *            an FSCharacter object.
++	 */
++	public void add(FSCharacter aCharacter)
++	{
++		characters.add(aCharacter);
++	}
++
++	/**
++	 * Gets the array of characters to be displayed.
++	 * 
++	 * @return the array of FSCharacter objects.
++	 */
++	public ArrayList&lt;FSCharacter&gt; getCharacters()
++	{
++		return characters;
++	}
++
++	/**
++	 * Sets the array of characters to be displayed.
++	 * 
++	 * @param anArray
++	 *            an array of FSCharacter objects.
++	 *            
++	 * @throws NullPointerException if the array is null.
++	 */
++	public void setCharacters(ArrayList&lt;FSCharacter&gt; anArray)
++	{
++		if (anArray == null) {
++			throw new NullPointerException(&quot;Array of characters cannot be null.&quot;);
++		}
++		characters = anArray;
++	}
++
++	int glyphBits()
++	{
++		int numberOfBits = 0;
++
++		for (Iterator&lt;FSCharacter&gt; i = characters.iterator(); i.hasNext();)
++			numberOfBits = Math.max(numberOfBits, FSCoder.size(i.next().getGlyphIndex(), false));
++
++		return numberOfBits;
++	}
++
++	int advanceBits()
++	{
++		int numberOfBits = 0;
++
++		for (Iterator&lt;FSCharacter&gt; i = characters.iterator(); i.hasNext();)
++			numberOfBits = Math.max(numberOfBits, FSCoder.size(i.next().getAdvance(),true));
++
++		return numberOfBits;
++	}
++
++	public Object clone()
++	{
++		FSSpan anObject = null;
++
++		try {
++			anObject = (FSSpan) super.clone();
++
++			anObject.color = (color != null) ? (FSColor) color.clone() : null;
++			anObject.characters = new ArrayList&lt;FSCharacter&gt;();
++
++			for (Iterator&lt;FSCharacter&gt; i = characters.iterator(); i.hasNext();)
++				anObject.characters.add((FSCharacter) i.next().clone());
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
++
++		if (super.equals(anObject))
++		{
++			FSSpan typedObject = (FSSpan) anObject;
++
++			result = identifier == typedObject.identifier;
++
++			if (color != null)
++				result = result &amp;&amp; color.equals(typedObject.color);
++			else
++				result = result &amp;&amp; color == typedObject.color;
++
++			result = result &amp;&amp; offsetX == typedObject.offsetX;
++			result = result &amp;&amp; offsetY == typedObject.offsetY;
++			result = result &amp;&amp; height == typedObject.height;
++			result = characters.equals(typedObject.characters);
++		}
++		return result;
++	}
++
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSText: { &quot;);
++		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
++		
++		if (color != null) {
++			buffer.append(&quot;color = &quot;).append(color.toString()).append(&quot;; &quot;);
++		}
++		buffer.append(&quot;offsetX = &quot;).append(offsetX).append(&quot;; &quot;);
++		buffer.append(&quot;offsetY = &quot;).append(offsetY).append(&quot;; &quot;);
++		buffer.append(&quot;height = &quot;).append(height).append(&quot;; &quot;);
++		buffer.append(&quot;characters = array[&quot;).append(characters.size()).append(&quot;]; &quot;);
++		buffer.append(&quot;}&quot;);
++		
++		return buffer.toString();
++	}
++
++	public int length(FSContext context)
++	{
++		boolean _containsFont = containsFont();
++		boolean _containsColor = containsColor();
++		boolean _containsOffsetX = containsOffsetX();
++		boolean _containsOffsetY = containsOffsetY();
++
++		int length = 1;
++
++		if (containsStyle())
++		{
++			length += (_containsFont) ? 2 : 0;
++			length += (_containsColor) ? color.length(context) : 0;
++			length += (_containsOffsetY) ? 2 : 0;
++			length += (_containsOffsetX) ? 2 : 0;
++			length += (_containsFont) ? 2 : 0;
++		}
++
++		length += 1;
++
++		if (characters.size() &gt; 0)
++		{
++			int numberOfBits = 0;
++			int numberOfGlyphBits = context.glyphSize;
++			int numberOfAdvanceBits = context.advanceSize;
++
++			numberOfBits = (numberOfGlyphBits + numberOfAdvanceBits)
++							* characters.size();
++			numberOfBits += (numberOfBits % 8 &gt; 0) ? 8 - (numberOfBits % 8) : 0;
++
++			length += numberOfBits &gt;&gt; 3;
++		}
++		return length;
++	}
++
++	public void encode(FSCoder coder, FSContext context)
++	{
++		boolean _containsFont = containsFont();
++		boolean _containsColor = containsColor();
++		boolean _containsOffsetY = containsOffsetY();
++		boolean _containsOffsetX = containsOffsetX();
++
++		coder.writeBits(1, 1);
++		coder.writeBits(0, 3);
++
++		coder.writeBits(_containsFont ? 1 : 0, 1);
++		coder.writeBits(_containsColor ? 1 : 0, 1);
++		coder.writeBits(_containsOffsetY ? 1 : 0, 1);
++		coder.writeBits(_containsOffsetX ? 1 : 0, 1);
++
++		if (_containsFont)
++			coder.writeWord(identifier, 2);
++
++		if (_containsColor)
++			color.encode(coder, context);
++
++		if (_containsOffsetX)
++			coder.writeWord(offsetX, 2);
++
++		if (_containsOffsetY)
++			coder.writeWord(offsetY, 2);
++
++		if (_containsFont)
++			coder.writeWord(height, 2);
++
++		coder.writeWord(characters.size(), 1);
++
++		for (Iterator&lt;FSCharacter&gt; charIter = characters.iterator(); charIter.hasNext();)
++			charIter.next().encode(coder, context);
++
++		coder.alignToByte();
++	}
++
++	public void decode(FSCoder coder, FSContext context)
++	{
++		/* type */coder.readBits(1, false);
++		/* reserved */coder.readBits(3, false);
++
++		boolean _containsFont = coder.readBits(1, false) != 0 ? true : false;
++		boolean _containsColor = coder.readBits(1, false) != 0 ? true : false;
++		boolean _containsOffsetY = coder.readBits(1, false) != 0 ? true : false;
++		boolean _containsOffsetX = coder.readBits(1, false) != 0 ? true : false;
++
++		if (_containsFont)
++			identifier = coder.readWord(2, false);
++
++		if (_containsColor)
++			color = new FSColor(coder, context);
++
++		if (_containsOffsetX)
++			offsetX = coder.readWord(2, true);
++
++		if (_containsOffsetY)
++			offsetY = coder.readWord(2, true);
++
++		if (_containsFont)
++			height = coder.readWord(2, false);
++
++		int charCount = coder.readByte();
++
++		characters = new ArrayList&lt;FSCharacter&gt;(charCount);
++
++		for (int i = 0; i &lt; charCount; i++)
++			characters.add(new FSCharacter(coder, context));
++
++		coder.alignToByte();
++	}
++
++	private boolean containsFont()
++	{
++		return identifier != 0 &amp;&amp; height != 0;
++	}
++
++	private boolean containsColor()
++	{
++		return color != null;
++	}
++
++	private boolean containsOffsetX()
++	{
++		return offsetX != Transform.VALUE_NOT_SET;
++	}
++
++	private boolean containsOffsetY()
++	{
++		return offsetY != Transform.VALUE_NOT_SET;
++	}
++
++	boolean containsStyle()
++	{
++		return containsFont() || containsColor() || containsOffsetX()
++						|| containsOffsetY();
++	}
++
++}
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/FSText.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSText.java	2008-03-26 15:32:05 UTC (rev 386)
++++ dev/dev-2-4/src/com/flagstone/transform/FSText.java	2008-03-26 15:32:58 UTC (rev 387)
+@@ -1,734 +0,0 @@
+-/*
+- * FSText.java
+- * Transform
+- * 
+- * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-
+-package com.flagstone.transform;
+-
+-import java.util.*;
+-
+-/**
+- * FSText is used to display a line of text.
+- * 
+- * &lt;p&gt;
+- * It contains an array of FSCharacter objects which identify the glyphs that
+- * will be displayed along with style information that sets the colour of the
+- * text, the size of the font and the relative placement of the line within a
+- * block of text.
+- * &lt;/p&gt;
+- * 
+- * &lt;table class=&quot;datasheet&quot;&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;identifier&lt;/td&gt;
+- * &lt;td&gt;The identifier, in the range 1..65535, of the font object which contains
+- * the glyphs representing each character displayed. Optional. Set to 0 if the
+- * font is not being changed.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;color&lt;/td&gt;
+- * &lt;td&gt;An FSColor object describing colour of the text. Optional. Set to null
+- * if the colour is not being changed.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;offsetX&lt;/td&gt;
+- * &lt;td&gt;The offset, in twips, relative to the left side bounding rectangle of
+- * the text block where the text will be displayed. Optional. Set to zero if no
+- * indent is being specified.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;offsetY&lt;/td&gt;
+- * &lt;td&gt;The offset, in twips, relative to the bottom of the bounding rectangle
+- * of the text block where the text will be displayed. Optional. Set to the
+- * height of the font if only a single line of text is being displayed so the
+- * characters are placed correctly within the bounding rectangle defined for the
+- * text object.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;height&lt;/td&gt;
+- * &lt;td&gt;The height of the font, in twips, used to render the characters.
+- * Optional. Set to zero if the font size is not being changed.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;characters&lt;/td&gt;
+- * &lt;td&gt;An array of FSCharacter objects which identify the glyph that will be
+- * displayed along with the spacing to the next character in the line of text.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;/table&gt;
+- * 
+- * &lt;p&gt;
+- * Whether the alpha channel in the colour needs to be specified depends on the
+- * class the FSText is added to. The FSDefineText2 class supports transparent
+- * text while FSDefineText class does not.
+- * &lt;/p&gt;
+- * 
+- * &lt;p&gt;
+- * The x and y offsets are used to control how several FSText objects are laid
+- * out to create a block of text. The y offset is specified relative to the
+- * bottom edge of the bounding rectangle, which is actually closer to the top of
+- * the screen as the direction of the y-axis is from the top to the bottom of
+- * the screen. In this respect Flash is counter-intuitive. Lines with higher
+- * offset values are displayed below lines with lower offsets.
+- * &lt;/p&gt;
+- * 
+- * &lt;p&gt;
+- * When several FSText objects are used to define a block of text using the
+- * FSDefineText or FSDefineText2 classes the attributes such as the font
+- * selected, size and colour must be specified in the first FSText object. For
+- * the remaining FSText objects these may be set to null or zero. The attributes
+- * will apply to all following FSText object until explicitly changed.
+- * &lt;/p&gt;
+- * 
+- * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
+- * 
+- * &lt;p&gt;
+- * The creation and layout of the glyphs to create the text is too onerous to
+- * perform from scratch. It is easier and more convenient to use existing font
+- * definitions either by parsing an existing Flash file or by converting a font
+- * definition from a specification such as TrueType in order to obtain the
+- * glyphs and layout information.
+- * &lt;/p&gt;
+- * 
+- * &lt;p&gt;
+- * 1. Creating a simple string.&lt;br/&gt; This examples assumes a font definition
+- * that contains glyphs for the following set of characters ' ', 'a', 'b', 'c'
+- * .... 'x', 'y', 'z'. The font used fixed size for the spacing between glyphs
+- * .e.g. Courier.
+- * &lt;/p&gt;
+- * 
+- * &lt;pre&gt;
+- * ArrayList characters = new ArrayList();
+- * 
+- * characters.add(new FSCharacter(1, 120)); // 'a'
+- * characters.add(new FSCharacter(0, 120)); // ' '
+- * characters.add(new FSCharacter(19, 120)); // 's'
+- * characters.add(new FSCharacter(10, 120)); // 't'
+- * characters.add(new FSCharacter(18, 120)); // 'r'
+- * characters.add(new FSCharacter(9, 120)); // 'i'
+- * characters.add(new FSCharacter(14, 120)); // 'n'
+- * characters.add(new FSCharacter(6, 120)); // 'g'
+- * 
+- * // Create the string setting the height to be 12-point (240 twips) and displaying 
+- * // the characters in black. The text is not indented or offset.
+- * 
+- * int xOffset = 0;
+- * int yOffset = 240;
+- * int fontSize = 240;
+- * 
+- * FSText string = new FSText(font.getIdentifier(), FSColorTable.black(), xOffset,
+- * 				yOffset, fontSize, characters);
+- * &lt;/pre&gt;
+- * 
+- * &lt;p&gt;
+- * 2. Creating a block of text.&lt;br/&gt; Again this examples assumes a fixed size
+- * font definition that contains glyphs for the set of characters.
+- * &lt;/p&gt;
+- * 
+- * &lt;pre&gt;
+- * ArrayList line1 = new ArrayList();
+- * 
+- * line1.add(new FSCharacter(19, 120)); // 's'
+- * line1.add(new FSCharacter(10, 120)); // 't'
+- * line1.add(new FSCharacter(18, 120)); // 'r'
+- * line1.add(new FSCharacter(9, 120)); // 'i'
+- * line1.add(new FSCharacter(14, 120)); // 'n'
+- * line1.add(new FSCharacter(6, 120)); // 'g'
+- * line1.add(new FSCharacter(0, 120)); // ' '
+- * line1.add(new FSCharacter(28, 120)); // '1'
+- * 
+- * // Create the string setting the height to be 12-point (240 twips) and 
+- * // displaying the characters in black. The text is not indented or offset.
+- * 
+- * int fontSize = 240;
+- * int yOffset = 240;
+- * 
+- * FSText string1 = new FSText(font.getIdentifier(), FSColorTable.black(), 0,
+- * 				yOffset, fontSize, line1);
+- * 
+- * ArrayList line1 = new ArrayList();
+- * 
+- * line2.add(new FSCharacter(19, 120)); // 's'
+- * line2.add(new FSCharacter(10, 120)); // 't'
+- * line2.add(new FSCharacter(18, 120)); // 'r'
+- * line2.add(new FSCharacter(9, 120)); // 'i'
+- * line2.add(new FSCharacter(14, 120)); // 'n'
+- * line2.add(new FSCharacter(6, 120)); // 'g'
+- * line2.add(new FSCharacter(0, 120)); // ' '
+- * line2.add(new FSCharacter(29, 120)); // '2'
+- * 
+- * // Display the second string 'one line' height (240 twips) below the first. 
+- * // The font size and colour remain unchanged.
+- * 
+- * yOffset += fontSize;
+- * 
+- * FSText string2 = new FSText(0, yOffset, line2);
+- * &lt;/pre&gt;
+- * 
+- * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+- * 
+- * &lt;p&gt;
+- * The FSText class represents both the TextRecordType0 and TextRecordType1
+- * structures from the Macromedia Flash (SWF) File Format Specification. It was
+- * introduced in Flash 1.
+- * &lt;/p&gt;
+- */
+-public class FSText implements Cloneable, Codeable
+-{
+-	/** Defines that the font character set is based on the Unicode standard. */
+-	public static final int Unicode = 0;
+-
+-	/**
+-	 * Defines that the font character set is based on the SJIS standard for
+-	 * representing Kanji characters.
+-	 */
+-	public static final int SJIS = 2;
+-
+-	/**
+-	 * Defines that the font character set is based on the ANSI UTF-8 standard
+-	 * which supports standard ASCII encoded strings.
+-	 */
+-	public static final int ANSI = 1;
+-
+-	// Flash 6
+-	// / Code used to identify the spoken language for Latin fonts.
+-	public static final int Latin = 1;
+-
+-	// / Code used to identify the spoken language for Japanese fonts.
+-	public static final int Japanese = 2;
+-
+-	// / Code used to identify the spoken language for Japanese fonts.
+-	public static final int Korean = 3;
+-
+-	// / Code used to identify the spoken language for simplified Chinese fonts.
+-	public static final int SimplifiedChinese = 4;
+-
+-	// / Code used to identify the spoken language for traditional Chinese
+-	// fonts.
+-	public static final int TraditionalChinese = 5;
+-
+-	// End Flash 6
+-
+-	private int identifier;
+-	private FSColor color;
+-	private int offsetX;
+-	private int offsetY;
+-	private int height;
+-
+-	private ArrayList&lt;FSCharacter&gt; characters;
+-
+-	/**
+-	 * Construct an FSText object, initialising it with values decoded from an
+-	 * encoded object.
+-	 * 
+-	 * @param coder
+-	 *            an FSCoder containing the binary data.
+-	 */
+-	public FSText(FSCoder coder, FSContext context)
+-	{
+-		decode(coder, context);
+-	}
+-
+-	// TODO check constructors to see if any can be removed or restructured.
+-	/**
+-	 * Constructs an FSText object specifying the array of characters to be
+-	 * displayed and their relative placement within a block of text. The
+-	 * selected font, colour of the text and height will remain unchanged from
+-	 * previous settings.
+-	 * 
+-	 * @param xOffset
+-	 *            the location of the text relative to the left edge of the
+-	 *            bounding rectangle enclosing the block of text.
+-	 * @param yOffset
+-	 *            the location of the text relative to the bottom edge of the
+-	 *            bounding rectangle enclosing the block of text.
+-	 * @param anArray
+-	 *            an array of FSCharacter objects.
+-	 *  
+-	 * @throws IllegalArgumentException if the x and y offsets are outside the 
+-	 * range -32768..32767.
+-	 * @throws NullPointerException if the character array is null.
+-	 */
+-	public FSText(int xOffset, int yOffset, ArrayList&lt;FSCharacter&gt; anArray)
+-	{
+-		setOffsetX(xOffset);
+-		setOffsetY(yOffset);
+-		setCharacters(anArray);
+-	}
+-
+-	/**
+-	 * Constructs an FSText object, specifying the colour and position of the
+-	 * following FSText.
+-	 * 
+-	 * @param anIdentifier
+-	 *            the identifier of the font that the text will be rendered in.
+-	 * @param aColor
+-	 *            the colour of the text.
+-	 * @param xOffset
+-	 *            the location of the text relative to the left edge of the
+-	 *            bounding rectangle enclosing the text.
+-	 * @param yOffset
+-	 *            the location of the text relative to the bottom edge of the
+-	 *            bounding rectangle enclosing the text.
+-	 * @param aHeight
+-	 *            the height of the text in the chosen font.
+-	 * @param anArray
+-	 *            an array of FSCharacter objects.
+-	 *            
+-	 * @throws IllegalArgumentException if the font identifier is outside the range 1..65535.
+-	 * @throws IllegalArgumentException if the x and y offsets are outside the 
+-	 * range -32768..32767.
+-	 * @throws IllegalArgumentException if the font height is outside the range 0..65535.
+-	 * @throws NullPointerException if the character array is null.
+-	 */
+-	public FSText(int anIdentifier, FSColor aColor, int xOffset, int yOffset,
+-					int aHeight, ArrayList&lt;FSCharacter&gt; anArray)
+-	{
+-		setIdentifier(anIdentifier);
+-		setColor(aColor);
+-		setOffsetX(xOffset);
+-		setOffsetY(yOffset);
+-		setHeight(aHeight);
+-		setCharacters(anArray);
+-	}
+-
+-	/**
+-	 * Constructs an FSText object by copying values from an existing object.
+-	 * 
+-	 * @param obj
+-	 *            an FSText object.
+-	 */
+-	public FSText(FSText obj)
+-	{
+-		identifier = obj.identifier;
+-		color = new FSColor(obj.color);
+-		offsetX = obj.offsetX;
+-		offsetY = obj.offsetY;
+-		height = obj.height;
+-
+-		characters = new ArrayList&lt;FSCharacter&gt;(obj.characters.size());
+-
+-		for (Iterator&lt;FSCharacter&gt; i = obj.characters.iterator(); i.hasNext();) {
+-			characters.add((FSCharacter)i.next().clone());			
+-		}
+-	}
+-
+-	/**
+-	 * Gets the identifier of the font in which the text will be displayed.
+-	 * 
+-	 * @return the identifier of the font.
+-	 */
+-	public int getIdentifier()
+-	{
+-		return identifier;
+-	}
+-
+-	/**
+-	 * Gets the colour of the font in which the text will be displayed.
+-	 * 
+-	 * @return the colour of the text.
+-	 */
+-	public FSColor getColor()
+-	{
+-		return color;
+-	}
+-
+-	/**
+-	 * Gets the location of the start of the text relative to the left edge of
+-	 * the bounding rectangle in twips.
+-	 * 
+-	 * @return the indentation applied to the text.
+-	 */
+-	public int getOffsetX()
+-	{
+-		return offsetX;
+-	}
+-
+-	/**
+-	 * Gets the location of the start of the text relative to the bottom edge of
+-	 * the bounding rectangle in twips.
+-	 * 
+-	 * @return the location of the text relative to the bottom of the bounding
+-	 *         rectangle.
+-	 */
+-	public int getOffsetY()
+-	{
+-		return offsetY;
+-	}
+-
+-	/**
+-	 * Gets the height of the text.
+-	 * 
+-	 * @return the height of the font used to displayed the text.
+-	 */
+-	public int getHeight()
+-	{
+-		return height;
+-	}
+-
+-	/**
+-	 * Sets the identifier of the font in which the text will be displayed.
+-	 * 
+-	 * @param anIdentifier
+-	 *            the identifier of the font that the text will be rendered in.
+-	 *            
+-	 * @throws IllegalArgumentException if the font identifier is outside the range 1..65535.
+-	 */
+-	public void setIdentifier(int anIdentifier)
+-	{
+-		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Identifier for font must be in the range 1..65535.&quot;);
+-		}
+-		identifier = anIdentifier;
+-	}
+-
+-	/**
+-	 * Sets the colour of the font in which the text will be displayed.
+-	 * 
+-	 * @param aColor
+-	 *            the colour of the text.
+-	 */
+-	public void setColor(FSColor aColor)
+-	{
+-		color = aColor;
+-	}
+-
+-	/**
+-	 * Sets the location of the start of the text relative to the left edge of
+-	 * the bounding rectangle in twips.
+-	 * 
+-	 * @param offset
+-	 *            the location of the text relative to the left edge of the
+-	 *            bounding rectangle enclosing the text.
+-	 *  
+-	 * @throws IllegalArgumentException if the offset is outside the range -32768..32767.
+-	 */
+-	public void setOffsetX(int offset)
+-	{
+-		if (offset &lt; -32768 || offset &gt; 32767) {
+-			throw new IllegalArgumentException(&quot;Offset must be in the range -32768..32767.&quot;);
+-		}
+-		offsetX = offset;
+-	}
+-
+-	/**
+-	 * Sets the location of the start of the text relative to the bottom edge of
+-	 * the bounding rectangle in twips.
+-	 * 
+-	 * @param offset
+-	 *            the location of the text relative to the bottom edge of the
+-	 *            bounding rectangle enclosing the text.
+-	 *  
+-	 * @throws IllegalArgumentException if the offset is outside the range -32768..32767.
+-	 */
+-	public void setOffsetY(int offset)
+-	{
+-		if (offset &lt; -32768 || offset &gt; 32767) {
+-			throw new IllegalArgumentException(&quot;Offset must be in the range -32768..32767.&quot;);
+-		}
+-		offsetY = offset;
+-	}
+-
+-	/**
+-	 * Sets the height of the text.
+-	 * 
+-	 * @param aHeight
+-	 *            the height of the text in the chosen font.
+-	 *            
+-	 * @throws IllegalArgumentException if the font height is outside the range 0..65535.
+-	 */
+-	public void setHeight(int aHeight)
+-	{
+-		if (aHeight &lt; 0 || aHeight &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Offset must be in the range 0..65535.&quot;);
+-		}
+-		height = aHeight;
+-	}
+-
+-	/**
+-	 * Adds an FSCharacter object to the array of characters.
+-	 * 
+-	 * @param aCharacter
+-	 *            an FSCharacter object.
+-	 */
+-	public void add(FSCharacter aCharacter)
+-	{
+-		characters.add(aCharacter);
+-	}
+-
+-	/**
+-	 * Gets the array of characters to be displayed.
+-	 * 
+-	 * @return the array of FSCharacter objects.
+-	 */
+-	public ArrayList&lt;FSCharacter&gt; getCharacters()
+-	{
+-		return characters;
+-	}
+-
+-	/**
+-	 * Sets the array of characters to be displayed.
+-	 * 
+-	 * @param anArray
+-	 *            an array of FSCharacter objects.
+-	 *            
+-	 * @throws NullPointerException if the array is null.
+-	 */
+-	public void setCharacters(ArrayList&lt;FSCharacter&gt; anArray)
+-	{
+-		if (anArray == null) {
+-			throw new NullPointerException(&quot;Array of characters cannot be null.&quot;);
+-		}
+-		characters = anArray;
+-	}
+-
+-	int glyphBits()
+-	{
+-		int numberOfBits = 0;
+-
+-		for (Iterator&lt;FSCharacter&gt; i = characters.iterator(); i.hasNext();)
+-			numberOfBits = Math.max(numberOfBits, FSCoder.size(i.next().getGlyphIndex(), false));
+-
+-		return numberOfBits;
+-	}
+-
+-	int advanceBits()
+-	{
+-		int numberOfBits = 0;
+-
+-		for (Iterator&lt;FSCharacter&gt; i = characters.iterator(); i.hasNext();)
+-			numberOfBits = Math.max(numberOfBits, FSCoder.size(i.next().getAdvance(),true));
+-
+-		return numberOfBits;
+-	}
+-
+-	public Object clone()
+-	{
+-		FSText anObject = null;
+-
+-		try {
+-			anObject = (FSText) super.clone();
+-
+-			anObject.color = (color != null) ? (FSColor) color.clone() : null;
+-			anObject.characters = new ArrayList&lt;FSCharacter&gt;();
+-
+-			for (Iterator&lt;FSCharacter&gt; i = characters.iterator(); i.hasNext();)
+-				anObject.characters.add((FSCharacter) i.next().clone());
+-		} 
+-		catch (CloneNotSupportedException e) {
+-			throw new InternalError();
+-		}
+-		return anObject;
+-	}
+-
+-	public boolean equals(Object anObject)
+-	{
+-		boolean result = false;
+-
+-		if (super.equals(anObject))
+-		{
+-			FSText typedObject = (FSText) anObject;
+-
+-			result = identifier == typedObject.identifier;
+-
+-			if (color != null)
+-				result = result &amp;&amp; color.equals(typedObject.color);
+-			else
+-				result = result &amp;&amp; color == typedObject.color;
+-
+-			result = result &amp;&amp; offsetX == typedObject.offsetX;
+-			result = result &amp;&amp; offsetY == typedObject.offsetY;
+-			result = result &amp;&amp; height == typedObject.height;
+-			result = characters.equals(typedObject.characters);
+-		}
+-		return result;
+-	}
+-
+-	public String toString()
+-	{
+-		StringBuffer buffer = new StringBuffer();
+-
+-		buffer.append(&quot;FSText: { &quot;);
+-		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
+-		
+-		if (color != null) {
+-			buffer.append(&quot;color = &quot;).append(color.toString()).append(&quot;; &quot;);
+-		}
+-		buffer.append(&quot;offsetX = &quot;).append(offsetX).append(&quot;; &quot;);
+-		buffer.append(&quot;offsetY = &quot;).append(offsetY).append(&quot;; &quot;);
+-		buffer.append(&quot;height = &quot;).append(height).append(&quot;; &quot;);
+-		buffer.append(&quot;characters = array[&quot;).append(characters.size()).append(&quot;]; &quot;);
+-		buffer.append(&quot;}&quot;);
+-		
+-		return buffer.toString();
+-	}
+-
+-	public int length(FSContext context)
+-	{
+-		boolean _containsFont = containsFont();
+-		boolean _containsColor = containsColor();
+-		boolean _containsOffsetX = containsOffsetX();
+-		boolean _containsOffsetY = containsOffsetY();
+-
+-		int length = 1;
+-
+-		if (containsStyle())
+-		{
+-			length += (_containsFont) ? 2 : 0;
+-			length += (_containsColor) ? color.length(context) : 0;
+-			length += (_containsOffsetY) ? 2 : 0;
+-			length += (_containsOffsetX) ? 2 : 0;
+-			length += (_containsFont) ? 2 : 0;
+-		}
+-
+-		length += 1;
+-
+-		if (characters.size() &gt; 0)
+-		{
+-			int numberOfBits = 0;
+-			int numberOfGlyphBits = context.glyphSize;
+-			int numberOfAdvanceBits = context.advanceSize;
+-
+-			numberOfBits = (numberOfGlyphBits + numberOfAdvanceBits)
+-							* characters.size();
+-			numberOfBits += (numberOfBits % 8 &gt; 0) ? 8 - (numberOfBits % 8) : 0;
+-
+-			length += numberOfBits &gt;&gt; 3;
+-		}
+-		return length;
+-	}
+-
+-	public void encode(FSCoder coder, FSContext context)
+-	{
+-		boolean _containsFont = containsFont();
+-		boolean _containsColor = containsColor();
+-		boolean _containsOffsetY = containsOffsetY();
+-		boolean _containsOffsetX = containsOffsetX();
+-
+-		coder.writeBits(1, 1);
+-		coder.writeBits(0, 3);
+-
+-		coder.writeBits(_containsFont ? 1 : 0, 1);
+-		coder.writeBits(_containsColor ? 1 : 0, 1);
+-		coder.writeBits(_containsOffsetY ? 1 : 0, 1);
+-		coder.writeBits(_containsOffsetX ? 1 : 0, 1);
+-
+-		if (_containsFont)
+-			coder.writeWord(identifier, 2);
+-
+-		if (_containsColor)
+-			color.encode(coder, context);
+-
+-		if (_containsOffsetX)
+-			coder.writeWord(offsetX, 2);
+-
+-		if (_containsOffsetY)
+-			coder.writeWord(offsetY, 2);
+-
+-		if (_containsFont)
+-			coder.writeWord(height, 2);
+-
+-		coder.writeWord(characters.size(), 1);
+-
+-		for (Iterator&lt;FSCharacter&gt; charIter = characters.iterator(); charIter.hasNext();)
+-			charIter.next().encode(coder, context);
+-
+-		coder.alignToByte();
+-	}
+-
+-	public void decode(FSCoder coder, FSContext context)
+-	{
+-		/* type */coder.readBits(1, false);
+-		/* reserved */coder.readBits(3, false);
+-
+-		boolean _containsFont = coder.readBits(1, false) != 0 ? true : false;
+-		boolean _containsColor = coder.readBits(1, false) != 0 ? true : false;
+-		boolean _containsOffsetY = coder.readBits(1, false) != 0 ? true : false;
+-		boolean _containsOffsetX = coder.readBits(1, false) != 0 ? true : false;
+-
+-		if (_containsFont)
+-			identifier = coder.readWord(2, false);
+-
+-		if (_containsColor)
+-			color = new FSColor(coder, context);
+-
+-		if (_containsOffsetX)
+-			offsetX = coder.readWord(2, true);
+-
+-		if (_containsOffsetY)
+-			offsetY = coder.readWord(2, true);
+-
+-		if (_containsFont)
+-			height = coder.readWord(2, false);
+-
+-		int charCount = coder.readByte();
+-
+-		characters = new ArrayList&lt;FSCharacter&gt;(charCount);
+-
+-		for (int i = 0; i &lt; charCount; i++)
+-			characters.add(new FSCharacter(coder, context));
+-
+-		coder.alignToByte();
+-	}
+-
+-	private boolean containsFont()
+-	{
+-		return identifier != 0 &amp;&amp; height != 0;
+-	}
+-
+-	private boolean containsColor()
+-	{
+-		return color != null;
+-	}
+-
+-	private boolean containsOffsetX()
+-	{
+-		return offsetX != Transform.VALUE_NOT_SET;
+-	}
+-
+-	private boolean containsOffsetY()
+-	{
+-		return offsetY != Transform.VALUE_NOT_SET;
+-	}
+-
+-	boolean containsStyle()
+-	{
+-		return containsFont() || containsColor() || containsOffsetX()
+-						|| containsOffsetY();
+-	}
+-
+-}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java	2008-03-26 15:32:05 UTC (rev 386)
++++ dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java	2008-03-26 15:32:58 UTC (rev 387)
+@@ -540,7 +540,7 @@
+         int[] glyphCodes = glyphIndicesForString(text);
+         int[] glyphAdvances = advancesForGlyphIndices(glyphCodes, scaleFactor);
+         
+-        FSText textRecord = new FSText(identifier, aColor, 0,
++        FSSpan textRecord = new FSSpan(identifier, aColor, 0,
+                 scaleBaseline(scaleFactor), fontSize, charactersForGlyphs(glyphCodes, glyphAdvances));
+ 
+         ArrayList textRecords = new ArrayList();
+@@ -609,7 +609,7 @@
+             xMin = (xMin &lt; bounds.getMinX()) ? xMin : bounds.getMinX();
+             xMax = (xMax &gt; bounds.getMaxX()) ? xMax : bounds.getMaxX();
+                     
+-            FSText textRecord = new FSText(identifier, aColor, xOffset,
++            FSSpan textRecord = new FSSpan(identifier, aColor, xOffset,
+                     yOffset, fontSize, charactersForGlyphs(glyphCodes, glyphAdvances));
+ 
+             textRecords.add(textRecord);
+@@ -731,7 +731,7 @@
+         FSDefineFont font = null;
+         FSFontInfo fontInfo = null;
+         FSDefineText text = null;
+-        FSText textRecord = null;
++        FSSpan textRecord = null;
+ 
+         for (Iterator i = fontMovie.getObjects().iterator(); i.hasNext();)
+         {
+@@ -751,7 +751,7 @@
+             }
+         }
+ 
+-        textRecord = (FSText) text.getObjects().get(0);
++        textRecord = (FSSpan) text.getObjects().get(0);
+ 
+         name = fontInfo.getName();
+         encoding = fontInfo.getEncoding();
+@@ -763,8 +763,8 @@
+          * Change the encoding for ASCII to Unicode since ASCII is compatible
+          * with UTF8.
+          */
+-        if (encoding == FSText.ANSI)
+-            encoding = FSText.Unicode;
++        if (encoding == FSSpan.ANSI)
++            encoding = FSSpan.Unicode;
+ 
+         glyphTable = new FSGlyph[font.getShapes().size()];
+         
+@@ -805,7 +805,7 @@
+             throw new IllegalArgumentException(&quot;No such font: &quot; + fontName);
+         
+         name = fontName;
+-        encoding = FSText.Unicode;
++        encoding = FSSpan.Unicode;
+ 
+         Rectangle2D transform = transformToEMSquare(font, fontContext);
+ 
+@@ -897,7 +897,7 @@
+         font = font.deriveFont(1.0f);
+ 
+         name = font.getName();
+-        encoding = FSText.Unicode;
++        encoding = FSSpan.Unicode;
+ 
+         Rectangle2D transform = transformToEMSquare(font, fontContext);
+ 
+@@ -1610,14 +1610,14 @@
+             
+             if (platformId == 0) // Unicode
+             {
+-                encoding = FSText.Unicode;
++                encoding = FSSpan.Unicode;
+             }
+             else if (platformId == 1) // Macintosh
+             {
+                 switch (encodingId)
+                 {
+-                    case 1: encoding = FSText.SJIS; break;
+-                    default: encoding = FSText.ANSI; break;
++                    case 1: encoding = FSSpan.SJIS; break;
++                    default: encoding = FSSpan.ANSI; break;
+                 }
+                     
+             }
+@@ -1625,9 +1625,9 @@
+             {
+                 switch (encodingId)
+                 {
+-                    case 1: encoding = FSText.Unicode; break;
+-                    case 2: encoding = FSText.SJIS; break;
+-                    default: encoding = FSText.ANSI; break;
++                    case 1: encoding = FSSpan.Unicode; break;
++                    case 2: encoding = FSSpan.SJIS; break;
++                    default: encoding = FSSpan.ANSI; break;
+                 }
+             }
+ 
+@@ -1706,7 +1706,7 @@
+             }
+             coder.setPointer(current);
+         }
+-        encoding = FSText.SJIS;
++        encoding = FSSpan.SJIS;
+     }
+     private void decodeGlyphs(FSCoder coder, int glyfOffset)
+     {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000321.html">[Transform-svn] r386 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000330.html">[Transform-svn] r388 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#322">[ date ]</a>
+              <a href="thread.html#322">[ thread ]</a>
+              <a href="subject.html#322">[ subject ]</a>
+              <a href="author.html#322">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

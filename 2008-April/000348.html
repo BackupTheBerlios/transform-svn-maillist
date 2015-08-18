@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r412 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r412%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011510.m31FAwqu010235%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000347.html">
+   <LINK REL="Next"  HREF="000349.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r412 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r412%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011510.m31FAwqu010235%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r412 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 17:10:58 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000347.html">[Transform-svn] r411 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000349.html">[Transform-svn] r413 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#348">[ date ]</a>
+              <a href="thread.html#348">[ thread ]</a>
+              <a href="subject.html#348">[ subject ]</a>
+              <a href="author.html#348">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 17:10:55 +0200 (Tue, 01 Apr 2008)
+New Revision: 412
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/Displayable.java
+Log:
+Added documentation
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/Displayable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/Displayable.java	2008-04-01 15:10:41 UTC (rev 411)
++++ dev/dev-3-0/src/com/flagstone/transform/Displayable.java	2008-04-01 15:10:55 UTC (rev 412)
+@@ -1,7 +1,60 @@
++/*
++ * Displayable.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
+ package com.flagstone.transform;
+ 
++/**
++ * The Displayable interface is implemented by all classes that are visible on
++ * the Flash Player screen.
++ * 
++ * The principal use of the interface is to allow the width and height of objects 
++ * representing images and shapes to obtained without having to test the class
++ * or type and cast to the correct class.
++ */
+ public interface Displayable
+ {
++	/**
++	 * Return the width of an object in twips. The value returned does not take
++	 * into account any scaling or other coordinate transform that might be 
++	 * performed to resize the object when it is rendered on the screen.
++	 * 
++	 * @return the width of the object in twips.
++	 */
+ 	public int getWidth();
++
++	/**
++	 * Return the height of an object in twips. The value returned does not take
++	 * into account any scaling or other coordinate transform that might be 
++	 * performed to resize the object when it is rendered on the screen.
++	 * 
++	 * @return the height of the object in twips.
++	 */
+ 	public int getHeight();
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000347.html">[Transform-svn] r411 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000349.html">[Transform-svn] r413 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#348">[ date ]</a>
+              <a href="thread.html#348">[ thread ]</a>
+              <a href="subject.html#348">[ subject ]</a>
+              <a href="author.html#348">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

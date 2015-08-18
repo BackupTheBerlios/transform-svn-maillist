@@ -1,0 +1,3317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r349 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r349%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181113.m2IBDdYn016187%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000284.html">
+   <LINK REL="Next"  HREF="000286.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r349 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r349%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181113.m2IBDdYn016187%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r349 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 12:13:39 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000284.html">[Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000286.html">[Transform-svn] r350 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#285">[ date ]</a>
+              <a href="thread.html#285">[ thread ]</a>
+              <a href="subject.html#285">[ subject ]</a>
+              <a href="author.html#285">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 12:13:31 +0100 (Tue, 18 Mar 2008)
+New Revision: 349
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSColorTable.java
+Log:
+Reformatted documentation.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSColorTable.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSColorTable.java	2008-03-18 11:01:59 UTC (rev 348)
++++ dev/dev-2-4/src/com/flagstone/transform/FSColorTable.java	2008-03-18 11:13:31 UTC (rev 349)
+@@ -30,825 +30,2425 @@
+ 
+ package com.flagstone.transform;
+ 
+-/** 
+- * The FSColorTable class contains a set of factory methods to generate FSColor objects 
+- * for each of the colours defined in the Netscape Colour Table. 
+- *
+- * &lt;div class=&quot;code&quot;&gt;
+- *        FSColor aColor = FSColorTable.%aliceblue();
+- * &lt;/div&gt;
++/**
++ * The FSColorTable class contains a set of factory methods to generate FSColor
++ * objects for each of the colours defined in the Netscape Colour Table.
+  * 
+- * &lt;p&gt;Each entry in the colour table returns and array of integers that define the values 
+- * for the red, green and blue colour channels. To define a transparent colour for use 
+- * with an object that support transparent colours such as the FSDefineShape3 class use 
+- * the following code fragment:&lt;/p&gt;
++ * &lt;div class=&quot;code&quot;&gt; FSColor aColor = FSColorTable.%aliceblue(); &lt;/div&gt;
+  * 
+- * &lt;div class=&quot;code&quot;&gt;
+- *        FSColor aColor = FSColorTable.%aliceblue(128);
+- * &lt;/div&gt;
++ * &lt;p&gt;
++ * Each entry in the colour table returns and array of integers that define the
++ * values for the red, green and blue colour channels. To define a transparent
++ * colour for use with an object that support transparent colours such as the
++ * FSDefineShape3 class use the following code fragment:
++ * &lt;/p&gt;
+  * 
+- * &lt;p&gt;Transparent colours are created by specifying the level of transparency, in the range 
+- * 0..255, where 0 is completely transparent and 255 is completely opaque.&lt;/P&gt;
+-
+-\htmlonly
+-&lt;center&gt;
+-&lt;table BORDER=&quot;1&quot; BGCOLOR=&quot;#FFFFFF&quot; CELLPADDING=&quot;5&quot; CELLSPACING=&quot;4&quot; width=&quot;90%&quot;&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;aliceblue&quot; WIDTH=&quot;15%&quot;&gt;aliceblue&lt;BR&gt;F0F8FF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;antiquewhite&quot; WIDTH=&quot;15%&quot;&gt;antiquewhite&lt;BR&gt;FAEBD7&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;aqua&quot; WIDTH=&quot;15%&quot;&gt;aqua&lt;BR&gt;00FFFF&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;aquamarine&quot; WIDTH=&quot;15%&quot;&gt;aquamarine&lt;BR&gt;7FFFD4&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;azure&quot; WIDTH=&quot;15%&quot;&gt;azure&lt;BR&gt;F0FFFF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;beige&quot; WIDTH=&quot;15%&quot;&gt;beige&lt;BR&gt;F5F5DC&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;bisque&quot; WIDTH=&quot;15%&quot;&gt;bisque&lt;BR&gt;FFE4C4&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;burlywood&quot; WIDTH=&quot;15%&quot;&gt;burlywood&lt;BR&gt;DEB887&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;blanchedalmond&quot; WIDTH=&quot;15%&quot;&gt;blanchedalmond&lt;BR&gt;FFEBCD&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;blue&quot; WIDTH=&quot;15%&quot;&gt;blue&lt;BR&gt;0000FF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;bluevoilet&quot; WIDTH=&quot;15%&quot;&gt;blueviolet&lt;BR&gt;8A2BE2&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;brown&quot; WIDTH=&quot;15%&quot;&gt;brown&lt;BR&gt;A52A2A&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;black&quot; WIDTH=&quot;15%&quot;&gt;&lt;FONT COLOR=&quot;FFFFFF&quot;&gt;black&lt;BR&gt;000000&lt;/FONT&gt;&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cadetblue&quot; WIDTH=&quot;15%&quot;&gt;cadetblue&lt;BR&gt;5F9EA0&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;chartreuse&quot; WIDTH=&quot;15%&quot;&gt;chartreuse&lt;BR&gt;7FFF00&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;chocolate&quot; WIDTH=&quot;15%&quot;&gt;chocolate&lt;BR&gt;D2691E&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;coral&quot; WIDTH=&quot;15%&quot;&gt;coral&lt;BR&gt;FF7F50&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cornflowerblue&quot; WIDTH=&quot;15%&quot;&gt;cornflowerblue&lt;BR&gt;6495ED&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cornsilk&quot; WIDTH=&quot;15%&quot;&gt;cornsilk&lt;BR&gt;FFF8DC&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;crimson&quot; WIDTH=&quot;15%&quot;&gt;crimson&lt;BR&gt;DC143C&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cyan&quot; WIDTH=&quot;15%&quot;&gt;cyan&lt;BR&gt;00FFFF&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkblue&quot; WIDTH=&quot;15%&quot;&gt;darkblue&lt;BR&gt;00008B&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkcyan&quot; WIDTH=&quot;15%&quot;&gt;darkcyan&lt;BR&gt;008B8B&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkgoldenrod&quot; WIDTH=&quot;15%&quot;&gt;darkgoldenrod&lt;BR&gt;B8860B&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkgray&quot; WIDTH=&quot;15%&quot;&gt;darkgray&lt;BR&gt;A9A9A9&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkgreen&quot; WIDTH=&quot;15%&quot;&gt;darkgreen&lt;BR&gt;006400&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkkhaki&quot; WIDTH=&quot;15%&quot;&gt;darkkhaki&lt;BR&gt;BDB76B&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkmagenta&quot; WIDTH=&quot;15%&quot;&gt;darkmagenta&lt;BR&gt;8B008B&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkolivegreen&quot; WIDTH=&quot;15%&quot;&gt;darkolivegreen&lt;BR&gt;556B2F&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkorange&quot; WIDTH=&quot;15%&quot;&gt;darkorange&lt;BR&gt;FF8C00&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkorchid&quot; WIDTH=&quot;15%&quot;&gt;darkorchid&lt;BR&gt;9932CC&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkred&quot; WIDTH=&quot;15%&quot;&gt;darkred&lt;BR&gt;8B0000&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darksalmon&quot; WIDTH=&quot;15%&quot;&gt;darksalmon&lt;BR&gt;E9967A&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkseagreen&quot; WIDTH=&quot;15%&quot;&gt;darkseagreen&lt;BR&gt;8FBC8F&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkslateblue&quot; WIDTH=&quot;15%&quot;&gt;darkslateblue&lt;BR&gt;483D8B&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkslategray&quot; WIDTH=&quot;15%&quot;&gt;darkslategray&lt;BR&gt;2F4F4F&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkturquoise&quot; WIDTH=&quot;15%&quot;&gt;darkturquoise&lt;BR&gt;00CED1&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkviolet&quot; WIDTH=&quot;15%&quot;&gt;darkviolet&lt;BR&gt;9400D3&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;deeppink&quot; WIDTH=&quot;15%&quot;&gt;deeppink&lt;BR&gt;FF1493&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;deepskyblue&quot; WIDTH=&quot;15%&quot;&gt;deepskyblue&lt;BR&gt;00BFFF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;dimgray&quot; WIDTH=&quot;15%&quot;&gt;dimgray&lt;BR&gt;696969&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;dodgerblue&quot; WIDTH=&quot;15%&quot;&gt;dodgerblue&lt;BR&gt;1E90FF&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;firebrick&quot; WIDTH=&quot;15%&quot;&gt;firebrick&lt;BR&gt;B22222&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;floralwhite&quot; WIDTH=&quot;15%&quot;&gt;floralwhite&lt;BR&gt;FFFAF0&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;forestgreen&quot; WIDTH=&quot;15%&quot;&gt;forestgreen&lt;BR&gt;228B22&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;fuchsia&quot; WIDTH=&quot;15%&quot;&gt;fuchsia&lt;BR&gt;FF00FF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;gainsboro&quot; WIDTH=&quot;15%&quot;&gt;gainsboro&lt;BR&gt;DCDCDC&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;ghostwhite&quot; WIDTH=&quot;15%&quot;&gt;ghostwhite&lt;BR&gt;F8F8FF&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;gold&quot; WIDTH=&quot;15%&quot;&gt;gold&lt;BR&gt;FFD700&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;goldenrod&quot; WIDTH=&quot;15%&quot;&gt;goldenrod&lt;BR&gt;DAA520&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;gray&quot; WIDTH=&quot;15%&quot;&gt;gray&lt;BR&gt;808080&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;green&quot; WIDTH=&quot;15%&quot;&gt;green&lt;BR&gt;008000&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;greenyellow&quot; WIDTH=&quot;15%&quot;&gt;greenyellow&lt;BR&gt;ADFF2F&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;honeydew&quot; WIDTH=&quot;15%&quot;&gt;honeydew&lt;BR&gt;F0FFF0&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;hotpink&quot; WIDTH=&quot;15%&quot;&gt;hotpink&lt;BR&gt;FF69B4&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;indianred&quot; WIDTH=&quot;15%&quot;&gt;indianred&lt;BR&gt;CD5C5C&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;indigo&quot; WIDTH=&quot;15%&quot;&gt;Indigo&lt;BR&gt;4B0082&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;ivory&quot; WIDTH=&quot;15%&quot;&gt;ivory&lt;BR&gt;FFFFF0&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;khaki&quot; WIDTH=&quot;15%&quot;&gt;khaki&lt;BR&gt;F0E68C&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lavender&quot; WIDTH=&quot;15%&quot;&gt;lavender&lt;BR&gt;E6E6FA&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lavenderblush&quot; WIDTH=&quot;15%&quot;&gt;lavenderblush&lt;BR&gt;FFF0F5&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lawngreen&quot; WIDTH=&quot;15%&quot;&gt;lawngreen&lt;BR&gt;7CFC00&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lemonchiffon&quot; WIDTH=&quot;15%&quot;&gt;lemonchiffon&lt;BR&gt;FFFACD&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightblue&quot; WIDTH=&quot;15%&quot;&gt;lightblue&lt;BR&gt;ADD8E6&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightcoral&quot; WIDTH=&quot;15%&quot;&gt;lightcoral&lt;BR&gt;F08080&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightcyan&quot; WIDTH=&quot;15%&quot;&gt;lightcyan&lt;BR&gt;E0FFFF&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightgoldenrodyellow&quot; WIDTH=&quot;15%&quot;&gt;lightgoldenrodyellow&lt;BR&gt;FAFAD2&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightgreen&quot; WIDTH=&quot;15%&quot;&gt;lightgreen&lt;BR&gt;90EE90&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightgrey&quot; WIDTH=&quot;15%&quot;&gt;lightgrey&lt;BR&gt;D3D3D3&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightpink&quot; WIDTH=&quot;15%&quot;&gt;lightpink&lt;BR&gt;FFB6C1&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightsalmon&quot; WIDTH=&quot;15%&quot;&gt;lightsalmon&lt;BR&gt;FFA07A&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightseagreen&quot; WIDTH=&quot;15%&quot;&gt;lightseagreen&lt;BR&gt;20B2AA&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightskyblue&quot; WIDTH=&quot;15%&quot;&gt;lightskyblue&lt;BR&gt;87CEFA&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightslategray&quot; WIDTH=&quot;15%&quot;&gt;lightslategray&lt;BR&gt;778899&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightsteelblue&quot; WIDTH=&quot;15%&quot;&gt;lightsteelblue&lt;BR&gt;B0C4DE&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightyellow&quot; WIDTH=&quot;15%&quot;&gt;lightyellow&lt;BR&gt;FFFFE0&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lime&quot; WIDTH=&quot;15%&quot;&gt;lime&lt;BR&gt;00FF00&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;limegreen&quot; WIDTH=&quot;15%&quot;&gt;limegreen&lt;BR&gt;32CD32&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;linen&quot; WIDTH=&quot;15%&quot;&gt;&lt;font COLOR=&quot;#000000&quot;&gt;linen&lt;BR&gt;FAF0E6&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;magenta&quot; WIDTH=&quot;15%&quot;&gt;magenta&lt;BR&gt;FF00FF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;maroon&quot; WIDTH=&quot;15%&quot;&gt;maroon&lt;BR&gt;800000&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumaquamarine&quot; WIDTH=&quot;15%&quot;&gt;mediumauqamarine&lt;BR&gt;66CDAA&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumblue&quot; WIDTH=&quot;15%&quot;&gt;mediumblue&lt;BR&gt;0000CD&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumorchid&quot; WIDTH=&quot;15%&quot;&gt;mediumorchid&lt;BR&gt;BA55D3&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumpurple&quot; WIDTH=&quot;15%&quot;&gt;mediumpurple&lt;BR&gt;9370D8&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumseagreen&quot; WIDTH=&quot;15%&quot;&gt;mediumseagreen&lt;BR&gt;3CB371&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumslateblue&quot; WIDTH=&quot;15%&quot;&gt;mediumslateblue&lt;BR&gt;7B68EE&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumspringgreen&quot; WIDTH=&quot;15%&quot;&gt;mediumspringgreen&lt;BR&gt;00FA9A&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumturquoise&quot; WIDTH=&quot;15%&quot;&gt;mediumturquoise&lt;BR&gt;48D1CC&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumvioletred&quot; WIDTH=&quot;15%&quot;&gt;mediumvioletred&lt;BR&gt;C71585&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;midnightblue&quot; WIDTH=&quot;15%&quot;&gt;midnightblue&lt;BR&gt;191970&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mintcream&quot; WIDTH=&quot;15%&quot;&gt;mintcream&lt;BR&gt;F5FFFA&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mistyrose&quot; WIDTH=&quot;15%&quot;&gt;mistyrose&lt;BR&gt;FFE4E1&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;moccasin&quot; WIDTH=&quot;15%&quot;&gt;moccasin&lt;BR&gt;FFE4B5&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;navajowhite&quot; WIDTH=&quot;15%&quot;&gt;navajowhite&lt;BR&gt;FFDEAD&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;navy&quot; WIDTH=&quot;15%&quot;&gt;navy&lt;BR&gt;000080&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;oldlace&quot; WIDTH=&quot;15%&quot;&gt;oldlace&lt;BR&gt;FDF5E6&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;olive&quot; WIDTH=&quot;15%&quot;&gt;olive&lt;BR&gt;808000&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;olivedrab&quot; WIDTH=&quot;15%&quot;&gt;olivedrab&lt;BR&gt;688E23&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;orange&quot; WIDTH=&quot;15%&quot;&gt;orange&lt;BR&gt;FFA500&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;orangered&quot; WIDTH=&quot;15%&quot;&gt;orangered&lt;BR&gt;FF4500&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;orchid&quot; WIDTH=&quot;15%&quot;&gt;orchid&lt;BR&gt;DA70D6&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;palegoldenrod&quot; WIDTH=&quot;15%&quot;&gt;palegoldenrod&lt;BR&gt;EEE8AA&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;palegreen&quot; WIDTH=&quot;15%&quot;&gt;palegreen&lt;BR&gt;98FB98&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;paleturquoise&quot; WIDTH=&quot;15%&quot;&gt;paleturquoise&lt;BR&gt;AFEEEE&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;palevioletred&quot; WIDTH=&quot;15%&quot;&gt;palevioletred&lt;BR&gt;D87093&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;papayawhip&quot; WIDTH=&quot;15%&quot;&gt;papayawhip&lt;BR&gt;FFEFD5&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;peachpuff&quot; WIDTH=&quot;15%&quot;&gt;peachpuff&lt;BR&gt;FFDAB9&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;peru&quot; WIDTH=&quot;15%&quot;&gt;peru&lt;BR&gt;CD853F&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;pink&quot; WIDTH=&quot;15%&quot;&gt;pink&lt;BR&gt;FFC0CB&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;plum&quot; WIDTH=&quot;15%&quot;&gt;plum&lt;BR&gt;DDA0DD&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;powderblue&quot; WIDTH=&quot;15%&quot;&gt;powderblue&lt;BR&gt;B0E0E6&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;purple&quot; WIDTH=&quot;15%&quot;&gt;purple&lt;BR&gt;800080&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;red&quot; WIDTH=&quot;15%&quot;&gt;red&lt;BR&gt;FF0000&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;rosybrown&quot; WIDTH=&quot;15%&quot;&gt;rosybrown&lt;BR&gt;BC8F8F&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;royalblue&quot; WIDTH=&quot;15%&quot;&gt;royalblue&lt;BR&gt;4169E1&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;saddlebrown&quot; WIDTH=&quot;15%&quot;&gt;saddlebrown&lt;BR&gt;8B4513&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;salmon&quot; WIDTH=&quot;15%&quot;&gt;salmon&lt;BR&gt;FA8072&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;sandybrown&quot; WIDTH=&quot;15%&quot;&gt;sandybrown&lt;BR&gt;F4A460&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;seagreen&quot; WIDTH=&quot;15%&quot;&gt;seagreen&lt;BR&gt;2E8B57&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;seashell&quot; WIDTH=&quot;15%&quot;&gt;seashell&lt;BR&gt;FFF5EE&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;sienna&quot; WIDTH=&quot;15%&quot;&gt;sienna&lt;BR&gt;A0522D&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;silver&quot; WIDTH=&quot;15%&quot;&gt;silver&lt;BR&gt;C0C0C0&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;skyblue&quot; WIDTH=&quot;15%&quot;&gt;skyblue&lt;BR&gt;87CEEB&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;slateblue&quot; WIDTH=&quot;15%&quot;&gt;slateblue&lt;BR&gt;6A5ACD&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;slategray&quot; WIDTH=&quot;15%&quot;&gt;slategray&lt;BR&gt;708090&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;snow&quot; WIDTH=&quot;15%&quot;&gt;snow&lt;BR&gt;FFFAFA&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;springgreen&quot; WIDTH=&quot;15%&quot;&gt;springgreen&lt;BR&gt;00FF7F&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;steelblue&quot; WIDTH=&quot;15%&quot;&gt;steelblue&lt;BR&gt;4682B4&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;tan&quot; WIDTH=&quot;15%&quot;&gt;tan&lt;BR&gt;D2B48C&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;teal&quot; WIDTH=&quot;15%&quot;&gt;teal&lt;BR&gt;008080&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;thistle&quot; WIDTH=&quot;15%&quot;&gt;thistle&lt;BR&gt;D8BFD8&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;tomato&quot; WIDTH=&quot;15%&quot;&gt;tomato&lt;BR&gt;FF6347&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;turquoise&quot; WIDTH=&quot;15%&quot;&gt;turquoise&lt;BR&gt;40E0D0&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;violet&quot; WIDTH=&quot;15%&quot;&gt;violet&lt;BR&gt;EE82EE&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;TR&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;wheat&quot; WIDTH=&quot;15%&quot;&gt;wheat&lt;BR&gt;F5DEB3&lt;BR&gt;&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;white&quot; WIDTH=&quot;15%&quot;&gt;white&lt;BR&gt;FFFFFF&lt;/TD&gt;
+-&lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;whitesmoke&quot; WIDTH=&quot;15%&quot;&gt;whitesmoke&lt;BR&gt;F5F5F5&lt;/TD&gt;
+-&lt;/TR&gt;
+-&lt;/table&gt;
+-&lt;/center&gt;
+-\endhtmlonly
+-
+-*/
++ * &lt;div class=&quot;code&quot;&gt; FSColor aColor = FSColorTable.%aliceblue(128); &lt;/div&gt;
++ * 
++ * &lt;p&gt;
++ * Transparent colours are created by specifying the level of transparency, in
++ * the range 0..255, where 0 is completely transparent and 255 is completely
++ * opaque.
++ * &lt;/P&gt;
++ * 
++ * \htmlonly &lt;center&gt; &lt;table BORDER=&quot;1&quot; BGCOLOR=&quot;#FFFFFF&quot; CELLPADDING=&quot;5&quot;
++ * CELLSPACING=&quot;4&quot; width=&quot;90%&quot;&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;aliceblue&quot; WIDTH=&quot;15%&quot;&gt;aliceblue&lt;BR&gt;
++ * F0F8FF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;antiquewhite&quot; WIDTH=&quot;15%&quot;&gt;antiquewhite&lt;BR&gt;
++ * FAEBD7&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;aqua&quot; WIDTH=&quot;15%&quot;&gt;aqua&lt;BR&gt;
++ * 00FFFF&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;aquamarine&quot; WIDTH=&quot;15%&quot;&gt;aquamarine&lt;BR&gt;
++ * 7FFFD4&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;azure&quot; WIDTH=&quot;15%&quot;&gt;azure&lt;BR&gt;
++ * F0FFFF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;beige&quot; WIDTH=&quot;15%&quot;&gt;beige&lt;BR&gt;
++ * F5F5DC&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;bisque&quot; WIDTH=&quot;15%&quot;&gt;bisque&lt;BR&gt;
++ * FFE4C4&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;burlywood&quot; WIDTH=&quot;15%&quot;&gt;burlywood&lt;BR&gt;
++ * DEB887&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;blanchedalmond&quot; WIDTH=&quot;15%&quot;&gt;blanchedalmond&lt;BR&gt;
++ * FFEBCD&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;blue&quot; WIDTH=&quot;15%&quot;&gt;blue&lt;BR&gt;
++ * 0000FF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;bluevoilet&quot; WIDTH=&quot;15%&quot;&gt;blueviolet&lt;BR&gt;
++ * 8A2BE2&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;brown&quot; WIDTH=&quot;15%&quot;&gt;brown&lt;BR&gt;
++ * A52A2A&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;black&quot; WIDTH=&quot;15%&quot;&gt;&lt;FONT COLOR=&quot;FFFFFF&quot;&gt;black&lt;BR&gt;
++ * 000000&lt;/FONT&gt;&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cadetblue&quot; WIDTH=&quot;15%&quot;&gt;cadetblue&lt;BR&gt;
++ * 5F9EA0&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;chartreuse&quot; WIDTH=&quot;15%&quot;&gt;chartreuse&lt;BR&gt;
++ * 7FFF00&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;chocolate&quot; WIDTH=&quot;15%&quot;&gt;chocolate&lt;BR&gt;
++ * D2691E&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;coral&quot; WIDTH=&quot;15%&quot;&gt;coral&lt;BR&gt;
++ * FF7F50&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cornflowerblue&quot; WIDTH=&quot;15%&quot;&gt;cornflowerblue&lt;BR&gt;
++ * 6495ED&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cornsilk&quot; WIDTH=&quot;15%&quot;&gt;cornsilk&lt;BR&gt;
++ * FFF8DC&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;crimson&quot; WIDTH=&quot;15%&quot;&gt;crimson&lt;BR&gt;
++ * DC143C&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;cyan&quot; WIDTH=&quot;15%&quot;&gt;cyan&lt;BR&gt;
++ * 00FFFF&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkblue&quot; WIDTH=&quot;15%&quot;&gt;darkblue&lt;BR&gt;
++ * 00008B&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkcyan&quot; WIDTH=&quot;15%&quot;&gt;darkcyan&lt;BR&gt;
++ * 008B8B&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkgoldenrod&quot; WIDTH=&quot;15%&quot;&gt;darkgoldenrod&lt;BR&gt;
++ * B8860B&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkgray&quot; WIDTH=&quot;15%&quot;&gt;darkgray&lt;BR&gt;
++ * A9A9A9&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkgreen&quot; WIDTH=&quot;15%&quot;&gt;darkgreen&lt;BR&gt;
++ * 006400&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkkhaki&quot; WIDTH=&quot;15%&quot;&gt;darkkhaki&lt;BR&gt;
++ * BDB76B&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkmagenta&quot; WIDTH=&quot;15%&quot;&gt;darkmagenta&lt;BR&gt;
++ * 8B008B&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkolivegreen&quot; WIDTH=&quot;15%&quot;&gt;darkolivegreen&lt;BR&gt;
++ * 556B2F&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkorange&quot; WIDTH=&quot;15%&quot;&gt;darkorange&lt;BR&gt;
++ * FF8C00&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkorchid&quot; WIDTH=&quot;15%&quot;&gt;darkorchid&lt;BR&gt;
++ * 9932CC&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkred&quot; WIDTH=&quot;15%&quot;&gt;darkred&lt;BR&gt;
++ * 8B0000&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darksalmon&quot; WIDTH=&quot;15%&quot;&gt;darksalmon&lt;BR&gt;
++ * E9967A&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkseagreen&quot; WIDTH=&quot;15%&quot;&gt;darkseagreen&lt;BR&gt;
++ * 8FBC8F&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkslateblue&quot; WIDTH=&quot;15%&quot;&gt;darkslateblue&lt;BR&gt;
++ * 483D8B&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkslategray&quot; WIDTH=&quot;15%&quot;&gt;darkslategray&lt;BR&gt;
++ * 2F4F4F&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkturquoise&quot; WIDTH=&quot;15%&quot;&gt;darkturquoise&lt;BR&gt;
++ * 00CED1&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;darkviolet&quot; WIDTH=&quot;15%&quot;&gt;darkviolet&lt;BR&gt;
++ * 9400D3&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;deeppink&quot; WIDTH=&quot;15%&quot;&gt;deeppink&lt;BR&gt;
++ * FF1493&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;deepskyblue&quot; WIDTH=&quot;15%&quot;&gt;deepskyblue&lt;BR&gt;
++ * 00BFFF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;dimgray&quot; WIDTH=&quot;15%&quot;&gt;dimgray&lt;BR&gt;
++ * 696969&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;dodgerblue&quot; WIDTH=&quot;15%&quot;&gt;dodgerblue&lt;BR&gt;
++ * 1E90FF&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;firebrick&quot; WIDTH=&quot;15%&quot;&gt;firebrick&lt;BR&gt;
++ * B22222&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;floralwhite&quot; WIDTH=&quot;15%&quot;&gt;floralwhite&lt;BR&gt;
++ * FFFAF0&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;forestgreen&quot; WIDTH=&quot;15%&quot;&gt;forestgreen&lt;BR&gt;
++ * 228B22&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;fuchsia&quot; WIDTH=&quot;15%&quot;&gt;fuchsia&lt;BR&gt;
++ * FF00FF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;gainsboro&quot; WIDTH=&quot;15%&quot;&gt;gainsboro&lt;BR&gt;
++ * DCDCDC&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;ghostwhite&quot; WIDTH=&quot;15%&quot;&gt;ghostwhite&lt;BR&gt;
++ * F8F8FF&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;gold&quot; WIDTH=&quot;15%&quot;&gt;gold&lt;BR&gt;
++ * FFD700&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;goldenrod&quot; WIDTH=&quot;15%&quot;&gt;goldenrod&lt;BR&gt;
++ * DAA520&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;gray&quot; WIDTH=&quot;15%&quot;&gt;gray&lt;BR&gt;
++ * 808080&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;green&quot; WIDTH=&quot;15%&quot;&gt;green&lt;BR&gt;
++ * 008000&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;greenyellow&quot; WIDTH=&quot;15%&quot;&gt;greenyellow&lt;BR&gt;
++ * ADFF2F&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;honeydew&quot; WIDTH=&quot;15%&quot;&gt;honeydew&lt;BR&gt;
++ * F0FFF0&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;hotpink&quot; WIDTH=&quot;15%&quot;&gt;hotpink&lt;BR&gt;
++ * FF69B4&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;indianred&quot; WIDTH=&quot;15%&quot;&gt;indianred&lt;BR&gt;
++ * CD5C5C&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;indigo&quot; WIDTH=&quot;15%&quot;&gt;Indigo&lt;BR&gt;
++ * 4B0082&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;ivory&quot; WIDTH=&quot;15%&quot;&gt;ivory&lt;BR&gt;
++ * FFFFF0&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;khaki&quot; WIDTH=&quot;15%&quot;&gt;khaki&lt;BR&gt;
++ * F0E68C&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lavender&quot; WIDTH=&quot;15%&quot;&gt;lavender&lt;BR&gt;
++ * E6E6FA&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lavenderblush&quot; WIDTH=&quot;15%&quot;&gt;lavenderblush&lt;BR&gt;
++ * FFF0F5&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lawngreen&quot; WIDTH=&quot;15%&quot;&gt;lawngreen&lt;BR&gt;
++ * 7CFC00&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lemonchiffon&quot; WIDTH=&quot;15%&quot;&gt;lemonchiffon&lt;BR&gt;
++ * FFFACD&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightblue&quot; WIDTH=&quot;15%&quot;&gt;lightblue&lt;BR&gt;
++ * ADD8E6&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightcoral&quot; WIDTH=&quot;15%&quot;&gt;lightcoral&lt;BR&gt;
++ * F08080&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightcyan&quot; WIDTH=&quot;15%&quot;&gt;lightcyan&lt;BR&gt;
++ * E0FFFF&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightgoldenrodyellow&quot; WIDTH=&quot;15%&quot;&gt;lightgoldenrodyellow&lt;BR&gt;
++ * FAFAD2&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightgreen&quot; WIDTH=&quot;15%&quot;&gt;lightgreen&lt;BR&gt;
++ * 90EE90&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightgrey&quot; WIDTH=&quot;15%&quot;&gt;lightgrey&lt;BR&gt;
++ * D3D3D3&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightpink&quot; WIDTH=&quot;15%&quot;&gt;lightpink&lt;BR&gt;
++ * FFB6C1&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightsalmon&quot; WIDTH=&quot;15%&quot;&gt;lightsalmon&lt;BR&gt;
++ * FFA07A&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightseagreen&quot; WIDTH=&quot;15%&quot;&gt;lightseagreen&lt;BR&gt;
++ * 20B2AA&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightskyblue&quot; WIDTH=&quot;15%&quot;&gt;lightskyblue&lt;BR&gt;
++ * 87CEFA&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightslategray&quot; WIDTH=&quot;15%&quot;&gt;lightslategray&lt;BR&gt;
++ * 778899&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightsteelblue&quot; WIDTH=&quot;15%&quot;&gt;lightsteelblue&lt;BR&gt;
++ * B0C4DE&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lightyellow&quot; WIDTH=&quot;15%&quot;&gt;lightyellow&lt;BR&gt;
++ * FFFFE0&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;lime&quot; WIDTH=&quot;15%&quot;&gt;lime&lt;BR&gt;
++ * 00FF00&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;limegreen&quot; WIDTH=&quot;15%&quot;&gt;limegreen&lt;BR&gt;
++ * 32CD32&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;linen&quot; WIDTH=&quot;15%&quot;&gt;&lt;font COLOR=&quot;#000000&quot;&gt;linen&lt;BR&gt;
++ * FAF0E6&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;magenta&quot; WIDTH=&quot;15%&quot;&gt;magenta&lt;BR&gt;
++ * FF00FF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;maroon&quot; WIDTH=&quot;15%&quot;&gt;maroon&lt;BR&gt;
++ * 800000&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumaquamarine&quot; WIDTH=&quot;15%&quot;&gt;mediumauqamarine&lt;BR&gt;
++ * 66CDAA&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumblue&quot; WIDTH=&quot;15%&quot;&gt;mediumblue&lt;BR&gt;
++ * 0000CD&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumorchid&quot; WIDTH=&quot;15%&quot;&gt;mediumorchid&lt;BR&gt;
++ * BA55D3&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumpurple&quot; WIDTH=&quot;15%&quot;&gt;mediumpurple&lt;BR&gt;
++ * 9370D8&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumseagreen&quot; WIDTH=&quot;15%&quot;&gt;mediumseagreen&lt;BR&gt;
++ * 3CB371&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumslateblue&quot; WIDTH=&quot;15%&quot;&gt;mediumslateblue&lt;BR&gt;
++ * 7B68EE&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumspringgreen&quot; WIDTH=&quot;15%&quot;&gt;mediumspringgreen&lt;BR&gt;
++ * 00FA9A&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumturquoise&quot; WIDTH=&quot;15%&quot;&gt;mediumturquoise&lt;BR&gt;
++ * 48D1CC&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mediumvioletred&quot; WIDTH=&quot;15%&quot;&gt;mediumvioletred&lt;BR&gt;
++ * C71585&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;midnightblue&quot; WIDTH=&quot;15%&quot;&gt;midnightblue&lt;BR&gt;
++ * 191970&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mintcream&quot; WIDTH=&quot;15%&quot;&gt;mintcream&lt;BR&gt;
++ * F5FFFA&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;mistyrose&quot; WIDTH=&quot;15%&quot;&gt;mistyrose&lt;BR&gt;
++ * FFE4E1&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;moccasin&quot; WIDTH=&quot;15%&quot;&gt;moccasin&lt;BR&gt;
++ * FFE4B5&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;navajowhite&quot; WIDTH=&quot;15%&quot;&gt;navajowhite&lt;BR&gt;
++ * FFDEAD&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;navy&quot; WIDTH=&quot;15%&quot;&gt;navy&lt;BR&gt;
++ * 000080&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;oldlace&quot; WIDTH=&quot;15%&quot;&gt;oldlace&lt;BR&gt;
++ * FDF5E6&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;olive&quot; WIDTH=&quot;15%&quot;&gt;olive&lt;BR&gt;
++ * 808000&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;olivedrab&quot; WIDTH=&quot;15%&quot;&gt;olivedrab&lt;BR&gt;
++ * 688E23&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;orange&quot; WIDTH=&quot;15%&quot;&gt;orange&lt;BR&gt;
++ * FFA500&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;orangered&quot; WIDTH=&quot;15%&quot;&gt;orangered&lt;BR&gt;
++ * FF4500&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;orchid&quot; WIDTH=&quot;15%&quot;&gt;orchid&lt;BR&gt;
++ * DA70D6&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;palegoldenrod&quot; WIDTH=&quot;15%&quot;&gt;palegoldenrod&lt;BR&gt;
++ * EEE8AA&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;palegreen&quot; WIDTH=&quot;15%&quot;&gt;palegreen&lt;BR&gt;
++ * 98FB98&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;paleturquoise&quot; WIDTH=&quot;15%&quot;&gt;paleturquoise&lt;BR&gt;
++ * AFEEEE&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;palevioletred&quot; WIDTH=&quot;15%&quot;&gt;palevioletred&lt;BR&gt;
++ * D87093&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;papayawhip&quot; WIDTH=&quot;15%&quot;&gt;papayawhip&lt;BR&gt;
++ * FFEFD5&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;peachpuff&quot; WIDTH=&quot;15%&quot;&gt;peachpuff&lt;BR&gt;
++ * FFDAB9&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;peru&quot; WIDTH=&quot;15%&quot;&gt;peru&lt;BR&gt;
++ * CD853F&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;pink&quot; WIDTH=&quot;15%&quot;&gt;pink&lt;BR&gt;
++ * FFC0CB&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;plum&quot; WIDTH=&quot;15%&quot;&gt;plum&lt;BR&gt;
++ * DDA0DD&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;powderblue&quot; WIDTH=&quot;15%&quot;&gt;powderblue&lt;BR&gt;
++ * B0E0E6&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;purple&quot; WIDTH=&quot;15%&quot;&gt;purple&lt;BR&gt;
++ * 800080&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;red&quot; WIDTH=&quot;15%&quot;&gt;red&lt;BR&gt;
++ * FF0000&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;rosybrown&quot; WIDTH=&quot;15%&quot;&gt;rosybrown&lt;BR&gt;
++ * BC8F8F&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;royalblue&quot; WIDTH=&quot;15%&quot;&gt;royalblue&lt;BR&gt;
++ * 4169E1&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;saddlebrown&quot; WIDTH=&quot;15%&quot;&gt;saddlebrown&lt;BR&gt;
++ * 8B4513&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;salmon&quot; WIDTH=&quot;15%&quot;&gt;salmon&lt;BR&gt;
++ * FA8072&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;sandybrown&quot; WIDTH=&quot;15%&quot;&gt;sandybrown&lt;BR&gt;
++ * F4A460&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;seagreen&quot; WIDTH=&quot;15%&quot;&gt;seagreen&lt;BR&gt;
++ * 2E8B57&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;seashell&quot; WIDTH=&quot;15%&quot;&gt;seashell&lt;BR&gt;
++ * FFF5EE&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;sienna&quot; WIDTH=&quot;15%&quot;&gt;sienna&lt;BR&gt;
++ * A0522D&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;silver&quot; WIDTH=&quot;15%&quot;&gt;silver&lt;BR&gt;
++ * C0C0C0&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;skyblue&quot; WIDTH=&quot;15%&quot;&gt;skyblue&lt;BR&gt;
++ * 87CEEB&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;slateblue&quot; WIDTH=&quot;15%&quot;&gt;slateblue&lt;BR&gt;
++ * 6A5ACD&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;slategray&quot; WIDTH=&quot;15%&quot;&gt;slategray&lt;BR&gt;
++ * 708090&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;snow&quot; WIDTH=&quot;15%&quot;&gt;snow&lt;BR&gt;
++ * FFFAFA&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;springgreen&quot; WIDTH=&quot;15%&quot;&gt;springgreen&lt;BR&gt;
++ * 00FF7F&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;steelblue&quot; WIDTH=&quot;15%&quot;&gt;steelblue&lt;BR&gt;
++ * 4682B4&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;tan&quot; WIDTH=&quot;15%&quot;&gt;tan&lt;BR&gt;
++ * D2B48C&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;teal&quot; WIDTH=&quot;15%&quot;&gt;teal&lt;BR&gt;
++ * 008080&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;thistle&quot; WIDTH=&quot;15%&quot;&gt;thistle&lt;BR&gt;
++ * D8BFD8&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;tomato&quot; WIDTH=&quot;15%&quot;&gt;tomato&lt;BR&gt;
++ * FF6347&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;turquoise&quot; WIDTH=&quot;15%&quot;&gt;turquoise&lt;BR&gt;
++ * 40E0D0&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;violet&quot; WIDTH=&quot;15%&quot;&gt;violet&lt;BR&gt;
++ * EE82EE&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;TR&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;wheat&quot; WIDTH=&quot;15%&quot;&gt;wheat&lt;BR&gt;
++ * F5DEB3&lt;BR&gt;
++ * &lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;white&quot; WIDTH=&quot;15%&quot;&gt;white&lt;BR&gt;
++ * FFFFFF&lt;/TD&gt;
++ * &lt;TD ALIGN=&quot;center&quot; BGCOLOR=&quot;whitesmoke&quot; WIDTH=&quot;15%&quot;&gt;whitesmoke&lt;BR&gt;
++ * F5F5F5&lt;/TD&gt;
++ * &lt;/TR&gt;
++ * &lt;/table&gt; &lt;/center&gt; \endhtmlonly
++ * 
++ */
+ public class FSColorTable
+ {
+-    /** Definition of the color, aliceblue from the Netscape color table. */
+-    public static FSColor aliceblue() { return new FSColor(0xF0, 0xF8, 0xFF, 0xFF); }
+-    /** Definition of the color, antiquewhite from the Netscape color table. */
+-    public static FSColor antiquewhite() { return new FSColor(0xFA, 0xEB, 0xD7, 0xFF); }
+-    /** Definition of the color, aqua from the Netscape color table. */
+-    public static FSColor aqua() { return new FSColor(0x00, 0xFF, 0xFF, 0xFF); }
+-    /** Definition of the color, aquamarine from the Netscape color table. */
+-    public static FSColor aquamarine() { return new FSColor(0x7F, 0xFF, 0xD4, 0xFF); }
+-    /** Definition of the color, azure from the Netscape color table. */
+-    public static FSColor azure() { return new FSColor(0xF0, 0xFF, 0xFF, 0xFF); }
+-    /** Definition of the color, beige from the Netscape color table. */
+-    public static FSColor beige() { return new FSColor(0xF5, 0xF5, 0xDC, 0xFF); }
+-    /** Definition of the color, bisque from the Netscape color table. */
+-    public static FSColor bisque() { return new FSColor(0xFF, 0xE4, 0xC4, 0xFF); }
+-    /** Definition of the color, black from the Netscape color table. */
+-    public static FSColor black() { return new FSColor(0x00, 0x00, 0x00, 0xFF); }
+-    /** Definition of the color, blanchedalmond from the Netscape color table. */
+-    public static FSColor blanchedalmond() { return new FSColor(0xFF, 0xEB, 0xCD, 0xFF); }
+-    /** Definition of the color, blue from the Netscape color table. */
+-    public static FSColor blue() { return new FSColor(0x00, 0x00, 0xFF, 0xFF); }
+-    /** Definition of the color, blueviolet from the Netscape color table. */
+-    public static FSColor blueviolet() { return new FSColor(0x8A, 0x2B, 0xE2, 0xFF); }
+-    /** Definition of the color, brown from the Netscape color table. */
+-    public static FSColor brown() { return new FSColor(0xA5, 0x2A, 0x2A, 0xFF); }
+-    /** Definition of the color, burlywood from the Netscape color table. */
+-    public static FSColor burlywood() { return new FSColor(0xDE, 0xB8, 0x87, 0xFF); }
+-    /** Definition of the color, cadetblue from the Netscape color table. */
+-    public static FSColor cadetblue() { return new FSColor(0x5F, 0x9E, 0xA0, 0xFF); }
+-    /** Definition of the color, chartreuse from the Netscape color table. */
+-    public static FSColor chartreuse() { return new FSColor(0x7F, 0xFF, 0x00, 0xFF); }
+-    /** Definition of the color, chocolate from the Netscape color table. */
+-    public static FSColor chocolate() { return new FSColor(0xD2, 0x69, 0x1E, 0xFF); }
+-    /** Definition of the color, coral from the Netscape color table. */
+-    public static FSColor coral() { return new FSColor(0xFF, 0x7F, 0x50, 0xFF); }
+-    /** Definition of the color, cornflowerblue from the Netscape color table. */
+-    public static FSColor cornflowerblue() { return new FSColor(0x64, 0x95, 0xED, 0xFF); }
+-    /** Definition of the color, cornsilk from the Netscape color table. */
+-    public static FSColor cornsilk() { return new FSColor(0xFF, 0xF8, 0xDC, 0xFF); }
+-    /** Definition of the color, crimson from the Netscape color table. */
+-    public static FSColor crimson() { return new FSColor(0xDC, 0x14, 0x3C, 0xFF); }
+-    /** Definition of the color, cyan from the Netscape color table. */
+-    public static FSColor cyan() { return new FSColor(0x00, 0xFF, 0xFF, 0xFF); }
+-    /** Definition of the color, darkblue from the Netscape color table. */
+-    public static FSColor darkblue() { return new FSColor(0x00, 0x00, 0x8B, 0xFF); }
+-    /** Definition of the color, darkcyan from the Netscape color table. */
+-    public static FSColor darkcyan() { return new FSColor(0x00, 0x8B, 0x8B, 0xFF); }
+-    /** Definition of the color, darkgoldenrod from the Netscape color table. */
+-    public static FSColor darkgoldenrod() { return new FSColor(0xB8, 0x86, 0x0B, 0xFF); }
+-    /** Definition of the color, darkgray from the Netscape color table. */
+-    public static FSColor darkgray() { return new FSColor(0xA9, 0xA9, 0xA9, 0xFF); }
+-    /** Definition of the color, darkgreen from the Netscape color table. */
+-    public static FSColor darkgreen() { return new FSColor(0x00, 0x64, 0x00, 0xFF); }
+-    /** Definition of the color, darkkhaki from the Netscape color table. */
+-    public static FSColor darkkhaki() { return new FSColor(0xBD, 0xB7, 0x6B, 0xFF); }
+-    /** Definition of the color, darkmagenta from the Netscape color table. */
+-    public static FSColor darkmagenta() { return new FSColor(0x8B, 0x00, 0x8B, 0xFF); }
+-    /** Definition of the color, darkolivegreen from the Netscape color table. */
+-    public static FSColor darkolivegreen() { return new FSColor(0x55, 0x6B, 0x2F, 0xFF); }
+-    /** Definition of the color, darkorange from the Netscape color table. */
+-    public static FSColor darkorange() { return new FSColor(0xFF, 0x8C, 0x00, 0xFF); }
+-    /** Definition of the color, darkorchid from the Netscape color table. */
+-    public static FSColor darkorchid() { return new FSColor(0x99, 0x32, 0xCC, 0xFF); }
+-    /** Definition of the color, darkred from the Netscape color table. */
+-    public static FSColor darkred() { return new FSColor(0x8B, 0x00, 0x00, 0xFF); }
+-    /** Definition of the color, darksalmon from the Netscape color table. */
+-    public static FSColor darksalmon() { return new FSColor(0xE9, 0x96, 0x7A, 0xFF); }
+-    /** Definition of the color, darkseagreen from the Netscape color table. */
+-    public static FSColor darkseagreen() { return new FSColor(0x8F, 0xBC, 0x8F, 0xFF); }
+-    /** Definition of the color, darkslateblue from the Netscape color table. */
+-    public static FSColor darkslateblue() { return new FSColor(0x48, 0x3D, 0x8B, 0xFF); }
+-    /** Definition of the color, darkslategray from the Netscape color table. */
+-    public static FSColor darkslategray() { return new FSColor(0x2F, 0x4F, 0x4F, 0xFF); }
+-    /** Definition of the color, darkturquoise from the Netscape color table. */
+-    public static FSColor darkturquoise() { return new FSColor(0x00, 0xCE, 0xD1, 0xFF); }
+-    /** Definition of the color, darkviolet from the Netscape color table. */
+-    public static FSColor darkviolet() { return new FSColor(0x94, 0x00, 0xD3, 0xFF); }
+-    /** Definition of the color, deeppink from the Netscape color table. */
+-    public static FSColor deeppink() { return new FSColor(0xFF, 0x14, 0x93, 0xFF); }
+-    /** Definition of the color, deepskyblue from the Netscape color table. */
+-    public static FSColor deepskyblue() { return new FSColor(0x00, 0xBF, 0xFF, 0xFF); }
+-    /** Definition of the color, dimgray from the Netscape color table. */
+-    public static FSColor dimgray() { return new FSColor(0x69, 0x69, 0x69, 0xFF); }
+-    /** Definition of the color, dodgerblue from the Netscape color table. */
+-    public static FSColor dodgerblue() { return new FSColor(0x1E, 0x90, 0xFF, 0xFF); }
+-    /** Definition of the color, firebrick from the Netscape color table. */
+-    public static FSColor firebrick() { return new FSColor(0xB2, 0x22, 0x22, 0xFF); }
+-    /** Definition of the color, floralwhite from the Netscape color table. */
+-    public static FSColor floralwhite() { return new FSColor(0xFF, 0xFA, 0xF0, 0xFF); }
+-    /** Definition of the color, forestgreen from the Netscape color table. */
+-    public static FSColor forestgreen() { return new FSColor(0x22, 0x8B, 0x22, 0xFF); }
+-    /** Definition of the color, fuchsia from the Netscape color table. */
+-    public static FSColor fuchsia() { return new FSColor(0xFF, 0x00, 0xFF, 0xFF); }
+-    /** Definition of the color, gainsboro from the Netscape color table. */
+-    public static FSColor gainsboro() { return new FSColor(0xDC, 0xDC, 0xDC, 0xFF); }
+-    /** Definition of the color, ghostwhite from the Netscape color table. */
+-    public static FSColor ghostwhite() { return new FSColor(0xF8, 0xF8, 0xFB, 0xFF); }
+-    /** Definition of the color, gold from the Netscape color table. */
+-    public static FSColor gold() { return new FSColor(0xFF, 0xD7, 0x00, 0xFF); }
+-    /** Definition of the color, goldenrod from the Netscape color table. */
+-    public static FSColor goldenrod() { return new FSColor(0xDA, 0xA5, 0x20, 0xFF); }
+-    /** Definition of the color, gray from the Netscape color table. */
+-    public static FSColor gray() { return new FSColor(0x80, 0x80, 0x80, 0xFF); }
+-    /** Definition of the color, green from the Netscape color table. */
+-    public static FSColor green() { return new FSColor(0x00, 0x80, 0x00, 0xFF); }
+-    /** Definition of the color, greenyellow from the Netscape color table. */
+-    public static FSColor greenyellow() { return new FSColor(0xAD, 0xFF, 0x2F, 0xFF); }
+-    /** Definition of the color, honeydew from the Netscape color table. */
+-    public static FSColor honeydew() { return new FSColor(0xF0, 0xFF, 0xF0, 0xFF); }
+-    /** Definition of the color, hotpink from the Netscape color table. */
+-    public static FSColor hotpink() { return new FSColor(0xFF, 0x69, 0xB4, 0xFF); }
+-    /** Definition of the color, indianred from the Netscape color table. */
+-    public static FSColor indianred() { return new FSColor(0xCD, 0x5C, 0x5C, 0xFF); }
+-    /** Definition of the color, indigo from the Netscape color table. */
+-    public static FSColor indigo() { return new FSColor(0x4B, 0x00, 0x82, 0xFF); }
+-    /** Definition of the color, ivory from the Netscape color table. */
+-    public static FSColor ivory() { return new FSColor(0xFF, 0xFF, 0xF0, 0xFF); }
+-    /** Definition of the color, khaki from the Netscape color table. */
+-    public static FSColor khaki() { return new FSColor(0xF0, 0xE6, 0x8C, 0xFF); }
+-    /** Definition of the color, lavender from the Netscape color table. */
+-    public static FSColor lavender() { return new FSColor(0xE6, 0xE6, 0xFA, 0xFF); }
+-    /** Definition of the color, lavenderblush from the Netscape color table. */
+-    public static FSColor lavenderblush() { return new FSColor(0xFF, 0xF0, 0xF5, 0xFF); }
+-    /** Definition of the color, lawngreen from the Netscape color table. */
+-    public static FSColor lawngreen() { return new FSColor(0x7C, 0xFC, 0x00, 0xFF); }
+-    /** Definition of the color, lemonchiffon from the Netscape color table. */
+-    public static FSColor lemonchiffon() { return new FSColor(0xFF, 0xFA, 0xCD, 0xFF); }
+-    /** Definition of the color, lightblue from the Netscape color table. */
+-    public static FSColor lightblue() { return new FSColor(0xAD, 0xD8, 0xE6, 0xFF); }
+-    /** Definition of the color, lightcoral from the Netscape color table. */
+-    public static FSColor lightcoral() { return new FSColor(0xF0, 0x80, 0x80, 0xFF); }
+-    /** Definition of the color, lightcyan from the Netscape color table. */
+-    public static FSColor lightcyan() { return new FSColor(0xE0, 0xFF, 0xFF, 0xFF); }
+-    /** Definition of the color, lightgoldenrodyellow from the Netscape color table. */
+-    public static FSColor lightgoldenrodyellow() { return new FSColor(0xFA, 0xFA, 0xD2, 0xFF); }
+-    /** Definition of the color, lightgreen from the Netscape color table. */
+-    public static FSColor lightgreen() { return new FSColor(0x90, 0xEE, 0x90, 0xFF); }
+-    /** Definition of the color, lightgrey from the Netscape color table. */
+-    public static FSColor lightgrey() { return new FSColor(0xD3, 0xD3, 0xD3, 0xFF); }
+-    /** Definition of the color, lightpink from the Netscape color table. */
+-    public static FSColor lightpink() { return new FSColor(0xFF, 0xB6, 0xC1, 0xFF); }
+-    /** Definition of the color, lightsalmon from the Netscape color table. */
+-    public static FSColor lightsalmon() { return new FSColor(0xFF, 0xA0, 0x7A, 0xFF); }
+-    /** Definition of the color, lightseagreen from the Netscape color table. */
+-    public static FSColor lightseagreen() { return new FSColor(0x20, 0xB2, 0xAA, 0xFF); }
+-    /** Definition of the color, lightskyblue from the Netscape color table. */
+-    public static FSColor lightskyblue() { return new FSColor(0x87, 0xCE, 0xFA, 0xFF); }
+-    /** Definition of the color, lightslategray from the Netscape color table. */
+-    public static FSColor lightslategray() { return new FSColor(0x77, 0x88, 0x99, 0xFF); }
+-    /** Definition of the color, lightsteelblue from the Netscape color table. */
+-    public static FSColor lightsteelblue() { return new FSColor(0xB0, 0xC4, 0xDE, 0xFF); }
+-    /** Definition of the color, lightyellow from the Netscape color table. */
+-    public static FSColor lightyellow() { return new FSColor(0xFF, 0xFF, 0xE0, 0xFF); }
+-    /** Definition of the color, lime from the Netscape color table. */
+-    public static FSColor lime() { return new FSColor(0x00, 0xFF, 0x00, 0xFF); }
+-    /** Definition of the color, limegreen from the Netscape color table. */
+-    public static FSColor limegreen() { return new FSColor(0x32, 0xCD, 0x32, 0xFF); }
+-    /** Definition of the color, linen from the Netscape color table. */
+-    public static FSColor linen() { return new FSColor(0xFA, 0xF0, 0xE6, 0xFF); }
+-    /** Definition of the color, magenta from the Netscape color table. */
+-    public static FSColor magenta() { return new FSColor(0xFF, 0x00, 0xFF, 0xFF); }
+-    /** Definition of the color, maroon from the Netscape color table. */
+-    public static FSColor maroon() { return new FSColor(0x80, 0x00, 0x00, 0xFF); }
+-    /** Definition of the color, mediumaquamarine from the Netscape color table. */
+-    public static FSColor mediumaquamarine() { return new FSColor(0x66, 0xCD, 0xAA, 0xFF); }
+-    /** Definition of the color, mediumblue from the Netscape color table. */
+-    public static FSColor mediumblue() { return new FSColor(0x00, 0x00, 0xCD, 0xFF); }
+-    /** Definition of the color, mediumorchid from the Netscape color table. */
+-    public static FSColor mediumorchid() { return new FSColor(0xBA, 0x55, 0xD3, 0xFF); }
+-    /** Definition of the color, mediumpurple from the Netscape color table. */
+-    public static FSColor mediumpurple() { return new FSColor(0x93, 0x70, 0xDB, 0xFF); }
+-    /** Definition of the color, mediumseagreen from the Netscape color table. */
+-    public static FSColor mediumseagreen() { return new FSColor(0x3C, 0xB3, 0x71, 0xFF); }
+-    /** Definition of the color, mediumslateblue from the Netscape color table. */
+-    public static FSColor mediumslateblue() { return new FSColor(0x7B, 0x68, 0xEE, 0xFF); }
+-    /** Definition of the color, mediumspringgreen from the Netscape color table. */
+-    public static FSColor mediumspringgreen() { return new FSColor(0x00, 0xFA, 0x9A, 0xFF); }
+-    /** Definition of the color, mediumturquoise from the Netscape color table. */
+-    public static FSColor mediumturquoise() { return new FSColor(0x48, 0xD1, 0xCC, 0xFF); }
+-    /** Definition of the color, mediumvioletred from the Netscape color table. */
+-    public static FSColor mediumvioletred() { return new FSColor(0xC7, 0x15, 0x85, 0xFF); }
+-    /** Definition of the color, midnightblue from the Netscape color table. */
+-    public static FSColor midnightblue() { return new FSColor(0x19, 0x19, 0x70, 0xFF); }
+-    /** Definition of the color, mintcream from the Netscape color table. */
+-    public static FSColor mintcream() { return new FSColor(0xF5, 0xFF, 0xFA, 0xFF); }
+-    /** Definition of the color, mistyrose from the Netscape color table. */
+-    public static FSColor mistyrose() { return new FSColor(0xFF, 0xE4, 0xE1, 0xFF); }
+-    /** Definition of the color, moccasin from the Netscape color table. */
+-    public static FSColor moccasin() { return new FSColor(0xFF, 0xE4, 0xB5, 0xFF); }
+-    /** Definition of the color, navajowhite from the Netscape color table. */
+-    public static FSColor navajowhite() { return new FSColor(0xFF, 0xDE, 0xAD, 0xFF); }
+-    /** Definition of the color, navy from the Netscape color table. */
+-    public static FSColor navy() { return new FSColor(0x00, 0x00, 0x80, 0xFF); }
+-    /** Definition of the color, oldlace from the Netscape color table. */
+-    public static FSColor oldlace() { return new FSColor(0xFD, 0xF5, 0xE6, 0xFF); }
+-    /** Definition of the color, olive from the Netscape color table. */
+-    public static FSColor olive() { return new FSColor(0x80, 0x80, 0x00, 0xFF); }
+-    /** Definition of the color, olivedrab from the Netscape color table. */
+-    public static FSColor olivedrab() { return new FSColor(0x6B, 0x8E, 0x23, 0xFF); }
+-    /** Definition of the color, orange from the Netscape color table. */
+-    public static FSColor orange() { return new FSColor(0xFF, 0xA5, 0x00, 0xFF); }
+-    /** Definition of the color, orangered from the Netscape color table. */
+-    public static FSColor orangered() { return new FSColor(0xFF, 0x45, 0x00, 0xFF); }
+-    /** Definition of the color, orchid from the Netscape color table. */
+-    public static FSColor orchid() { return new FSColor(0xDA, 0x70, 0xD6, 0xFF); }
+-    /** Definition of the color, palegoldenrod from the Netscape color table. */
+-    public static FSColor palegoldenrod() { return new FSColor(0xEE, 0xE8, 0xAA, 0xFF); }
+-    /** Definition of the color, palegreen from the Netscape color table. */
+-    public static FSColor palegreen() { return new FSColor(0x98, 0xFB, 0x98, 0xFF); }
+-    /** Definition of the color, paleturquoise from the Netscape color table. */
+-    public static FSColor paleturquoise() { return new FSColor(0xAF, 0xEE, 0xEE, 0xFF); }
+-    /** Definition of the color, palevioletred from the Netscape color table. */
+-    public static FSColor palevioletred() { return new FSColor(0xDB, 0x70, 0x93, 0xFF); }
+-    /** Definition of the color, papayawhip from the Netscape color table. */
+-    public static FSColor papayawhip() { return new FSColor(0xFF, 0xEF, 0xD5, 0xFF); }
+-    /** Definition of the color, peachpuff from the Netscape color table. */
+-    public static FSColor peachpuff() { return new FSColor(0xFF, 0xDA, 0xB9, 0xFF); }
+-    /** Definition of the color, peru from the Netscape color table. */
+-    public static FSColor peru() { return new FSColor(0xCD, 0x85, 0x3F, 0xFF); }
+-    /** Definition of the color, pink from the Netscape color table. */
+-    public static FSColor pink() { return new FSColor(0xFF, 0xC0, 0xCB, 0xFF); }
+-    /** Definition of the color, plum from the Netscape color table. */
+-    public static FSColor plum() { return new FSColor(0xDD, 0xA0, 0xDD, 0xFF); }
+-    /** Definition of the color, powderblue from the Netscape color table. */
+-    public static FSColor powderblue() { return new FSColor(0xB0, 0xE0, 0xE6, 0xFF); }
+-    /** Definition of the color, purple from the Netscape color table. */
+-    public static FSColor purple() { return new FSColor(0x80, 0x00, 0x80, 0xFF); }
+-    /** Definition of the color, red from the Netscape color table. */
+-    public static FSColor red() { return new FSColor(0xFF, 0x00, 0x00, 0xFF); }
+-    /** Definition of the color, rosybrown from the Netscape color table. */
+-    public static FSColor rosybrown() { return new FSColor(0xBC, 0x8F, 0x8F, 0xFF); }
+-    /** Definition of the color, royalblue from the Netscape color table. */
+-    public static FSColor royalblue() { return new FSColor(0x41, 0x69, 0xE1, 0xFF); }
+-    /** Definition of the color, saddlebrown from the Netscape color table. */
+-    public static FSColor saddlebrown() { return new FSColor(0x8B, 0x45, 0x13, 0xFF); }
+-    /** Definition of the color, salmon from the Netscape color table. */
+-    public static FSColor salmon() { return new FSColor(0xFA, 0x80, 0x72, 0xFF); }
+-    /** Definition of the color, sandybrown from the Netscape color table. */
+-    public static FSColor sandybrown() { return new FSColor(0xF4, 0xA4, 0x60, 0xFF); }
+-    /** Definition of the color, seagreen from the Netscape color table. */
+-    public static FSColor seagreen() { return new FSColor(0x2E, 0x8B, 0x57, 0xFF); }
+-    /** Definition of the color, seashell from the Netscape color table. */
+-    public static FSColor seashell() { return new FSColor(0xFF, 0xF5, 0xEE, 0xFF); }
+-    /** Definition of the color, sienna from the Netscape color table. */
+-    public static FSColor sienna() { return new FSColor(0xA0, 0x52, 0x2d, 0xFF); }
+-    /** Definition of the color, silver from the Netscape color table. */
+-    public static FSColor silver() { return new FSColor(0xC0, 0xC0, 0xC0, 0xFF); }
+-    /** Definition of the color, skyblue from the Netscape color table. */
+-    public static FSColor skyblue() { return new FSColor(0x87, 0xCE, 0xEB, 0xFF); }
+-    /** Definition of the color, slateblue from the Netscape color table. */
+-    public static FSColor slateblue() { return new FSColor(0x6A, 0x5A, 0xCD, 0xFF); }
+-    /** Definition of the color, slategray from the Netscape color table. */
+-    public static FSColor slategray() { return new FSColor(0x70, 0x80, 0x90, 0xFF); }
+-    /** Definition of the color, snow from the Netscape color table. */
+-    public static FSColor snow() { return new FSColor(0xFF, 0xFA, 0xFA, 0xFF); }
+-    /** Definition of the color, springgreen from the Netscape color table. */
+-    public static FSColor springgreen() { return new FSColor(0x00, 0xFF, 0x7F, 0xFF); }
+-    /** Definition of the color, steelblue from the Netscape color table. */
+-    public static FSColor steelblue() { return new FSColor(0x46, 0x82, 0xB4, 0xFF); }
+-    /** Definition of the color, tan from the Netscape color table. */
+-    public static FSColor tan() { return new FSColor(0xD2, 0xB4, 0x8C, 0xFF); }
+-    /** Definition of the color, teal from the Netscape color table. */
+-    public static FSColor teal() { return new FSColor(0x00, 0x80, 0x80, 0xFF); }
+-    /** Definition of the color, thistle from the Netscape color table. */
+-    public static FSColor thistle() { return new FSColor(0xD8, 0xBF, 0xD8, 0xFF); }
+-    /** Definition of the color, tomato from the Netscape color table. */
+-    public static FSColor tomato() { return new FSColor(0xFF, 0x63, 0x47, 0xFF); }
+-    /** Definition of the color, turquoise from the Netscape color table. */
+-    public static FSColor turquoise() { return new FSColor(0x40, 0xE0, 0xD0, 0xFF); }
+-    /** Definition of the color, violet from the Netscape color table. */
+-    public static FSColor violet() { return new FSColor(0xEE, 0x82, 0xEE, 0xFF); }
+-    /** Definition of the color, wheat from the Netscape color table. */
+-    public static FSColor wheat() { return new FSColor(0xF5, 0xDE, 0xB3, 0xFF); }
+-    /** Definition of the color, white from the Netscape color table. */
+-    public static FSColor white() { return new FSColor(0xFF, 0xFF, 0xFF, 0xFF); }
+-    /** Definition of the color, whitesmoke from the Netscape color table. */
+-    public static FSColor whitesmoke() { return new FSColor(0xF5, 0xF5, 0xF5, 0xFF); }
+-    /** Definition of the color, yellow from the Netscape color table. */
+-    public static FSColor yellow() { return new FSColor(0xFF, 0xFF, 0x00, 0xFF); }
+-    /** Definition of the color, yellowgreen from the Netscape color table. */
+-    public static FSColor yellowgreen() { return new FSColor(0x9A, 0xCD, 0x32, 0xFF); } 
++	/** Definition of the color, aliceblue from the Netscape color table. */
++	public static FSColor aliceblue()
++	{
++		return new FSColor(0xF0, 0xF8, 0xFF, 0xFF);
++	}
+ 
+-    /** Definition of the transparent color, aliceblue from the Netscape color table. */
+-    public static FSColor aliceblue(int alpha) { return new FSColor(0xF0, 0xF8, 0xFF, alpha); }
+-    /** Definition of the transparent color, antiquewhite from the Netscape color table. */
+-    public static FSColor antiquewhite(int alpha) { return new FSColor(0xFA, 0xEB, 0xD7, alpha); }
+-    /** Definition of the transparent color, aqua from the Netscape color table. */
+-    public static FSColor aqua(int alpha) { return new FSColor(0x00, 0xFF, 0xFF, alpha); }
+-    /** Definition of the transparent color, aquamarine from the Netscape color table. */
+-    public static FSColor aquamarine(int alpha) { return new FSColor(0x7F, 0xFF, 0xD4, alpha); }
+-    /** Definition of the transparent color, azure from the Netscape color table. */
+-    public static FSColor azure(int alpha) { return new FSColor(0xF0, 0xFF, 0xFF, alpha); }
+-    /** Definition of the transparent color, beige from the Netscape color table. */
+-    public static FSColor beige(int alpha) { return new FSColor(0xF5, 0xF5, 0xDC, alpha); }
+-    /** Definition of the transparent color, bisque from the Netscape color table. */
+-    public static FSColor bisque(int alpha) { return new FSColor(0xFF, 0xE4, 0xC4, alpha); }
+-    /** Definition of the transparent color, black from the Netscape color table. */
+-    public static FSColor black(int alpha) { return new FSColor(0x00, 0x00, 0x00, alpha); }
+-    /** Definition of the transparent color, blanchedalmond from the Netscape color table. */
+-    public static FSColor blanchedalmond(int alpha) { return new FSColor(0xFF, 0xEB, 0xCD, alpha); }
+-    /** Definition of the transparent color, blue from the Netscape color table. */
+-    public static FSColor blue(int alpha) { return new FSColor(0x00, 0x00, 0xFF, alpha); }
+-    /** Definition of the transparent color, blueviolet from the Netscape color table. */
+-    public static FSColor blueviolet(int alpha) { return new FSColor(0x8A, 0x2B, 0xE2, alpha); }
+-    /** Definition of the transparent color, brown from the Netscape color table. */
+-    public static FSColor brown(int alpha) { return new FSColor(0xA5, 0x2A, 0x2A, alpha); }
+-    /** Definition of the transparent color, burlywood from the Netscape color table. */
+-    public static FSColor burlywood(int alpha) { return new FSColor(0xDE, 0xB8, 0x87, alpha); }
+-    /** Definition of the transparent color, cadetblue from the Netscape color table. */
+-    public static FSColor cadetblue(int alpha) { return new FSColor(0x5F, 0x9E, 0xA0, alpha); }
+-    /** Definition of the transparent color, chartreuse from the Netscape color table. */
+-    public static FSColor chartreuse(int alpha) { return new FSColor(0x7F, 0xFF, 0x00, alpha); }
+-    /** Definition of the transparent color, chocolate from the Netscape color table. */
+-    public static FSColor chocolate(int alpha) { return new FSColor(0xD2, 0x69, 0x1E, alpha); }
+-    /** Definition of the transparent color, coral from the Netscape color table. */
+-    public static FSColor coral(int alpha) { return new FSColor(0xFF, 0x7F, 0x50, alpha); }
+-    /** Definition of the transparent color, cornflowerblue from the Netscape color table. */
+-    public static FSColor cornflowerblue(int alpha) { return new FSColor(0x64, 0x95, 0xED, alpha); }
+-    /** Definition of the transparent color, cornsilk from the Netscape color table. */
+-    public static FSColor cornsilk(int alpha) { return new FSColor(0xFF, 0xF8, 0xDC, alpha); }
+-    /** Definition of the transparent color, crimson from the Netscape color table. */
+-    public static FSColor crimson(int alpha) { return new FSColor(0xDC, 0x14, 0x3C, alpha); }
+-    /** Definition of the transparent color, cyan from the Netscape color table. */
+-    public static FSColor cyan(int alpha) { return new FSColor(0x00, 0xFF, 0xFF, alpha); }
+-    /** Definition of the transparent color, darkblue from the Netscape color table. */
+-    public static FSColor darkblue(int alpha) { return new FSColor(0x00, 0x00, 0x8B, alpha); }
+-    /** Definition of the transparent color, darkcyan from the Netscape color table. */
+-    public static FSColor darkcyan(int alpha) { return new FSColor(0x00, 0x8B, 0x8B, alpha); }
+-    /** Definition of the transparent color, darkgoldenrod from the Netscape color table. */
+-    public static FSColor darkgoldenrod(int alpha) { return new FSColor(0xB8, 0x86, 0x0B, alpha); }
+-    /** Definition of the transparent color, darkgray from the Netscape color table. */
+-    public static FSColor darkgray(int alpha) { return new FSColor(0xA9, 0xA9, 0xA9, alpha); }
+-    /** Definition of the transparent color, darkgreen from the Netscape color table. */
+-    public static FSColor darkgreen(int alpha) { return new FSColor(0x00, 0x64, 0x00, alpha); }
+-    /** Definition of the transparent color, darkkhaki from the Netscape color table. */
+-    public static FSColor darkkhaki(int alpha) { return new FSColor(0xBD, 0xB7, 0x6B, alpha); }
+-    /** Definition of the transparent color, darkmagenta from the Netscape color table. */
+-    public static FSColor darkmagenta(int alpha) { return new FSColor(0x8B, 0x00, 0x8B, alpha); }
+-    /** Definition of the transparent color, darkolivegreen from the Netscape color table. */
+-    public static FSColor darkolivegreen(int alpha) { return new FSColor(0x55, 0x6B, 0x2F, alpha); }
+-    /** Definition of the transparent color, darkorange from the Netscape color table. */
+-    public static FSColor darkorange(int alpha) { return new FSColor(0xFF, 0x8C, 0x00, alpha); }
+-    /** Definition of the transparent color, darkorchid from the Netscape color table. */
+-    public static FSColor darkorchid(int alpha) { return new FSColor(0x99, 0x32, 0xCC, alpha); }
+-    /** Definition of the transparent color, darkred from the Netscape color table. */
+-    public static FSColor darkred(int alpha) { return new FSColor(0x8B, 0x00, 0x00, alpha); }
+-    /** Definition of the transparent color, darksalmon from the Netscape color table. */
+-    public static FSColor darksalmon(int alpha) { return new FSColor(0xE9, 0x96, 0x7A, alpha); }
+-    /** Definition of the transparent color, darkseagreen from the Netscape color table. */
+-    public static FSColor darkseagreen(int alpha) { return new FSColor(0x8F, 0xBC, 0x8F, alpha); }
+-    /** Definition of the transparent color, darkslateblue from the Netscape color table. */
+-    public static FSColor darkslateblue(int alpha) { return new FSColor(0x48, 0x3D, 0x8B, alpha); }
+-    /** Definition of the transparent color, darkslategray from the Netscape color table. */
+-    public static FSColor darkslategray(int alpha) { return new FSColor(0x2F, 0x4F, 0x4F, alpha); }
+-    /** Definition of the transparent color, darkturquoise from the Netscape color table. */
+-    public static FSColor darkturquoise(int alpha) { return new FSColor(0x00, 0xCE, 0xD1, alpha); }
+-    /** Definition of the transparent color, darkviolet from the Netscape color table. */
+-    public static FSColor darkviolet(int alpha) { return new FSColor(0x94, 0x00, 0xD3, alpha); }
+-    /** Definition of the transparent color, deeppink from the Netscape color table. */
+-    public static FSColor deeppink(int alpha) { return new FSColor(0xFF, 0x14, 0x93, alpha); }
+-    /** Definition of the transparent color, deepskyblue from the Netscape color table. */
+-    public static FSColor deepskyblue(int alpha) { return new FSColor(0x00, 0xBF, 0xFF, alpha); }
+-    /** Definition of the transparent color, dimgray from the Netscape color table. */
+-    public static FSColor dimgray(int alpha) { return new FSColor(0x69, 0x69, 0x69, alpha); }
+-    /** Definition of the transparent color, dodgerblue from the Netscape color table. */
+-    public static FSColor dodgerblue(int alpha) { return new FSColor(0x1E, 0x90, 0xFF, alpha); }
+-    /** Definition of the transparent color, firebrick from the Netscape color table. */
+-    public static FSColor firebrick(int alpha) { return new FSColor(0xB2, 0x22, 0x22, alpha); }
+-    /** Definition of the transparent color, floralwhite from the Netscape color table. */
+-    public static FSColor floralwhite(int alpha) { return new FSColor(0xFF, 0xFA, 0xF0, alpha); }
+-    /** Definition of the transparent color, forestgreen from the Netscape color table. */
+-    public static FSColor forestgreen(int alpha) { return new FSColor(0x22, 0x8B, 0x22, alpha); }
+-    /** Definition of the transparent color, fuchsia from the Netscape color table. */
+-    public static FSColor fuchsia(int alpha) { return new FSColor(0xFF, 0x00, 0xFF, alpha); }
+-    /** Definition of the transparent color, gainsboro from the Netscape color table. */
+-    public static FSColor gainsboro(int alpha) { return new FSColor(0xDC, 0xDC, 0xDC, alpha); }
+-    /** Definition of the transparent color, ghostwhite from the Netscape color table. */
+-    public static FSColor ghostwhite(int alpha) { return new FSColor(0xF8, 0xF8, 0xFB, alpha); }
+-    /** Definition of the transparent color, gold from the Netscape color table. */
+-    public static FSColor gold(int alpha) { return new FSColor(0xFF, 0xD7, 0x00, alpha); }
+-    /** Definition of the transparent color, goldenrod from the Netscape color table. */
+-    public static FSColor goldenrod(int alpha) { return new FSColor(0xDA, 0xA5, 0x20, alpha); }
+-    /** Definition of the transparent color, gray from the Netscape color table. */
+-    public static FSColor gray(int alpha) { return new FSColor(0x80, 0x80, 0x80, alpha); }
+-    /** Definition of the transparent color, green from the Netscape color table. */
+-    public static FSColor green(int alpha) { return new FSColor(0x00, 0x80, 0x00, alpha); }
+-    /** Definition of the transparent color, greenyellow from the Netscape color table. */
+-    public static FSColor greenyellow(int alpha) { return new FSColor(0xAD, 0xFF, 0x2F, alpha); }
+-    /** Definition of the transparent color, honeydew from the Netscape color table. */
+-    public static FSColor honeydew(int alpha) { return new FSColor(0xF0, 0xFF, 0xF0, alpha); }
+-    /** Definition of the transparent color, hotpink from the Netscape color table. */
+-    public static FSColor hotpink(int alpha) { return new FSColor(0xFF, 0x69, 0xB4, alpha); }
+-    /** Definition of the transparent color, indianred from the Netscape color table. */
+-    public static FSColor indianred(int alpha) { return new FSColor(0xCD, 0x5C, 0x5C, alpha); }
+-    /** Definition of the transparent color, indigo from the Netscape color table. */
+-    public static FSColor indigo(int alpha) { return new FSColor(0x4B, 0x00, 0x82, alpha); }
+-    /** Definition of the transparent color, ivory from the Netscape color table. */
+-    public static FSColor ivory(int alpha) { return new FSColor(0xFF, 0xFF, 0xF0, alpha); }
+-    /** Definition of the transparent color, khaki from the Netscape color table. */
+-    public static FSColor khaki(int alpha) { return new FSColor(0xF0, 0xE6, 0x8C, alpha); }
+-    /** Definition of the transparent color, lavender from the Netscape color table. */
+-    public static FSColor lavender(int alpha) { return new FSColor(0xE6, 0xE6, 0xFA, alpha); }
+-    /** Definition of the transparent color, lavenderblush from the Netscape color table. */
+-    public static FSColor lavenderblush(int alpha) { return new FSColor(0xFF, 0xF0, 0xF5, alpha); }
+-    /** Definition of the transparent color, lawngreen from the Netscape color table. */
+-    public static FSColor lawngreen(int alpha) { return new FSColor(0x7C, 0xFC, 0x00, alpha); }
+-    /** Definition of the transparent color, lemonchiffon from the Netscape color table. */
+-    public static FSColor lemonchiffon(int alpha) { return new FSColor(0xFF, 0xFA, 0xCD, alpha); }
+-    /** Definition of the transparent color, lightblue from the Netscape color table. */
+-    public static FSColor lightblue(int alpha) { return new FSColor(0xAD, 0xD8, 0xE6, alpha); }
+-    /** Definition of the transparent color, lightcoral from the Netscape color table. */
+-    public static FSColor lightcoral(int alpha) { return new FSColor(0xF0, 0x80, 0x80, alpha); }
+-    /** Definition of the transparent color, lightcyan from the Netscape color table. */
+-    public static FSColor lightcyan(int alpha) { return new FSColor(0xE0, 0xFF, 0xFF, alpha); }
+-    /** Definition of the transparent color, lightgoldenrodyellow from the Netscape color table. */
+-    public static FSColor lightgoldenrodyellow(int alpha) { return new FSColor(0xFA, 0xFA, 0xD2, alpha); }
+-    /** Definition of the transparent color, lightgreen from the Netscape color table. */
+-    public static FSColor lightgreen(int alpha) { return new FSColor(0x90, 0xEE, 0x90, alpha); }
+-    /** Definition of the transparent color, lightgrey from the Netscape color table. */
+-    public static FSColor lightgrey(int alpha) { return new FSColor(0xD3, 0xD3, 0xD3, alpha); }
+-    /** Definition of the transparent color, lightpink from the Netscape color table. */
+-    public static FSColor lightpink(int alpha) { return new FSColor(0xFF, 0xB6, 0xC1, alpha); }
+-    /** Definition of the transparent color, lightsalmon from the Netscape color table. */
+-    public static FSColor lightsalmon(int alpha) { return new FSColor(0xFF, 0xA0, 0x7A, alpha); }
+-    /** Definition of the transparent color, lightseagreen from the Netscape color table. */
+-    public static FSColor lightseagreen(int alpha) { return new FSColor(0x20, 0xB2, 0xAA, alpha); }
+-    /** Definition of the transparent color, lightskyblue from the Netscape color table. */
+-    public static FSColor lightskyblue(int alpha) { return new FSColor(0x87, 0xCE, 0xFA, alpha); }
+-    /** Definition of the transparent color, lightslategray from the Netscape color table. */
+-    public static FSColor lightslategray(int alpha) { return new FSColor(0x77, 0x88, 0x99, alpha); }
+-    /** Definition of the transparent color, lightsteelblue from the Netscape color table. */
+-    public static FSColor lightsteelblue(int alpha) { return new FSColor(0xB0, 0xC4, 0xDE, alpha); }
+-    /** Definition of the transparent color, lightyellow from the Netscape color table. */
+-    public static FSColor lightyellow(int alpha) { return new FSColor(0xFF, 0xFF, 0xE0, alpha); }
+-    /** Definition of the transparent color, lime from the Netscape color table. */
+-    public static FSColor lime(int alpha) { return new FSColor(0x00, 0xFF, 0x00, alpha); }
+-    /** Definition of the transparent color, limegreen from the Netscape color table. */
+-    public static FSColor limegreen(int alpha) { return new FSColor(0x32, 0xCD, 0x32, alpha); }
+-    /** Definition of the transparent color, linen from the Netscape color table. */
+-    public static FSColor linen(int alpha) { return new FSColor(0xFA, 0xF0, 0xE6, alpha); }
+-    /** Definition of the transparent color, magenta from the Netscape color table. */
+-    public static FSColor magenta(int alpha) { return new FSColor(0xFF, 0x00, 0xFF, alpha); }
+-    /** Definition of the transparent color, maroon from the Netscape color table. */
+-    public static FSColor maroon(int alpha) { return new FSColor(0x80, 0x00, 0x00, alpha); }
+-    /** Definition of the transparent color, mediumaquamarine from the Netscape color table. */
+-    public static FSColor mediumaquamarine(int alpha) { return new FSColor(0x66, 0xCD, 0xAA, alpha); }
+-    /** Definition of the transparent color, mediumblue from the Netscape color table. */
+-    public static FSColor mediumblue(int alpha) { return new FSColor(0x00, 0x00, 0xCD, alpha); }
+-    /** Definition of the transparent color, mediumorchid from the Netscape color table. */
+-    public static FSColor mediumorchid(int alpha) { return new FSColor(0xBA, 0x55, 0xD3, alpha); }
+-    /** Definition of the transparent color, mediumpurple from the Netscape color table. */
+-    public static FSColor mediumpurple(int alpha) { return new FSColor(0x93, 0x70, 0xDB, alpha); }
+-    /** Definition of the transparent color, mediumseagreen from the Netscape color table. */
+-    public static FSColor mediumseagreen(int alpha) { return new FSColor(0x3C, 0xB3, 0x71, alpha); }
+-    /** Definition of the transparent color, mediumslateblue from the Netscape color table. */
+-    public static FSColor mediumslateblue(int alpha) { return new FSColor(0x7B, 0x68, 0xEE, alpha); }
+-    /** Definition of the transparent color, mediumspringgreen from the Netscape color table. */
+-    public static FSColor mediumspringgreen(int alpha) { return new FSColor(0x00, 0xFA, 0x9A, alpha); }
+-    /** Definition of the transparent color, mediumturquoise from the Netscape color table. */
+-    public static FSColor mediumturquoise(int alpha) { return new FSColor(0x48, 0xD1, 0xCC, alpha); }
+-    /** Definition of the transparent color, mediumvioletred from the Netscape color table. */
+-    public static FSColor mediumvioletred(int alpha) { return new FSColor(0xC7, 0x15, 0x85, alpha); }
+-    /** Definition of the transparent color, midnightblue from the Netscape color table. */
+-    public static FSColor midnightblue(int alpha) { return new FSColor(0x19, 0x19, 0x70, alpha); }
+-    /** Definition of the transparent color, mintcream from the Netscape color table. */
+-    public static FSColor mintcream(int alpha) { return new FSColor(0xF5, 0xFF, 0xFA, alpha); }
+-    /** Definition of the transparent color, mistyrose from the Netscape color table. */
+-    public static FSColor mistyrose(int alpha) { return new FSColor(0xFF, 0xE4, 0xE1, alpha); }
+-    /** Definition of the transparent color, moccasin from the Netscape color table. */
+-    public static FSColor moccasin(int alpha) { return new FSColor(0xFF, 0xE4, 0xB5, alpha); }
+-    /** Definition of the transparent color, navajowhite from the Netscape color table. */
+-    public static FSColor navajowhite(int alpha) { return new FSColor(0xFF, 0xDE, 0xAD, alpha); }
+-    /** Definition of the transparent color, navy from the Netscape color table. */
+-    public static FSColor navy(int alpha) { return new FSColor(0x00, 0x00, 0x80, alpha); }
+-    /** Definition of the transparent color, oldlace from the Netscape color table. */
+-    public static FSColor oldlace(int alpha) { return new FSColor(0xFD, 0xF5, 0xE6, alpha); }
+-    /** Definition of the transparent color, olive from the Netscape color table. */
+-    public static FSColor olive(int alpha) { return new FSColor(0x80, 0x80, 0x00, alpha); }
+-    /** Definition of the transparent color, olivedrab from the Netscape color table. */
+-    public static FSColor olivedrab(int alpha) { return new FSColor(0x6B, 0x8E, 0x23, alpha); }
+-    /** Definition of the transparent color, orange from the Netscape color table. */
+-    public static FSColor orange(int alpha) { return new FSColor(0xFF, 0xA5, 0x00, alpha); }
+-    /** Definition of the transparent color, orangered from the Netscape color table. */
+-    public static FSColor orangered(int alpha) { return new FSColor(0xFF, 0x45, 0x00, alpha); }
+-    /** Definition of the transparent color, orchid from the Netscape color table. */
+-    public static FSColor orchid(int alpha) { return new FSColor(0xDA, 0x70, 0xD6, alpha); }
+-    /** Definition of the transparent color, palegoldenrod from the Netscape color table. */
+-    public static FSColor palegoldenrod(int alpha) { return new FSColor(0xEE, 0xE8, 0xAA, alpha); }
+-    /** Definition of the transparent color, palegreen from the Netscape color table. */
+-    public static FSColor palegreen(int alpha) { return new FSColor(0x98, 0xFB, 0x98, alpha); }
+-    /** Definition of the transparent color, paleturquoise from the Netscape color table. */
+-    public static FSColor paleturquoise(int alpha) { return new FSColor(0xAF, 0xEE, 0xEE, alpha); }
+-    /** Definition of the transparent color, palevioletred from the Netscape color table. */
+-    public static FSColor palevioletred(int alpha) { return new FSColor(0xDB, 0x70, 0x93, alpha); }
+-    /** Definition of the transparent color, papayawhip from the Netscape color table. */
+-    public static FSColor papayawhip(int alpha) { return new FSColor(0xFF, 0xEF, 0xD5, alpha); }
+-    /** Definition of the transparent color, peachpuff from the Netscape color table. */
+-    public static FSColor peachpuff(int alpha) { return new FSColor(0xFF, 0xDA, 0xB9, alpha); }
+-    /** Definition of the transparent color, peru from the Netscape color table. */
+-    public static FSColor peru(int alpha) { return new FSColor(0xCD, 0x85, 0x3F, alpha); }
+-    /** Definition of the transparent color, pink from the Netscape color table. */
+-    public static FSColor pink(int alpha) { return new FSColor(0xFF, 0xC0, 0xCB, alpha); }
+-    /** Definition of the transparent color, plum from the Netscape color table. */
+-    public static FSColor plum(int alpha) { return new FSColor(0xDD, 0xA0, 0xDD, alpha); }
+-    /** Definition of the transparent color, powderblue from the Netscape color table. */
+-    public static FSColor powderblue(int alpha) { return new FSColor(0xB0, 0xE0, 0xE6, alpha); }
+-    /** Definition of the transparent color, purple from the Netscape color table. */
+-    public static FSColor purple(int alpha) { return new FSColor(0x80, 0x00, 0x80, alpha); }
+-    /** Definition of the transparent color, red from the Netscape color table. */
+-    public static FSColor red(int alpha) { return new FSColor(0xFF, 0x00, 0x00, alpha); }
+-    /** Definition of the transparent color, rosybrown from the Netscape color table. */
+-    public static FSColor rosybrown(int alpha) { return new FSColor(0xBC, 0x8F, 0x8F, alpha); }
+-    /** Definition of the transparent color, royalblue from the Netscape color table. */
+-    public static FSColor royalblue(int alpha) { return new FSColor(0x41, 0x69, 0xE1, alpha); }
+-    /** Definition of the transparent color, saddlebrown from the Netscape color table. */
+-    public static FSColor saddlebrown(int alpha) { return new FSColor(0x8B, 0x45, 0x13, alpha); }
+-    /** Definition of the transparent color, salmon from the Netscape color table. */
+-    public static FSColor salmon(int alpha) { return new FSColor(0xFA, 0x80, 0x72, alpha); }
+-    /** Definition of the transparent color, sandybrown from the Netscape color table. */
+-    public static FSColor sandybrown(int alpha) { return new FSColor(0xF4, 0xA4, 0x60, alpha); }
+-    /** Definition of the transparent color, seagreen from the Netscape color table. */
+-    public static FSColor seagreen(int alpha) { return new FSColor(0x2E, 0x8B, 0x57, alpha); }
+-    /** Definition of the transparent color, seashell from the Netscape color table. */
+-    public static FSColor seashell(int alpha) { return new FSColor(0xFF, 0xF5, 0xEE, alpha); }
+-    /** Definition of the transparent color, sienna from the Netscape color table. */
+-    public static FSColor sienna(int alpha) { return new FSColor(0xA0, 0x52, 0x2d, alpha); }
+-    /** Definition of the transparent color, silver from the Netscape color table. */
+-    public static FSColor silver(int alpha) { return new FSColor(0xC0, 0xC0, 0xC0, alpha); }
+-    /** Definition of the transparent color, skyblue from the Netscape color table. */
+-    public static FSColor skyblue(int alpha) { return new FSColor(0x87, 0xCE, 0xEB, alpha); }
+-    /** Definition of the transparent color, slateblue from the Netscape color table. */
+-    public static FSColor slateblue(int alpha) { return new FSColor(0x6A, 0x5A, 0xCD, alpha); }
+-    /** Definition of the transparent color, slategray from the Netscape color table. */
+-    public static FSColor slategray(int alpha) { return new FSColor(0x70, 0x80, 0x90, alpha); }
+-    /** Definition of the transparent color, snow from the Netscape color table. */
+-    public static FSColor snow(int alpha) { return new FSColor(0xFF, 0xFA, 0xFA, alpha); }
+-    /** Definition of the transparent color, springgreen from the Netscape color table. */
+-    public static FSColor springgreen(int alpha) { return new FSColor(0x00, 0xFF, 0x7F, alpha); }
+-    /** Definition of the transparent color, steelblue from the Netscape color table. */
+-    public static FSColor steelblue(int alpha) { return new FSColor(0x46, 0x82, 0xB4, alpha); }
+-    /** Definition of the transparent color, tan from the Netscape color table. */
+-    public static FSColor tan(int alpha) { return new FSColor(0xD2, 0xB4, 0x8C, alpha); }
+-    /** Definition of the transparent color, teal from the Netscape color table. */
+-    public static FSColor teal(int alpha) { return new FSColor(0x00, 0x80, 0x80, alpha); }
+-    /** Definition of the transparent color, thistle from the Netscape color table. */
+-    public static FSColor thistle(int alpha) { return new FSColor(0xD8, 0xBF, 0xD8, alpha); }
+-    /** Definition of the transparent color, tomato from the Netscape color table. */
+-    public static FSColor tomato(int alpha) { return new FSColor(0xFF, 0x63, 0x47, alpha); }
+-    /** Definition of the transparent color, turquoise from the Netscape color table. */
+-    public static FSColor turquoise(int alpha) { return new FSColor(0x40, 0xE0, 0xD0, alpha); }
+-    /** Definition of the transparent color, violet from the Netscape color table. */
+-    public static FSColor violet(int alpha) { return new FSColor(0xEE, 0x82, 0xEE, alpha); }
+-    /** Definition of the transparent color, wheat from the Netscape color table. */
+-    public static FSColor wheat(int alpha) { return new FSColor(0xF5, 0xDE, 0xB3, alpha); }
+-    /** Definition of the transparent color, white from the Netscape color table. */
+-    public static FSColor white(int alpha) { return new FSColor(0xFF, 0xFF, 0xFF, alpha); }
+-    /** Definition of the transparent color, whitesmoke from the Netscape color table. */
+-    public static FSColor whitesmoke(int alpha) { return new FSColor(0xF5, 0xF5, 0xF5, alpha); }
+-    /** Definition of the transparent color, yellow from the Netscape color table. */
+-    public static FSColor yellow(int alpha) { return new FSColor(0xFF, 0xFF, 0x00, alpha); }
+-    /** Definition of the transparent color, yellowgreen from the Netscape color table. */
+-    public static FSColor yellowgreen(int alpha) { return new FSColor(0x9A, 0xCD, 0x32, alpha); } 
++	/** Definition of the color, antiquewhite from the Netscape color table. */
++	public static FSColor antiquewhite()
++	{
++		return new FSColor(0xFA, 0xEB, 0xD7, 0xFF);
++	}
++
++	/** Definition of the color, aqua from the Netscape color table. */
++	public static FSColor aqua()
++	{
++		return new FSColor(0x00, 0xFF, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, aquamarine from the Netscape color table. */
++	public static FSColor aquamarine()
++	{
++		return new FSColor(0x7F, 0xFF, 0xD4, 0xFF);
++	}
++
++	/** Definition of the color, azure from the Netscape color table. */
++	public static FSColor azure()
++	{
++		return new FSColor(0xF0, 0xFF, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, beige from the Netscape color table. */
++	public static FSColor beige()
++	{
++		return new FSColor(0xF5, 0xF5, 0xDC, 0xFF);
++	}
++
++	/** Definition of the color, bisque from the Netscape color table. */
++	public static FSColor bisque()
++	{
++		return new FSColor(0xFF, 0xE4, 0xC4, 0xFF);
++	}
++
++	/** Definition of the color, black from the Netscape color table. */
++	public static FSColor black()
++	{
++		return new FSColor(0x00, 0x00, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, blanchedalmond from the Netscape color table. */
++	public static FSColor blanchedalmond()
++	{
++		return new FSColor(0xFF, 0xEB, 0xCD, 0xFF);
++	}
++
++	/** Definition of the color, blue from the Netscape color table. */
++	public static FSColor blue()
++	{
++		return new FSColor(0x00, 0x00, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, blueviolet from the Netscape color table. */
++	public static FSColor blueviolet()
++	{
++		return new FSColor(0x8A, 0x2B, 0xE2, 0xFF);
++	}
++
++	/** Definition of the color, brown from the Netscape color table. */
++	public static FSColor brown()
++	{
++		return new FSColor(0xA5, 0x2A, 0x2A, 0xFF);
++	}
++
++	/** Definition of the color, burlywood from the Netscape color table. */
++	public static FSColor burlywood()
++	{
++		return new FSColor(0xDE, 0xB8, 0x87, 0xFF);
++	}
++
++	/** Definition of the color, cadetblue from the Netscape color table. */
++	public static FSColor cadetblue()
++	{
++		return new FSColor(0x5F, 0x9E, 0xA0, 0xFF);
++	}
++
++	/** Definition of the color, chartreuse from the Netscape color table. */
++	public static FSColor chartreuse()
++	{
++		return new FSColor(0x7F, 0xFF, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, chocolate from the Netscape color table. */
++	public static FSColor chocolate()
++	{
++		return new FSColor(0xD2, 0x69, 0x1E, 0xFF);
++	}
++
++	/** Definition of the color, coral from the Netscape color table. */
++	public static FSColor coral()
++	{
++		return new FSColor(0xFF, 0x7F, 0x50, 0xFF);
++	}
++
++	/** Definition of the color, cornflowerblue from the Netscape color table. */
++	public static FSColor cornflowerblue()
++	{
++		return new FSColor(0x64, 0x95, 0xED, 0xFF);
++	}
++
++	/** Definition of the color, cornsilk from the Netscape color table. */
++	public static FSColor cornsilk()
++	{
++		return new FSColor(0xFF, 0xF8, 0xDC, 0xFF);
++	}
++
++	/** Definition of the color, crimson from the Netscape color table. */
++	public static FSColor crimson()
++	{
++		return new FSColor(0xDC, 0x14, 0x3C, 0xFF);
++	}
++
++	/** Definition of the color, cyan from the Netscape color table. */
++	public static FSColor cyan()
++	{
++		return new FSColor(0x00, 0xFF, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, darkblue from the Netscape color table. */
++	public static FSColor darkblue()
++	{
++		return new FSColor(0x00, 0x00, 0x8B, 0xFF);
++	}
++
++	/** Definition of the color, darkcyan from the Netscape color table. */
++	public static FSColor darkcyan()
++	{
++		return new FSColor(0x00, 0x8B, 0x8B, 0xFF);
++	}
++
++	/** Definition of the color, darkgoldenrod from the Netscape color table. */
++	public static FSColor darkgoldenrod()
++	{
++		return new FSColor(0xB8, 0x86, 0x0B, 0xFF);
++	}
++
++	/** Definition of the color, darkgray from the Netscape color table. */
++	public static FSColor darkgray()
++	{
++		return new FSColor(0xA9, 0xA9, 0xA9, 0xFF);
++	}
++
++	/** Definition of the color, darkgreen from the Netscape color table. */
++	public static FSColor darkgreen()
++	{
++		return new FSColor(0x00, 0x64, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, darkkhaki from the Netscape color table. */
++	public static FSColor darkkhaki()
++	{
++		return new FSColor(0xBD, 0xB7, 0x6B, 0xFF);
++	}
++
++	/** Definition of the color, darkmagenta from the Netscape color table. */
++	public static FSColor darkmagenta()
++	{
++		return new FSColor(0x8B, 0x00, 0x8B, 0xFF);
++	}
++
++	/** Definition of the color, darkolivegreen from the Netscape color table. */
++	public static FSColor darkolivegreen()
++	{
++		return new FSColor(0x55, 0x6B, 0x2F, 0xFF);
++	}
++
++	/** Definition of the color, darkorange from the Netscape color table. */
++	public static FSColor darkorange()
++	{
++		return new FSColor(0xFF, 0x8C, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, darkorchid from the Netscape color table. */
++	public static FSColor darkorchid()
++	{
++		return new FSColor(0x99, 0x32, 0xCC, 0xFF);
++	}
++
++	/** Definition of the color, darkred from the Netscape color table. */
++	public static FSColor darkred()
++	{
++		return new FSColor(0x8B, 0x00, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, darksalmon from the Netscape color table. */
++	public static FSColor darksalmon()
++	{
++		return new FSColor(0xE9, 0x96, 0x7A, 0xFF);
++	}
++
++	/** Definition of the color, darkseagreen from the Netscape color table. */
++	public static FSColor darkseagreen()
++	{
++		return new FSColor(0x8F, 0xBC, 0x8F, 0xFF);
++	}
++
++	/** Definition of the color, darkslateblue from the Netscape color table. */
++	public static FSColor darkslateblue()
++	{
++		return new FSColor(0x48, 0x3D, 0x8B, 0xFF);
++	}
++
++	/** Definition of the color, darkslategray from the Netscape color table. */
++	public static FSColor darkslategray()
++	{
++		return new FSColor(0x2F, 0x4F, 0x4F, 0xFF);
++	}
++
++	/** Definition of the color, darkturquoise from the Netscape color table. */
++	public static FSColor darkturquoise()
++	{
++		return new FSColor(0x00, 0xCE, 0xD1, 0xFF);
++	}
++
++	/** Definition of the color, darkviolet from the Netscape color table. */
++	public static FSColor darkviolet()
++	{
++		return new FSColor(0x94, 0x00, 0xD3, 0xFF);
++	}
++
++	/** Definition of the color, deeppink from the Netscape color table. */
++	public static FSColor deeppink()
++	{
++		return new FSColor(0xFF, 0x14, 0x93, 0xFF);
++	}
++
++	/** Definition of the color, deepskyblue from the Netscape color table. */
++	public static FSColor deepskyblue()
++	{
++		return new FSColor(0x00, 0xBF, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, dimgray from the Netscape color table. */
++	public static FSColor dimgray()
++	{
++		return new FSColor(0x69, 0x69, 0x69, 0xFF);
++	}
++
++	/** Definition of the color, dodgerblue from the Netscape color table. */
++	public static FSColor dodgerblue()
++	{
++		return new FSColor(0x1E, 0x90, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, firebrick from the Netscape color table. */
++	public static FSColor firebrick()
++	{
++		return new FSColor(0xB2, 0x22, 0x22, 0xFF);
++	}
++
++	/** Definition of the color, floralwhite from the Netscape color table. */
++	public static FSColor floralwhite()
++	{
++		return new FSColor(0xFF, 0xFA, 0xF0, 0xFF);
++	}
++
++	/** Definition of the color, forestgreen from the Netscape color table. */
++	public static FSColor forestgreen()
++	{
++		return new FSColor(0x22, 0x8B, 0x22, 0xFF);
++	}
++
++	/** Definition of the color, fuchsia from the Netscape color table. */
++	public static FSColor fuchsia()
++	{
++		return new FSColor(0xFF, 0x00, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, gainsboro from the Netscape color table. */
++	public static FSColor gainsboro()
++	{
++		return new FSColor(0xDC, 0xDC, 0xDC, 0xFF);
++	}
++
++	/** Definition of the color, ghostwhite from the Netscape color table. */
++	public static FSColor ghostwhite()
++	{
++		return new FSColor(0xF8, 0xF8, 0xFB, 0xFF);
++	}
++
++	/** Definition of the color, gold from the Netscape color table. */
++	public static FSColor gold()
++	{
++		return new FSColor(0xFF, 0xD7, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, goldenrod from the Netscape color table. */
++	public static FSColor goldenrod()
++	{
++		return new FSColor(0xDA, 0xA5, 0x20, 0xFF);
++	}
++
++	/** Definition of the color, gray from the Netscape color table. */
++	public static FSColor gray()
++	{
++		return new FSColor(0x80, 0x80, 0x80, 0xFF);
++	}
++
++	/** Definition of the color, green from the Netscape color table. */
++	public static FSColor green()
++	{
++		return new FSColor(0x00, 0x80, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, greenyellow from the Netscape color table. */
++	public static FSColor greenyellow()
++	{
++		return new FSColor(0xAD, 0xFF, 0x2F, 0xFF);
++	}
++
++	/** Definition of the color, honeydew from the Netscape color table. */
++	public static FSColor honeydew()
++	{
++		return new FSColor(0xF0, 0xFF, 0xF0, 0xFF);
++	}
++
++	/** Definition of the color, hotpink from the Netscape color table. */
++	public static FSColor hotpink()
++	{
++		return new FSColor(0xFF, 0x69, 0xB4, 0xFF);
++	}
++
++	/** Definition of the color, indianred from the Netscape color table. */
++	public static FSColor indianred()
++	{
++		return new FSColor(0xCD, 0x5C, 0x5C, 0xFF);
++	}
++
++	/** Definition of the color, indigo from the Netscape color table. */
++	public static FSColor indigo()
++	{
++		return new FSColor(0x4B, 0x00, 0x82, 0xFF);
++	}
++
++	/** Definition of the color, ivory from the Netscape color table. */
++	public static FSColor ivory()
++	{
++		return new FSColor(0xFF, 0xFF, 0xF0, 0xFF);
++	}
++
++	/** Definition of the color, khaki from the Netscape color table. */
++	public static FSColor khaki()
++	{
++		return new FSColor(0xF0, 0xE6, 0x8C, 0xFF);
++	}
++
++	/** Definition of the color, lavender from the Netscape color table. */
++	public static FSColor lavender()
++	{
++		return new FSColor(0xE6, 0xE6, 0xFA, 0xFF);
++	}
++
++	/** Definition of the color, lavenderblush from the Netscape color table. */
++	public static FSColor lavenderblush()
++	{
++		return new FSColor(0xFF, 0xF0, 0xF5, 0xFF);
++	}
++
++	/** Definition of the color, lawngreen from the Netscape color table. */
++	public static FSColor lawngreen()
++	{
++		return new FSColor(0x7C, 0xFC, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, lemonchiffon from the Netscape color table. */
++	public static FSColor lemonchiffon()
++	{
++		return new FSColor(0xFF, 0xFA, 0xCD, 0xFF);
++	}
++
++	/** Definition of the color, lightblue from the Netscape color table. */
++	public static FSColor lightblue()
++	{
++		return new FSColor(0xAD, 0xD8, 0xE6, 0xFF);
++	}
++
++	/** Definition of the color, lightcoral from the Netscape color table. */
++	public static FSColor lightcoral()
++	{
++		return new FSColor(0xF0, 0x80, 0x80, 0xFF);
++	}
++
++	/** Definition of the color, lightcyan from the Netscape color table. */
++	public static FSColor lightcyan()
++	{
++		return new FSColor(0xE0, 0xFF, 0xFF, 0xFF);
++	}
++
++	/**
++	 * Definition of the color, lightgoldenrodyellow from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightgoldenrodyellow()
++	{
++		return new FSColor(0xFA, 0xFA, 0xD2, 0xFF);
++	}
++
++	/** Definition of the color, lightgreen from the Netscape color table. */
++	public static FSColor lightgreen()
++	{
++		return new FSColor(0x90, 0xEE, 0x90, 0xFF);
++	}
++
++	/** Definition of the color, lightgrey from the Netscape color table. */
++	public static FSColor lightgrey()
++	{
++		return new FSColor(0xD3, 0xD3, 0xD3, 0xFF);
++	}
++
++	/** Definition of the color, lightpink from the Netscape color table. */
++	public static FSColor lightpink()
++	{
++		return new FSColor(0xFF, 0xB6, 0xC1, 0xFF);
++	}
++
++	/** Definition of the color, lightsalmon from the Netscape color table. */
++	public static FSColor lightsalmon()
++	{
++		return new FSColor(0xFF, 0xA0, 0x7A, 0xFF);
++	}
++
++	/** Definition of the color, lightseagreen from the Netscape color table. */
++	public static FSColor lightseagreen()
++	{
++		return new FSColor(0x20, 0xB2, 0xAA, 0xFF);
++	}
++
++	/** Definition of the color, lightskyblue from the Netscape color table. */
++	public static FSColor lightskyblue()
++	{
++		return new FSColor(0x87, 0xCE, 0xFA, 0xFF);
++	}
++
++	/** Definition of the color, lightslategray from the Netscape color table. */
++	public static FSColor lightslategray()
++	{
++		return new FSColor(0x77, 0x88, 0x99, 0xFF);
++	}
++
++	/** Definition of the color, lightsteelblue from the Netscape color table. */
++	public static FSColor lightsteelblue()
++	{
++		return new FSColor(0xB0, 0xC4, 0xDE, 0xFF);
++	}
++
++	/** Definition of the color, lightyellow from the Netscape color table. */
++	public static FSColor lightyellow()
++	{
++		return new FSColor(0xFF, 0xFF, 0xE0, 0xFF);
++	}
++
++	/** Definition of the color, lime from the Netscape color table. */
++	public static FSColor lime()
++	{
++		return new FSColor(0x00, 0xFF, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, limegreen from the Netscape color table. */
++	public static FSColor limegreen()
++	{
++		return new FSColor(0x32, 0xCD, 0x32, 0xFF);
++	}
++
++	/** Definition of the color, linen from the Netscape color table. */
++	public static FSColor linen()
++	{
++		return new FSColor(0xFA, 0xF0, 0xE6, 0xFF);
++	}
++
++	/** Definition of the color, magenta from the Netscape color table. */
++	public static FSColor magenta()
++	{
++		return new FSColor(0xFF, 0x00, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, maroon from the Netscape color table. */
++	public static FSColor maroon()
++	{
++		return new FSColor(0x80, 0x00, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, mediumaquamarine from the Netscape color table. */
++	public static FSColor mediumaquamarine()
++	{
++		return new FSColor(0x66, 0xCD, 0xAA, 0xFF);
++	}
++
++	/** Definition of the color, mediumblue from the Netscape color table. */
++	public static FSColor mediumblue()
++	{
++		return new FSColor(0x00, 0x00, 0xCD, 0xFF);
++	}
++
++	/** Definition of the color, mediumorchid from the Netscape color table. */
++	public static FSColor mediumorchid()
++	{
++		return new FSColor(0xBA, 0x55, 0xD3, 0xFF);
++	}
++
++	/** Definition of the color, mediumpurple from the Netscape color table. */
++	public static FSColor mediumpurple()
++	{
++		return new FSColor(0x93, 0x70, 0xDB, 0xFF);
++	}
++
++	/** Definition of the color, mediumseagreen from the Netscape color table. */
++	public static FSColor mediumseagreen()
++	{
++		return new FSColor(0x3C, 0xB3, 0x71, 0xFF);
++	}
++
++	/** Definition of the color, mediumslateblue from the Netscape color table. */
++	public static FSColor mediumslateblue()
++	{
++		return new FSColor(0x7B, 0x68, 0xEE, 0xFF);
++	}
++
++	/** Definition of the color, mediumspringgreen from the Netscape color table. */
++	public static FSColor mediumspringgreen()
++	{
++		return new FSColor(0x00, 0xFA, 0x9A, 0xFF);
++	}
++
++	/** Definition of the color, mediumturquoise from the Netscape color table. */
++	public static FSColor mediumturquoise()
++	{
++		return new FSColor(0x48, 0xD1, 0xCC, 0xFF);
++	}
++
++	/** Definition of the color, mediumvioletred from the Netscape color table. */
++	public static FSColor mediumvioletred()
++	{
++		return new FSColor(0xC7, 0x15, 0x85, 0xFF);
++	}
++
++	/** Definition of the color, midnightblue from the Netscape color table. */
++	public static FSColor midnightblue()
++	{
++		return new FSColor(0x19, 0x19, 0x70, 0xFF);
++	}
++
++	/** Definition of the color, mintcream from the Netscape color table. */
++	public static FSColor mintcream()
++	{
++		return new FSColor(0xF5, 0xFF, 0xFA, 0xFF);
++	}
++
++	/** Definition of the color, mistyrose from the Netscape color table. */
++	public static FSColor mistyrose()
++	{
++		return new FSColor(0xFF, 0xE4, 0xE1, 0xFF);
++	}
++
++	/** Definition of the color, moccasin from the Netscape color table. */
++	public static FSColor moccasin()
++	{
++		return new FSColor(0xFF, 0xE4, 0xB5, 0xFF);
++	}
++
++	/** Definition of the color, navajowhite from the Netscape color table. */
++	public static FSColor navajowhite()
++	{
++		return new FSColor(0xFF, 0xDE, 0xAD, 0xFF);
++	}
++
++	/** Definition of the color, navy from the Netscape color table. */
++	public static FSColor navy()
++	{
++		return new FSColor(0x00, 0x00, 0x80, 0xFF);
++	}
++
++	/** Definition of the color, oldlace from the Netscape color table. */
++	public static FSColor oldlace()
++	{
++		return new FSColor(0xFD, 0xF5, 0xE6, 0xFF);
++	}
++
++	/** Definition of the color, olive from the Netscape color table. */
++	public static FSColor olive()
++	{
++		return new FSColor(0x80, 0x80, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, olivedrab from the Netscape color table. */
++	public static FSColor olivedrab()
++	{
++		return new FSColor(0x6B, 0x8E, 0x23, 0xFF);
++	}
++
++	/** Definition of the color, orange from the Netscape color table. */
++	public static FSColor orange()
++	{
++		return new FSColor(0xFF, 0xA5, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, orangered from the Netscape color table. */
++	public static FSColor orangered()
++	{
++		return new FSColor(0xFF, 0x45, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, orchid from the Netscape color table. */
++	public static FSColor orchid()
++	{
++		return new FSColor(0xDA, 0x70, 0xD6, 0xFF);
++	}
++
++	/** Definition of the color, palegoldenrod from the Netscape color table. */
++	public static FSColor palegoldenrod()
++	{
++		return new FSColor(0xEE, 0xE8, 0xAA, 0xFF);
++	}
++
++	/** Definition of the color, palegreen from the Netscape color table. */
++	public static FSColor palegreen()
++	{
++		return new FSColor(0x98, 0xFB, 0x98, 0xFF);
++	}
++
++	/** Definition of the color, paleturquoise from the Netscape color table. */
++	public static FSColor paleturquoise()
++	{
++		return new FSColor(0xAF, 0xEE, 0xEE, 0xFF);
++	}
++
++	/** Definition of the color, palevioletred from the Netscape color table. */
++	public static FSColor palevioletred()
++	{
++		return new FSColor(0xDB, 0x70, 0x93, 0xFF);
++	}
++
++	/** Definition of the color, papayawhip from the Netscape color table. */
++	public static FSColor papayawhip()
++	{
++		return new FSColor(0xFF, 0xEF, 0xD5, 0xFF);
++	}
++
++	/** Definition of the color, peachpuff from the Netscape color table. */
++	public static FSColor peachpuff()
++	{
++		return new FSColor(0xFF, 0xDA, 0xB9, 0xFF);
++	}
++
++	/** Definition of the color, peru from the Netscape color table. */
++	public static FSColor peru()
++	{
++		return new FSColor(0xCD, 0x85, 0x3F, 0xFF);
++	}
++
++	/** Definition of the color, pink from the Netscape color table. */
++	public static FSColor pink()
++	{
++		return new FSColor(0xFF, 0xC0, 0xCB, 0xFF);
++	}
++
++	/** Definition of the color, plum from the Netscape color table. */
++	public static FSColor plum()
++	{
++		return new FSColor(0xDD, 0xA0, 0xDD, 0xFF);
++	}
++
++	/** Definition of the color, powderblue from the Netscape color table. */
++	public static FSColor powderblue()
++	{
++		return new FSColor(0xB0, 0xE0, 0xE6, 0xFF);
++	}
++
++	/** Definition of the color, purple from the Netscape color table. */
++	public static FSColor purple()
++	{
++		return new FSColor(0x80, 0x00, 0x80, 0xFF);
++	}
++
++	/** Definition of the color, red from the Netscape color table. */
++	public static FSColor red()
++	{
++		return new FSColor(0xFF, 0x00, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, rosybrown from the Netscape color table. */
++	public static FSColor rosybrown()
++	{
++		return new FSColor(0xBC, 0x8F, 0x8F, 0xFF);
++	}
++
++	/** Definition of the color, royalblue from the Netscape color table. */
++	public static FSColor royalblue()
++	{
++		return new FSColor(0x41, 0x69, 0xE1, 0xFF);
++	}
++
++	/** Definition of the color, saddlebrown from the Netscape color table. */
++	public static FSColor saddlebrown()
++	{
++		return new FSColor(0x8B, 0x45, 0x13, 0xFF);
++	}
++
++	/** Definition of the color, salmon from the Netscape color table. */
++	public static FSColor salmon()
++	{
++		return new FSColor(0xFA, 0x80, 0x72, 0xFF);
++	}
++
++	/** Definition of the color, sandybrown from the Netscape color table. */
++	public static FSColor sandybrown()
++	{
++		return new FSColor(0xF4, 0xA4, 0x60, 0xFF);
++	}
++
++	/** Definition of the color, seagreen from the Netscape color table. */
++	public static FSColor seagreen()
++	{
++		return new FSColor(0x2E, 0x8B, 0x57, 0xFF);
++	}
++
++	/** Definition of the color, seashell from the Netscape color table. */
++	public static FSColor seashell()
++	{
++		return new FSColor(0xFF, 0xF5, 0xEE, 0xFF);
++	}
++
++	/** Definition of the color, sienna from the Netscape color table. */
++	public static FSColor sienna()
++	{
++		return new FSColor(0xA0, 0x52, 0x2d, 0xFF);
++	}
++
++	/** Definition of the color, silver from the Netscape color table. */
++	public static FSColor silver()
++	{
++		return new FSColor(0xC0, 0xC0, 0xC0, 0xFF);
++	}
++
++	/** Definition of the color, skyblue from the Netscape color table. */
++	public static FSColor skyblue()
++	{
++		return new FSColor(0x87, 0xCE, 0xEB, 0xFF);
++	}
++
++	/** Definition of the color, slateblue from the Netscape color table. */
++	public static FSColor slateblue()
++	{
++		return new FSColor(0x6A, 0x5A, 0xCD, 0xFF);
++	}
++
++	/** Definition of the color, slategray from the Netscape color table. */
++	public static FSColor slategray()
++	{
++		return new FSColor(0x70, 0x80, 0x90, 0xFF);
++	}
++
++	/** Definition of the color, snow from the Netscape color table. */
++	public static FSColor snow()
++	{
++		return new FSColor(0xFF, 0xFA, 0xFA, 0xFF);
++	}
++
++	/** Definition of the color, springgreen from the Netscape color table. */
++	public static FSColor springgreen()
++	{
++		return new FSColor(0x00, 0xFF, 0x7F, 0xFF);
++	}
++
++	/** Definition of the color, steelblue from the Netscape color table. */
++	public static FSColor steelblue()
++	{
++		return new FSColor(0x46, 0x82, 0xB4, 0xFF);
++	}
++
++	/** Definition of the color, tan from the Netscape color table. */
++	public static FSColor tan()
++	{
++		return new FSColor(0xD2, 0xB4, 0x8C, 0xFF);
++	}
++
++	/** Definition of the color, teal from the Netscape color table. */
++	public static FSColor teal()
++	{
++		return new FSColor(0x00, 0x80, 0x80, 0xFF);
++	}
++
++	/** Definition of the color, thistle from the Netscape color table. */
++	public static FSColor thistle()
++	{
++		return new FSColor(0xD8, 0xBF, 0xD8, 0xFF);
++	}
++
++	/** Definition of the color, tomato from the Netscape color table. */
++	public static FSColor tomato()
++	{
++		return new FSColor(0xFF, 0x63, 0x47, 0xFF);
++	}
++
++	/** Definition of the color, turquoise from the Netscape color table. */
++	public static FSColor turquoise()
++	{
++		return new FSColor(0x40, 0xE0, 0xD0, 0xFF);
++	}
++
++	/** Definition of the color, violet from the Netscape color table. */
++	public static FSColor violet()
++	{
++		return new FSColor(0xEE, 0x82, 0xEE, 0xFF);
++	}
++
++	/** Definition of the color, wheat from the Netscape color table. */
++	public static FSColor wheat()
++	{
++		return new FSColor(0xF5, 0xDE, 0xB3, 0xFF);
++	}
++
++	/** Definition of the color, white from the Netscape color table. */
++	public static FSColor white()
++	{
++		return new FSColor(0xFF, 0xFF, 0xFF, 0xFF);
++	}
++
++	/** Definition of the color, whitesmoke from the Netscape color table. */
++	public static FSColor whitesmoke()
++	{
++		return new FSColor(0xF5, 0xF5, 0xF5, 0xFF);
++	}
++
++	/** Definition of the color, yellow from the Netscape color table. */
++	public static FSColor yellow()
++	{
++		return new FSColor(0xFF, 0xFF, 0x00, 0xFF);
++	}
++
++	/** Definition of the color, yellowgreen from the Netscape color table. */
++	public static FSColor yellowgreen()
++	{
++		return new FSColor(0x9A, 0xCD, 0x32, 0xFF);
++	}
++
++	/**
++	 * Definition of the transparent color, aliceblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor aliceblue(int alpha)
++	{
++		return new FSColor(0xF0, 0xF8, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, antiquewhite from the Netscape color
++	 * table.
++	 */
++	public static FSColor antiquewhite(int alpha)
++	{
++		return new FSColor(0xFA, 0xEB, 0xD7, alpha);
++	}
++
++	/** Definition of the transparent color, aqua from the Netscape color table. */
++	public static FSColor aqua(int alpha)
++	{
++		return new FSColor(0x00, 0xFF, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, aquamarine from the Netscape color
++	 * table.
++	 */
++	public static FSColor aquamarine(int alpha)
++	{
++		return new FSColor(0x7F, 0xFF, 0xD4, alpha);
++	}
++
++	/** Definition of the transparent color, azure from the Netscape color table. */
++	public static FSColor azure(int alpha)
++	{
++		return new FSColor(0xF0, 0xFF, 0xFF, alpha);
++	}
++
++	/** Definition of the transparent color, beige from the Netscape color table. */
++	public static FSColor beige(int alpha)
++	{
++		return new FSColor(0xF5, 0xF5, 0xDC, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, bisque from the Netscape color
++	 * table.
++	 */
++	public static FSColor bisque(int alpha)
++	{
++		return new FSColor(0xFF, 0xE4, 0xC4, alpha);
++	}
++
++	/** Definition of the transparent color, black from the Netscape color table. */
++	public static FSColor black(int alpha)
++	{
++		return new FSColor(0x00, 0x00, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, blanchedalmond from the Netscape
++	 * color table.
++	 */
++	public static FSColor blanchedalmond(int alpha)
++	{
++		return new FSColor(0xFF, 0xEB, 0xCD, alpha);
++	}
++
++	/** Definition of the transparent color, blue from the Netscape color table. */
++	public static FSColor blue(int alpha)
++	{
++		return new FSColor(0x00, 0x00, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, blueviolet from the Netscape color
++	 * table.
++	 */
++	public static FSColor blueviolet(int alpha)
++	{
++		return new FSColor(0x8A, 0x2B, 0xE2, alpha);
++	}
++
++	/** Definition of the transparent color, brown from the Netscape color table. */
++	public static FSColor brown(int alpha)
++	{
++		return new FSColor(0xA5, 0x2A, 0x2A, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, burlywood from the Netscape color
++	 * table.
++	 */
++	public static FSColor burlywood(int alpha)
++	{
++		return new FSColor(0xDE, 0xB8, 0x87, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, cadetblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor cadetblue(int alpha)
++	{
++		return new FSColor(0x5F, 0x9E, 0xA0, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, chartreuse from the Netscape color
++	 * table.
++	 */
++	public static FSColor chartreuse(int alpha)
++	{
++		return new FSColor(0x7F, 0xFF, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, chocolate from the Netscape color
++	 * table.
++	 */
++	public static FSColor chocolate(int alpha)
++	{
++		return new FSColor(0xD2, 0x69, 0x1E, alpha);
++	}
++
++	/** Definition of the transparent color, coral from the Netscape color table. */
++	public static FSColor coral(int alpha)
++	{
++		return new FSColor(0xFF, 0x7F, 0x50, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, cornflowerblue from the Netscape
++	 * color table.
++	 */
++	public static FSColor cornflowerblue(int alpha)
++	{
++		return new FSColor(0x64, 0x95, 0xED, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, cornsilk from the Netscape color
++	 * table.
++	 */
++	public static FSColor cornsilk(int alpha)
++	{
++		return new FSColor(0xFF, 0xF8, 0xDC, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, crimson from the Netscape color
++	 * table.
++	 */
++	public static FSColor crimson(int alpha)
++	{
++		return new FSColor(0xDC, 0x14, 0x3C, alpha);
++	}
++
++	/** Definition of the transparent color, cyan from the Netscape color table. */
++	public static FSColor cyan(int alpha)
++	{
++		return new FSColor(0x00, 0xFF, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkblue(int alpha)
++	{
++		return new FSColor(0x00, 0x00, 0x8B, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkcyan from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkcyan(int alpha)
++	{
++		return new FSColor(0x00, 0x8B, 0x8B, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkgoldenrod from the Netscape
++	 * color table.
++	 */
++	public static FSColor darkgoldenrod(int alpha)
++	{
++		return new FSColor(0xB8, 0x86, 0x0B, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkgray from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkgray(int alpha)
++	{
++		return new FSColor(0xA9, 0xA9, 0xA9, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkgreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkgreen(int alpha)
++	{
++		return new FSColor(0x00, 0x64, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkkhaki from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkkhaki(int alpha)
++	{
++		return new FSColor(0xBD, 0xB7, 0x6B, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkmagenta from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkmagenta(int alpha)
++	{
++		return new FSColor(0x8B, 0x00, 0x8B, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkolivegreen from the Netscape
++	 * color table.
++	 */
++	public static FSColor darkolivegreen(int alpha)
++	{
++		return new FSColor(0x55, 0x6B, 0x2F, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkorange from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkorange(int alpha)
++	{
++		return new FSColor(0xFF, 0x8C, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkorchid from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkorchid(int alpha)
++	{
++		return new FSColor(0x99, 0x32, 0xCC, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkred from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkred(int alpha)
++	{
++		return new FSColor(0x8B, 0x00, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darksalmon from the Netscape color
++	 * table.
++	 */
++	public static FSColor darksalmon(int alpha)
++	{
++		return new FSColor(0xE9, 0x96, 0x7A, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkseagreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkseagreen(int alpha)
++	{
++		return new FSColor(0x8F, 0xBC, 0x8F, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkslateblue from the Netscape
++	 * color table.
++	 */
++	public static FSColor darkslateblue(int alpha)
++	{
++		return new FSColor(0x48, 0x3D, 0x8B, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkslategray from the Netscape
++	 * color table.
++	 */
++	public static FSColor darkslategray(int alpha)
++	{
++		return new FSColor(0x2F, 0x4F, 0x4F, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkturquoise from the Netscape
++	 * color table.
++	 */
++	public static FSColor darkturquoise(int alpha)
++	{
++		return new FSColor(0x00, 0xCE, 0xD1, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, darkviolet from the Netscape color
++	 * table.
++	 */
++	public static FSColor darkviolet(int alpha)
++	{
++		return new FSColor(0x94, 0x00, 0xD3, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, deeppink from the Netscape color
++	 * table.
++	 */
++	public static FSColor deeppink(int alpha)
++	{
++		return new FSColor(0xFF, 0x14, 0x93, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, deepskyblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor deepskyblue(int alpha)
++	{
++		return new FSColor(0x00, 0xBF, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, dimgray from the Netscape color
++	 * table.
++	 */
++	public static FSColor dimgray(int alpha)
++	{
++		return new FSColor(0x69, 0x69, 0x69, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, dodgerblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor dodgerblue(int alpha)
++	{
++		return new FSColor(0x1E, 0x90, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, firebrick from the Netscape color
++	 * table.
++	 */
++	public static FSColor firebrick(int alpha)
++	{
++		return new FSColor(0xB2, 0x22, 0x22, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, floralwhite from the Netscape color
++	 * table.
++	 */
++	public static FSColor floralwhite(int alpha)
++	{
++		return new FSColor(0xFF, 0xFA, 0xF0, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, forestgreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor forestgreen(int alpha)
++	{
++		return new FSColor(0x22, 0x8B, 0x22, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, fuchsia from the Netscape color
++	 * table.
++	 */
++	public static FSColor fuchsia(int alpha)
++	{
++		return new FSColor(0xFF, 0x00, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, gainsboro from the Netscape color
++	 * table.
++	 */
++	public static FSColor gainsboro(int alpha)
++	{
++		return new FSColor(0xDC, 0xDC, 0xDC, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, ghostwhite from the Netscape color
++	 * table.
++	 */
++	public static FSColor ghostwhite(int alpha)
++	{
++		return new FSColor(0xF8, 0xF8, 0xFB, alpha);
++	}
++
++	/** Definition of the transparent color, gold from the Netscape color table. */
++	public static FSColor gold(int alpha)
++	{
++		return new FSColor(0xFF, 0xD7, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, goldenrod from the Netscape color
++	 * table.
++	 */
++	public static FSColor goldenrod(int alpha)
++	{
++		return new FSColor(0xDA, 0xA5, 0x20, alpha);
++	}
++
++	/** Definition of the transparent color, gray from the Netscape color table. */
++	public static FSColor gray(int alpha)
++	{
++		return new FSColor(0x80, 0x80, 0x80, alpha);
++	}
++
++	/** Definition of the transparent color, green from the Netscape color table. */
++	public static FSColor green(int alpha)
++	{
++		return new FSColor(0x00, 0x80, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, greenyellow from the Netscape color
++	 * table.
++	 */
++	public static FSColor greenyellow(int alpha)
++	{
++		return new FSColor(0xAD, 0xFF, 0x2F, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, honeydew from the Netscape color
++	 * table.
++	 */
++	public static FSColor honeydew(int alpha)
++	{
++		return new FSColor(0xF0, 0xFF, 0xF0, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, hotpink from the Netscape color
++	 * table.
++	 */
++	public static FSColor hotpink(int alpha)
++	{
++		return new FSColor(0xFF, 0x69, 0xB4, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, indianred from the Netscape color
++	 * table.
++	 */
++	public static FSColor indianred(int alpha)
++	{
++		return new FSColor(0xCD, 0x5C, 0x5C, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, indigo from the Netscape color
++	 * table.
++	 */
++	public static FSColor indigo(int alpha)
++	{
++		return new FSColor(0x4B, 0x00, 0x82, alpha);
++	}
++
++	/** Definition of the transparent color, ivory from the Netscape color table. */
++	public static FSColor ivory(int alpha)
++	{
++		return new FSColor(0xFF, 0xFF, 0xF0, alpha);
++	}
++
++	/** Definition of the transparent color, khaki from the Netscape color table. */
++	public static FSColor khaki(int alpha)
++	{
++		return new FSColor(0xF0, 0xE6, 0x8C, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lavender from the Netscape color
++	 * table.
++	 */
++	public static FSColor lavender(int alpha)
++	{
++		return new FSColor(0xE6, 0xE6, 0xFA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lavenderblush from the Netscape
++	 * color table.
++	 */
++	public static FSColor lavenderblush(int alpha)
++	{
++		return new FSColor(0xFF, 0xF0, 0xF5, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lawngreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor lawngreen(int alpha)
++	{
++		return new FSColor(0x7C, 0xFC, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lemonchiffon from the Netscape color
++	 * table.
++	 */
++	public static FSColor lemonchiffon(int alpha)
++	{
++		return new FSColor(0xFF, 0xFA, 0xCD, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightblue(int alpha)
++	{
++		return new FSColor(0xAD, 0xD8, 0xE6, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightcoral from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightcoral(int alpha)
++	{
++		return new FSColor(0xF0, 0x80, 0x80, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightcyan from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightcyan(int alpha)
++	{
++		return new FSColor(0xE0, 0xFF, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightgoldenrodyellow from the
++	 * Netscape color table.
++	 */
++	public static FSColor lightgoldenrodyellow(int alpha)
++	{
++		return new FSColor(0xFA, 0xFA, 0xD2, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightgreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightgreen(int alpha)
++	{
++		return new FSColor(0x90, 0xEE, 0x90, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightgrey from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightgrey(int alpha)
++	{
++		return new FSColor(0xD3, 0xD3, 0xD3, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightpink from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightpink(int alpha)
++	{
++		return new FSColor(0xFF, 0xB6, 0xC1, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightsalmon from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightsalmon(int alpha)
++	{
++		return new FSColor(0xFF, 0xA0, 0x7A, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightseagreen from the Netscape
++	 * color table.
++	 */
++	public static FSColor lightseagreen(int alpha)
++	{
++		return new FSColor(0x20, 0xB2, 0xAA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightskyblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightskyblue(int alpha)
++	{
++		return new FSColor(0x87, 0xCE, 0xFA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightslategray from the Netscape
++	 * color table.
++	 */
++	public static FSColor lightslategray(int alpha)
++	{
++		return new FSColor(0x77, 0x88, 0x99, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightsteelblue from the Netscape
++	 * color table.
++	 */
++	public static FSColor lightsteelblue(int alpha)
++	{
++		return new FSColor(0xB0, 0xC4, 0xDE, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, lightyellow from the Netscape color
++	 * table.
++	 */
++	public static FSColor lightyellow(int alpha)
++	{
++		return new FSColor(0xFF, 0xFF, 0xE0, alpha);
++	}
++
++	/** Definition of the transparent color, lime from the Netscape color table. */
++	public static FSColor lime(int alpha)
++	{
++		return new FSColor(0x00, 0xFF, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, limegreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor limegreen(int alpha)
++	{
++		return new FSColor(0x32, 0xCD, 0x32, alpha);
++	}
++
++	/** Definition of the transparent color, linen from the Netscape color table. */
++	public static FSColor linen(int alpha)
++	{
++		return new FSColor(0xFA, 0xF0, 0xE6, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, magenta from the Netscape color
++	 * table.
++	 */
++	public static FSColor magenta(int alpha)
++	{
++		return new FSColor(0xFF, 0x00, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, maroon from the Netscape color
++	 * table.
++	 */
++	public static FSColor maroon(int alpha)
++	{
++		return new FSColor(0x80, 0x00, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumaquamarine from the Netscape
++	 * color table.
++	 */
++	public static FSColor mediumaquamarine(int alpha)
++	{
++		return new FSColor(0x66, 0xCD, 0xAA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor mediumblue(int alpha)
++	{
++		return new FSColor(0x00, 0x00, 0xCD, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumorchid from the Netscape color
++	 * table.
++	 */
++	public static FSColor mediumorchid(int alpha)
++	{
++		return new FSColor(0xBA, 0x55, 0xD3, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumpurple from the Netscape color
++	 * table.
++	 */
++	public static FSColor mediumpurple(int alpha)
++	{
++		return new FSColor(0x93, 0x70, 0xDB, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumseagreen from the Netscape
++	 * color table.
++	 */
++	public static FSColor mediumseagreen(int alpha)
++	{
++		return new FSColor(0x3C, 0xB3, 0x71, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumslateblue from the Netscape
++	 * color table.
++	 */
++	public static FSColor mediumslateblue(int alpha)
++	{
++		return new FSColor(0x7B, 0x68, 0xEE, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumspringgreen from the Netscape
++	 * color table.
++	 */
++	public static FSColor mediumspringgreen(int alpha)
++	{
++		return new FSColor(0x00, 0xFA, 0x9A, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumturquoise from the Netscape
++	 * color table.
++	 */
++	public static FSColor mediumturquoise(int alpha)
++	{
++		return new FSColor(0x48, 0xD1, 0xCC, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mediumvioletred from the Netscape
++	 * color table.
++	 */
++	public static FSColor mediumvioletred(int alpha)
++	{
++		return new FSColor(0xC7, 0x15, 0x85, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, midnightblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor midnightblue(int alpha)
++	{
++		return new FSColor(0x19, 0x19, 0x70, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mintcream from the Netscape color
++	 * table.
++	 */
++	public static FSColor mintcream(int alpha)
++	{
++		return new FSColor(0xF5, 0xFF, 0xFA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, mistyrose from the Netscape color
++	 * table.
++	 */
++	public static FSColor mistyrose(int alpha)
++	{
++		return new FSColor(0xFF, 0xE4, 0xE1, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, moccasin from the Netscape color
++	 * table.
++	 */
++	public static FSColor moccasin(int alpha)
++	{
++		return new FSColor(0xFF, 0xE4, 0xB5, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, navajowhite from the Netscape color
++	 * table.
++	 */
++	public static FSColor navajowhite(int alpha)
++	{
++		return new FSColor(0xFF, 0xDE, 0xAD, alpha);
++	}
++
++	/** Definition of the transparent color, navy from the Netscape color table. */
++	public static FSColor navy(int alpha)
++	{
++		return new FSColor(0x00, 0x00, 0x80, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, oldlace from the Netscape color
++	 * table.
++	 */
++	public static FSColor oldlace(int alpha)
++	{
++		return new FSColor(0xFD, 0xF5, 0xE6, alpha);
++	}
++
++	/** Definition of the transparent color, olive from the Netscape color table. */
++	public static FSColor olive(int alpha)
++	{
++		return new FSColor(0x80, 0x80, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, olivedrab from the Netscape color
++	 * table.
++	 */
++	public static FSColor olivedrab(int alpha)
++	{
++		return new FSColor(0x6B, 0x8E, 0x23, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, orange from the Netscape color
++	 * table.
++	 */
++	public static FSColor orange(int alpha)
++	{
++		return new FSColor(0xFF, 0xA5, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, orangered from the Netscape color
++	 * table.
++	 */
++	public static FSColor orangered(int alpha)
++	{
++		return new FSColor(0xFF, 0x45, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, orchid from the Netscape color
++	 * table.
++	 */
++	public static FSColor orchid(int alpha)
++	{
++		return new FSColor(0xDA, 0x70, 0xD6, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, palegoldenrod from the Netscape
++	 * color table.
++	 */
++	public static FSColor palegoldenrod(int alpha)
++	{
++		return new FSColor(0xEE, 0xE8, 0xAA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, palegreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor palegreen(int alpha)
++	{
++		return new FSColor(0x98, 0xFB, 0x98, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, paleturquoise from the Netscape
++	 * color table.
++	 */
++	public static FSColor paleturquoise(int alpha)
++	{
++		return new FSColor(0xAF, 0xEE, 0xEE, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, palevioletred from the Netscape
++	 * color table.
++	 */
++	public static FSColor palevioletred(int alpha)
++	{
++		return new FSColor(0xDB, 0x70, 0x93, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, papayawhip from the Netscape color
++	 * table.
++	 */
++	public static FSColor papayawhip(int alpha)
++	{
++		return new FSColor(0xFF, 0xEF, 0xD5, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, peachpuff from the Netscape color
++	 * table.
++	 */
++	public static FSColor peachpuff(int alpha)
++	{
++		return new FSColor(0xFF, 0xDA, 0xB9, alpha);
++	}
++
++	/** Definition of the transparent color, peru from the Netscape color table. */
++	public static FSColor peru(int alpha)
++	{
++		return new FSColor(0xCD, 0x85, 0x3F, alpha);
++	}
++
++	/** Definition of the transparent color, pink from the Netscape color table. */
++	public static FSColor pink(int alpha)
++	{
++		return new FSColor(0xFF, 0xC0, 0xCB, alpha);
++	}
++
++	/** Definition of the transparent color, plum from the Netscape color table. */
++	public static FSColor plum(int alpha)
++	{
++		return new FSColor(0xDD, 0xA0, 0xDD, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, powderblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor powderblue(int alpha)
++	{
++		return new FSColor(0xB0, 0xE0, 0xE6, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, purple from the Netscape color
++	 * table.
++	 */
++	public static FSColor purple(int alpha)
++	{
++		return new FSColor(0x80, 0x00, 0x80, alpha);
++	}
++
++	/** Definition of the transparent color, red from the Netscape color table. */
++	public static FSColor red(int alpha)
++	{
++		return new FSColor(0xFF, 0x00, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, rosybrown from the Netscape color
++	 * table.
++	 */
++	public static FSColor rosybrown(int alpha)
++	{
++		return new FSColor(0xBC, 0x8F, 0x8F, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, royalblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor royalblue(int alpha)
++	{
++		return new FSColor(0x41, 0x69, 0xE1, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, saddlebrown from the Netscape color
++	 * table.
++	 */
++	public static FSColor saddlebrown(int alpha)
++	{
++		return new FSColor(0x8B, 0x45, 0x13, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, salmon from the Netscape color
++	 * table.
++	 */
++	public static FSColor salmon(int alpha)
++	{
++		return new FSColor(0xFA, 0x80, 0x72, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, sandybrown from the Netscape color
++	 * table.
++	 */
++	public static FSColor sandybrown(int alpha)
++	{
++		return new FSColor(0xF4, 0xA4, 0x60, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, seagreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor seagreen(int alpha)
++	{
++		return new FSColor(0x2E, 0x8B, 0x57, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, seashell from the Netscape color
++	 * table.
++	 */
++	public static FSColor seashell(int alpha)
++	{
++		return new FSColor(0xFF, 0xF5, 0xEE, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, sienna from the Netscape color
++	 * table.
++	 */
++	public static FSColor sienna(int alpha)
++	{
++		return new FSColor(0xA0, 0x52, 0x2d, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, silver from the Netscape color
++	 * table.
++	 */
++	public static FSColor silver(int alpha)
++	{
++		return new FSColor(0xC0, 0xC0, 0xC0, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, skyblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor skyblue(int alpha)
++	{
++		return new FSColor(0x87, 0xCE, 0xEB, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, slateblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor slateblue(int alpha)
++	{
++		return new FSColor(0x6A, 0x5A, 0xCD, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, slategray from the Netscape color
++	 * table.
++	 */
++	public static FSColor slategray(int alpha)
++	{
++		return new FSColor(0x70, 0x80, 0x90, alpha);
++	}
++
++	/** Definition of the transparent color, snow from the Netscape color table. */
++	public static FSColor snow(int alpha)
++	{
++		return new FSColor(0xFF, 0xFA, 0xFA, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, springgreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor springgreen(int alpha)
++	{
++		return new FSColor(0x00, 0xFF, 0x7F, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, steelblue from the Netscape color
++	 * table.
++	 */
++	public static FSColor steelblue(int alpha)
++	{
++		return new FSColor(0x46, 0x82, 0xB4, alpha);
++	}
++
++	/** Definition of the transparent color, tan from the Netscape color table. */
++	public static FSColor tan(int alpha)
++	{
++		return new FSColor(0xD2, 0xB4, 0x8C, alpha);
++	}
++
++	/** Definition of the transparent color, teal from the Netscape color table. */
++	public static FSColor teal(int alpha)
++	{
++		return new FSColor(0x00, 0x80, 0x80, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, thistle from the Netscape color
++	 * table.
++	 */
++	public static FSColor thistle(int alpha)
++	{
++		return new FSColor(0xD8, 0xBF, 0xD8, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, tomato from the Netscape color
++	 * table.
++	 */
++	public static FSColor tomato(int alpha)
++	{
++		return new FSColor(0xFF, 0x63, 0x47, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, turquoise from the Netscape color
++	 * table.
++	 */
++	public static FSColor turquoise(int alpha)
++	{
++		return new FSColor(0x40, 0xE0, 0xD0, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, violet from the Netscape color
++	 * table.
++	 */
++	public static FSColor violet(int alpha)
++	{
++		return new FSColor(0xEE, 0x82, 0xEE, alpha);
++	}
++
++	/** Definition of the transparent color, wheat from the Netscape color table. */
++	public static FSColor wheat(int alpha)
++	{
++		return new FSColor(0xF5, 0xDE, 0xB3, alpha);
++	}
++
++	/** Definition of the transparent color, white from the Netscape color table. */
++	public static FSColor white(int alpha)
++	{
++		return new FSColor(0xFF, 0xFF, 0xFF, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, whitesmoke from the Netscape color
++	 * table.
++	 */
++	public static FSColor whitesmoke(int alpha)
++	{
++		return new FSColor(0xF5, 0xF5, 0xF5, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, yellow from the Netscape color
++	 * table.
++	 */
++	public static FSColor yellow(int alpha)
++	{
++		return new FSColor(0xFF, 0xFF, 0x00, alpha);
++	}
++
++	/**
++	 * Definition of the transparent color, yellowgreen from the Netscape color
++	 * table.
++	 */
++	public static FSColor yellowgreen(int alpha)
++	{
++		return new FSColor(0x9A, 0xCD, 0x32, alpha);
++	}
+ }
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000284.html">[Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000286.html">[Transform-svn] r350 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#285">[ date ]</a>
+              <a href="thread.html#285">[ thread ]</a>
+              <a href="subject.html#285">[ subject ]</a>
+              <a href="author.html#285">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

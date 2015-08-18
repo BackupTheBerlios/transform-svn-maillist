@@ -1,0 +1,164 @@
+From smackay at mail.berlios.de  Sun Oct  1 16:59:48 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Sun, 1 Oct 2006 16:59:48 +0200
+Subject: [Transform-svn] r233 - trunk/doc/web
+Message-ID: <200610011459.k91ExmxH014025@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-10-01 16:59:45 +0200 (Sun, 01 Oct 2006)
+New Revision: 233
+
+Modified:
+   trunk/doc/web/issues.html
+Log:
+Updated status for bugs closed in release 2.1.4
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-09-30 15:29:40 UTC (rev 232)
++++ trunk/doc/web/issues.html	2006-10-01 14:59:45 UTC (rev 233)
+@@ -71,49 +71,49 @@
+ <TR>
+ <TD>8866</TD>
+ <TD>FSImageConstructor: encoding argument is not checked.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+ <TR>
+ <TD>8776</TD>
+ <TD>Indexed PNG images lose alpha.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+ <TR>
+ <TD>8751</TD>
+ <TD>defineTextBlock() bounding box is incorrect.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+ <TR>
+ <TD>8750</TD>
+ <TD>FSText does not encode records without style information.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+ <TR>
+ <TD>8749</TD>
+ <TD>FSVideoFrame does not set identifier.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+ <TR>
+ <TD>8748</TD>
+ <TD>FSDefineFont[2] fails to handle buggy fonts.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+ <TR>
+ <TD>7936</TD>
+ <TD>Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.</TD>
+-<TD>Open</TD>
++<TD>Closed</TD>
+ <TD>2.1.4</TD>
+ </TR>
+ 
+
+
+
+From smackay at mail.berlios.de  Sun Oct  1 18:18:33 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Sun, 1 Oct 2006 18:18:33 +0200
+Subject: [Transform-svn] r234 - trunk/doc/web
+Message-ID: <200610011618.k91GIXTm019997@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-10-01 18:18:31 +0200 (Sun, 01 Oct 2006)
+New Revision: 234
+
+Modified:
+   trunk/doc/web/issues.html
+Log:
+Added details of bug 8752 when handling fonts on a Macintosh.
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-10-01 14:59:45 UTC (rev 233)
++++ trunk/doc/web/issues.html	2006-10-01 16:18:31 UTC (rev 234)
+@@ -30,7 +30,7 @@
+ <div class="content">
+ 
+ <H1>Transform SWF: Known Issues &amp; Bugs</H1>
+-<P>Version: 2.1.4<BR/>Updated: 30th September 2006</P>
++<P>Version: 2.1.4<BR/>Updated: 1st October 2006</P>
+ 
+ <TABLE width="100%">
+ 
+@@ -52,6 +52,13 @@
+ <TD>Open</TD>
+ </TR>
+ 
++<TR>
++<TD>8752</TD>
++<TD>Fonts do not decode on Macintosh.</TD>
++<TD>Open</TD>
++<TD>Open</TD>
++</TR>
++
+ </TBODY>
+ </TABLE>
+ 
+@@ -160,6 +167,39 @@
+ conversion between the way the font is encoded. This option is planned for 
+ release in the next version of Transform Utilities.</P>
+ 
++<div class="hr"><hr/></div>
++
++<H3>8752. Fonts do not decode on Macintosh.</H3>
++
++<P>When decoding an an AWT Font object to create glyphs the first set of 
++coordinates returned are a relative move. When using Windows or Linux the 
++relative move is small and falls within the bounding box for the glyph. However 
++under Mac OS X the relative move is large and falls outside the bounding box 
++for the glyph.</P>
++
++<p>The result is that text is displaced. If the text is not animated the 
++characters are displayed correctly however in order to place the text correctly 
++the relative move must be corrected for - which means checking the glyph 
++information to find the coordinates and then correctly for the selected font 
++size - not very practical.</p>
++
++<H4>Root Cause</H4>
++
++<P>The exact cause is unknown. The TrueType (OpenType) font format is complex 
++and it is possible that the problem is a bug in the JDK, though this seems 
++unlikely. Most probably the information returned when running on OS X is 
++simply different and the FSTextConstructor must take account of this platform
++dependency.</P>
++
++<H4>Workaround?</H4>
++
++<P>No workaround is currently available.</P>
++
++<H4>When will it be fixed?</H4>
++
++<P>No date set, pending a review of several minor implementation issues in the 
++FSTextConstructor class.</P>
++
+ <br/>
+ 
+ <H2>Recently Fixed</H2>
+
+
+

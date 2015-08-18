@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r360%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181607.m2IG7FYP005777%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000295.html">
+   <LINK REL="Next"  HREF="000297.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r360%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181607.m2IG7FYP005777%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:07:15 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000295.html">[Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000297.html">[Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#296">[ date ]</a>
+              <a href="thread.html#296">[ thread ]</a>
+              <a href="subject.html#296">[ subject ]</a>
+              <a href="author.html#296">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:07:11 +0100 (Tue, 18 Mar 2008)
+New Revision: 360
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java
+Log:
+Renamed FSSolidLine to FSLineStyle so name matches new line style added in Flash 8.
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java	2008-03-18 16:02:44 UTC (rev 359)
++++ dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java	2008-03-18 16:07:11 UTC (rev 360)
+@@ -1,40 +0,0 @@
+-/*
+- * FSLineStyle.java
+- * Transform
+- * 
+- * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-
+-package com.flagstone.transform;
+-
+-/** The FSLineStyle is the abstract root class for line styles.
+-*/
+-public abstract class FSLineStyle extends FSTransformObject
+-{
+-    FSLineStyle()
+-    {
+-    }
+-}
+\ No newline at end of file
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java (from rev 344, dev/dev-2-4/src/com/flagstone/transform/FSSolidLine.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSSolidLine.java	2008-03-16 08:53:49 UTC (rev 344)
++++ dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java	2008-03-18 16:07:11 UTC (rev 360)
+@@ -0,0 +1,280 @@
++/*
++ * FSLineStyle.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++/**
++ * FSLineStyle defines the width and colour of a line that is used when drawing
++ * the outline of a shape.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;width&lt;/td&gt;
++ * &lt;td&gt;The width of the line drawn in twips.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;color&lt;/td&gt;
++ * &lt;td&gt;The colour used to draw the line.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * All lines are drawn with rounded corners and end caps. Different join and
++ * line end styles can be created by drawing line segments as a sequence of
++ * filled shapes. With 1 twip equal to 1/20th of a pixel this technique can
++ * easily be used to draw the narrowest of visible lines.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Whether the alpha channel in the colour is used is determined by the class
++ * used to define the shape. Transparent colours are only supported from Flash 3
++ * onwards. Simply specifying the level of transparency in the FSColor object is
++ * not sufficient.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;pre&gt;
++ * FSLineStyle lineStyle = new FSLineStyle(20, new FSColor(0, 0, 0));
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Draws a black line, 1 pixel wide.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSLineStyle lineStyle = new FSLineStyle(20, new FSColor(255, 0, 0, 128));
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Draws a transparent red line, 1 pixel wide. If the alpha channel is not
++ * specified then the value defaults to 255 generating a completely opaque
++ * colour.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Flash only supports contiguous lines. Dashed line styles can be created by
++ * drawing the line as a series of short line segments by interspersing
++ * FSShapeStyle objects to move the current point in between the FSLine objects
++ * that draw the line segments.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * // define the line style
++ * lineStyles.add(new FSLineStyle(20, new FSColor(0, 0, 0)));
++ * 
++ * // Select the line style
++ * shape.add(new FSShapeStyle(1, 0, 0));
++ * 
++ * // Draw the dashed line with lines and gaps each 5 pixels long
++ * shape.add(new FSShapeStyle(1, 0, 0));
++ * 
++ * for (int i = 0; i &lt; 10; i++)
++ * {
++ * 	shape.add(new FSLine(100, 0));
++ * 	shape.add(new FSShapeStyle(0, 0, 0));
++ * 	shape.add(new FSLine(100, 0));
++ * }
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSLineStyle class represents the LineStyle structure from the Macromedia
++ * Flash (SWF) File Format Specification. It was introduced in Flash 1. Support
++ * for transparent colours was added in Flash 3.
++ * &lt;/p&gt;
++ */
++public class FSLineStyle implements Cloneable, Codeable
++{
++	private int width;
++	private FSColor color;
++
++	/**
++	 * Construct an FSLineStyle object, initalizing it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSLineStyle(FSCoder coder)
++	{
++		decode(coder);
++	}
++
++	/**
++	 * Constructs an FSLineStyle, specifying the width and colour of the line.
++	 * 
++	 * @param aWidth
++	 *            the width of the line.
++	 * @param aColor
++	 *            the colour of the line.
++	 */
++	public FSLineStyle(int aWidth, FSColor aColor)
++	{
++		setWidth(aWidth);
++		setColor(aColor);
++	}
++
++	/**
++	 * Constructs an FSLineStyle object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSLineStyle object.
++	 */
++	public FSLineStyle(FSLineStyle obj)
++	{
++		width = obj.width;
++		color = new FSColor(obj.color);
++	}
++
++	/**
++	 * Gets the width of the line.
++	 * 
++	 * @return the width of the line.
++	 */
++	public int getWidth()
++	{
++		return width;
++	}
++
++	/**
++	 * Gets the colour of the line.
++	 * 
++	 * @return the colour for the line.
++	 */
++	public FSColor getColor()
++	{
++		return color;
++	}
++
++	/**
++	 * Sets the width of the line.
++	 * 
++	 * @param aNumber
++	 *            the width of the line.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 0..65535.
++	 */
++	public void setWidth(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Line width must be in range 0..65535.&quot;);
++		}
++		width = aNumber;
++	}
++
++	/**
++	 * Sets the colour of the line.
++	 * 
++	 * @param aColor
++	 *            the colour of the line.
++	 * 
++	 * @throws NullPointerException if the argument is null,
++	 */
++	public void setColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null&quot;);
++		}
++		color = aColor;
++	}
++
++	public Object clone()
++	{
++		FSLineStyle anObject = null;
++
++		try
++		{
++			anObject = (FSLineStyle) super.clone();
++			anObject.color = (FSColor) color.clone();
++		} 
++		catch (CloneNotSupportedException e)
++		{
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
++
++		if (super.equals(anObject))
++		{
++			FSLineStyle typedObject = (FSLineStyle) anObject;
++
++			result = width == typedObject.width;
++			result = result &amp;&amp; color.equals(typedObject.color);
++		}
++		return result;
++	}
++
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSLineStyle : {&quot;);
++		buffer.append(&quot;width = &quot;).append(width).append(&quot;; &quot;);
++		buffer.append(&quot;color = &quot;).append(color.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++
++		return buffer.toString();
++	}
++
++	public int length(FSCoder coder)
++	{
++		int length = 2;
++
++		length += color.length(coder);
++
++		return length;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		coder.writeWord(width, 2);
++		color.encode(coder);
++	}
++
++	public void decode(FSCoder coder)
++	{
++		width = coder.readWord(2, false);
++		color = new FSColor(coder);
++	}
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000295.html">[Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000297.html">[Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#296">[ date ]</a>
+              <a href="thread.html#296">[ thread ]</a>
+              <a href="subject.html#296">[ subject ]</a>
+              <a href="author.html#296">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

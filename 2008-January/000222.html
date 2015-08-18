@@ -1,0 +1,1081 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r286 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r286%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801281123.m0SBN4U9018507%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000221.html">
+   <LINK REL="Next"  HREF="000223.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r286 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r286%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801281123.m0SBN4U9018507%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r286 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Mon Jan 28 12:23:04 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000221.html">[Transform-svn] r285 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000223.html">[Transform-svn] r287 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#222">[ date ]</a>
+              <a href="thread.html#222">[ thread ]</a>
+              <a href="subject.html#222">[ subject ]</a>
+              <a href="author.html#222">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-28 12:22:59 +0100 (Mon, 28 Jan 2008)
+New Revision: 286
+
+Added:
+   trunk/src/com/flagstone/transform/FSFrame.java
+   trunk/src/com/flagstone/transform/FSHeader.java
+   trunk/src/com/flagstone/transform/FSLayer.java
+Log:
+Added new classes to simplify processing movies.
+
+Added: trunk/src/com/flagstone/transform/FSFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFrame.java	2008-01-28 11:12:48 UTC (rev 285)
++++ trunk/src/com/flagstone/transform/FSFrame.java	2008-01-28 11:22:59 UTC (rev 286)
+@@ -0,0 +1,344 @@
++/*
++ * FSFrame.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++
++import java.util.*;
++import com.flagstone.transform.*;
++
++/** 
++ * The Frame class is used to provide a higher level view of a movie. Rather 
++ * than viewing movies as a sequence of individual objects each representing a 
++ * given data structure in the encoded Flash file, objects can be grouped together 
++ * in frames which presents a more logical view of a movie and makes movie
++ * manipulation and search for specific objects easier to handle.
++ * 
++ * Each Frame object has the following attributes:
++ *
++ * number - The position in the movie when the frame will be displayed.
++ * 
++ * label - An optional name assigned to a frame. The FSGotoFrame2 object can 
++ * be used to move to a named frame when playing a movie or movie clip.
++ * 
++ * definitions - An array containing objects that define items for display in a 
++ * movie. Definitions are sub-classes of the FSDefineObject class and define shapes, 
++ * fonts, images and sounds that are displayed or played by the Flash Player.
++ *
++ * commands - An array containing objects that define commands that affect the 
++ * display list or the Flash Player directly.
++ * 
++ * actions - An array that define actions that are executed when a frame is displayed.
++ *
++ * Frame objects simplify the handling of movies. FSDoAction, FSFrameLabel and 
++ * FSShowFrame classes can now &quot;hidden&quot; from view. They are generated automatically 
++ * by the FSFrame object when it is added to an FSMovie object.
++ * 
++ * The framesFromMovie(FSMovie aMovie) method allows an existing movie to be 
++ * viewed as an array of FSFrame objects. Objects from the movie are copied into 
++ * each frame so changes made to the attributes of each object are reflected 
++ * in the movie. The frame objects are not synchronised with the movie, so any 
++ * objects added to a frame are not added to the FSMovie. The easiest way to do 
++ * this is to remove the existing objects from the movie and add all the frames.
++ *
++ * ArrayList frames = FSFrame.framesFromMovie(aMovie);
++ * ...
++ * ...
++ * aMovie.getObjects().clear();
++ *   
++ * for (Iterator i = frames.iterator(); i.hasNext();)
++ *     ((FSFrame)i.next()).addToMovie(aMovie);
++ *
++ * When the contents of an FSFrame object is added to a movie if a label defined 
++ * then an FSFrameLabel object will be added. Similarly if actions are defined 
++ * then an FSDoAction object will be added. An FSShowFrame object which instructs
++ * the Flash Player to update the display list with all the changes is added.
++ *
++ */
++public final class FSFrame
++{
++    /** 
++     * Create a frame based view of a movie. Objects from the movie are grouped 
++     * into Frame objects. Objects from the movie are added to the frame so any 
++     * changes made are reflected in the movie. However objects added or removed 
++     * from a frame are not reflected in the movie.
++     * 
++     * @param aMovie an FSMovie object.
++     * @return an array of Frame objects.
++     */
++    public static ArrayList framesFromMovie(FSMovie aMovie)
++    {
++        ArrayList frames = new ArrayList();
++        int number = 1;
++
++        FSFrame currentFrame = new FSFrame(number++);
++ 
++        for (Iterator i = aMovie.getObjects().iterator(); i.hasNext();)
++        {
++            FSMovieObject currentObject = (FSMovieObject)i.next();
++            
++            if (currentObject instanceof FSDoAction)
++            {
++                currentFrame.actions = ((FSDoAction)currentObject).getActions();
++            }
++            else if (currentObject instanceof FSFrameLabel)
++            {
++                currentFrame.label = ((FSFrameLabel)currentObject).getLabel();
++            }
++            else if (currentObject instanceof FSDefineObject)
++            {
++                currentFrame.addDefinition((FSDefineObject)currentObject);
++            }
++			else if (currentObject instanceof FSShowFrame)
++			{
++                frames.add(currentFrame);
++                currentFrame = new FSFrame(number++);
++			}
++            else
++            {
++                currentFrame.addCommand(currentObject);
++            }   
++        }
++        return frames;
++     }    
++
++    private int number = 0;
++    private String label = null;
++    private ArrayList definitions = null;
++    private ArrayList commands = null;
++    private ArrayList actions = null;
++
++    /** 
++     * Constructs an empty frame with no label defined and the definitions, 
++     * commands and actions arrays empty.
++     */
++    public FSFrame(int number)
++    {
++        setNumber(number);
++        setLabel(&quot;&quot;);
++        setDefinitions(new ArrayList());
++        setCommands(new ArrayList());
++        setActions(new ArrayList());
++    }
++
++    /** 
++     * Constructs a frame with with the specified label, definitions, commands
++     * and actions. The label is optional and may be set to null if no label is 
++     * defined. Similarly if no definitions, commands or actions are defined for 
++     * a given frame then the corresponding argument may be set to null.
++     * 
++     * @param label a label for the frame. Maybe null if no label is defined.
++     * 
++     * @param definitions an array of definition objects. Maybe null if no 
++     * definitions are defined.
++     * 
++     * @param action an array of objects used to manipulate the display list. 
++     * Maybe null if no display list commands are defined.
++     * 
++     * @param action an array of action objects that will be executed when the 
++     * frame is displayed. Maybe null if no actions are defined.
++     */
++    public FSFrame(int number, String label, ArrayList definitions, ArrayList commands, ArrayList actions)
++    {
++        setLabel(label);
++        setDefinitions(definitions);
++        setCommands(commands);
++        setActions(actions);
++    }
++
++    /** 
++     * Adds the action object to the frame.
++     * 
++     * @param anObject the action object to be added to the frame.
++     */
++    public void addAction(FSActionObject anObject)
++    {
++    	if (actions == null)
++    		actions = new ArrayList();
++    		
++        actions.add(anObject);
++    }
++
++    /** 
++     * Adds an object to the frame that defines an object to be displayed in the 
++     * movie.
++     * 
++     * @param anObject a sub-class of FSDefineObject.
++     */
++    public void addDefinition(FSDefineObject anObject)
++    {
++		if (definitions == null)
++			definitions = new ArrayList();
++    		
++        definitions.add(anObject);
++    }
++
++    /** 
++     * Adds the display list command to the frame.
++     * 
++     * @param anObject an FSMovieObject the manipulates the display list.
++     */
++    public void addCommand(FSMovieObject anObject)
++    {
++        commands.add(anObject);
++    }
++
++    /** 
++     * Gets the number assigned to the frame. The number indicates when the 
++     * frame will be displayed when a movie is played.
++     * 
++     * @return the frame number.
++     */
++    public int getNumber()
++    {
++        return number;
++    }
++    /** 
++     * Gets the label assigned to the frame.
++     * 
++     * @return the label.
++     */
++    public String getLabel()
++    {
++        return label;
++    }
++
++    /** 
++     * Gets the array of definition objects contained in the frame.
++     * 
++     * @return the array of definitions.
++     */
++    public ArrayList getDefinitions()
++    {
++        return definitions;
++    }
++
++    /**
++     * Gets the array of commands that update the display list. 
++     * 
++     * @return the array of commands objects.
++     */
++    public ArrayList getCommands()
++    {
++        return commands;
++    }
++
++    /**
++     * Gets the array of action objects that will be execute when the frame is 
++     * displayed.
++     * 
++     * @return the array of actions defined for the frame.
++     */
++    public ArrayList getActions()
++    {
++        return actions;
++    }
++    
++    /** 
++     * Sets the number assigned to the frame. The number indicates when the 
++     * frame will be displayed when a movie is played.
++     * 
++     * @param n the frame number.
++     */
++    public void setNumber(int n)
++    {
++        number = n;
++    }
++    /** 
++     * Sets the label for the frame.
++     * 
++     * @param aString the label.
++     */
++    public void setLabel(String aString)
++    {
++    	label = aString;
++    }
++
++    /** 
++     * Sets the array of action objects for the frame.
++     * 
++     * @param anArray the array of actions.
++     */
++    public void setDefinitions(ArrayList anArray)
++    {
++        definitions = anArray;
++    }
++
++    /** 
++     * Sets the array of commands that updated the display list for the frame. 
++     * The changes are visible when the frame is displayed.
++     *
++     * @param anArray the array of command objects.
++     */
++    public void setCommands(ArrayList anArray)
++    {
++        commands = anArray;
++    }
++
++    /** 
++     * Sets the array of action objects for the frame.
++     * 
++     * @param anArray the array of actions.
++     */
++    public void setActions(ArrayList anArray)
++    {
++    	actions = anArray;
++    }
++
++    /** 
++     * Add the objects in the frame to the movie. The contents of the definitions 
++     * and commands arrays are added to the movie. If a label is assigned to the 
++     * frame then an FSFrameLabel object is added to the movie. If actions are 
++     * defined then an FSDoAction object is added containing the actions defined 
++     * in the frame. 
++     * 
++     * @param aMovie an FSMovie object.
++     */
++    public void addToMovie(FSMovie aMovie)
++    {
++    	if (definitions != null || definitions.size() &gt; 0)
++    	{
++			for (Iterator i = definitions.iterator(); i.hasNext();)
++				aMovie.add((FSMovieObject)i.next());
++    	}
++            
++        if (label != null &amp;&amp; label.length() &gt; 0)
++            aMovie.add(new FSFrameLabel(label));
++
++		if (actions != null &amp;&amp; actions.size() &gt; 0)
++			aMovie.add(new FSDoAction(actions));
++
++        for (Iterator j = commands.iterator(); j.hasNext();)
++            aMovie.add((FSMovieObject)j.next());
++            
++        aMovie.add(new FSShowFrame());
++    }
++}
++
+
+Added: trunk/src/com/flagstone/transform/FSHeader.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSHeader.java	2008-01-28 11:12:48 UTC (rev 285)
++++ trunk/src/com/flagstone/transform/FSHeader.java	2008-01-28 11:22:59 UTC (rev 286)
+@@ -0,0 +1,188 @@
++package com.flagstone.transform;
++/*
++ * FSHeader.java
++ * 
++ * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++import java.util.zip.*;
++import java.io.*;
++
++public final class FSHeader
++{
++    public static void main(String[] args)
++    {
++        try
++        {
++            FSHeader header = new FSHeader(args[0]);
++            
++            StringBuffer buffer = new StringBuffer();
++            
++            buffer.append(&quot;File: &quot;).append(args[0]).append(&quot;\n&quot;);
++            buffer.append(&quot;Signature: &quot;).append(header.getSignature()).append(&quot;\n&quot;);
++            buffer.append(&quot;Version: &quot;).append(header.getVersion()).append(&quot;\n&quot;);
++            buffer.append(&quot;Frame: &quot;);
++            buffer.append(&quot;(&quot;).append(header.getMinX()).append(&quot;,&quot;).append(header.getMinY()).append(&quot;) &quot;);
++            buffer.append(&quot;(&quot;).append(header.getMaxX()).append(&quot;,&quot;).append(header.getMaxY()).append(&quot;)\n&quot;);
++            buffer.append(&quot;Length: &quot;).append(header.getLength()+&quot; bytes&quot;).append(&quot;\n&quot;);
++            buffer.append(&quot;FrameRate: &quot;).append(header.getFrameRate()+&quot; per second&quot;).append(&quot;\n&quot;);
++            buffer.append(&quot;Number Of Frames: &quot;).append(header.getNumberOfFrames()).append(&quot;\n&quot;);
++            
++            System.out.println(buffer.toString());
++        }
++        catch (Exception e)
++        {
++            System.err.println(&quot;Could not read file: &quot;+ args[0]);
++        }
++    }
++    
++    private String signature = null;
++    private int version = 0;
++    private int minX = 0;
++    private int minY = 0;
++    private int maxX = 0;
++    private int maxY = 0;
++    private int length = 0;
++    private float frameRate = 0.0f;
++    private int frameCount = 0;
++    
++
++    public FSHeader(String filename) throws IOException, DataFormatException
++    {
++        decodeFromFile(filename);
++    }
++    public String getSignature()
++    {
++        return signature;
++    }
++    public int getVersion()
++    {
++        return version;
++    }
++    public int getLength()
++    {
++        return length;
++    }
++    public int getMinX() 
++    {
++        return minX;
++    }
++    public int getMaxX() 
++    {
++        return maxX;
++    }
++    public int getMinY() 
++    {
++        return minY;
++    }
++    public int getMaxY()
++    {
++        return maxY;
++    }
++    public float getFrameRate()
++    {
++        return frameRate;
++    }
++    public float getNumberOfFrames()
++    {
++        return frameCount;
++    }
++    public void decodeFromFile(String fileName) throws FileNotFoundException, DataFormatException, IOException
++    {
++        FileInputStream fileContents = null;
++        
++        File swfFile = new File(fileName);
++        
++        fileContents = new FileInputStream(swfFile);
++        
++        int fileLength = (int)swfFile.length();
++        byte[] contents = new byte[fileLength];
++        
++        fileContents.read(contents);
++        fileContents.close();
++        
++        decodeFromData(contents);
++    }
++    public void decodeFromData(byte[] bytes) throws DataFormatException, IOException
++    {
++        FSCoder coder = null;
++
++        isFlash(bytes);
++
++        if (bytes[0] == 0x43)
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
++        else
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++        
++        signature = coder.readString(3, &quot;UTF8&quot;);
++        version = coder.readWord(1, false);
++        length = coder.readWord(4, false);
++
++        coder.alignToByte();
++        
++        int fieldSize = coder.readBits(5, false);
++        
++        minX = coder.readBits(fieldSize, true);
++        maxX = coder.readBits(fieldSize, true);
++        minY = coder.readBits(fieldSize, true);
++        maxY = coder.readBits(fieldSize, true);
++        
++        coder.alignToByte();
++
++        frameRate = coder.readFixedWord(1, 1);
++        frameCount = coder.readWord(2, false);
++    }
++    private void isFlash(byte[] bytes) throws DataFormatException
++    {
++        if (bytes == null || bytes.length &lt; 8)
++            throw new DataFormatException(&quot;Flash data is null or empty.&quot;);
++            
++        boolean isFlash = (bytes[0] == 0x43 || bytes[0] == 0x46) &amp;&amp; bytes[1] == 0x57 &amp;&amp; bytes[2] == 0x53;
++                
++        if (isFlash == false)
++            throw new DataFormatException(&quot;Data does not start with a valid Flash signature.&quot;);
++    }
++    private byte[] unzip(byte[] bytes) throws DataFormatException
++    {
++        int movieLength = 0;
++
++        for (int i=0; i&lt;4; i++)
++            movieLength += (bytes[i+4] &amp; 0x000000FF) &lt;&lt; (i*8);
++            
++        byte[] data = new byte[movieLength];
++        
++        // copy the uncompressed signature, version and length
++        
++        for (int i=0; i&lt;8; i++)
++            data[i] = bytes[i];            
++        
++        Inflater inflater = new Inflater();
++        inflater.setInput(bytes, 8, bytes.length-8);
++        inflater.inflate(data, 8, movieLength-8);
++
++        return data;
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/FSLayer.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLayer.java	2008-01-28 11:12:48 UTC (rev 285)
++++ trunk/src/com/flagstone/transform/FSLayer.java	2008-01-28 11:22:59 UTC (rev 286)
+@@ -0,0 +1,459 @@
++/*
++ * FSLayer.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++import java.util.*;
++
++/**
++ * The Layer class can be used to simplify the creation of movies. It provides
++ * a series of methods that can be used to control how an object is displayed
++ * and provides an API that is easier to use when compared to creating the 
++ * commands (FSPlaceObject, FSRemoveObject, etc.) used to manipulate the Flash 
++ * Player's display list directly. The following code:
++ * 
++ * &lt;pre&gt;
++ * FSLayer layer = new Layer(1);
++ * 
++ * layer.select(shape);
++ * layer.move(x1, y1);
++ * layer.show();
++ * layer.move(x2, y2);
++ * layer.show();
++ * 
++ * movie.add(layer.getObjects());
++ * &lt;/pre&gt;
++ * 
++ * is equivalent to:
++ * 
++ * &lt;pre&gt;
++ * movie.add(shape);
++ * movie.add(new FSPlaceObject2(shape.getIdentifier, 1, x1, y1));
++ * movie.add(FSShowFrame.getInstance());
++ * movie.add(new FSPlaceObject2(1, x2, y2));
++ * movie.add(FSShowFrame.getInstance());
++ * &lt;/pre&gt;
++ * 
++ * After each set of commands the display list is updated by executing the 
++ * show() method - this adds a ShowFrame instruction to the final movie which
++ * tells the Flash Player to render the display list on the screen.
++ * 
++ * The commands that manipulate the display list can also be combined to apply
++ * several operations at once:
++ * 
++ * &lt;pre&gt;
++ * layer.select(shape);
++ * layer.move(x, y);
++ * layer.morph(0.9);
++ * layer.color(r, g, b);
++ * layer.show();
++ * &lt;/pre&gt;
++ * 
++ * is equivalent to:
++ * 
++ * &lt;pre&gt;
++ * FSCoordTransform coord = new FSCoordTransform(x, y);
++ * FSColorTransform color = new FSColorTransform(r, g, b);
++ * FSPlaceObject2 place = new FSPlaceObject2(shape.getIdentifier, 1, coord, color)
++ * place.setRatio(0.9);
++ * 
++ * movie.add(shape);
++ * movie.add(place);
++ * movie.add(FSShowFrame.getInstance());
++ * &lt;/pre&gt;
++ * 
++ * An operation is use to set the attributes on either an FSPlaceObject2 or 
++ * FSRemoveObject2 object so operations of the same type cannot be combined
++ * to create a cumulative effect. For example:
++ * 
++ * &lt;pre&gt;
++ * layer.move(x1, y1);
++ * layer.move(x2, y2);
++ * &lt;/pre&gt;
++ *
++ * is the same as:
++ * 
++ * &lt;pre&gt;
++ * layer.move(x2, y2);
++ * &lt;/pre&gt;
++ * 
++ * and not:
++ * 
++ * &lt;pre&gt;
++ * layer.move(x1+x2, y1+y2);
++ * &lt;/pre&gt;
++ * 
++ * The most obvious benefit is code that is easier to write and read however
++ * the benefits of using layers come to the fore when creating movies with 
++ * multiple objects. Currently the movie object represents the main time-line and
++ * the commands to control and display each object must be interleaved together.
++ * This quickly becomes unwieldy and error prone if several objects are involved.
++ * With layers, each can be regarded as the time-line for a single object. The 
++ * object can then be manipulated more easily and the final set of Layers merged
++ * together to create a single time-line. The only limitation in the merging 
++ * process is that all the Layers must start at the same point in time. 
++ * 
++ * Each Layer object created must be assigned a unique number. In Flash an object 
++ * to be displayed is assigned to a given layer with (typically) only one object 
++ * displayed on a given layer. The layer number is used to control the order in 
++ * which the objects are displayed. Objects placed on a higher layer number are 
++ * displayed in front of object placed on a lower layer number. 
++ * 
++ */
++public final class FSLayer
++{
++	/**
++	 * Merge layers together to create a single time-line. Each layer is 
++	 * assumed to start at the same point in time. The process steps through 
++	 * each of the layers, frame by frame, adding all the commands used to 
++	 * manipulate the Flash Player's display list into a single group.
++	 * 
++	 * @param layers and array of FSLayer objects.
++	 * 
++	 * @return an array of all the objects contained in each layer. This array 
++	 * can then be added to the movie.
++	 */
++    public static ArrayList merge(ArrayList layers)
++    {
++        ArrayList objects = new ArrayList();
++        
++        int[] idx = new int[layers.size()];
++        
++        for (int i=0; i&lt;idx.length; i++) {
++        	idx[i] = 0;
++        }
++        
++        while (true)
++        {
++        	ArrayList array = null;
++        	FSMovieObject object;
++
++        	for (int i=0; i&lt;idx.length; i++)
++            {
++        		array = ((FSLayer)layers.get(i)).getObjects();
++        		
++        		while (idx[i] &lt; array.size())
++        		{
++        			object = (FSMovieObject)array.get(idx[i]++);
++        			
++        			if (object.getType() == FSMovieObject.ShowFrame) {
++        				break;
++        			}
++        			
++        			objects.add(object);
++        		}
++        		
++        		if (idx[i] == array.size()) {
++        			array = null;
++        		}
++            }
++        	objects.add(FSShowFrame.getInstance());
++        	
++        	if (array == null) {
++        		break;
++        	}
++        }
++        
++        return objects;
++    }    
++
++    private int layer;
++    private int identifier;
++    private FSPlaceObject2 place;
++    
++    private ArrayList displayList;
++
++    /**
++     * Create a new Layer object. Layers are used to define the order in which
++     * objects are displayed. Objects placed on a high layer number are 
++     * displayed in front of those on a lower layer.
++     * 
++     * @param number the layer number on the display list.
++     */
++    public FSLayer(int number)
++    {
++    	layer = number;
++    	identifier = 0;
++    	displayList = new ArrayList();
++    }
++    
++    /**
++     * Return the layer number. The Flash Player assumes that there is only 
++     * one object placed on each layer and so each must have a unique number.
++     * 
++     * @return the layer number.
++     */
++    public int getLayer()
++    {
++    	return layer;
++    }
++    
++    /**
++     * Return the identifier of the object on the layer. Note: it is possible 
++     * to place more than one object on a layer however only one should be 
++     * visible on the display list at a given time.
++     * 
++     * @return the unique identifier used to reference the object.
++     */
++    public int getIdentifier()
++    {
++    	return identifier;
++    }
++    
++    /**
++     * Return the array of commands used to manipulate the object on the display
++     * list.
++     * 
++     * @return an array of FSMovieObject containing the definition of the object
++     * (shape, text, etc) to be displayed and the associated commands that 
++     * update the position of the object on the screen.
++     */
++    public ArrayList getObjects()
++    {
++    	return displayList;
++    }
++
++    /**
++     * Add an object to the layer. The object may be selected later for display.
++     * 
++     * @param definition an object defining an image, shape, text, sound
++     * or video.
++     */
++    public void add(FSDefineObject definition)
++    {
++		displayList.add(definition);
++    }
++    
++    /**
++     * Select the object previously added to the layer to be added on the 
++     * display list.
++     * 
++     * @param definition an object definition, FSDefineShape, FSDefineImage,
++     * etc. that will be added to the display list.
++     */
++    public void select(int identifier)
++    {
++		this.identifier = identifier;
++    }
++
++    /**
++     * Add an object to the later and select it to be added on the display list.
++     * 
++     * @param definition an object definition, FSDefineShape, FSDefineImage,
++     * etc. that will be added to the display list.
++     */
++    public void select(FSDefineObject definition)
++    {
++		add(definition);
++		select(definition.getIdentifier());
++    }
++
++    /**
++     * Set the coordinates where the object will be displayed.
++     * 
++     * @param x the x-coordinate, expressed in twips.
++     * @param y the y-coordinate, expressed in twips.
++     */
++    public void move(int x, int y) 
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, x, y);
++    	}
++    	else {
++        	place.setTransform(new FSCoordTransform(x, y));
++    	}
++    }
++    
++    /**
++     * Change the colour of the object to the values (r,g,b). The colour will
++     * be opaque so you cannot use this method to change only the colour of 
++     * a transparent object.
++     * 
++     * @param r the red component of the colour.
++     * @param g the green component of the colour.
++     * @param b the blue component of the colour.
++     */
++    public void color(int r, int g, int b)
++    {
++    	color(r,g,b,255);
++    }
++    
++    /**
++     * Change the colour of the object to the values (r,g,b,a).
++     * 
++     * @param r the red component of the colour.
++     * @param g the green component of the colour.
++     * @param b the blue component of the colour.
++     * @param a the transparency component.
++     */
++    public void color(int r, int g, int b, int a)
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, new FSColorTransform(0.0f, 0.0f, 0.0f, 0.0f, r, g, b, a));
++    	}
++    	else {
++        	place.setColorTransform(new FSColorTransform(0.0f, 0.0f, 0.0f, 0.0f, r, g, b, a));
++    	}
++    }
++    
++    /** 
++     * Set the number of layers that the outline of the object will clip when
++     * placed on the display list.
++     * 
++     * @param depth the number of layers that will be clipped.
++     */
++    public void clip(int depth)
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, (FSCoordTransform)null);
++    		place.setClippingDepth(depth);
++    	}
++    	else {
++        	place.setClippingDepth(depth);
++    	}
++    }
++    
++    /**
++     * Set the point in the morphing process for a morph shape in the range 
++     * 0.0 to 1.0. May be set to zero if the shape being placed is not being 
++     * morphed.
++     * 
++     * @param ratio the ratio between the starting shape and the end shape.
++     */
++    public void morph(float ratio)
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, ratio, null);
++    	}
++    	else {
++        	place.setRatio(ratio);
++    	}
++    }
++    
++    /**
++     * Assign a name to the object.
++     * 
++     * @param name a string that can be used to reference the object.
++     */
++    public void name(String name)
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, (FSCoordTransform)null);
++    		place.setName(name);
++    	}
++    	else {
++        	place.setName(name);
++    	}
++    }
++        
++    /**
++     * Remove the object from the display list.
++     */
++    public void remove()
++    {
++    	if (place != null) {
++    		displayList.add(place);
++    		place = null;
++    	}
++    	
++    	displayList.add(new FSRemoveObject2(layer));
++    }
++
++    /**
++     * Change the colour of the object by applying a color transform.
++     * 
++     * @param color the color transform to apply to the shape.
++     */
++    public void change(FSColorTransform color)
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, color);
++    	}
++    	else {
++        	place.setColorTransform(color);
++    	}
++    }
++    
++    /**
++     * Change the position, orientation and scaling of the object by applying a 
++     * 2D coordinate transform.
++     * 
++     * Use this method to apply more complex coordinate transforms to an object
++     * for example that composite move, scaling and rotation operations in a 
++     * single step.
++     * 
++     * @param coord the coordinate transform to apply to the object.
++     */
++    public void change(FSCoordTransform coord)
++    {
++    	if (place == null) {
++    		place = new FSPlaceObject2(layer, coord);
++    	}
++    	else {
++        	place.setTransform(coord);
++    	}
++    }
++    
++    /**
++     * Instruct the Flash Player to display a frame and render the contents of 
++     * the display list, applying the commands previously set. You must use this 
++     * method for any of the other operations to take effect.
++     * 
++     */
++    public void show()
++    {
++    	show(1);
++    }
++    
++    /**
++     * Display one or more frames. The state (position, orientation, visibility,
++     * etc.) of the object will remain unchanged for the duration of the 
++     * added frames. 
++     * 
++     * @param count the number of frames to be displayed.
++     * @throws IllegalArgumentException is the number of frames is less than 1.
++     */
++    public void show(int count)
++    {
++    	if (count &lt; 1) {
++    		throw new IllegalArgumentException(&quot;Must show at least one frame&quot;);
++    	}
++    	
++    	if (place != null) {
++    		displayList.add(place);
++    		place = null;
++    	}
++    	
++    	for (int i=0; i&lt;count; i++) {
++    		displayList.add(FSShowFrame.getInstance());
++    	}
++    }
++}
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000221.html">[Transform-svn] r285 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000223.html">[Transform-svn] r287 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#222">[ date ]</a>
+              <a href="thread.html#222">[ thread ]</a>
+              <a href="subject.html#222">[ subject ]</a>
+              <a href="author.html#222">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r392%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803271152.m2RBqcNh015171%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000325.html">
+   <LINK REL="Next"  HREF="000327.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r392%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803271152.m2RBqcNh015171%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar 27 12:52:38 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000325.html">[Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+        <LI>Next message: <A HREF="000327.html">[Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#326">[ date ]</a>
+              <a href="thread.html#326">[ thread ]</a>
+              <a href="subject.html#326">[ subject ]</a>
+              <a href="author.html#326">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-27 12:52:28 +0100 (Thu, 27 Mar 2008)
+New Revision: 392
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/Displayable.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Added new Displayable interface for all things that have a width and a height.
+
+Added: dev/dev-2-4/src/com/flagstone/transform/Displayable.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/Displayable.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/Displayable.java	2008-03-27 11:52:28 UTC (rev 392)
+@@ -0,0 +1,7 @@
++package com.flagstone.transform;
++
++public interface Displayable
++{
++	public int getWidth();
++	public int getHeight();
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineImage.java	2008-03-27 11:52:28 UTC (rev 392)
+@@ -140,7 +140,7 @@
+  * 2.
+  * &lt;/p&gt;
+  */
+-public class FSDefineImage extends FSDefineObject
++public class FSDefineImage extends FSDefineObject implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineImage2.java	2008-03-27 11:52:28 UTC (rev 392)
+@@ -122,7 +122,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineImage2 extends FSDefineObject
++public class FSDefineImage2 extends FSDefineObject implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-03-27 11:52:28 UTC (rev 392)
+@@ -117,7 +117,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineJPEGImage extends FSDefineObject
++public class FSDefineJPEGImage extends FSDefineObject implements Displayable
+ {
+ 	private byte[] image;
+ 	private int width;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-03-27 11:52:28 UTC (rev 392)
+@@ -118,7 +118,7 @@
+  * 2.
+  * &lt;/p&gt;
+  */
+-public class FSDefineJPEGImage2 extends FSDefineObject
++public class FSDefineJPEGImage2 extends FSDefineObject implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-03-27 11:52:28 UTC (rev 392)
+@@ -146,7 +146,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineJPEGImage3 extends FSDefineObject
++public class FSDefineJPEGImage3 extends FSDefineObject implements Displayable
+ {
+ 	private int width;
+ 	private int height;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000325.html">[Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+	<LI>Next message: <A HREF="000327.html">[Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#326">[ date ]</a>
+              <a href="thread.html#326">[ thread ]</a>
+              <a href="subject.html#326">[ subject ]</a>
+              <a href="author.html#326">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

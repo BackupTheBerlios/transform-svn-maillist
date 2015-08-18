@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r212 - in trunk/doc: . releases web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r212%20-%20in%20trunk/doc%3A%20.%20releases%20web&In-Reply-To=%3C200609101609.k8AG9cmF007747%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000149.html">
+   <LINK REL="Next"  HREF="000151.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r212 - in trunk/doc: . releases web</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r212%20-%20in%20trunk/doc%3A%20.%20releases%20web&In-Reply-To=%3C200609101609.k8AG9cmF007747%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r212 - in trunk/doc: . releases web">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sun Sep 10 18:09:38 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000149.html">[Transform-svn] r211 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000151.html">[Transform-svn] r213 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#150">[ date ]</a>
+              <a href="thread.html#150">[ thread ]</a>
+              <a href="subject.html#150">[ subject ]</a>
+              <a href="author.html#150">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-10 18:09:33 +0200 (Sun, 10 Sep 2006)
+New Revision: 212
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/doc/releases/transform-pre-2.1.4.txt
+   trunk/doc/web/issues.html
+   trunk/doc/web/planned.html
+Log:
+Updated documentation on bugs and next release.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-09-03 02:49:55 UTC (rev 211)
++++ trunk/doc/CHANGES.txt	2006-09-10 16:09:33 UTC (rev 212)
+@@ -1,3 +1,7 @@
++2006-09-10 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * updated docs on latest bugs and next release.
++
+ 2006-09-02 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">denis at fireflydesign.com</A>
+ 
+     * fixed improperly initialized identifier in FSVideoFrame(int, int, byte[]).
+@@ -2,3 +6,3 @@
+ 
+-2006-06-29 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.comO</A>
++2006-06-29 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+
+Modified: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-03 02:49:55 UTC (rev 211)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-10 16:09:33 UTC (rev 212)
+@@ -7,8 +7,11 @@
+ 
+ 
+ Bug Fixes
+-    Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
+-
++    7936. Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
++    8749. FSVideoFrame does not set identifier.
++    8750. FSText does not encode records without style information.
++    8751. FSTextConstructor.defineTextBlock() bounding box is incorrect.
++        
+ Class Changes
+     None scheduled
+     
+@@ -23,13 +26,31 @@
+   Bug Fixes  
+ -------------
+ 
+-1. Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
++7936. Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
+ 
+ When a null reference is passed to the setEncodingTable method on the classes
+ FSDefineJPEGImage2 and FSDefineJPEGImage3 an empty encoding table is created
+ and assigned to the instance variable. However a programming error meant that 
+ the table was create but not assigned correctly. This is now fixed.
+ 
++8749. FSVideoFrame does not set identifier.
++
++The identifier attribute was not using the value passed as an argument in the 
++constructor: public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
++Instead the attribute was being assigned to itself. This is now fixed.
++
++8750. FSText does not encode records without style information.
++
++If an FSText object did not contain any style information (font, color or x and
++y offset) then the object was not encoded correctly. This is now fixed.
++
++8751. FSTextConstructor.defineTextBlock() bounding box is incorrect.
++
++The bounding box for a block of text was not taking into account the descent of
++the last line of the block. The result was that the bounding did not completely 
++enclose the text preventing it from being redrawn completely if the text was 
++animated or placed close to or in front of another obect. This is now fixed.
++
+ -----------------
+   Class Changes  
+ -----------------
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-09-03 02:49:55 UTC (rev 211)
++++ trunk/doc/web/issues.html	2006-09-10 16:09:33 UTC (rev 212)
+@@ -30,13 +30,14 @@
+ &lt;div class=&quot;content&quot;&gt;
+ 
+ &lt;H1&gt;Transform SWF: Known Issues &amp; Bugs&lt;/H1&gt;
+-&lt;P&gt;Version: 2.1.3&lt;BR/&gt;Updated: 7th July 2006&lt;/P&gt;
++&lt;P&gt;Version: 2.1.3&lt;BR/&gt;Updated: 10th September 2006&lt;/P&gt;
+ 
+ &lt;TABLE width=&quot;100%&quot;&gt;
+ 
+ &lt;THEAD&gt;
+ &lt;TR&gt;
+-&lt;TH&gt;Current Issue&lt;/TH&gt;
++&lt;TH&gt;No.&lt;/TH&gt;
++&lt;TH&gt;Issue&lt;/TH&gt;
+ &lt;TH&gt;Status&lt;/TH&gt;
+ &lt;TH&gt;Fix Due&lt;/TH&gt;
+ &lt;/TR&gt;
+@@ -45,13 +46,36 @@
+ &lt;TBODY&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;1. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/TD&gt;
++&lt;TD&gt;8751&lt;/TD&gt;
++&lt;TD&gt;defineTextBlock() bounding box is incorrect.&lt;/TD&gt;
+ &lt;TD&gt;Open&lt;/TD&gt;
+ &lt;TD&gt;2.1.4&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
++&lt;TR&gt;
++&lt;TD&gt;8750&lt;/TD&gt;
++&lt;TD&gt;FSText does not encode records without style information.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;/TR&gt;
++
++&lt;TR&gt;
++&lt;TD&gt;8749&lt;/TD&gt;
++&lt;TD&gt;FSVideoFrame does not set identifier.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;/TR&gt;
++
++&lt;TR&gt;
++&lt;TD&gt;7936&lt;/TD&gt;
++&lt;TD&gt;Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;/TR&gt;
++
+ &lt;TR&gt;
+-&lt;TD&gt;2. FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/TD&gt;
++&lt;TD&gt;6739&lt;/TD&gt;
++&lt;TD&gt;FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/TD&gt;
+ &lt;TD&gt;Open&lt;/TD&gt;
+ &lt;TD&gt;Open&lt;/TD&gt;
+ &lt;/TR&gt;
+@@ -126,8 +150,190 @@
+ 
+ &lt;h2&gt;Current Issues&lt;/h2&gt;
+ 
+-&lt;H3&gt;1. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/H3&gt;
++&lt;H3&gt;8751. defineTextBlock() bounding box is incorrect.&lt;/H3&gt;
+ 
++&lt;P&gt;The size of the bounding box that encloses the block of text created using 
++the defineTextBlock() method in the FSTextConstructor class is not calculated
++correctly. The block fails to account for the descent of the last line in the 
++block. The result is that the bounding box is too short so if the text is 
++animated or placed next to another object it will not be redrawn correctly.&lt;/P&gt;
++
++&lt;H4&gt;Root Cause&lt;/H4&gt;
++
++&lt;P&gt;The root cause is a an error in the way the dimensions of the box are
++calculated.&lt;/P&gt;
++
++&lt;H4&gt;Workaround?&lt;/H4&gt;
++
++&lt;P&gt;Replace lines 598-608:&lt;/P&gt;
++
++&lt;pre&gt;
++    if (n==0) {
++        yMin = bounds.getMinY();
++        yMax = bounds.getMaxY();
++    }
++    else if (n==lines.size()) {
++        yMax += bounds.getMaxY();
++    }
++    else {
++        yMax += lineSpacing;
++    }
++&lt;/pre&gt;
++
++&lt;p&gt;with:&lt;/p&gt;
++ 
++&lt;pre&gt;
++    if (n==0) {
++        yMin = bounds.getMinY();
++        yMax = bounds.getMaxY();
++    }
++    else {
++        yMax += lineSpacing;
++    }
++    
++    if (n==lines.size()-1)
++        yMax += bounds.getHeight();
++&lt;/pre&gt;
++
++&lt;p&gt;This is a patch. It works but the code that creates text blocks needs to be
++improved so the bounding box can be used to provide more precise positioning of
++the text.&lt;/p&gt;
++
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
++
++&lt;P&gt;This patch will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
++
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
++&lt;H3&gt;8750. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/H3&gt;
++
++&lt;P&gt;If an FSText object does not contain any style information (font, colour, x 
++or y offets) then it is not encoded correctly - the first byte which contains 
++type and flags indicating which fields are included is not encoded.&lt;/P&gt;
++
++&lt;H4&gt;Root Cause&lt;/H4&gt;
++
++&lt;P&gt;The problem was introduced in Transform version 1 when two classes, 
++FSTextStyle and FSTextRecord were merged to create FSText.&lt;/P&gt;
++
++&lt;H4&gt;Workaround?&lt;/H4&gt;
++
++&lt;P&gt;Replace the length() and encode() methods with the following:&lt;/P&gt;
++
++&lt;pre&gt;
++    public int length(FSCoder coder)
++    {
++        boolean _containsFont = containsFont();
++        boolean _containsColor = containsColor();
++        boolean _containsOffsetX = containsOffsetX();
++        boolean _containsOffsetY = containsOffsetY();
++        
++        int length = 1;
++    
++        if (containsStyle())
++        {
++            length += (_containsFont) ? 2 : 0;
++            length += (_containsColor) ? color.length(coder) : 0;
++            length += (_containsOffsetY) ? 2 : 0;
++            length += (_containsOffsetX) ? 2 : 0;
++            length += (_containsFont) ? 2 : 0;
++        }
++        
++        length += 1;
++
++        if (characters.size() &gt; 0)
++        {
++            int numberOfBits = 0;
++            int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
++            int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
++            
++            numberOfBits = (numberOfGlyphBits + numberOfAdvanceBits)*characters.size();
++            numberOfBits += (numberOfBits % 8 &gt; 0) ? 8 - (numberOfBits % 8) : 0;
++
++            length += numberOfBits &gt;&gt; 3;
++        }
++        return length;
++    }
++
++    public void encode(FSCoder coder)
++    {
++        boolean _containsFont = containsFont();
++        boolean _containsColor = containsColor();
++        boolean _containsOffsetY = containsOffsetY();
++        boolean _containsOffsetX = containsOffsetX();
++
++        coder.writeBits(1, 1);
++        coder.writeBits(0, 3);
++        coder.writeBits(_containsFont ? 1 : 0, 1);
++        coder.writeBits(_containsColor ? 1 : 0, 1);
++        coder.writeBits(_containsOffsetY ? 1 : 0, 1);
++        coder.writeBits(_containsOffsetX ? 1 : 0, 1);
++    
++        if (_containsFont)
++            coder.writeWord(identifier, 2);
++    
++        if (_containsColor)
++            color.encode(coder);
++    
++        if (_containsOffsetX)
++            coder.writeWord(offsetX, 2);
++    
++        if (_containsOffsetY)
++            coder.writeWord(offsetY, 2);
++    
++        if (_containsFont)
++            coder.writeWord(height, 2);
++
++        coder.writeWord(characters.size(), 1);
++        
++        for (Iterator charIter = characters.iterator(); charIter.hasNext();) 
++            ((FSTransformObject)charIter.next()).encode(coder);
++            
++        coder.alignToByte();
++    }
++&lt;/pre&gt;
++
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
++
++&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
++
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
++&lt;H3&gt;8749. FSVideoFrame does not set identifier.&lt;/H3&gt;
++
++&lt;P&gt;The identifier attribute is not set correctly in the constructor:&lt;/P&gt;
++
++&lt;pre&gt;
++    public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
++&lt;/pre&gt;
++
++&lt;H4&gt;Root Cause&lt;/H4&gt;
++
++&lt;P&gt;The attribute assigns a value to itself rather than using the argument passed
++to the constructor.&lt;/P&gt;
++
++&lt;H4&gt;Workaround?&lt;/H4&gt;
++
++&lt;P&gt;Replace the constructor with the following method:&lt;/P&gt;
++
++&lt;pre&gt;
++    public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
++    {
++        super(VideoFrame);
++        setIdentifier(anIdentifier);
++        setFrameNumber(frameNumber);
++        setData(data);
++    }
++&lt;/pre&gt;
++
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
++
++&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
++
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
++&lt;H3&gt;7936. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/H3&gt;
++
+ &lt;P&gt;The setEncodingTable() method in each class checks for a null argument and 
+ creates an empty encodeing table so the object can be successfully encoded.
+ However the null argument is assigned to the instance variable and not the newly
+@@ -163,11 +369,11 @@
+ 
+ &lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+ 
+-&lt;P&gt;This will be released in version 2.1.4 due at the end of July.&lt;/P&gt;
++&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+ 
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;2. FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/H3&gt;
++&lt;H3&gt;6739. FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/H3&gt;
+ 
+ &lt;P&gt;The OpenType format for defining fonts allows new glyphs to be defined by 
+ combining existing glyphs to form complex shapes. The FSTextConstructor class 
+
+Modified: trunk/doc/web/planned.html
+===================================================================
+--- trunk/doc/web/planned.html	2006-09-03 02:49:55 UTC (rev 211)
++++ trunk/doc/web/planned.html	2006-09-10 16:09:33 UTC (rev 212)
+@@ -9,8 +9,8 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;31st July 2006&lt;/td&gt;
+-&lt;td class=&quot;date&quot;&gt;2nd July 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;30th Sept 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;10th Sept 2006&lt;/td&gt;
+ &lt;td class=&quot;version&quot;&gt;2.1.4&lt;/td&gt;
+ &lt;td class=&quot;description&quot;&gt;Add more unit test suites. Bug Fixes&lt;/td&gt;
+ &lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-2.1.4.txt&quot;&gt;release notes&lt;/a&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000149.html">[Transform-svn] r211 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000151.html">[Transform-svn] r213 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#150">[ date ]</a>
+              <a href="thread.html#150">[ thread ]</a>
+              <a href="subject.html#150">[ subject ]</a>
+              <a href="author.html#150">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

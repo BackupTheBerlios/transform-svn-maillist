@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r141 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r141%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200603311322.k2VDMExA026447%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000080.html">
+   <LINK REL="Next"  HREF="000082.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r141 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r141%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200603311322.k2VDMExA026447%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r141 - trunk/src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Fri Mar 31 15:22:14 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000080.html">[Transform-svn] r140 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000082.html">[Transform-svn] r142 - trunk/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-31 15:22:05 +0200 (Fri, 31 Mar 2006)
+New Revision: 141
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Fixed bug when displaying fonts on the Mac. 
+Bounding box for text is not calculated accurately. 
+Added method to return the advance for a given character.
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-03-27 11:52:20 UTC (rev 140)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-03-31 13:22:05 UTC (rev 141)
+@@ -595,15 +595,20 @@
+             
+             FSBounds bounds = boundsForText(glyphCodes, glyphAdvances, fontSize);
+             
+-            if (n==0)
+-            {
+-                yMin = yMax = bounds.getMinY();
++            if (n==0) {
++                yMin = bounds.getMinY();
++                yMax = bounds.getMaxY();
+             }
++            else if (n==lines.size()) {
++                yMax += bounds.getMaxY();
++            }
++            else {
++                yMax += lineSpacing;
++            }
+             
+             xMin = (xMin &lt; bounds.getMinX()) ? xMin : bounds.getMinX();
+             xMax = (xMax &gt; bounds.getMaxX()) ? xMax : bounds.getMaxX();
+-            yMax += bounds.getHeight();
+-        
++                    
+             FSText textRecord = new FSText(identifier, aColor, xOffset,
+                     yOffset, fontSize, charactersForGlyphs(glyphCodes, glyphAdvances));
+ 
+@@ -632,6 +637,24 @@
+         return boundsForText(glyphCodes, glyphAdvances, fontSize);
+     }
+     /**
++     * Returns the advance, in twips to the next character. this method can be
++     * used when laying out sequences of individual characters, rather than as 
++     * as single string.
++     * 
++     * @param c the character that will be displayed.
++     * @param fontSize the size of the font the character will be rendered in.
++     * @return the distance to the next character.
++     */
++    public int advanceForChar(char c, int fontSize)
++    {
++        float scaleFactor = ((float)fontSize) / 1024.0f;
++
++        int index = characterTable[c];
++        int advance = (int) (glyphTable[index].advance * scaleFactor);
++        
++        return advance;
++    }
++    /**
+      * defineShape converts a string into an equivalent shape representation. The
+      * shape is constructed from glyphs used to represent each character in the 
+      * string and filled with the specified colour.
+@@ -798,8 +821,8 @@
+          as the transform used for the glyphs otherwise the advance values are not 
+          scaled accordingly.
+          */
+-        AffineTransform at = AffineTransform.getTranslateInstance(translateX, translateY);
+-        font = font.deriveFont(at);
++//        AffineTransform at = AffineTransform.getTranslateInstance(translateX, translateY);
++//        font = font.deriveFont(at);
+         font = font.deriveFont((float)scaleX);
+ 
+         missingGlyph = font.getMissingGlyphCode();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000080.html">[Transform-svn] r140 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000082.html">[Transform-svn] r142 - trunk/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,763 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r205 - in trunk/doc: releases web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-July/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r205%20-%20in%20trunk/doc%3A%20releases%20web&In-Reply-To=%3C200607021103.k62B3ALO001900%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000142.html">
+   <LINK REL="Next"  HREF="000144.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r205 - in trunk/doc: releases web</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r205%20-%20in%20trunk/doc%3A%20releases%20web&In-Reply-To=%3C200607021103.k62B3ALO001900%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r205 - in trunk/doc: releases web">smackay at berlios.de
+       </A><BR>
+    <I>Sun Jul  2 13:03:10 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000142.html">[Transform-svn] r204 - trunk/doc/web
+</A></li>
+        <LI>Next message: <A HREF="000144.html">[Transform-svn] r206 - trunk/doc/web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#143">[ date ]</a>
+              <a href="thread.html#143">[ thread ]</a>
+              <a href="subject.html#143">[ subject ]</a>
+              <a href="author.html#143">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-07-02 13:02:50 +0200 (Sun, 02 Jul 2006)
+New Revision: 205
+
+Added:
+   trunk/doc/releases/transform-pre-2.1.4.txt
+   trunk/doc/releases/transform-pre-2.2.0.txt
+   trunk/doc/releases/transform-pre-3.0.0.txt
+   trunk/doc/web/planned.html
+Removed:
+   trunk/doc/web/roadmap.html
+Log:
+Added table for web site that will contain release notes for upcoming releases.
+
+Added: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,43 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.1.4.
++------------------------------------------------------------
++
++The release will improve the test coverage by adding more TestNG suites and 
++unit test classes.
++
++
++Bug Fixes
++    None scheduled
++
++Class Changes
++    None scheduled
++    
++Testing Changes
++    New unit test classes and suites.
++
++Package Changes
++    Non scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++-----------------
++  Class Changes  
++-----------------
++
++-------------------
++  Testing Changes  
++-------------------
++
++1. New unit test classes and suites.
++
++Test coverage will be improved with classes and suites to perform unit testing 
++for the following classes:
++
++
++-------------------
++  Package Changes  
++-------------------
++
+
+Added: trunk/doc/releases/transform-pre-2.2.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.2.0.txt	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/releases/transform-pre-2.2.0.txt	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,70 @@
++----------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.2.
++----------------------------------------------------------
++
++The release will improve the test coverage by adding more TestNG suites and 
++unit test classes.
++
++
++Bug Fixes
++    None scheduled
++
++Class Changes
++    JPEG Images have width and height.
++    FSFrame - a new class for organizing the timeline within movies.
++    FSLayer - a new class for organizing the animation of objects within movies.
++    
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++-----------------
++  Class Changes  
++-----------------
++
++1. JPEG Images have width and height.
++
++Accessor methods to get the width and height of a JPEG encoded image are 
++added to the FSDefineJPEGImage, FSDefineJPEGImage2 and FSDefineJPEGImage3
++classes.
++
++    public int getWidth();
++    public int getHeight();
++
++No set methods are added, the width and height are decoded from the image data 
++whenver the object is decoded or the setImage() method is used.
++
++2. FSFrame - a new class for organizing the timeline within movies.
++
++FSFrame is an upgraded version of the Frame class currently available on the 
++Useful Code page with the addition of a frame number attribute. 
++
++Grouping together all the objects associated with a frame simplifies greatly the 
++task of creation and editing a movie. However supported numbered frames becomes
++really useful when combined with the new FSLayer class.
++
++3. FSLayer - a new class for organizing the animation of objects within movies.
++
++Currently all the objects must be created and positioned for successive frames.
++This makes creating of complex animations with Transform next to impossible 
++without careful coding.
++
++With the FSLayer class, separate timelines can be created for each object. With
++each frame numbered using the FSFrame class all the layers can easily be aligned 
++and flattened to create the final animation. 
++
++-------------------
++  Testing Changes  
++-------------------
++
++-------------------
++  Package Changes  
++-------------------
++
+
+Added: trunk/doc/releases/transform-pre-3.0.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-3.0.0.txt	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/releases/transform-pre-3.0.0.txt	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,177 @@
++-------------------------------------------------
++  Release Notes for Transform SWF, Version 3.0. 
++-------------------------------------------------
++
++IMPORTANT: This document contains the set of proposed changes for version 3.0 
++of the Transfrom SWF framework. This document will be updated regularly and 
++everything is, of course, subject to change.
++ 
++Introduction
++Over the past year I have been involved in projects that used existing Flash 
++files as a template. Transform was used to decode the file then update or 
++replace objects to create a customised version.
++
++The changes proposed for Transform 3.0 will update the code to include all 
++the lessons learned from this work and also generally clean up the code base - 
++fixing mistakes, dumb decisions and generally making the framework easier to 
++use.
++
++Architecturally the changes should be minor - the same philosophy of 
++providing a low-level API which exposes all the data structures in a Flash file 
++as objects will be maintained. Files will still be generated and parsed in the 
++same way. Most of the changes will essentially be cosmetic - fixing code that 
++simply bad or poorly implemented. As a result migrating code from Transform 2 
++to Transform 3 should be very simple and extensive rewrites will not be 
++necessary.
++
++Class Changes
++
++    Flatten class hierarchy and use interfaces to identify object types.
++    Enforce encapsulation and add support for references.
++    Add factory methods.
++    More use of Java 'native' classes.
++    
++    Rename existing classes:
++    
++        Rename FSGradient to FSGradientColor.
++        Rename FSEnvelope to FSSoundLevel.
++        Rename FSShapeStyle to FSStyle.
++        Rename FSUnknownObject to FSBinaryObject.
++
++    New Classes:
++
++        FSScript - a wrapper for encoded actions generated by Translate.
++        FSEnvelope - a collection class for FSSoundLevels.
++        FSGradient - a collection class for FSGradientColors.
++        FSGlyph - a collection class for font information.
++
++Internal Class Changes
++
++    To be defined
++
++Package Changes
++
++    None planned.
++
++
++-----------------
++  Class Changes
++-----------------
++
++1. Flatten class hierarchy and use interfaces to identify object types.
++
++In short the current class hierarchy: 
++
++    FSTransformObject -&gt; FSMovieObject -&gt; FSDefineObject 
++    
++adds very little to the project. Code reuse is minimal and the overhead slows 
++down the encoding and decoding of files.
++
++To fix this the hierarchy will be flattened to a single level. For code that 
++need to identify where an object was a definition or a display list command Java 
++interfaces will be used to effectively create types of object. For example 
++rather than inheriting from FSTransformObject objects will implement the 
++FSTransformable interface which defines where an object knows how to encode and 
++decode itself from binary data.
++
++Examples of the interfaces that will be defined include:
++
++    public interface Transformable
++    {
++        public int decode(FSCoder coder);
++        public void precode(FSCoder coder);
++        public int encode(FSCoder coder);
++    }
++
++    public interface MovieObject
++    {
++        public int getType();
++        public boolean isDefinition();
++        public boolean isShape();
++        public boolean isImage();
++        public boolean isSound();
++        public boolean isFont();
++        public boolean isText();
++    }
++    
++    public interface DefinitionObject
++    {
++        public int getIdentifier();
++        public void setIdentifier(int identifier);
++    }
++
++The methods, of course, is all subject to change should a better idea come 
++to light.
++
++
++2. Enforce encapsulation and add support for references.
++
++Flash files are simply large data structures. An object in Transform is 
++simply a data structure that knows how to encode and decode itself. As a result 
++a deliberate decision was taken to break encapsulation and support accessor 
++methods that simply used references rather than copies. This avoided the 
++overhead of creating trees of objects whenever the objects in a Flash file were 
++traversed. Enforcing encapsulation would have required creating several trees 
++of objects as the graph was traversed to change for example a small-grained 
++object such as a shape's colour.
++
++The move to use lazily decoded arrays potentially requires encapsulation to 
++be enforced since it would make it explicitly clear when an array of objects 
++was modified and required encoding when a files was saved.
++
++For the 3.0 release the default policy will most likely be that normal 
++get/set accessor methods create copies of objects. Methods will be added to 
++return references so that excessive copying when traversing the object tree is 
++avoided.
++
++
++3. Add factory methods.
++
++Constructors for simple objects such as shape definitions and some display 
++list commands are easy to use. However for multipurpose objects which have 
++optional attributes including constructors for every option is tedious and 
++confusing, FSPlaceObject2 is the obvious culprit. The basic set of constructors
++was standardised in version 2.1. For version 3.0 the factory methods will be
++updated.
++
++
++4. More use of Java 'native' classes.
++
++The FSMovie class is the obvious example of how classes in Transform fail to 
++make use of Java classes. Rather than using File objects the names of Flash 
++files are presented using Strings - which are used internally to create File 
++objects. This situation arose as I wanted to keep the API for the Java and C++ 
++versions as close as possible to minimise the effort of maintaining the code - 
++a poor decision. So Transform 3.0 will make better use of Java objects to provide 
++a more 'natural' API.
++
++
++5. Rename existing classes.
++
++With a new version comes a chance to clean up and ugliness. The following 
++classes will be renamed to make their role clearer and hopefully more intuitive:
++
++Rename FSGradient to FSGradientColor to support the new FSGradient collection 
++class for FSGradientColours - specifying how the colour of a shape changes 
++across the Gradient Square.
++
++Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class 
++for a FSSoundLevels which describes the waveform applied to a sound.
++
++Rename FSShapeStyle to FSStyle - easier to type.
++
++Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly 
++by Transform Utilities classes to generate encoded version of objects.
++
++ 
++6. New Classes
++
++The new classes that will be added in Transform 3.0 are designed to support 
++lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
++FSGradient are  simple collection classes.
++
++FSGlyph is more complicated as it will support all the information that 
++describes a font glyph: shape, advance, character code and bounding box. This 
++will simply the use of the FSTextConstructor class in Tranform Utilities and 
++handling of the FSDefineFont2 class in Transform.
++
+
+Added: trunk/doc/web/planned.html
+===================================================================
+--- trunk/doc/web/planned.html	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/web/planned.html	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,39 @@
++&lt;table class=&quot;release&quot;&gt;
++
++&lt;tr&gt;
++&lt;th class=&quot;date&quot;&gt;Planned Date&lt;/th&gt;
++&lt;th class=&quot;date&quot;&gt;Last Updated&lt;/th&gt;
++&lt;th class=&quot;version&quot;&gt;Version&lt;/th&gt;
++&lt;th&gt;Description&lt;/th&gt;
++&lt;th class=&quot;release&quot;&gt;Details&lt;/th&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;31st July 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;2nd July 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.4&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Add more unit test suites. Bug Fixes&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-2.1.4.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;Q3 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;2nd July 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.2.0&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;New classes to simplify creating and organiding movies; 
++JPEG images have width and height; Bug Fixes.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-2.2.0.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;Q4 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;2nd July 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;3.0.0&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Improved design.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-3.0.0.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;/table&gt;
+
+Deleted: trunk/doc/web/roadmap.html
+===================================================================
+--- trunk/doc/web/roadmap.html	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/web/roadmap.html	2006-07-02 11:02:50 UTC (rev 205)
+@@ -1,289 +0,0 @@
+-&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=content-type content=&quot;text/html;  charset=ISO-8859-1&quot;&gt;
+&lt;title&gt;Flagstone Software :: Road Map for Transform SWF&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/flagstone.css&quot;&gt;
+&lt;script language=&quot;JavaScript&quot; src=&quot;/js/imageload.js&quot;&gt;&lt;/script&gt;
+&lt;script language=&quot;JavaScript&quot; src=&quot;/js/imageswap.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;script type='text/javascript'&gt;function Go(){return}&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/js/menu_var.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/js/menu_com.js&quot;&gt;&lt;/script&gt;
+&lt;noscript&gt;Your browser does not support script&lt;/noscript&gt;
+
+&lt;div class=&quot;page&quot;&gt;
+
+&lt;div class=&quot;header&quot;&gt;
+&lt;img src=&quot;/images/flagstone_header.gif&quot; alt=&quot;Flagstone Software&quot; width=760 height=77&gt;
+&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; class=&quot;sitemenu&quot;&gt;
+&lt;tr&gt;
+&lt;td width=150 bgcolor=&quot;#9A1F31&quot;&gt;&lt;a href=&quot;/index.html&quot; onmouseover=&quot;imageSwap('home', 'homeOn');&quot; onmouseout=&quot;imageSwap('home', 'homeOff');&quot;&gt;&lt;img src=&quot;/images/home_off.gif&quot; alt=&quot;[Home]&quot; wi!
+ dth=77 height=29 border=0 name=&quot;home&quot;&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td width=29&gt;&lt;img src=&quot;/images/diagonal_divider.gif&quot; alt=&quot;&quot; width=29 height=29&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#C43F52&quot;&gt;&lt;div id='MenuPos' style='position:left; width:440; height:27;'&gt;&lt;img src='/images/spacer.gif' width='440' height='27'&gt;&lt;/div&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#C43F52&quot;&gt;&lt;img src='/images/spacer.gif' width='141' height='27'&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;content&quot;&gt;
+-
+-&lt;h1&gt;Road Map for Transform SWF&lt;/h1&gt;
+-
+-&lt;p&gt;&lt;b&gt;Last Updated: &lt;/b&gt;4th March 2006&lt;/p&gt;
+-
+-&lt;p&gt; Here is the proposed sets of changes to the existing release and plans for 
+-features that will be included in the next major release of Transform. As always, 
+-plans are subject to change. Any suggestions, good ideas or complaints are 
+-welcome.&lt;/p&gt;
+-
+-&lt;h2&gt;Planned Changes for Transform 2.1 (Released 7th March 2006)&lt;/h2&gt;
+-
+-&lt;ol&gt;
+-&lt;li&gt;Deprecate the MovieListener interface and classes.&lt;/li&gt;
+-&lt;li&gt;Integrate Transform Utilties classes to create a unified release.&lt;/li&gt;
+-&lt;li&gt;A new class, FSCoderException will report errors when encoding and decoding files.&lt;/li&gt;
+-&lt;li&gt;Lazy decoding of arrays.&lt;/li&gt;
+-&lt;li&gt;Create canonical versions of simple objects.&lt;/li&gt;
+-&lt;/ol&gt;
+-   
+-&lt;h3&gt;Deprecate the Movie Listener interface and classes.&lt;/h3&gt;
+-&lt;p&gt;The FSMovieListener interface was originally used to support Describe. When a 
+-movie was parsed the values decoded were reported to a FSMovieListener. This 
+-allowed Describe to build a tree of objects so the contents of a Flash file 
+-could be browsed.&lt;/p&gt;
+-
+-&lt;p&gt;The interface also allowed errors to be reported so a file could be decoded 
+-even if part of it was corrupted - some third-party tools are known to contain 
+-bugs that generate errors. The Flash Player is robust when encountering this 
+-type of error so the Movie Listener interface was an attempt to introduce 
+-robustness into Transform.&lt;/p&gt;
+-
+-&lt;p&gt;In practice the value of the interface was limited. Files containing errors 
+-which would cause errors were relatively unusual and when an error was detected 
+-it was not obvious that recovering form the error was useful.&lt;/p&gt;
+-
+-&lt;p&gt;The Movie Listener interface will be deprecated for version 2.1 then removed 
+-in version 2.2. The classes affected are FSCoder, FSMovie, FSMovieListener and 
+-FSMovieEvent.&lt;/p&gt;
+-
+-&lt;h3&gt;Integrate Transform Utilities classes to create a unified release.&lt;/h3&gt;
+-
+-&lt;p&gt;For Transform 2.1 the Transform Utilities classes will be included into 
+-releases of the Transform framework. Previous editions of the roadmap proposed
+-merging the packages together however the benefits do not justify the changes
+-to existing code - though only import statements would be affected.&lt;/p&gt;
+-
+-&lt;h3&gt;A new class, FSCoderException will report errors when encoding and decoding files.&lt;/h3&gt;
+-
+-&lt;p&gt;If an error occurs when encoding or decoding a movie then an IOException is 
+-reported (in methods where MovieListener is not used). A new exception class 
+-FSCoderException will be used to report the object and location in the file 
+-that causes the error. This will give the benefits that the MovieListener
+-interface provided by accurately reporting the location in a file so that the 
+-error can be debugged. The exception will be a subclass of IOException so no API
+-changes are required.&lt;/P&gt;
+-
+-&lt;h3&gt;Lazy decoding of arrays.&lt;/h3&gt;
+-
+-&lt;p&gt;When using a Flash file as a template the changes are at a high level, for 
+-example replacing images, sounds, shapes and text. As a result decoding the 
+-small-grain objects in a file is a waste of resources. Examples of small grain 
+-objects are:
+-
+-&lt;ul&gt;
+-&lt;li&gt;Actions&lt;/li&gt;
+-&lt;li&gt;Line and fill styles&lt;/li&gt;
+-&lt;li&gt;Shape elements: FSLine, FSCurve and FSShapeStyle&lt;/li&gt;
+-&lt;li&gt;Sound envelopes&lt;/li&gt;
+-&lt;li&gt;Gradient Fills&lt;/li&gt;
+-&lt;li&gt;Text Characters&lt;/li&gt;
+-&lt;/ul&gt;
+-&lt;/p&gt;
+-
+-&lt;p&gt;Arrays containing small-grained objects will be lazily decoded when an 
+-accessor method is used for the first time to access the array. The decoding 
+-process will be completely hidden and the use of some of the new collection 
+-classes, see below should simplify the process.&lt;/p&gt;
+-
+-&lt;p&gt;Originally this idea was planned for Transform 3.0 however in a quiet moment
+-I tried it for actions and shapes (in shape definitions and fonts). The 
+-performance gains are enormous. Benchmarked on a suite of nearly 400 &quot;real-world&quot;
+-Flash files the speed of decoding a file was between 0 and 420 times faster!!! 
+-The larger the file the more impressive the figure. The average improvement was 
+-still 15 times.&lt;/p&gt;
+-
+-&lt;P&gt;So lazy decoding of actions and shapes are in for release 2.1. Lazy decoding
+-of line and fill styles, gradients and text are probably not worth it given 
+-that the number of objects involved is small - it might not be worthwhile even
+-for version 3.0.&lt;/p&gt;
+-
+-&lt;h3&gt;Create canonical versions of simple objects.&lt;/h3&gt;
+-
+-&lt;p&gt;Another optimisation that should speed up the process of decoding Flash files 
+-is to replace constant objects with canonical versions. Byte-code actions, 
+-created using the FSAction class are the obvious example. Rather than creating 
+-repeated copies of objects representing simple operations such as additions, 
+-class methods such as FSAction.Add() will return a reference to a constant 
+-singleton.&lt;/p&gt;
+-
+-&lt;p&gt;This update is trivial in comparison to lazy decoding of actions but it 
+-should make a difference if only in Translate which deals with nothing but
+-actions, particularly if the compiler is being used on a server to compile 
+-large numbers of scripts.&lt;/p&gt;
+-
+-&lt;h2&gt;Proposed Changes for Transform 3.0&lt;/h2&gt;
+-&lt;p&gt;Over the past year I have been involved in projects that used existing Flash 
+-files as a template. Transform was used to decode the file then update or 
+-replace objects to create a customised version.&lt;/p&gt;
+-
+-&lt;p&gt;The changes proposed for Transform 3.0 will update the code to include all 
+-the lessons learned from this work and also generally clean up the code base - 
+-fixing mistakes, dumb decisions and generally making the framework easier to 
+-use.&lt;/p&gt;
+-
+-&lt;p&gt;Architecturally the changes should be minor - the same philosophy of 
+-providing a low-level API which exposes all the data structures in a Flash file 
+-as objects will be maintained. Files will still be generated and parsed in the 
+-same way. Most of the changes will essentially be cosmetic - fixing code that 
+-simply bad or poorly implemented. As a result migrating code from Transform 2 
+-to Transform 3 should be very simple and extensive rewrites will not be 
+-necessary.&lt;/p&gt;
+-
+-&lt;p&gt;The current list of changes are:
+-
+-&lt;ul&gt;
+-&lt;li&gt;Flatten class hierarchy and use interfaces to identify object types.&lt;/li&gt;
+-&lt;li&gt;Enforce encapsulation and add support for references.&lt;/li&gt;
+-&lt;li&gt;Simplify constructors and add factory methods.&lt;/li&gt;
+-&lt;li&gt;More use of Java 'native' classes.&lt;/li&gt;
+-&lt;li&gt;Changes to existing classes.
+-&lt;ul&gt;
+-&lt;li&gt;Rename FSGradient to FSGradientColor.&lt;/li&gt;
+-&lt;li&gt;Rename FSEnvelope to FSSoundLevel.&lt;/li&gt;
+-&lt;li&gt;Rename FSShapeStyle to FSStyle.&lt;/li&gt;
+-&lt;li&gt;Rename FSUnknownObject to FSBinaryObject.&lt;/li&gt;
+-&lt;/ul&gt;
+-&lt;/li&gt;
+-&lt;li&gt;New Classes
+-&lt;ul&gt;
+-&lt;li&gt;FSFrame - similar to the Frame class on the Useful Code page.&lt;/li&gt;
+-&lt;li&gt;FSLayer - a collection class for Frames.&lt;/li&gt;
+-&lt;li&gt;FSScript - a wrapper for encoded actions generated by Translate.&lt;/li&gt;
+-&lt;li&gt;FSEnvelope - a collection class for FSSoundLevels.&lt;/li&gt;
+-&lt;li&gt;FSGradient - a collection class for FSGradientColors.&lt;/li&gt;
+-&lt;li&gt;FSGlyph - a collection class for font information.&lt;/li&gt;
+-&lt;/ul&gt;
+-&lt;/li&gt;
+-&lt;/ul&gt;
+-      
+-&lt;h3&gt;Flatten class hierarchy and use interfaces to identify object types.&lt;/h3&gt;
+-
+-&lt;p&gt;In short the current class hierarchy: FSTransformObject -&gt; FSMovieObject -&gt; 
+-FSDefineObject adds very little to the project. Code reuse is minimal and the 
+-overhead slows down the encoding and decoding of files.&lt;/p&gt;
+-
+-&lt;p&gt;To fix this the hierarchy will be flattened to a single level. For code that 
+-need to identify where an object was a definition or a display list command Java 
+-interfaces will be used to effectively create types of object. For example 
+-rather than inheriting from FSTransformObject objects will implement the 
+-FSTransformable interface which defines where an object knows how to encode and 
+-decode itself from binary data.&lt;/p&gt;
+-
+-&lt;p&gt;Examples of the interfaces that will be defined include:
+-
+-&lt;pre&gt;
+-public interface Transformable
+-{
+-    public int decode(FSCoder coder);
+-    public void precode(FSCoder coder);
+-    public int encode(FSCoder coder);
+-}
+-
+-public interface MovieObject
+-{
+-    public int getType();
+-    public boolean isDefinition();
+-    public boolean isShape();
+-    public boolean isImage();
+-    public boolean isSound();
+-    public boolean isFont();
+-    public boolean isText();
+-}
+-public interface DefinitionObject
+-{
+-    public int getIdentifier();
+-    public void setIdentifier(int identifier);
+-}
+-&lt;/pre&gt;
+-&lt;/P&gt;
+-
+-&lt;p&gt;The methods, of course, is all subject to change should a better idea come 
+-to light.&lt;/p&gt;
+-
+-&lt;h3&gt;Enforce encapsulation and add support for references.&lt;/h3&gt;
+-
+-&lt;p&gt;Flash files are simply large data structures. An object in Transform is 
+-simply a data structure that knows how to encode and decode itself. As a result 
+-a deliberate decision was taken to break encapsulation and support accessor 
+-methods that simply used references rather than copies. This avoided the 
+-overhead of creating trees of objects whenever the objects in a Flash file were 
+-traversed. Enforcing encapsulation would have required creating several trees 
+-of objects as the graph was traversed to change for example a small-grained 
+-object such as a shape's colour.&lt;/p&gt;
+-
+-&lt;p&gt;The move to use lazily decoded arrays potentially requires encapsulation to 
+-be enforced since it would make it explicitly clear when an array of objects 
+-was modified and required encoding when a files was saved.&lt;/p&gt;
+-
+-&lt;p&gt;For the 3.0 release the default policy will most likely be that normal 
+-get/set accessor methods create copies of objects. Methods will be added to 
+-return references so that excessive copying when traversing the object tree is 
+-avoided.&lt;/p&gt;
+-
+-&lt;h3&gt;Simplify constructors and add factory methods.&lt;/h3&gt;
+-
+-&lt;p&gt;Constructors for simple objects such as shape definitions and some display 
+-list commands are easy to use. However for multipurpose objects which have 
+-optional attributes including constructors for every option is tedious and 
+-confusing, FSPlaceObject2 is the obvious culprit.&lt;/p&gt;
+-
+-&lt;p&gt;For Transform 3.0 it is proposed to include a fixed, basic set of 
+-constructors then add factory methods to generate objects with specific set of 
+-attributes. The current basic set of constructors includes:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-   FSObject()                 /* create with default values */
+-   FSObject(values...)        /* create with a specific set of values */
+-   FSObject(FSCoder coder)    /* initialise from binary encoded data */
+-   FSObject(FSObject object)  /* copy constructor */
+-&lt;/pre&gt;
+-
+-&lt;p&gt;The copy constructor will be used to replace the clone() method, largely for 
+-aesthetic reasons.&lt;/p&gt;
+-
+-&lt;h3&gt;More use of Java 'native' classes.&lt;/h3&gt;
+-
+-&lt;p&gt;The FSMovie class is the obvious example of how classes in Transform fail to 
+-make use of Java classes. Rather than using File objects the names of Flash 
+-files are presented using Strings - which are used internally to create File 
+-objects. This situation arose as I wanted to keep the API for the Java and C++ 
+-versions as close as possible to minimise the effort of maintaining the code - 
+-a poor decision. So Transform 3.0 will make better use of Java objects to provide 
+-a more 'natural' API.&lt;/p&gt;
+-
+-&lt;h3&gt;Changes to existing classes.&lt;/h3&gt;
+-
+-&lt;p&gt;With a new version comes a chance to clean up and ugliness. The following 
+-classes will be renamed to make their role clearer and hopefully more intuitive:&lt;/p&gt;
+-
+-&lt;ul&gt;
+-&lt;li&gt;Rename FSGradient to FSGradientColor to support the new FSGradient collection class for FSGradientColours - specifying how the colour of a shape changes across the Gradient Square.&lt;/li&gt;
+-&lt;li&gt;Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class for a FSSoundLevels which describes the waveform applied to a sound.&lt;/li&gt;
+-&lt;li&gt;Rename FSShapeStyle to FSStyle - easier to type.&lt;/li&gt;
+-&lt;li&gt;Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly by Transform Utilities classes to generate encoded version of objects.&lt;/li&gt;
+-&lt;/ul&gt;
+- 
+-&lt;h3&gt;New Classes&lt;/h3&gt;
+-
+-&lt;p&gt;The new classes that will be added in Transform 3.0 are designed to support 
+-lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
+-FSGradient are  simple collection classes.&lt;/p&gt;
+-
+-&lt;p&gt;FSGlyph is more complicated as it will support all the information that 
+-describes a font glyph: shape, advance, character code and bounding box. This 
+-will simply the use of the FSTextConstructor class in Tranform Utilities and 
+-handling of the FSDefineFont2 class in Transform.&lt;/p&gt;
+-
+-&lt;p&gt;The two most interesting new classes are FSFrame and FSLayer. FSFrame is an 
+-upgraded version of the Frame class currently available on the Useful Code page. 
+-Adding a frame number attribute increases the potential uses of Transform 
+-enormously:&lt;/p&gt;
+-
+-&lt;ul&gt;
+-&lt;li&gt;Adding code to Transform to support animation of objects now becomes much 
+-easier: simply create two frames defining the start and final positions of an 
+-object then pass then to a method (yet to be defined) to interpolate the 
+-object's position as the animation is played frame-by-frame.&lt;/li&gt;
+-&lt;li&gt;When combined with the Layer object it simplifies creating animations. 
+-Separate layers for each object to be animated can be created. Including the 
+-number in each frame object allows a collection of Layers to be easily 
+-flattened to create the final animation. Currently all the objects must be 
+-created and positioned for successive frames - this makes creating of complex 
+-animations with Transform next to impossible without careful coding.&lt;/li&gt;
+-&lt;/ul&gt;
+-
+-    
+-      &lt;/div&gt;
+&lt;div class=&quot;footer&quot;&gt;
+Copyright 2001-2005, Flagstone Software. All rights reserved. 
+Please read our &lt;a href=&quot;/privacy.html&quot;&gt;Privacy Policy&lt;/a&gt; and 
+&lt;a href=&quot;/legal.html&quot;&gt;Legal Notices&lt;/a&gt;.
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000142.html">[Transform-svn] r204 - trunk/doc/web
+</A></li>
+	<LI>Next message: <A HREF="000144.html">[Transform-svn] r206 - trunk/doc/web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#143">[ date ]</a>
+              <a href="thread.html#143">[ thread ]</a>
+              <a href="subject.html#143">[ subject ]</a>
+              <a href="author.html#143">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

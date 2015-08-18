@@ -1,0 +1,399 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r429 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r429%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804022122.m32LM2U7006304%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000364.html">
+   <LINK REL="Next"  HREF="000366.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r429 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r429%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804022122.m32LM2U7006304%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r429 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  2 23:22:02 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000364.html">[Transform-svn] r428 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000366.html">[Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#365">[ date ]</a>
+              <a href="thread.html#365">[ thread ]</a>
+              <a href="subject.html#365">[ subject ]</a>
+              <a href="author.html#365">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-02 23:22:00 +0200 (Wed, 02 Apr 2008)
+New Revision: 429
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSMovie.java
+   dev/dev-3-0/src/com/flagstone/transform/FSVideo.java
+Log:
+Added complementary methods to encode/decode file using either String path or File arguments.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMovie.java	2008-04-02 10:26:24 UTC (rev 428)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMovie.java	2008-04-02 21:22:00 UTC (rev 429)
+@@ -230,7 +230,7 @@
+ 	 * error occurs while reading and parsing the file then an exception is
+ 	 * thrown.
+ 	 * 
+-	 * @param fileName
++	 * @param path
+ 	 *            the path to the Flash file that will be parsed.
+ 	 * 
+ 	 * @throws FileNotFoundException -
+@@ -242,26 +242,49 @@
+ 	 * @throws IOException -
+ 	 *             if an I/O error occurs while reading the file.
+ 	 */
+-	public FSMovie(String fileName) throws IOException, DataFormatException
++	public FSMovie(String path) throws IOException, DataFormatException
+ 	{
+-		decodeFromFile(fileName);
++		decodeFromFile(new File(path));
+ 	}
+ 
+ 	/**
++	 * Constructs an FSMovie object and decodes the contents of the specified
++	 * file to generate an array of objects representing the Flash file. If an
++	 * error occurs while reading and parsing the file then an exception is
++	 * thrown.
++	 * 
++	 * @param file
++	 *            the Flash file that will be parsed.
++	 * 
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws FSCoderException -
++	 *             if an error occurs while decoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while reading the file.
++	 */
++	public FSMovie(File file) throws IOException, DataFormatException
++	{
++		decodeFromFile(file);
++	}
++
++	/**
+ 	 * Constructs an FSMovie object and decodes the binary data presented in the
+ 	 * byte array to generate an array of objects representing the Flash data.
+ 	 * If an error occurs while parsing the data then an Exception is thrown.
+ 	 * 
+ 	 * @param data
+ 	 *            an array of bytes containing the Flash binary data.
+-	 * @throws DataFormatException -
+-	 *             if the file does not contain Flash data.
+ 	 * @throws FSCoderException -
+ 	 *             if an error occurs while decoding the file.
+ 	 * @throws IOException -
+ 	 *             if an I/O error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
+ 	 */
+-	public FSMovie(byte[] data) throws DataFormatException, IOException
++	public FSMovie(byte[] data) throws IOException, DataFormatException
+ 	{
+ 		decodeFromData(data);
+ 	}
+@@ -607,7 +630,7 @@
+ 	 * they were decoded from the file. If an error occurs while reading and
+ 	 * parsing the file then an exception is thrown.
+ 	 * 
+-	 * @param fileName
++	 * @param path
+ 	 *            the path to the Flash file that will be parsed.
+ 	 * @throws FileNotFoundException -
+ 	 *             if an error occurs while reading the file.
+@@ -618,16 +641,35 @@
+ 	 * @throws IOException -
+ 	 *             if an I/O error occurs while reading the file.
+ 	 */
+-	public void decodeFromFile(String fileName) throws FileNotFoundException,
++	public void decodeFromFile(String path) throws FileNotFoundException,
+ 					DataFormatException, IOException
+ 	{
+-		FileInputStream fileContents = null;
++		decodeFromFile(new File(path));
++	}
+ 
+-		File swfFile = new File(fileName);
++	/**
++	 * Decodes the contents of the specified file. An object for each tag
++	 * decoded from the file is placed in the Movie's object array in the order
++	 * they were decoded from the file. If an error occurs while reading and
++	 * parsing the file then an exception is thrown.
++	 * 
++	 * @param file
++	 *            the Flash file that will be parsed.
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws FSCoderException -
++	 *             if an error occurs while decoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while reading the file.
++	 */
++	public void decodeFromFile(File file) throws FileNotFoundException,
++					DataFormatException, IOException
++	{
++		FileInputStream fileContents = new FileInputStream(file);
+ 
+-		fileContents = new FileInputStream(swfFile);
+-
+-		int fileLength = (int) swfFile.length();
++		int fileLength = (int) file.length();
+ 		byte[] contents = new byte[fileLength];
+ 
+ 		fileContents.read(contents);
+@@ -707,7 +749,7 @@
+ 	 * Encodes the array of objects and writes the data to the specified file.
+ 	 * If an error occurs while encoding the file then an exception is thrown.
+ 	 * 
+-	 * @param fileName
++	 * @param path
+ 	 *            the path to the Flash file that the movie will be encoded to.
+ 	 * 
+ 	 * @throws FileNotFoundException -
+@@ -717,13 +759,34 @@
+ 	 * @throws IOException -
+ 	 *             if an I/O error occurs while writing the file.
+ 	 */
+-	public void encodeToFile(String fileName) throws FileNotFoundException,
+-					IOException
++	public void encodeToFile(String path) throws FileNotFoundException, IOException
+ 	{
+-		FileOutputStream fileContents = null;
++		FileOutputStream fileContents = new FileOutputStream(path);
+ 
+-		fileContents = new FileOutputStream(fileName);
++		byte[] encodedData = encode();
+ 
++		fileContents.write(encodedData);
++		fileContents.close();
++	}
++
++	/**
++	 * Encodes the array of objects and writes the data to the specified file.
++	 * If an error occurs while encoding the file then an exception is thrown.
++	 * 
++	 * @param file
++	 *            the Flash file that the movie will be encoded to.
++	 * 
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while opening the file.
++	 * @throws FSCoderException -
++	 *             if an error occurs while encoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while writing the file.
++	 */
++	public void encodeToFile(File file) throws FileNotFoundException, IOException
++	{
++		FileOutputStream fileContents = new FileOutputStream(file);
++
+ 		byte[] encodedData = encode();
+ 
+ 		fileContents.write(encodedData);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSVideo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSVideo.java	2008-04-02 10:26:24 UTC (rev 428)
++++ dev/dev-3-0/src/com/flagstone/transform/FSVideo.java	2008-04-02 21:22:00 UTC (rev 429)
+@@ -149,7 +149,7 @@
+ 	 * error occurs while reading and parsing the file then an exception is
+ 	 * thrown.
+ 	 * 
+-	 * @param fileName
++	 * @param path
+ 	 *            the path to the Flash Video file that will be parsed.
+ 	 * @throws FileNotFoundException -
+ 	 *             if an error occurs while reading the file.
+@@ -158,13 +158,32 @@
+ 	 * @throws IOException -
+ 	 *             if an error occurs while reading and decoding the file.
+ 	 */
+-	public FSVideo(String fileName) throws FileNotFoundException, IOException,
+-					DataFormatException
++	public FSVideo(String path) throws IOException, DataFormatException
+ 	{
+-		decodeFromFile(fileName);
++		decodeFromFile(new File(path));
+ 	}
+ 
+ 	/**
++	 * Constructs an FSVideo object and decodes the contents of the specified
++	 * file to generate an array of objects representing the video file. If an
++	 * error occurs while reading and parsing the file then an exception is
++	 * thrown.
++	 * 
++	 * @param file
++	 *             the Flash Video file that will be parsed.
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws IOException -
++	 *             if an error occurs while reading and decoding the file.
++	 */
++	public FSVideo(File file) throws IOException, DataFormatException
++	{
++		decodeFromFile(file);
++	}
++
++	/**
+ 	 * Constructs an FSVideo object and decodes the binary data presented in the
+ 	 * byte array to generate an array of objects representing the Flash Video
+ 	 * data. If an error occurs while parsing the data then an exception is
+@@ -270,7 +289,7 @@
+ 	 * were read from the file. If an error occurs while reading and parsing the
+ 	 * file then an exception is thrown.
+ 	 * 
+-	 * @param fileName
++	 * @param path
+ 	 *            the path to the Flash Video file that will be parsed.
+ 	 * 
+ 	 * @throws FileNotFoundException -
+@@ -280,15 +299,32 @@
+ 	 * @throws IOException -
+ 	 *             if an error occurs while reading and decoding the file.
+ 	 */
+-	public void decodeFromFile(String fileName) throws FileNotFoundException,
+-					DataFormatException, IOException
++	public void decodeFromFile(String path) throws IOException, DataFormatException
+ 	{
+-		FileInputStream fileContents = null;
+-		File swfFile = new File(fileName);
++		decodeFromFile(new File(path));
++	}
+ 
+-		fileContents = new FileInputStream(swfFile);
++	/**
++	 * Decodes the contents of the specified file. An object for each tag
++	 * decoded from the file is placed in the object array in the order they
++	 * were read from the file. If an error occurs while reading and parsing the
++	 * file then an exception is thrown.
++	 * 
++	 * @param file
++	 *            the Flash Video file that will be parsed.
++	 * 
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws IOException -
++	 *             if an error occurs while reading and decoding the file.
++	 */
++	public void decodeFromFile(File file) throws IOException, DataFormatException
++	{
++		FileInputStream fileContents = new FileInputStream(file);
+ 
+-		int fileLength = (int) swfFile.length();
++		int fileLength = (int) file.length();
+ 		byte[] contents = new byte[fileLength];
+ 
+ 		fileContents.read(contents);
+@@ -310,8 +346,8 @@
+ 	 * @throws IOException -
+ 	 *             if an error occurs while reading and decoding the file.
+ 	 */
+-	public void decodeFromData(byte[] bytes) throws DataFormatException,
+-					IOException
++	public void decodeFromData(byte[] bytes) throws IOException, DataFormatException
++					
+ 	{
+ 		FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, bytes);
+ 		FSContext context = new FSContext();
+@@ -346,7 +382,7 @@
+ 	 * Encodes the array of objects and writes the data to the specified file.
+ 	 * If an error occurs while encoding the file then an exception is thrown.
+ 	 * 
+-	 * @param fileName
++	 * @param path
+ 	 *            the path to the file that the video will be encoded to.
+ 	 * 
+ 	 * @throws FileNotFoundException -
+@@ -354,10 +390,9 @@
+ 	 * @throws IOException -
+ 	 *             if an error occurs while encoding and writing the file.
+ 	 */
+-	public void encodeToFile(String fileName) throws FileNotFoundException,
+-					IOException
++	public void encodeToFile(String path) throws IOException
+ 	{
+-		FileOutputStream fileContents = new FileOutputStream(fileName);
++		FileOutputStream fileContents = new FileOutputStream(path);
+ 
+ 		byte[] encodedData = encode();
+ 
+@@ -366,6 +401,28 @@
+ 	}
+ 
+ 	/**
++	 * Encodes the array of objects and writes the data to the specified file.
++	 * If an error occurs while encoding the file then an exception is thrown.
++	 * 
++	 * @param file
++	 *            the file that the video will be encoded to.
++	 * 
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws IOException -
++	 *             if an error occurs while encoding and writing the file.
++	 */
++	public void encodeToFile(File file) throws IOException
++	{
++		FileOutputStream fileContents = new FileOutputStream(file);
++
++		byte[] encodedData = encode();
++
++		fileContents.write(encodedData);
++		fileContents.close();
++	}
++
++	/**
+ 	 * Returns the encoded representation of the array of objects that this
+ 	 * Video contains. If an error occurs while encoding the file then an
+ 	 * exception is thrown.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000364.html">[Transform-svn] r428 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000366.html">[Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#365">[ date ]</a>
+              <a href="thread.html#365">[ thread ]</a>
+              <a href="subject.html#365">[ subject ]</a>
+              <a href="author.html#365">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

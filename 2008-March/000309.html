@@ -1,0 +1,1051 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r373%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181712.m2IHC1na011653%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000308.html">
+   <LINK REL="Next"  HREF="000310.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r373%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181712.m2IHC1na011653%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 18:12:01 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000308.html">[Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000310.html">[Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#309">[ date ]</a>
+              <a href="thread.html#309">[ thread ]</a>
+              <a href="subject.html#309">[ subject ]</a>
+              <a href="author.html#309">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 18:11:57 +0100 (Tue, 18 Mar 2008)
+New Revision: 373
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java	2008-03-18 17:10:17 UTC (rev 372)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java	2008-03-18 17:11:57 UTC (rev 373)
+@@ -27,242 +27,752 @@
+  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+- 
++
+ package com.flagstone.transform;
+ 
+-/** 
+- * The FSMovieObject is the root class for objects that represent each of the 
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.Iterator;
++
++/**
++ * The FSMovieObject is the root class for objects that represent each of the
+  * tagged data structures that make up the Flash file format specification.
+- *
+- * Each of the major data structures defined in the Flash file format specification 
+- * start with a header that contains the type identifying the data structure followed 
+- * by the number of bytes that the body of the encoded data structure occupies in 
+- * the file. The FSMovieObject manages the encoding and decoding of this information.
+- *
++ * 
++ * Each of the major data structures defined in the Flash file format
++ * specification start with a header that contains the type identifying the data
++ * structure followed by the number of bytes that the body of the encoded data
++ * structure occupies in the file. The FSMovieObject manages the encoding and
++ * decoding of this information.
++ * 
+  * This class is primarily used internally in the library however the getType()
+- * method is useful when manipulating decoded Flash files. Rather than using the 
+- * runtime type checking provided in the Java environment the method can be used 
+- * to identify the class, derived from FSMovieObject, that represents each data 
++ * method is useful when manipulating decoded Flash files. Rather than using the
++ * runtime type checking provided in the Java environment the method can be used
++ * to identify the class, derived from FSMovieObject, that represents each data
+  * structure, improving performance.
+  */
+ 
+-public abstract class FSMovieObject extends FSTransformObject
++public abstract class FSMovieObject implements Cloneable, Codeable
+ {
+-    /** Type used to identify ShowFrame objects. */
+-    public static final int ShowFrame            = 1;
+-    /** Type used to identify DefineShape objects. */
+-    public static final int DefineShape          = 2;
+-    /** Type used to identify PlaceObject objects. */
+-    public static final int PlaceObject          = 4;
+-    /** Type used to identify RemoveObject objects. */
+-    public static final int RemoveObject         = 5;
+-    /** Type used to identify DefineJPEGImage objects. */
+-    public static final int DefineJPEGImage      = 6;
+-    /** Type used to identify DefineButton objects. */
+-    public static final int DefineButton         = 7;
+-    /** Type used to identify JPEGTables objects. */
+-    public static final int JPEGTables           = 8;
+-    /** Type used to identify SetBackgroundColor objects. */
+-    public static final int SetBackgroundColor   = 9;
+-    /** Type used to identify DefineFont objects. */
+-    public static final int DefineFont           = 10;
+-    /** Type used to identify DefineText objects. */
+-    public static final int DefineText           = 11;
+-    /** Type used to identify DoAction objects. */
+-    public static final int DoAction             = 12;
+-    /** Type used to identify FontInfo objects. */
+-    public static final int FontInfo             = 13;
+-    /** Type used to identify DefineSound objects. */
+-    public static final int DefineSound          = 14;
+-    /** Type used to identify StartSound objects. */
+-    public static final int StartSound           = 15;
+-    /** Type used to identify SoundStreamHead objects. */
+-    public static final int SoundStreamHead      = 18;
+-    /** Type used to identify SoundStreamBlock objects. */
+-    public static final int SoundStreamBlock     = 19;
+-// Flash 2
+-    /// Type used to identify ButtonSound objects.
+-    public static final int ButtonSound          = 17;
+-    /// Type used to identify DefineImage objects.
+-    public static final int DefineImage          = 20;
+-    /// Type used to identify DefineJPEGImage2 objects.
+-    public static final int DefineJPEGImage2     = 21;
+-    /// Type used to identify DefineShape2 objects.
+-    public static final int DefineShape2         = 22;
+-    /// Type used to identify ButtonColorTransform objects.
+-    public static final int ButtonColorTransform = 23;
+-    /// Type used to identify Protect objects.
+-    public static final int Protect              = 24;
+-// Flash 3
+-    /// Type used to identify Free objects.
+-    public static final int Free                 = 3;
+-    /// Type used to identify PlaceObject2 objects.
+-    public static final int PlaceObject2         = 26;
+-    /// Type used to identify RemoveObject2 objects.
+-    public static final int RemoveObject2        = 28;
+-    /// Type used to identify DefineShape3 objects.
+-    public static final int DefineShape3         = 32;
+-    /// Type used to identify DefineText2 objects.
+-    public static final int DefineText2          = 33;
+-    /// Type used to identify DefineButton2 objects.
+-    public static final int DefineButton2        = 34;
+-    /// Type used to identify DefineJPEGImage3 objects.
+-    public static final int DefineJPEGImage3     = 35;
+-    /// Type used to identify DefineImage2 objects.
+-    public static final int DefineImage2         = 36;
+-    /// Type used to identify DefineMovieClip objects.
+-    public static final int DefineMovieClip      = 39;
+-    /// Type used to identify FrameLabel objects.
+-    public static final int FrameLabel           = 43;
+-    /// Type used to identify SoundStreamHead2 objects.
+-    public static final int SoundStreamHead2     = 45;
+-    /// Type used to identify DefineMorphShape objects.
+-    public static final int DefineMorphShape     = 46;
+-    /// Type used to identify DefineFont2 objects.
+-    public static final int DefineFont2          = 48;
+-// Flash 4
+-    /// Type used to identify PathsArePostscript objects.
+-    public static final int PathsArePostscript   = 25;
+-    /// Type used to identify DefineTextField objects.
+-    public static final int DefineTextField      = 37;
+-    /// Type used to identify QuicktimeMovie objects.
+-    public static final int QuicktimeMovie       = 38;
+-    /// Type used to identify SerialNumber objects.
+-    public static final int SerialNumber         = 41;
+-    /// Type used to identify DefineBitsPtr objects.
+-    public static final int DefineBitsPtr        = 1023;
+-// Flash 5
+-    /// Type used to identify Export objects.
+-    public static final int Export               = 56;
+-    /// Type used to identify Import objects.
+-    public static final int Import               = 57;
+-    /// Type used to identify EnableDebugger objects.
+-    public static final int EnableDebugger       = 58;
+-// Flash 6
+-    /// Type used to identify Initialize objects.
+-    public static final int Initialize           = 59;
+-    /// Type used to identify DefineVideo objects.
+-    public static final int DefineVideo          = 60;
+-    /// Type used to identify VideoFrame objects.
+-    public static final int VideoFrame           = 61;
+-    /// Type used to identify FontInfo2 objects.
+-    public static final int FontInfo2            = 62;
+-    /// Type used to identify EnableDebugger2 objects.
+-    public static final int EnableDebugger2      = 64;
+-// Flash 7
+-    /// Type used to identify LimitScript objects.
+-    public static final int LimitScript          = 65;
+-    /// Type used to identify TabOrder objects.
+-    public static final int TabOrder             = 66;
++	/** Type used to identify ShowFrame objects. */
++	public static final int ShowFrame = 1;
+ 
+-    protected int type = 0;
+-    protected int length = 0;
+-    protected boolean extendLength = false;
++	/** Type used to identify DefineShape objects. */
++	public static final int DefineShape = 2;
+ 
+-    /**
+-     * Constructs a movie object with the specified type.
+-     * 
+-     * @param aType an identifier indicating the type of movie object.
+-     */
+-    protected FSMovieObject(int aType)
+-    {
+-        type = aType;
+-    }
+-    /**
+-     * Constructs a movie object by copying an existing one.
+-     * 
+-     * @param obj an FSMovieObject object. 
+-     */
+-    protected FSMovieObject(FSMovieObject obj)
+-    {
+-        type = obj.type;
+-        length = obj.length;
+-        extendLength = obj.extendLength;
+-    }
+-    /** 
+-     * Gets the code used that identifies the type of the object when it is 
+-     * encoded. 
+-      *
+-     * @return the code used to denote the type of the object.
+-     */
+-    public int getType() 
+-    {
+-        return type;
+-    }
+-    
+-    int getLength()
+-    {
+-        return length;
+-    }
+-    
+-    boolean getExtendLength()
+-    {
+-        return extendLength;
+-    }
+-    
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false; 
+-        
+-        if (super.equals(anObject))
+-        {
+-            result = type == ((FSMovieObject)anObject).getType();
+-        }
+-        return result;
+-    }
++	/** Type used to identify PlaceObject objects. */
++	public static final int PlaceObject = 4;
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
++	/** Type used to identify RemoveObject objects. */
++	public static final int RemoveObject = 5;
+ 
+-    public int length(FSCoder coder)
+-    {
+-        coder.context[FSCoder.Type] = type;
+-        
+-        length = 0;
+-        
+-        return length;
+-    }
++	/** Type used to identify DefineJPEGImage objects. */
++	public static final int DefineJPEGImage = 6;
+ 
+-    public void encode(FSCoder coder)
+-    {
+-        coder.beginObject(name());
++	/** Type used to identify DefineButton objects. */
++	public static final int DefineButton = 7;
+ 
+-        coder.context[FSCoder.Type] = type;
+-        
+-        if (extendLength == false &amp;&amp; length &lt; 63)
+-        {
+-            coder.writeWord((type &lt;&lt; 6) | length, 2);            
+-        }
+-        else
+-        {
+-            coder.writeWord((type &lt;&lt; 6) | 0x3F, 2);            
+-            coder.writeWord(length, 4);            
+-        }
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        coder.beginObject(name());
++	/** Type used to identify JPEGTables objects. */
++	public static final int JPEGTables = 8;
+ 
+-        type = coder.scanWord(2, false) &gt;&gt; 6;
+-        length = coder.scanWord(2, false) &amp; 0x3F;
+-        
+-        coder.context[FSCoder.Type] = type;
+-        coder.setPointer(coder.getPointer()+16);
+-        
+-        if (length == 0x3F)
+-        {
+-            length = coder.readWord(4, false);
+-            extendLength = true;
+-        }
+-    }
++	/** Type used to identify SetBackgroundColor objects. */
++	public static final int SetBackgroundColor = 9;
++
++	/** Type used to identify DefineFont objects. */
++	public static final int DefineFont = 10;
++
++	/** Type used to identify DefineText objects. */
++	public static final int DefineText = 11;
++
++	/** Type used to identify DoAction objects. */
++	public static final int DoAction = 12;
++
++	/** Type used to identify FontInfo objects. */
++	public static final int FontInfo = 13;
++
++	/** Type used to identify DefineSound objects. */
++	public static final int DefineSound = 14;
++
++	/** Type used to identify StartSound objects. */
++	public static final int StartSound = 15;
++
++	/** Type used to identify SoundStreamHead objects. */
++	public static final int SoundStreamHead = 18;
++
++	/** Type used to identify SoundStreamBlock objects. */
++	public static final int SoundStreamBlock = 19;
++
++	// Flash 2
++	// / Type used to identify ButtonSound objects.
++	public static final int ButtonSound = 17;
++
++	// / Type used to identify DefineImage objects.
++	public static final int DefineImage = 20;
++
++	// / Type used to identify DefineJPEGImage2 objects.
++	public static final int DefineJPEGImage2 = 21;
++
++	// / Type used to identify DefineShape2 objects.
++	public static final int DefineShape2 = 22;
++
++	// / Type used to identify ButtonColorTransform objects.
++	public static final int ButtonColorTransform = 23;
++
++	// / Type used to identify Protect objects.
++	public static final int Protect = 24;
++
++	// Flash 3
++	// / Type used to identify Free objects.
++	public static final int Free = 3;
++
++	// / Type used to identify PlaceObject2 objects.
++	public static final int PlaceObject2 = 26;
++
++	// / Type used to identify RemoveObject2 objects.
++	public static final int RemoveObject2 = 28;
++
++	// / Type used to identify DefineShape3 objects.
++	public static final int DefineShape3 = 32;
++
++	// / Type used to identify DefineText2 objects.
++	public static final int DefineText2 = 33;
++
++	// / Type used to identify DefineButton2 objects.
++	public static final int DefineButton2 = 34;
++
++	// / Type used to identify DefineJPEGImage3 objects.
++	public static final int DefineJPEGImage3 = 35;
++
++	// / Type used to identify DefineImage2 objects.
++	public static final int DefineImage2 = 36;
++
++	// / Type used to identify DefineMovieClip objects.
++	public static final int DefineMovieClip = 39;
++
++	// / Type used to identify FrameLabel objects.
++	public static final int FrameLabel = 43;
++
++	// / Type used to identify SoundStreamHead2 objects.
++	public static final int SoundStreamHead2 = 45;
++
++	// / Type used to identify DefineMorphShape objects.
++	public static final int DefineMorphShape = 46;
++
++	// / Type used to identify DefineFont2 objects.
++	public static final int DefineFont2 = 48;
++
++	// Flash 4
++	// / Type used to identify PathsArePostscript objects.
++	public static final int PathsArePostscript = 25;
++
++	// / Type used to identify DefineTextField objects.
++	public static final int DefineTextField = 37;
++
++	// / Type used to identify QuicktimeMovie objects.
++	public static final int QuicktimeMovie = 38;
++
++	// / Type used to identify SerialNumber objects.
++	public static final int SerialNumber = 41;
++
++	// / Type used to identify DefineBitsPtr objects.
++	public static final int DefineBitsPtr = 1023;
++
++	// Flash 5
++	// / Type used to identify Export objects.
++	public static final int Export = 56;
++
++	// / Type used to identify Import objects.
++	public static final int Import = 57;
++
++	// / Type used to identify EnableDebugger objects.
++	public static final int EnableDebugger = 58;
++
++	// Flash 6
++	// / Type used to identify Initialize objects.
++	public static final int Initialize = 59;
++
++	// / Type used to identify DefineVideo objects.
++	public static final int DefineVideo = 60;
++
++	// / Type used to identify VideoFrame objects.
++	public static final int VideoFrame = 61;
++
++	// / Type used to identify FontInfo2 objects.
++	public static final int FontInfo2 = 62;
++
++	// / Type used to identify EnableDebugger2 objects.
++	public static final int EnableDebugger2 = 64;
++
++	// Flash 7
++	// / Type used to identify LimitScript objects.
++	public static final int LimitScript = 65;
++
++	// / Type used to identify TabOrder objects.
++	public static final int TabOrder = 66;
++
++	public static final String[] name =
++	{
++		&quot;ShowFrame&quot;,
++		&quot;DefineShape&quot;,
++		&quot;Free&quot;,
++		&quot;PlaceObject&quot;,
++		&quot;RemoveObject&quot;, // 5
++		&quot;DefineJPEGImage&quot;,
++		&quot;DefineButton&quot;,
++		&quot;JPEGTables&quot;,
++		&quot;SetBackgroundColor&quot;,
++		&quot;DefineFont&quot;, // 10
++		&quot;DefineText&quot;,
++		&quot;DoAction&quot;,
++		&quot;FontInfo&quot;,
++		&quot;DefineSound&quot;,
++		&quot;StartSound&quot;, // 15
++		&quot;Unknown&quot;,
++		&quot;ButtonSound&quot;,
++		&quot;SoundStreamHead&quot;,
++		&quot;SoundStreamBlock&quot;,
++		&quot;DefineImage&quot;, // 20
++		&quot;DefineJPEGImage2&quot;, 
++		&quot;DefineShape2&quot;,
++		&quot;ButtonColorTransform&quot;,
++		&quot;Protect&quot;,
++		&quot;PathsArePostscript&quot;, // 25
++		&quot;PlaceObject2&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;RemoveObject2&quot;,
++		&quot;Unknown&quot;,
++		&quot;Unknown&quot;, // 30
++		&quot;Unknown&quot;, 
++		&quot;DefineShape3&quot;, 
++		&quot;DefineText2&quot;,
++		&quot;DefineButton2&quot;,
++		&quot;DefineJPEGImage3&quot;, // 35
++		&quot;DefineImage2&quot;, 
++		&quot;DefineTextField&quot;, 
++		&quot;QuicktimeMovie&quot;, 
++		&quot;DefineMovieClip&quot;,
++		&quot;Unknown&quot;, // 40
++		&quot;SerialNumber&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;FrameLabel&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;SoundStreamHead2&quot;, // 45
++		&quot;DefineMorphShape&quot;,
++		&quot;Unknown&quot;, 
++		&quot;DefineFont2&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;Unknown&quot;, // 50
++		&quot;Unknown&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;Unknown&quot;, // 55
++		&quot;Export&quot;, 
++		&quot;Import&quot;, 
++		&quot;EnableDebugger&quot;, 
++		&quot;Initialize&quot;, 
++		&quot;DefineVideo&quot;, // 60
++		&quot;VideoFrame&quot;, 
++		&quot;FontInfo2&quot;, 
++		&quot;Unknown&quot;, 
++		&quot;EnableDebugger2&quot;, 
++		&quot;LimitScript&quot;, // 65
++		&quot;TabOrder&quot;,
++	};
++
++	static int length(FSCoder coder, ArrayList&lt;FSMovieObject&gt; array)
++	{
++		FSMovieObject object;
++		int length = 0;
++		int total = 0;
++
++		for (Iterator&lt;FSMovieObject&gt; i = array.iterator(); i.hasNext();)
++		{
++			object = i.next();
++
++			length = object.length(coder);
++			length += (object.extendLength || length &gt;= 63) ? 6 : 2;
++
++			total += length;
++		}
++		return total;
++	}
++
++	static void encode(FSCoder coder, ArrayList&lt;FSMovieObject&gt; array)
++	{
++		FSMovieObject object;
++		int start;
++		int next;
++		int delta;
++
++		for (Iterator&lt;FSMovieObject&gt; i = array.iterator(); i.hasNext();)
++		{
++			object = i.next();
++
++			start = coder.getPointer();
++			next = start;
++			next += ((object.extendLength || object.length &gt;= 63) ? 48 : 16);
++			next += (object.length &lt;&lt; 3);
++
++			object.encode(coder);
++
++			delta = (coder.getPointer() - next) &gt;&gt; 3;
++
++			if (delta != 0)
++			{
++				coder.context[FSCoder.CodingError] = 1;
++				coder.context[FSCoder.TypeInError] = object.getType();
++				coder.context[FSCoder.StartOfError] = start &gt;&gt;&gt; 3;
++				coder.context[FSCoder.ExpectedLength] = (next - start) &gt;&gt;&gt; 3;
++				coder.context[FSCoder.Delta] = delta;
++				break;
++			}
++
++			coder.setPointer(next);
++		}
++	}
++
++	static FSMovieObject decodeObject(FSCoder coder)
++	{
++		FSMovieObject currentObject = null;
++
++		int objStart = coder.getPointer();
++		int type = coder.scanWord(2, false) &gt;&gt; 6;
++		int length = coder.scanWord(2, false) &amp; 0x3F;
++		int next = coder.getPointer() + 16 + (length &lt;&lt; 3);
++		int identifier = 0;
++
++		if (type == 0)
++		{
++			/*
++			 * Skip over the End object so it does not generate an event.
++			 */
++			coder.setPointer(next);
++			return currentObject;
++		}
++
++		if (length == 0x3F)
++		{
++			coder.adjustPointer(16);
++			length = coder.scanWord(4, false);
++			next = coder.getPointer() + 32 + (length &lt;&lt; 3);
++			coder.adjustPointer(-16);
++		}
++
++		switch (type)
++		{
++			case ShowFrame:
++				currentObject = FSShowFrame.getInstance();
++				coder.setPointer(next);
++				break;
++			case DefineShape:
++				currentObject = new FSDefineShape(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case PlaceObject:
++				currentObject = new FSPlaceObject(coder);
++				break;
++			case RemoveObject:
++				currentObject = new FSRemoveObject(coder);
++				break;
++			case DefineJPEGImage:
++				currentObject = new FSDefineJPEGImage(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineButton:
++				currentObject = new FSDefineButton(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case JPEGTables:
++				currentObject = new FSJPEGEncodingTable(coder);
++				break;
++			case SetBackgroundColor:
++				currentObject = new FSSetBackgroundColor(coder);
++				break;
++			case DefineFont:
++				currentObject = new FSDefineFont(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineText:
++				currentObject = new FSDefineText(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DoAction:
++				currentObject = new FSDoAction(coder);
++				break;
++			case FontInfo:
++				currentObject = new FSFontInfo(coder);
++				break;
++			case DefineSound:
++				currentObject = new FSDefineSound(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case StartSound:
++				currentObject = new FSStartSound(coder);
++				break;
++			case SoundStreamHead:
++				currentObject = new FSSoundStreamHead(coder);
++				break;
++			case SoundStreamBlock:
++				currentObject = new FSSoundStreamBlock(coder);
++				break;
++			// Flash 2
++			case ButtonSound:
++				currentObject = new FSButtonSound(coder);
++				break;
++			case DefineImage:
++				currentObject = new FSDefineImage(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineJPEGImage2:
++				currentObject = new FSDefineJPEGImage2(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineShape2:
++				currentObject = new FSDefineShape2(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case ButtonColorTransform:
++				currentObject = new FSButtonColorTransform(coder);
++				break;
++			case Protect:
++				currentObject = new FSProtect(coder);
++				break;
++			// Flash 3
++			case Free:
++				currentObject = new FSFree(coder);
++				break;
++			case PlaceObject2:
++				currentObject = new FSPlaceObject2(coder);
++				break;
++			case RemoveObject2:
++				currentObject = new FSRemoveObject2(coder);
++				break;
++			case DefineShape3:
++				currentObject = new FSDefineShape3(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineText2:
++				currentObject = new FSDefineText2(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineButton2:
++				currentObject = new FSDefineButton2(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineJPEGImage3:
++				currentObject = new FSDefineJPEGImage3(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineImage2:
++				currentObject = new FSDefineImage2(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineMovieClip:
++				currentObject = new FSDefineMovieClip(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case FrameLabel:
++				currentObject = new FSFrameLabel(coder);
++				break;
++			case SoundStreamHead2:
++				currentObject = new FSSoundStreamHead2(coder);
++				break;
++			case DefineMorphShape:
++				currentObject = new FSDefineMorphShape(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case DefineFont2:
++				currentObject = new FSDefineFont2(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			// Flash 4
++			case PathsArePostscript:
++				currentObject = FSPathsArePostscript.getInstance();
++				coder.setPointer(next);
++				break;
++			case DefineTextField:
++				currentObject = new FSDefineTextField(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case QuicktimeMovie:
++				currentObject = new FSQuicktimeMovie(coder);
++				break;
++			case SerialNumber:
++				currentObject = new FSSerialNumber(coder);
++				break;
++			case DefineBitsPtr:
++				currentObject = new FSPointer(coder);
++				break;
++			// Flash 5
++			case EnableDebugger:
++				currentObject = new FSEnableDebugger(coder);
++				break;
++			case Export:
++				currentObject = new FSExport(coder);
++				break;
++			case Import:
++				currentObject = new FSImport(coder);
++				break;
++			// Flash 6
++			case Initialize:
++				currentObject = new FSInitialize(coder);
++				break;
++			case DefineVideo:
++				currentObject = new FSDefineVideo(coder);
++				identifier = ((FSDefineObject) currentObject).getIdentifier();
++				break;
++			case VideoFrame:
++				currentObject = new FSVideoFrame(coder);
++				break;
++			case FontInfo2:
++				currentObject = new FSFontInfo2(coder);
++				break;
++			case EnableDebugger2:
++				currentObject = new FSEnableDebugger2(coder);
++				break;
++			// Flash 7
++			case LimitScript:
++				currentObject = new FSLimitScript(coder);
++				break;
++			case TabOrder:
++				currentObject = new FSTabOrder(coder);
++				break;
++			default:
++				Integer key = new Integer(type);
++
++				if (table.containsKey(key))
++				{
++					try
++					{
++						Class&lt;FSMovieObject&gt; obj = table.get(key);
++						currentObject = (FSMovieObject) obj.newInstance();
++						currentObject.decode(coder);
++
++						if (currentObject instanceof FSDefineObject)
++						{
++							identifier = ((FSDefineObject) currentObject)
++											.getIdentifier();
++						}
++					} catch (Exception e)
++					{
++						currentObject = new FSUnknownObject(coder);
++					}
++				} else
++				{
++					currentObject = new FSUnknownObject(coder);
++				}
++				break;
++		}
++
++		int delta = (coder.getPointer() - next) &gt;&gt; 3;
++
++		if (delta != 0)
++		{
++			coder.context[FSCoder.CodingError] = 1;
++			coder.context[FSCoder.TypeInError] = currentObject.getType();
++			coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++			coder.context[FSCoder.ExpectedLength] = (next - objStart) &gt;&gt;&gt; 3;
++			coder.context[FSCoder.Delta] = delta;
++		}
++
++		coder.setPointer(next);
++
++		if (identifier != 0)
++			coder.context[FSCoder.Identifier] = Math.max(
++							coder.context[FSCoder.Identifier], identifier);
++
++		return currentObject;
++	}
++
++	private static HashMap&lt;Integer, Class&lt;FSMovieObject&gt;&gt; table = new HashMap&lt;Integer, Class&lt;FSMovieObject&gt;&gt;();
++
++	/**
++	 * This method allows you to extend the Transform framework by adding new
++	 * classes to decode the data structures that are not currently supported.
++	 * 
++	 * To add support for a new data structure simply sub-class FSMovieObject
++	 * and implement the following methods:
++	 * 
++	 * public int length(FSCoder coder) public void encode(FSCoder coder) public
++	 * void decode(FSCoder coder)
++	 * 
++	 * In addition you must implement the nullary or empty constructor so that
++	 * the object can be instantiated correctly.
++	 * 
++	 * When the FSMovie object encounters a data structure it does not support
++	 * it will use the type to perform a table lookup for any registered class.
++	 * If a class is found an object will be instantiated and then the data
++	 * structure will be decoded by calling the decode() method.
++	 * 
++	 * If no class has been registered or if an error occurs while instantiating
++	 * the object then the data structure will be decoded as an FSUnknownObject.
++	 * 
++	 * @param type
++	 *            the type used to identify the type of data structure encoded
++	 *            in the flash file.
++	 * 
++	 * @param aClass
++	 *            the class object that will be used to instantiate an object
++	 *            and decode the data structure.
++	 */
++	public static void registerClass(int type, Class&lt;FSMovieObject&gt; aClass)
++	{
++		table.put(new Integer(type), aClass);
++	}
++
++	protected int type;
++	protected int identifier;
++	protected int length;
++	protected boolean extendLength;
++
++	/**
++	 * Constructs a movie object with the specified type.
++	 * 
++	 * @param aType
++	 *            an identifier indicating the type of movie object.
++	 */
++	protected FSMovieObject(int aType)
++	{
++		type = aType;
++		identifier = 0;
++	}
++
++	/**
++	 * Constructs a movie object by copying an existing one.
++	 * 
++	 * @param obj
++	 *            an FSMovieObject object.
++	 */
++	protected FSMovieObject(FSMovieObject obj)
++	{
++		type = obj.type;
++		identifier = obj.identifier;
++
++		length = obj.length;
++		extendLength = obj.extendLength;
++	}
++
++	/**
++	 * Gets the code used that identifies the type of the object when it is
++	 * encoded.
++	 * 
++	 * @return the code used to denote the type of the object.
++	 */
++	public int getType()
++	{
++		return type;
++	}
++
++	/**
++	 * Returns the unique identifier assigned to this object if it contains a
++	 * definition of a shape, image, button, text or sound. If the object is not
++	 * a definition then zero is returned.
++	 * 
++	 * @return the unique identifier for the object if the object contains a
++	 *         definition otherwise returns zero.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
++
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
++
++		if (obj == null)
++		{
++			return false;
++		}
++
++		if (obj == this)
++		{
++			return true;
++		}
++
++		if (obj instanceof FSMovieObject)
++		{
++			result = type == ((FSMovieObject) obj).getType();
++		}
++		return result;
++	}
++
++	/**
++	 * Creates a deep copy of the entire object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
++
++		try
++		{
++			anObject = super.clone();
++		} catch (CloneNotSupportedException e)
++		{
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	/**
++	 * Generates a string representation of the object showing the values of the
++	 * fields or nested objects. If the object contains an array then only the
++	 * size of the array will be reported rather than the string representation
++	 * being returned for all the objects in the array.
++	 * 
++	 * @return a string giving a brief description of the object and its fields.
++	 */
++	public String toString()
++	{
++		return name[type];
++	}
++
++	public int length(FSCoder coder)
++	{
++		coder.context[FSCoder.Type] = type;
++
++		length = 0;
++
++		return length;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		coder.context[FSCoder.Type] = type;
++
++		if (extendLength == false &amp;&amp; length &lt; 63)
++		{
++			coder.writeWord((type &lt;&lt; 6) | length, 2);
++		} else
++		{
++			coder.writeWord((type &lt;&lt; 6) | 0x3F, 2);
++			coder.writeWord(length, 4);
++		}
++	}
++
++	public void decode(FSCoder coder)
++	{
++		type = coder.scanWord(2, false) &gt;&gt; 6;
++		length = coder.scanWord(2, false) &amp; 0x3F;
++
++		coder.context[FSCoder.Type] = type;
++		coder.setPointer(coder.getPointer() + 16);
++
++		if (length == 0x3F)
++		{
++			length = coder.readWord(4, false);
++			extendLength = true;
++		}
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000308.html">[Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000310.html">[Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#309">[ date ]</a>
+              <a href="thread.html#309">[ thread ]</a>
+              <a href="subject.html#309">[ subject ]</a>
+              <a href="author.html#309">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

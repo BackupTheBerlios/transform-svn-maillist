@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r225 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r225%20-%20trunk/doc/releases&In-Reply-To=%3C200609231002.k8NA2w23030766%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000162.html">
+   <LINK REL="Next"  HREF="000164.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r225 - trunk/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r225%20-%20trunk/doc/releases&In-Reply-To=%3C200609231002.k8NA2w23030766%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r225 - trunk/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Sep 23 12:02:58 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000162.html">[Transform-svn] r224 - trunk/doc/web
+</A></li>
+        <LI>Next message: <A HREF="000164.html">[Transform-svn] r227 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#163">[ date ]</a>
+              <a href="thread.html#163">[ thread ]</a>
+              <a href="subject.html#163">[ subject ]</a>
+              <a href="author.html#163">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-23 12:02:53 +0200 (Sat, 23 Sep 2006)
+New Revision: 225
+
+Modified:
+   trunk/doc/releases/transform-pre-2.1.4.txt
+Log:
+updated pre-release notes for 2.1.4
+
+Modified: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-23 10:02:08 UTC (rev 224)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-23 10:02:53 UTC (rev 225)
+@@ -3,7 +3,7 @@
+ ------------------------------------------------------------
+ 
+ The release will improve the test coverage by adding more TestNG suites and 
+-unit test classes.
++unit test classes. Bug fixes are also included.
+ 
+ 
+ Bug Fixes
+@@ -12,15 +12,16 @@
+     8749. FSVideoFrame does not set identifier.
+     8750. FSText does not encode records without style information.
+     8751. FSTextConstructor.defineTextBlock() bounding box is incorrect.
++    8866. FSImageConstructor: encoding argument is not checked.
+         
+ Class Changes
+-    None scheduled
++    None
+     
+ Testing Changes
+-    New unit test classes and suites.
++    Restructured test data.
+ 
+ Package Changes
+-    Non scheduled
++    None
+ 
+   
+ -------------
+@@ -66,22 +67,40 @@
+ prevent the the alpha channel information from being ignored and an opaque 
+ colour displayed instead.
+ 
++8866. FSImageConstructor: encoding argument is not checked.
+ 
++The setIndexedImage() and setColorImage() methods each have an argument, encoding
++which specified the format of the encoded data also passed as an argument. The 
++encoding argument will be assigned to the format attribute. The methods now 
++correctly check that the encoding argument is checked, previously they were
++incorrectly checking the format (which was already set to a valid value). The 
++logic of the test was flawed and an IllegalArgumentException was being thrown.
++
+ -----------------
+   Class Changes  
+ -----------------
+ 
++None
++
+ -------------------
+   Testing Changes  
+ -------------------
+ 
+-1. New unit test classes and suites.
++1. Restructured test data
+ 
+-Test coverage will be improved with classes and suites to perform unit testing 
+-for the following classes:
++The test/data directory was restructured to reduce the number of files shipped
++with each release. Now specific test suites for each of different files types 
++handled by the the constructor classes in the com.flagstone.transform.util are 
++included.
+ 
++Sample flash files are also included. Each file contains a single type of data
++structure and provide some examples extracted from real-world flash files. The 
++formal testing of the classes in the com.flagstone.transform package will be 
++carried out using classes located in com.flagstone.transform.test. The other 
++classes will require on the test data sets.
+ 
+ -------------------
+   Package Changes  
+ -------------------
+ 
++None
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000162.html">[Transform-svn] r224 - trunk/doc/web
+</A></li>
+	<LI>Next message: <A HREF="000164.html">[Transform-svn] r227 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#163">[ date ]</a>
+              <a href="thread.html#163">[ thread ]</a>
+              <a href="subject.html#163">[ subject ]</a>
+              <a href="author.html#163">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

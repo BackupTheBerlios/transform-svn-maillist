@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r134 - in trunk: . doc doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r134%20-%20in%20trunk%3A%20.%20doc%20doc/releases&In-Reply-To=%3C200603131656.k2DGunIO020731%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000073.html">
+   <LINK REL="Next"  HREF="000075.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r134 - in trunk: . doc doc/releases</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r134%20-%20in%20trunk%3A%20.%20doc%20doc/releases&In-Reply-To=%3C200603131656.k2DGunIO020731%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r134 - in trunk: . doc doc/releases">smackay at berlios.de
+       </A><BR>
+    <I>Mon Mar 13 17:56:49 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000073.html">[Transform-svn] r133 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000075.html">[Transform-svn] r135 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-13 17:56:43 +0100 (Mon, 13 Mar 2006)
+New Revision: 134
+
+Added:
+   trunk/doc/releases/transform-2.1.1.html
+Modified:
+   trunk/build.xml
+   trunk/doc/CHANGES.txt
+   trunk/doc/releases/index.html
+Log:
+Added documentation for release 2.1.1
+
+Modified: trunk/build.xml
+===================================================================
+--- trunk/build.xml	2006-03-10 18:55:44 UTC (rev 133)
++++ trunk/build.xml	2006-03-13 16:56:43 UTC (rev 134)
+@@ -37,7 +37,7 @@
+ 
+     &lt;/description&gt;
+ 
+-    &lt;property name=&quot;version&quot; value=&quot;2.1&quot;/&gt;
++    &lt;property name=&quot;version&quot; value=&quot;2.1.1&quot;/&gt;
+     
+     &lt;property name=&quot;src.dir&quot; location=&quot;src&quot;/&gt;
+     &lt;property name=&quot;lib.dir&quot; location=&quot;lib&quot;/&gt;
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-10 18:55:44 UTC (rev 133)
++++ trunk/doc/CHANGES.txt	2006-03-13 16:56:43 UTC (rev 134)
+@@ -1,3 +1,7 @@
++2006-03-13 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Released 2.1.1.
++    
+ 2006-03-10 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Fixed the inifinite loop problem when decoding MP3 files. Also updated 
+
+Modified: trunk/doc/releases/index.html
+===================================================================
+--- trunk/doc/releases/index.html	2006-03-10 18:55:44 UTC (rev 133)
++++ trunk/doc/releases/index.html	2006-03-13 16:56:43 UTC (rev 134)
+@@ -20,6 +20,16 @@
+ &lt;th class=&quot;description&quot;&gt;Details&lt;/th&gt;
+ &lt;/tr&gt;
+ 
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;13th March 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.1&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;
++Bug fix for the infinite loop problem when decoding MP3 files.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;
++&lt;a href=&quot;transform-2.1.1.html&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
+ &lt;tr class=&quot;even&quot;&gt;
+ &lt;td class=&quot;date&quot;&gt;7th March 2006&lt;/td&gt;
+ &lt;td class=&quot;version&quot;&gt;2.1&lt;/td&gt;
+
+Added: trunk/doc/releases/transform-2.1.1.html
+===================================================================
+--- trunk/doc/releases/transform-2.1.1.html	2006-03-10 18:55:44 UTC (rev 133)
++++ trunk/doc/releases/transform-2.1.1.html	2006-03-13 16:56:43 UTC (rev 134)
+@@ -0,0 +1,80 @@
++&lt;html&gt;
++&lt;head&gt;
++&lt;title&gt;Release Notes for Transform SWF for Java, Version 2.1.1&lt;/title&gt;
++&lt;style type=&quot;text/CSS&quot;&gt;
++&lt;!--
++a:link { text-decoration: none; }
++a:visited { color: darkred; text-decoration: none; }
++a:active { text-decoration: none; }
++a:hover { color: #000066; text-decoration: none; }
++
++h1 { font-size: 140%; background-color: darkgray; padding: 3px 10px; }
++h2 { font-size: 120%; background-color: darkgray; padding: 3px 10px; }
++h3 { font-size: 110%; margin-bottom: 0px; }
++
++div.section { margin-left: 10px; margin-right: 10px; }
++
++p { margin-top: 0px; }
++pre { font-size: 90%; }
++ul { margin-left: 10px; }
++ul ol { margin-left: 10px; }
++table { margin-left: 10px;}
++--&gt;
++&lt;/style&gt;
++&lt;/head&gt;
++&lt;body&gt;
++
++&lt;h1&gt;Release Notes for Transform SWF for Java, Version 2.1.1.&lt;/h1&gt;
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;P&gt;This a minor release fixing bugs.&lt;/P&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;ul&gt;
++&lt;li&gt;Bug Fixes     
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#fix1&quot;&gt;FSSoundConstructor: Now decodes MP3 files correctly.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;/ul&gt;  
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Bug Fixes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;fix1&quot;&gt;1. FSSoundConstructor: Now decodes MP3 files correctly.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;When an MP3 file contained a trailing ID3 block that overwrote part of the
++last frame in a file the decoder would scan this block for a new start of frame
++marker. If the scanning process started less than 11 bits (the size of the marker)
++from the end of the file then the method FSCodec.findBits() would go into an
++infinite loop.&lt;/P&gt; 
++
++&lt;p&gt;The cause was a bug in the way the findBits() method stepped through a block
++of data. If a read using the readBits() method would cause an overflow then the 
++value of the internal pointer would be clamped to the end of the file. The 
++pointer was then decremented by the size of the start of frame marker (11 bits)
++and incremented by the step size (8 bits). The next read would cause an overflow 
++so the pointer was clamped and the process repeated ad infinitum.&lt;/p&gt;
++
++&lt;p&gt;The process of decoding MP3 files now checks whether a frame has ended 
++prematurely and the findBits() method now correctly adjusts for the actual 
++number of bits read - not the expected number.&lt;/P&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Additional Information&lt;/h2&gt;
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;p&gt;For Further Information please contact:&lt;/p&gt;
++
++&lt;p&gt;Stuart MacKay&lt;br/&gt;
++Flagstone Software Ltd.&lt;br/&gt;
++92 High Street&lt;br/&gt;
++Wick, Caithness KW1 4LY&lt;br/&gt;
++Scotland&lt;br/&gt;&lt;br/&gt;
++www.flagstonesoftware.com
++&lt;/div&gt;&lt;!-- section --&gt;
++&lt;/body&gt;
++&lt;/html&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000073.html">[Transform-svn] r133 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000075.html">[Transform-svn] r135 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

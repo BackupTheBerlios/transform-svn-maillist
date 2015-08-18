@@ -1,0 +1,1250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r89 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r89%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/test%20src/com/flagstone/transform/util%20test/suites&In-Reply-To=%3C200602281320.k1SDKpsR026988%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000029.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r89 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r89%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/test%20src/com/flagstone/transform/util%20test/suites&In-Reply-To=%3C200602281320.k1SDKpsR026988%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r89 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 28 14:20:51 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000029.html">[Transform-svn] r88 - trunk/doc
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#30">[ date ]</a>
+              <a href="thread.html#30">[ thread ]</a>
+              <a href="subject.html#30">[ subject ]</a>
+              <a href="author.html#30">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-28 14:20:03 +0100 (Tue, 28 Feb 2006)
+New Revision: 89
+
+Added:
+   trunk/src/com/flagstone/transform/util/FSCharacterTable.java
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+   trunk/test/suites/FSTextConstructor.xml
+Log:
+Added FSTextConstructor.willDisplay(char[]) to allow sets of 
+characters to be defined before creating any test objects. This 
+solves the bug where characters were encoded in the order they were 
+used but not in ascending order of character code.
+      
+Added FSCharacterTable class to com.flagstone.transform.util to 
+provide predefined sets of characters to use with the willDisplay() 
+method.
+      
+Added a corresponding canDisplay(char[]) method to see if a font 
+can display all of the characters in a set.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-02-26 22:36:37 UTC (rev 88)
++++ trunk/doc/CHANGES.txt	2006-02-28 13:20:03 UTC (rev 89)
+@@ -1,3 +1,18 @@
++2006-02-27 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Added FSTextConstructor.willDisplay(char[]) to allow sets of characters
++      to be defined before creating any test objects. This solves the bug where
++      characters were encoded in the order they were used but not in ascending
++      order of character code.
++      
++      Added FSCharacterTable class to com.flagstone.transform.util to provide
++      predefined sets of characters to use with the willDisplay() method.
++      
++      Added a corresponding canDisplay(char[]) method to see if a font can 
++      display all of the characters in a set.
++      
++    * Updated FSTextConstructor test to include the new willDisplay method.
++
+ 2006-02-26 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Tidied up the FSCoder class, making all methods more reliable merging in
+@@ -4,8 +19,7 @@
+       functionality from Transform Utilities FSCodec. All decoding and encoding 
+       of data is now performed using FSCoder. FSCodec is deprecated.
+       
+-    * The class TransformUtil is now deprecated.
+-    
++    * The class TransformUtil is now deprecated.  
+ 
+ 2006-02-25 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+
+Modified: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-02-26 22:36:37 UTC (rev 88)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-02-28 13:20:03 UTC (rev 89)
+@@ -75,6 +75,50 @@
+         }
+     }
+     /**
++     * @testng.test dataProvider=&quot;character-sets&quot;
++     */
++    public void displayCharacterSets(Integer code, String name)
++    {
++        try 
++        {
++            File destFile = new File(destDir, name+&quot;.swf&quot;);
++            
++            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++         
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            encodeCharacterSet(textGenerator, 
++                FSCharacterTable.characterSet(code.intValue()), destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
++     * @testng.test dataProvider=&quot;locales&quot;
++     */
++    public void displayLocales(Locale locale, String name)
++    {
++        try 
++        {
++            File destFile = new File(destDir, name+&quot;.swf&quot;);
++            
++            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++         
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            encodeCharacterSet(textGenerator, 
++                FSCharacterTable.characterSetForLocale(locale), destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
+      * @testng.data-provider name=&quot;files&quot;
+      */
+     public Object[][] findFiles()
+@@ -103,6 +147,38 @@
+         
+         return parameters;
+     }
++    /**
++     * @testng.data-provider name=&quot;character-sets&quot;
++     */
++    public Object[][] characterSets()
++    {
++        Object[][] parameters = new Object[][] {
++            new Object[] { new Integer(FSCharacterTable.euro), &quot;euro&quot; },                       
++            new Object[] { new Integer(FSCharacterTable.iso_646), &quot;iso-646&quot; },                       
++            new Object[] { new Integer(FSCharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },                       
++        };
++        
++        return parameters;
++    }
++    /**
++     * @testng.data-provider name=&quot;locales&quot;
++     */
++    public Object[][] locales()
++    {
++        Object[][] parameters = new Object[][] {
++            new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },                       
++            new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },                       
++            new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },                       
++            new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },                       
++            new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },                       
++            new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },                       
++            new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },                       
++            new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },                       
++            new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },                       
++        };
++        
++        return parameters;
++    }
+       
+     private void encodeFontToFile(FSTextConstructor textGenerator, File file) throws Exception
+     {
+@@ -145,4 +221,55 @@
+ 
+         movie.encodeToFile(file.getPath());
+     }
++    private void encodeCharacterSet(FSTextConstructor textGenerator, char[] chars, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;        
++        int margin = fontSize;
++        int charsPerline = 32;
++                
++        FSMovie movie = new FSMovie();
++        ArrayList lines = new ArrayList();
++        
++        char c = 0;
++
++        StringBuffer line = new StringBuffer();
++
++        for (int i=0; i&lt;chars.length; i++)
++        {
++            line.append(chars[i]);
++
++            if (i % charsPerline == charsPerline-1)
++            {
++                lines.add(line.toString());
++                line = new StringBuffer();
++            }
++        }
++        
++        if (line.length() &gt; 0)
++            lines.add(line.toString());
++            
++        
++        int fontId = movie.newIdentifier();
++        
++        textGenerator.willDisplay(chars);
++        
++        FSDefineFont2 font = textGenerator.defineFont();
++        FSDefineText2 text = textGenerator.defineTextBlock(movie.newIdentifier(), lines, fontSize, FSColorTable.black(), lineSpacing);
++        
++        font.setIdentifier(fontId);
++
++        int screenWidth = text.getBounds().getWidth() + margin + margin;
++        int screenHeight = text.getBounds().getHeight() + margin + margin;
++            
++        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(font);
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
+ }
+
+Added: trunk/src/com/flagstone/transform/util/FSCharacterTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSCharacterTable.java	2006-02-26 22:36:37 UTC (rev 88)
++++ trunk/src/com/flagstone/transform/util/FSCharacterTable.java	2006-02-28 13:20:03 UTC (rev 89)
+@@ -0,0 +1,576 @@
++/*
++ *  FSCharacterTable.java
++ *  Transform Utilities
++ *
++ * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.util;
++
++import java.util.Locale;
++
++/**
++ * The FSCharacterTable class provides predefined arrays of characters that can
++ * be used with the FSTextConstructor's willDisplay() method to predefine the 
++ * characters that will be displayed using a given font.
++ * 
++ * Character sets are simply list of characters to use. The names used to 
++ * identify collections of characters use official character set names, such
++ * as iso_8859_1. However they do NOT indicate how the characters are encoded
++ * as such (all strings are encoded using UTF-8) they are simply a way of 
++ * naming a group of characters in a recognized (and standard) way.
++ * 
++ * Other sets that use characters appropriate for a specific country and 
++ * language also use ISO designations for a specific locale such as en_US
++ * or pt_BR.
++ *
++ */
++public class FSCharacterTable 
++{
++    /*
++     * List of character sets supported. 
++     */
++    
++    /**
++     * Code identifying a set containing the single character for the euro
++     * currency symbol. It is included as a separate set as manly formal 
++     * coded character sets do not include it. A separate set makes it easier
++     * to match different sets of characters together.
++     * 
++     * The (Unicode) character code for this symbol is 0x20AC so it will
++     * typically be the last character set passed to the FSTextConstructor's
++     * willDisplay() method.
++     */
++    public static final int euro = 0;
++    /**
++     * Code identifying formal the characters defined in ISO 646.
++     * 
++     * Alias: ASCII
++     */
++    public static final int iso_646 = 1;
++    /**
++     * Code identifying formal the characters defined in ISO-8859-1.
++     * 
++     * Alias: Latin-1
++     */
++    public static final int iso_8859_1 = 2;
++    
++    /*
++     * The ISO 646 character set is used as a base for other characters sets.
++     * Other character sets are created by including these characters in the 
++     * array returned by the characterSetWithCode() method. This saves space
++     * and more importantly makes it easier to correct errors.
++     */
++    private final static char[] iso_646_chars = {
++        '\u0020', // space
++        '\u0021', // exclamation mark
++        '\u0022', // quotation mark
++        '\u0023', // number sign
++        '\u0024', // dollar sign
++        '\u0025', // percent sign
++        '\u0026', // ampersand
++        '\'',     // apostrophe
++        '\u0028', // left parenthesis
++        '\u0029', // right parenthesis
++        '\u002A', // asterisk
++        '\u002B', // plus sign
++        '\u002C', // comma
++        '\u002D', // hyphen or minus
++        '\u002E', // full stop
++        '\u002F', // forward slash
++        '\u0030', // digit zero
++        '\u0031', // digit one
++        '\u0032', // digit two
++        '\u0033', // digit three
++        '\u0034', // digit four
++        '\u0035', // digit five
++        '\u0036', // digit six
++        '\u0037', // digit seven
++        '\u0038', // digit eight
++        '\u0039', // digit nine
++        '\u003A', // colon
++        '\u003B', // semicolon
++        '\u003C', // less than sign
++        '\u003D', // equals sign
++        '\u003E', // greater than sign
++        '\u003F', // question mark
++        '\u0040', // commercial at
++        '\u0041', // upper case A
++        '\u0042', // upper case B
++        '\u0043', // upper case C
++        '\u0044', // upper case D
++        '\u0045', // upper case E
++        '\u0046', // upper case F
++        '\u0047', // upper case G
++        '\u0048', // upper case H
++        '\u0049', // upper case I
++        '\u004A', // upper case J
++        '\u004B', // upper case K
++        '\u004C', // upper case L
++        '\u004D', // upper case M
++        '\u004E', // upper case N
++        '\u004F', // upper case O
++        '\u0050', // upper case P
++        '\u0051', // upper case Q
++        '\u0052', // upper case R
++        '\u0053', // upper case S
++        '\u0054', // upper case T
++        '\u0055', // upper case U
++        '\u0056', // upper case V
++        '\u0057', // upper case W
++        '\u0058', // upper case X
++        '\u0059', // upper case Y
++        '\u005A', // upper case Z
++        '\u005B', // left square bracket
++        '\\',     // backslash
++        '\u005D', // right square bracket
++        '\u005E', // circumflex
++        '\u005F', // underscore
++        '\u0060', // grave
++        '\u0061', // lower case A
++        '\u0062', // lower case B
++        '\u0063', // lower case C
++        '\u0064', // lower case D
++        '\u0065', // lower case E
++        '\u0066', // lower case F
++        '\u0067', // lower case G
++        '\u0068', // lower case H
++        '\u0069', // lower case I
++        '\u006A', // lower case J
++        '\u006B', // lower case K
++        '\u006C', // lower case L
++        '\u006D', // lower case M
++        '\u006E', // lower case N
++        '\u006F', // lower case O
++        '\u0070', // lower case P
++        '\u0071', // lower case Q
++        '\u0072', // lower case R
++        '\u0073', // lower case S
++        '\u0074', // lower case T
++        '\u0075', // lower case U
++        '\u0076', // lower case V
++        '\u0077', // lower case W
++        '\u0078', // lower case X
++        '\u0079', // lower case Y
++        '\u007A', // lower case Z
++        '\u007B', // left curly bracket
++        '\u007C', // vertical line
++        '\u007D', // right curly bracket
++        '\u007E', // tilde
++    };
++    
++    private static final char[] iso_8859_1_chars = new char[] {
++        '\u00A0', // non-breaking space
++        '\u00A1', // inverted exclamation mark
++        '\u00A2', // cent sign
++        '\u00A3', // pound sign
++        '\u00A4', // currency sign
++        '\u00A5', // yen sign
++        '\u00A6', // broken BAR
++        '\u00A7', // section sign
++        '\u00A8', // diaresis
++        '\u00A9', // copyright sign
++        '\u00AA', // feminine ordinal indicator
++        '\u00AB', // left pointing double angle quotation mark
++        '\u00AC', // not sign
++        '\u00AD', // soft hyphen
++        '\u00AE', // registered trademark sign
++        '\u00AF', // macron
++        '\u00B0', // degree sign
++        '\u00B1', // plus-minus sign
++        '\u00B2', // superscript two
++        '\u00B3', // superscript three
++        '\u00B4', // acute accent
++        '\u00B5', // micro sign
++        '\u00B6', // pilcrow sign
++        '\u00B7', // middle dot
++        '\u00B8', // cedilla
++        '\u00B9', // superscript ONE
++        '\u00BA', // masculine ordinal indicator
++        '\u00BB', // right pointing double angle quotation mark
++        '\u00BC', // vulgar fraction one quarter
++        '\u00BD', // vulgar fraction one half
++        '\u00BE', // vulgar fraction three quarters
++        '\u00BF', // inverted question mark
++        '\u00C0', // upper case letter A with grave
++        '\u00C1', // upper case letter A with acute
++        '\u00C2', // upper case letter A with circumflex
++        '\u00C3', // upper case letter A with tilde
++        '\u00C4', // upper case letter A with diaresis
++        '\u00C5', // upper case letter A with ring above
++        '\u00C6', // upper case letter AE
++        '\u00C7', // upper case letter C with cedilla
++        '\u00C8', // upper case letter E with grave
++        '\u00C9', // upper case letter E with acute
++        '\u00CA', // upper case letter E with circumflex
++        '\u00CB', // upper case letter E with diaresis
++        '\u00CC', // upper case letter I with grave
++        '\u00CD', // upper case letter I with acute
++        '\u00CE', // upper case letter I with circumflex
++        '\u00CF', // upper case letter I with diaresis
++        '\u00D0', // upper case letter Eth (Icelandic)
++        '\u00D1', // upper case letter N with tilde
++        '\u00D2', // upper case letter O with grave
++        '\u00D3', // upper case letter O with acute
++        '\u00D4', // upper case letter O with circumflex
++        '\u00D5', // upper case letter O with tilde
++        '\u00D6', // upper case letter O with diaresis
++        '\u00D7', // multiplication sign
++        '\u00D8', // upper case letter O with stroke
++        '\u00D9', // upper case letter U with grave
++        '\u00DA', // upper case letter U with acute
++        '\u00DB', // upper case letter U with circumflex
++        '\u00DC', // upper case letter U with diaresis
++        '\u00DD', // upper case letter Y with acute
++        '\u00DE', // upper case letter Thorn (Icelandic)
++        '\u00DF', // lower case letter Sharp S (German)
++        '\u00E0', // lower case letter A with grave
++        '\u00E1', // lower case letter A with acute
++        '\u00E2', // lower case letter A with circumflex
++        '\u00E3', // lower case letter A with tilde
++        '\u00E4', // lower case letter A with diaresis
++        '\u00E5', // lower case letter A with ring above
++        '\u00E6', // lower case letter AE
++        '\u00E7', // lower case letter C with cedilla
++        '\u00E8', // lower case letter E with grave
++        '\u00E9', // lower case letter E with acute
++        '\u00EA', // lower case letter E with circumflex
++        '\u00EB', // lower case letter E with diaresis
++        '\u00EC', // lower case letter I with grave
++        '\u00ED', // lower case letter I with acute
++        '\u00EE', // lower case letter I with circumflex
++        '\u00EF', // lower case letter I with diaresis
++        '\u00F0', // lower case letter Eth (Icelandic)
++        '\u00F1', // lower case letter N with tilde
++        '\u00F2', // lower case letter O with grave
++        '\u00F3', // lower case letter O with acute
++        '\u00F4', // lower case letter O with circumflex
++        '\u00F5', // lower case letter O with tilde
++        '\u00F6', // lower case letter O with diaresis
++        '\u00F7', // division sign
++        '\u00F8', // lower case letter O with stroke
++        '\u00F9', // lower case letter U with grave
++        '\u00FA', // lower case letter U with acute
++        '\u00FB', // lower case letter U with circumflex
++        '\u00FC', // lower case letter U with diaresis
++        '\u00FD', // lower case letter Y with acute
++        '\u00FE', // lower case letter Thorn (Icelandic)
++        '\u00FF', // lower case letter Y with diaresis
++    };
++
++    private final static char[] euroChar = { 
++        '\u20AC', // Euro currency symbol
++    };
++    
++    private final static char[] de_DE = {
++        '\u00A2', // cent sign
++        '\u00C1', // upper case letter A with acute
++        '\u00D6', // upper case letter O with diaresis
++        '\u00DC', // upper case letter U with diaresis
++        '\u00DF', // lower case letter Sharp S (German)
++        '\u00E1', // lower case letter A with acute
++        '\u00F6', // lower case letter O with diaresis
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    private final static char[] dk_DK = {
++        '\u00C5', // upper case letter A with ring above
++        '\u00C6', // upper case letter AE
++        '\u00D8', // upper case letter O with stroke
++        '\u00E5', // lower case letter A with ring above
++        '\u00E6', // lower case letter AE
++        '\u00F8', // lower case letter O with stroke
++    };
++
++    private final static char[] en_GB = {
++        '\u00A2', // cent sign
++        '\u00A3', // pound sign
++        '\u20AC', // Euro currency symbol
++    };
++
++    private final static char[] en_US = {
++    };
++    
++    private final static char[] es_ES = {
++        '\u00A2', // cent sign
++        '\u00C1', // upper case letter A with acute
++        '\u00C9', // upper case letter E with acute
++        '\u00CD', // upper case letter I with acute
++        '\u00D1', // upper case letter N with tilde
++        '\u00D3', // upper case letter O with acute
++        '\u00DA', // upper case letter U with acute
++        '\u00DC', // upper case letter U with diaresis
++        '\u00E1', // lower case letter A with acute
++        '\u00E9', // lower case letter E with acute
++        '\u00ED', // lower case letter I with acute
++        '\u00F1', // lower case letter N with tilde
++        '\u00F3', // lower case letter O with acute
++        '\u00FA', // lower case letter U with acute
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    /**
++     * TODO Add ?? ?? &#65533;&#65533; &#65533;&#65533;
++     */
++    private final static char[] fi_FI = { 
++        '\u00A2', // cent sign
++        '\u00C5', // upper case letter A with ring above
++        '\u00E5', // lower case letter A with ring above
++        '\u20AC', // Euro currency symbol
++    };
++    
++    /**
++     * TODO Add ? ?
++     */
++    private final static char[] fr_FR = {
++        '\u00A2', // cent sign
++        '\u00C0', // upper case letter A with grave
++        '\u00C2', // upper case letter A with circumflex
++        '\u00C7', // upper case letter C with cedilla
++        '\u00C8', // upper case letter E with grave
++        '\u00C9', // upper case letter E with acute
++        '\u00CA', // upper case letter E with circumflex
++        '\u00CB', // upper case letter E with diaresis
++        '\u00CE', // upper case letter I with circumflex
++        '\u00CF', // upper case letter I with diaresis
++        '\u00D4', // upper case letter O with circumflex
++        '\u00DA', // upper case letter U with acute
++        '\u00DC', // upper case letter U with diaresis
++        '\u00E0', // lower case letter A with grave
++        '\u00E2', // lower case letter A with circumflex
++        '\u00E7', // lower case letter C with cedilla
++        '\u00E8', // lower case letter E with grave
++        '\u00E9', // lower case letter E with acute
++        '\u00EA', // lower case letter E with circumflex
++        '\u00EB', // lower case letter E with diaresis
++        '\u00EE', // lower case letter I with circumflex
++        '\u00EF', // lower case letter I with diaresis
++        '\u00F4', // lower case letter O with circumflex
++        '\u00FA', // lower case letter U with acute
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    private final static char[] pt_PT = {
++        '\u00A2', // cent sign
++        '\u00C0', // upper case letter A with grave
++        '\u00C1', // upper case letter A with acute
++        '\u00C2', // upper case letter A with circumflex
++        '\u00C3', // upper case letter A with tilde
++        '\u00C7', // upper case letter C with cedilla
++        '\u00C9', // upper case letter E with acute
++        '\u00CA', // upper case letter E with circumflex
++        '\u00CD', // upper case letter I with acute
++        '\u00D3', // upper case letter O with acute
++        '\u00D4', // upper case letter O with circumflex
++        '\u00D5', // upper case letter O with tilde
++        '\u00DA', // upper case letter U with acute
++        '\u00DC', // upper case letter U with diaresis
++        '\u00E0', // lower case letter A with grave
++        '\u00E1', // lower case letter A with acute
++        '\u00E2', // lower case letter A with circumflex
++        '\u00E3', // lower case letter A with tilde
++        '\u00E7', // lower case letter C with cedilla
++        '\u00E9', // lower case letter E with acute
++        '\u00EA', // lower case letter E with circumflex
++        '\u00ED', // lower case letter I with acute
++        '\u00F3', // lower case letter O with acute
++        '\u00F4', // lower case letter O with circumflex
++        '\u00F5', // lower case letter O with tilde
++        '\u00FA', // lower case letter U with acute
++        '\u00FC', // lower case letter U with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++/**
++     * Return a predefined set of characters. An integer code is used to select 
++     * the set to avoid possible formatting issues with names of character sets
++     * specified as strings.
++     * 
++     * @param code a predefine constant identifying the character set to 
++     * return.
++     * 
++     * @return an char[] contains all the characters for a given character 
++     * set. If an unknown code is used then an empty array will be returned.
++     */
++    public static final char[] characterSet(int code)
++    {
++        char[] set = new char[0];
++        int index = 0;
++        
++        switch (code)
++        {
++            case euro: set=euroChar; break;
++            case iso_646: set=iso_646_chars; break;
++            case iso_8859_1:
++                set = new char[iso_646_chars.length+iso_8859_1_chars.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;iso_8859_1_chars.length; i++, index++)
++                    set[index] = iso_8859_1_chars[i];
++                 
++                break;
++            default:
++                break;
++        }
++        
++        return set;
++    }
++    /**
++     * Return a character set for a given country and language. This method is
++     * used to generate smaller character sets which will also reduce the size 
++     * of the font definitions.
++     * 
++     * @param a Locale identifying the country and optional language used to 
++     * select a character set.
++     * 
++     * @return an array containing all the characters suitable for display
++     * using the specified country and language.
++     */
++    public static final char[] characterSetForLocale(Locale locale)
++    {
++        char[] set = new char[0];
++        
++        String country = locale.getCountry();
++        String language = locale.getLanguage();
++        
++        int index = 0;
++
++        if (language.equals(&quot;de&quot;))
++        {
++            if (country.equals(&quot;DE&quot;))
++            {
++                set = new char[iso_646_chars.length+de_DE.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;de_DE.length; i++, index++)
++                    set[index] = de_DE[i];            
++            }
++        }
++        else if (language.equals(&quot;dk&quot;))
++        {
++            if (country.equals(&quot;DK&quot;))
++            {
++                set = new char[iso_646_chars.length+dk_DK.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;dk_DK.length; i++, index++)
++                    set[index] = dk_DK[i];            
++            }
++        }
++        else if (language.equals(&quot;en&quot;))
++        {
++            if (country.equals(&quot;US&quot;))
++            {
++                set = new char[iso_646_chars.length+en_US.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;en_US.length; i++, index++)
++                    set[index] = en_US[i];            
++            }
++            else if (country.equals(&quot;GB&quot;) || country.equals(&quot;UK&quot;))
++            {
++                set = new char[iso_646_chars.length+en_GB.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;en_GB.length; i++, index++)
++                    set[index] = en_GB[i];            
++            }
++            else
++            {
++                set = new char[iso_646_chars.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++            }
++        }
++        else if (language.equals(&quot;es&quot;))
++        {
++            if (country.equals(&quot;ES&quot;))
++            {
++                set = new char[iso_646_chars.length+es_ES.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;es_ES.length; i++, index++)
++                    set[index] = es_ES[i];            
++            }
++        }
++        else if (language.equals(&quot;fi&quot;))
++        {
++            if (country.equals(&quot;FI&quot;))
++            {
++                set = new char[iso_646_chars.length+fi_FI.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;fi_FI.length; i++, index++)
++                    set[index] = fi_FI[i];            
++            }
++        }
++        else if (language.equals(&quot;fr&quot;))
++        {
++            if (country.equals(&quot;FR&quot;))
++            {
++                set = new char[iso_646_chars.length+fr_FR.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;fr_FR.length; i++, index++)
++                    set[index] = fr_FR[i];            
++            }
++        }
++        else if (language.equals(&quot;pt&quot;))
++        {
++            if (country.equals(&quot;PT&quot;))
++            {
++                set = new char[iso_646_chars.length+pt_PT.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;pt_PT.length; i++, index++)
++                    set[index] = pt_PT[i];            
++            }
++        }
++        return set;
++    }
++
++}
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-26 22:36:37 UTC (rev 88)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-28 13:20:03 UTC (rev 89)
+@@ -41,8 +41,8 @@
+ import java.util.zip.*;
+ 
+ /**
+- * The FSTextConstructor class greatly simplifies the use of fonts and text when creating
+- * Flash files. Font definitions can be created in three ways:
++ * The FSTextConstructor class greatly simplifies the use of fonts and text when 
++ * creating Flash files. Font definitions can be created in three ways:
+  * 
+  * &lt;ol&gt;
+  * &lt;li&gt;Using TrueType or OpenType font definition stored in a file.&lt;/li&gt;
+@@ -50,8 +50,8 @@
+  * &lt;li&gt;Using a given Java AWT font as a template.&lt;/li&gt;
+  * &lt;/ol&gt;
+  * 
+- * &lt;P&gt;Font definitions from TrueType, OpenType or Flash files are created by specifying the 
+- * name of the file:&lt;/p&gt;
++ * &lt;P&gt;Font definitions from TrueType, OpenType or Flash files are created by 
++ * specifying the name of the file:&lt;/p&gt;
+  * 
+  * &lt;pre&gt;
+  *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;Arial.otf&quot;);
+@@ -60,27 +60,30 @@
+  *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;TimesNewRoman.swf&quot;);
+  * &lt;/pre&gt;
+  * 
+- * &lt;P&gt;The OpenType or TrueType file is parsed to construct the font definition. File with the
+- * extensions &quot;.otf&quot; or &quot;.ttf&quot; may be used. Files containing collections of fonts &quot;.otc&quot; are 
+- * not currently supported. For Flash files the first font definition encountered is used and 
+- * all the text definition objects associated with the font are used to obtain the advance 
+- * information for each character. An example Flash file can be found in the resources directory 
++ * &lt;P&gt;The OpenType or TrueType file is parsed to construct the font definition. 
++ * Files with the extensions &quot;.otf&quot; or &quot;.ttf&quot; may be used. Files containing 
++ * collections of fonts &quot;.otc&quot; are not currently supported. For Flash files the 
++ * first font definition encountered is used and all the text definition objects 
++ * associated with the font are used to obtain the advance information for each 
++ * character. An example Flash file can be found in the resources directory 
+  * included in this release.&lt;/p&gt;
+  * 
+- * &lt;P&gt;Font definitions from AWT templates are created by specifying the name of the font:&lt;/p&gt;
++ * &lt;P&gt;Font definitions from AWT templates are created by specifying the name of 
++ * the font:&lt;/p&gt;
+  * 
+  * &lt;pre&gt;
+  *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;Times New Roman Bold&quot;);
+  * &lt;/pre&gt;
+  * 
+- * &lt;p&gt;Only the font or file name needs to specified. Unlike Java fonts, font definitions in
+- * Flash are size  independent, the size and colour in which a given string in rendered
+- * is specified in the object  that defines the text to be displayed avoiding the need
+- * to create multiple font definitions for  the same font name.&lt;/p&gt;
++ * &lt;p&gt;Only the font or file name needs to specified. Unlike Java fonts, font 
++ * definitions in Flash are size  independent, the size and colour in which a 
++ * given string in rendered is specified in the object  that defines the text to 
++ * be displayed avoiding the need to create multiple font definitions for  the 
++ * same font name.&lt;/p&gt;
+  *
+- * &lt;P&gt;An array of FSGlyph objects are created from the font definition. Each object 
+- * contains the glyph for the font, the associated character code and information used to
+- * lay out each glyph when it is displayed.&lt;/P&gt;
++ * &lt;P&gt;An array of FSGlyph objects are created from the font definition. Each 
++ * object contains the glyph for the font, the associated character code and 
++ * information used to lay out each glyph when it is displayed.&lt;/P&gt;
+  * 
+  * &lt;P&gt;Once a font has been created text strings can be generated:&lt;/p&gt;
+  * 
+@@ -90,45 +93,50 @@
+  *    FSDefineText2 aString = font.defineText(&quot;This is a string&quot;, fontSize, fontColor);
+  * &lt;/pre&gt;
+  * 
+- * &lt;P&gt;The defineText method returns FSDefineText2 objects since they support transparent
+- * colours, while FSDefineText only supports opaque colours.&lt;/P&gt;
++ * &lt;P&gt;The defineText method returns FSDefineText2 objects since they support 
++ * transparent colours, while FSDefineText only supports opaque colours.&lt;/P&gt;
+  *
+- * &lt;P&gt;Once all the strings to be displayed have been generated the font definition object 
+- * containing the glyphs can be generated.&lt;/p&gt;
++ * &lt;P&gt;Once all the strings to be displayed have been generated the font 
++ * definition object containing the glyphs can be generated.&lt;/p&gt;
+  * 
+  * &lt;pre&gt;
+  *    FSDefineFont2 defineFont = font.defineFont();
+  * &lt;/pre&gt;
+  * 
+- * &lt;P&gt;Remember however that objects in a Flash file must be defined before they are used so
+- * the font object must be added to the file before the first FSDefineText object that
+- * references the glyphs in the font.&lt;/p&gt;
++ * &lt;P&gt;Remember however that objects in a Flash file must be defined before they 
++ * are used so the font object must be added to the file before the first 
++ * FSDefineText object that references the glyphs in the font.&lt;/p&gt;
+  * 
+- * &lt;P&gt;To reduce the size of the Flash file only the glyphs actually displayed can be included
+- * in a font definition object. When a FSDefineText object is created the glyphs used are 
+- * marked. This is why the text definition objects are generated before the font definition.&lt;/P&gt;
++ * &lt;P&gt;To reduce the size of the Flash file only the glyphs actually displayed 
++ * can be included in a font definition object. When a FSDefineText object is 
++ * created the glyphs used are marked. This is why the text definition objects 
++ * are generated before the font definition.&lt;/P&gt;
+  *
+- * &lt;P&gt;Glyphs are included in the font in the order they are used with each FSDefineText2 object 
+- * referencing a glyph by its position in the array of glyphs contained in a font definition.
+- * Any unused glyphs can then easily be omitted.&lt;/P&gt;
++ * &lt;P&gt;Glyphs are included in the font in the order they are used with each 
++ * FSDefineText2 object referencing a glyph by its position in the array of 
++ * glyphs contained in a font definition. Any unused glyphs can then easily be 
++ * omitted.&lt;/P&gt;
+  * 
+- * &lt;P&gt;When the font definition is created only the glyphs used (up to that point) are included. 
+- * If subsequent FSDefineText objects are generated that include glyphs not previously used then 
+- * the text will not be displayed correctly.&lt;/p&gt;
++ * &lt;P&gt;When the font definition is created only the glyphs used (up to that 
++ * point) are included. If subsequent FSDefineText objects are generated that 
++ * include glyphs not previously used then the text will not be displayed 
++ * correctly.&lt;/p&gt;
+  *
+  * &lt;b&gt;Text Fields&lt;/b&gt;&lt;br/&gt;
+  *
+- * &lt;P&gt;When creating text fields using the FSDefineTextField class, there are two options when 
+- * specifying the font used to display the characters entered into the field:
++ * &lt;P&gt;When creating text fields using the FSDefineTextField class, there are two 
++ * options when specifying the font used to display the characters entered into 
++ * the field:
+  *
+  * &lt;ol&gt;
+  * &lt;li&gt;The glyphs for the font may be loaded from the host platform.&lt;/li&gt;
+  * &lt;li&gt;The glyphs for the font are taken from a font definition object.&lt;/li&gt;
+  * &lt;/ol&gt;
+  *
+- * &lt;P&gt;Using the glyphs loaded from the host platform is by far the easiest way of using text fields.
+- * First a font definition is created that specifies only the name of the font which will be loaded
+- * from the host platform. Then creating the text fields set the useFontGlyphs attribute to false.&lt;/P&gt;
++ * &lt;P&gt;Using the glyphs loaded from the host platform is by far the easiest way 
++ * of using text fields. First a font definition is created that specifies only 
++ * the name of the font which will be loaded from the host platform. Then 
++ * creating the text fields set the useFontGlyphs attribute to false.&lt;/P&gt;
+  *
+  * &lt;pre&gt;
+  *    FSDefineFont2 fontDefinition = new FSDefineFont2(movie.newIdentifier(), &quot;Arial&quot;);
+@@ -138,64 +146,48 @@
+  *    textField.setUseFontGlyphs(false);
+  * &lt;/pre&gt;
+  *
+- * &lt;P&gt;This approach only works if the font is defined on the host platform otherwise the Flash Player
+- * will substitute a default font.&lt;/P&gt;
++ * &lt;P&gt;This approach only works if the font is defined on the host platform 
++ * otherwise the Flash Player will substitute a default font.&lt;/P&gt;
+  *
+- * &lt;P&gt;When using a font definition contained in the Flash file obviously the glyphs for all possible 
+- * characters must be defined otherwise the character will not be displayed correctly. There are 
+- * two ways to do this, either generate FSDefineText objects which contain all possible characters
+- * (the object need not be added to the Flash file)&lt;/P&gt;
+- *
++ * &lt;P&gt;When using a font definition contained in the Flash file obviously the 
++ * glyphs for all possible characters must be defined otherwise the character 
++ * will not be displayed correctly. When using text fields the characters must 
++ * be defined in the font, sorted by ascending character code, otherwise the
++ * text will not be displayed correctly. To do this the FSCharacterTable class
++ * provides arrays of characters sorted in the correct order. The array is 
++ * passed to the willDisplay() method and the FSTextConstructor will add the 
++ * glyphs for the characters in the order they appear in the array:&lt;/p&gt;
++ * 
+  * &lt;pre&gt;
+- *    int fontSize = 280;
+- *    FSColor fontColor = FSColorTable.black();
+- *
+- *    String lowerCaseLetters = &quot;abcdefghijklmnopqrstuvwxyz&quot;;
+- *    String upperCaseLetters = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;
+- *    String numbers = &quot;1234567890&quot;;
+- *    String everythingElse = &quot;`!@#$%^&amp;*()-=[]\\:\&quot;&lt;&gt;?~_+{}|;',./&quot;;
+- *
+- *    FSDefineText2 aString = null;
+- *
+- *    font.defineText(lowerCaseLetters, fontSize, fontColor);
+- *    font.defineText(upperCaseLetters, fontSize, fontColor);
+- *    font.defineText(numbers, fontSize, fontColor);
+- *    font.defineText(everythingElse, fontSize, fontColor);
+- *
+- *    FSDefineFont2 defineFont = font.defineFont();
++ *     char[] characterSet = FSCharacterTable.ascii();
++ *     
++ *     textConstructor.willDisplay(characterSet);
+  * &lt;/pre&gt;
++ * 
++ * &lt;P&gt;This will add ALL of the characters in the array to the font definition.
++ * Several character sets are provided in the FSCharacterTable class but any 
++ * array of characters could be passed to the willDisplay() method - allowing
++ * smaller font definitions to be created when only a few characters are 
++ * displayed.&lt;/p&gt;
+  *
+- * &lt;p&gt;or alternatively define a range of characters to be included:&lt;/p&gt;
+- *
+- * &lt;pre&gt;
+- *     char first = 'a';
+- *     char last = 'z';
+- *
+- *     for (int i=first; i&lt;=last; i++)
+- *            font.defineText(new String(i), fontSize, fontColor);
+- * &lt;/pre&gt;
+- *
+- * &lt;P&gt;This will include all the glyphs representing the range of characters in the 
+- * font definition.&lt;/P&gt;
+- *
+  * &lt;b&gt;Missing Characters&lt;/b&gt;&lt;br/&gt;
+  *
+- * &lt;P&gt;Characters that cannot be displayed using the font are handled by a displaying a 
+- * default glyph which typically represents a space or an empty box. Both Java AWT and
+- * True/Open Type definitions explicitly define the missing glyph. For fonts parsed
+- * from Flash files the missing glyph is assumed (by default) to be the first glyph 
+- * in the font definition.&lt;/p&gt;
++ * &lt;P&gt;Characters that cannot be displayed using the font are handled by a 
++ * displaying a default glyph which typically represents a space or an empty 
++ * box. Both Java AWT and True/Open Type definitions explicitly define the 
++ * missing glyph. For fonts parsed from Flash files the missing glyph is assumed 
++ * (by default) to be the first glyph in the font definition.&lt;/p&gt;
+  * 
+  * &lt;P&gt;When a font is loaded the missing glyph is added automatically to the font 
+- * definition so there is no need to explicitly include it by creating a text object
+- * to force it to be included. The missing glyph will always be the first glyph in the
+- * font definition generated by the FSTextConstructor object so it may be substituted
+- * by another suitable shape if required.&lt;/P&gt;
++ * definition so there is no need to explicitly include it by creating a text 
++ * object to force it to be included. The missing glyph will always be the first 
++ * glyph in the font definition generated by the FSTextConstructor object so it 
++ * may be substituted by another suitable shape if required.&lt;/P&gt;
+  * 
+  * &lt;P&gt;Whether a string can be displayed using a font can be determined by the 
+- * &lt;em&gt;canDisplay()&lt;/em&gt; method which returns the index of the first character that 
+- * cannot be displayed (the missing glyph will be displayed instead) or -1 if all the 
+- * characters are represented in the font.&lt;/P&gt;
++ * &lt;em&gt;canDisplay()&lt;/em&gt; method which returns the index of the first character 
++ * that cannot be displayed (the missing glyph will be displayed instead) or -1 
++ * if all the characters are represented in the font.&lt;/P&gt;
+  */
+ public final class FSTextConstructor
+ {
+@@ -352,15 +344,41 @@
+              decodeAWTFont(fontName);
+      }
+     /**
+-     * Indicates whether or not this FSTextConstructor can display a specified Unicode
+-     * String. This method returns the index of the first character that cannot be
+-     * displayed using this font. If the Font can display all characters, -1 is
+-     * returned.
++     * Indicates whether or not this FSTextConstructor can display all the 
++     * characters specified in the array. This method returns the index of the 
++     * first character that cannot be displayed using this font. If the Font can 
++     * display all characters, -1 is returned.
+      *
++     * @param chars an array containing all the characters to be displayed.
++     *
++     * @return the index of the first character that cannot be displayed, -1 
++     * otherwise.
++     */
++    public int canDisplay(char[] chars)
++    {
++        int firstMissingChar = -1;
++
++        for (int i=0; i&lt;chars.length; i++)
++        {
++            if (canDisplay(chars[i]) == false)
++            {
++                firstMissingChar = i;
++                break;
++            }
++        }
++        return firstMissingChar;
++    }
++    /**
++     * Indicates whether or not this FSTextConstructor can display a specified 
++     * Unicode String. This method returns the index of the first character that 
++     * cannot be displayed using this font. If the Font can display all 
++     * characters, -1 is returned.
++     *
+      * @param aString the String to be displayed.
+      *
+-     * @return the index of the first character that cannot be displayed, -1 otherwise.
+-     */
++     * @return the index of the first character that cannot be displayed, -1 
++     * otherwise.
++     */
+     public int canDisplay(String aString)
+     {
+         int firstMissingChar = -1;
+@@ -377,12 +395,39 @@
+         return firstMissingChar;
+     }
+     /**
++     * willDisplay is used to predefine the set of characters that will be 
++     * used when defining text objects.
++     * 
++     * @see FSCharacterTable for lists of predefined character sets that can be
++     * used with different spoken languages.
++     * 
++     * @param chars an array of characters defining the character set that will
++     * be used when defining text objects and fonts. The characters must be 
++     * sorted by the code used to represent the character.
++     */
++    public void willDisplay(char[] chars)
++    {
++       for (int i=0; i&lt;chars.length; i++)
++       {
++           int glyphIndex = characterTable[chars[i]];
++           
++           for (int index=0; index&lt;65536; index++)
++           {
++               if (orderTable[index] == glyphIndex)
++                   break;
++               else if (orderTable[index] == -1)
++               {
++                   orderTable[index] = (short)glyphIndex;
++                   break;
++               }
++           }
++       }
++    }
++    /**
+      * Generates a FSDefineFont2 object containing a complete definition of the font.
+      *
+-     * &lt;P&gt;NOTE: Only the glyphs referenced in the FSDefineText2 objects created using the 
+-     * defineText method will be included in the font definition. If FSDefineText2 objects 
+-     * are created after the font is generated and the text references a glyph not 
+-     * previously used then the text string will not be displayed correctly.&lt;/P&gt;
++     * &lt;P&gt;NOTE: Only the glyphs specified in the array of characters passed to
++     * the willDisplay method will be shown.&lt;/P&gt;
+      *
+      * @return a FSDefineFont2 object generated from the font definition.
+      */
+@@ -444,12 +489,6 @@
+      * &lt;P&gt;If any of the Unicode characters in the String cannot be displayed using this font
+      * then the missing glyph is substituted.&lt;/p&gt;
+      * 
+-     * &lt;P&gt;All the FSDefineText2 objects should be created before the font definition. Only 
+-     * the glyphs referenced up to that point will be included in the font. If text objects
+-     * are created after the font definition has been generated and a glyph is referenced 
+-     * that is not in the font then the text will not be displayed correctly and may even
+-     * crash the Flash Player.
+-     *
+      * @param anIdentifier a unique identifier for the object.
+      * @param text the String to be displayed.
+      * @param fontSize the size of the font in twips.
+@@ -487,12 +526,6 @@
+      * &lt;P&gt;If any of the Unicode characters in the String cannot be displayed using this font
+      * then the missing glyph is substituted.&lt;/p&gt;
+      * 
+-     * &lt;P&gt;All the FSDefineText2 objects should be created before the font definition. Only 
+-     * the glyphs referenced up to that point will be included in the font. If text objects
+-     * are created after the font definition has been generated and a glyph is referenced 
+-     * that is not in the font then the text will not be displayed correctly and may even
+-     * crash the Flash Player.
+-     *
+      * @param anIdentifier a unique identifier for the object.
+      * @param lines an array containing the lines of text to be displayed.
+      * @param fontSize the size of the font in twips.
+@@ -1780,7 +1813,7 @@
+         glyphTable[glyphIndex].onCurve = onCurve;
+         glyphTable[glyphIndex].endPoints = endPtsOfContours;
+     }
+-      private void decodeCompositeGlyph(FSCoder coder, int glyphIndex)
++    private void decodeCompositeGlyph(FSCoder coder, int glyphIndex)
+     {
+         FSShape shape = new FSShape();
+         FSCoordTransform transform = null;
+
+Modified: trunk/test/suites/FSTextConstructor.xml
+===================================================================
+--- trunk/test/suites/FSTextConstructor.xml	2006-02-26 22:36:37 UTC (rev 88)
++++ trunk/test/suites/FSTextConstructor.xml	2006-02-28 13:20:03 UTC (rev 89)
+@@ -56,5 +56,27 @@
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
++    &lt;test name=&quot;Character Sets&quot;&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/character-sets&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayCharacterSets&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Character Sets&quot;&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/locales&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayLocales&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
+ &lt;/suite&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000029.html">[Transform-svn] r88 - trunk/doc
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#30">[ date ]</a>
+              <a href="thread.html#30">[ thread ]</a>
+              <a href="subject.html#30">[ subject ]</a>
+              <a href="author.html#30">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

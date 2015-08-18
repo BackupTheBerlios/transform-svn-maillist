@@ -1,0 +1,721 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r111 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r111%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603051056.k25AuArq028948%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000051.html">
+   <LINK REL="Next"  HREF="000053.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r111 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r111%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603051056.k25AuArq028948%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r111 - in trunk: doc src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Sun Mar  5 11:56:10 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000051.html">[Transform-svn] r110 - in trunk: doc src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000053.html">[Transform-svn] r112 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-05 11:55:58 +0100 (Sun, 05 Mar 2006)
+New Revision: 111
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSAction.java
+   trunk/src/com/flagstone/transform/FSActionObject.java
+   trunk/src/com/flagstone/transform/FSCall.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/src/com/flagstone/transform/FSNull.java
+   trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+   trunk/src/com/flagstone/transform/FSPush.java
+   trunk/src/com/flagstone/transform/FSShowFrame.java
+   trunk/src/com/flagstone/transform/FSVoid.java
+Log:
+Added canonical version of objects that can be safely shared since 
+they contain no editable attributes: FSNull, FSVoid, FSAction, 
+FSCall, FSShowFrame, FSPathsArePostscript.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/doc/CHANGES.txt	2006-03-05 10:55:58 UTC (rev 111)
+@@ -1,5 +1,11 @@
+ 2006-03-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
++    * Added canonical version of objects that can be safely shared since they
++      contain no editable attributes: FSNull, FSVoid, FSAction, FSCall, 
++      FSShowFrame, FSPathsArePostscript.
++
++2006-03-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
+     * Updated FSMovieText.java and added a new test folder, benchmarks, for 
+       holding TestNG files to run performance test on Transform classes.
+       
+
+Modified: trunk/src/com/flagstone/transform/FSAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSAction.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSAction.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -849,166 +849,299 @@
+         &quot;&quot;,  // 127
+     };
+ 
++    private static final FSAction[] actions = {
++        null,
++        null,
++        null,
++        null,
++        new FSAction(FSAction.NextFrame),        // 4;
++        new FSAction(FSAction.PrevFrame),        // 5;
++        new FSAction(FSAction.Play),             // 6;
++        new FSAction(FSAction.Stop),             // 7;
++        new FSAction(FSAction.ToggleQuality),    // 8;
++        new FSAction(FSAction.StopSounds),       // 9;
++        new FSAction(FSAction.IntegerAdd),       // 10;
++        new FSAction(FSAction.Subtract),         // 11;
++        new FSAction(FSAction.Multiply),         // 12;
++        new FSAction(FSAction.Divide),           // 13;
++        new FSAction(FSAction.IntegerEquals),    // 14;
++        new FSAction(FSAction.IntegerLess),      // 15;
++        new FSAction(FSAction.And),              // 16;
++        new FSAction(FSAction.Or),               // 17;
++        new FSAction(FSAction.Not),              // 18;
++        new FSAction(FSAction.StringEquals),     // 19;
++        new FSAction(FSAction.StringLength),     // 20;
++        new FSAction(FSAction.StringExtract),    // 21;
++        null, 
++        new FSAction(FSAction.Pop),              // 23;
++        new FSAction(FSAction.ToInteger),        // 24;
++        null,
++        null, 
++        null,
++        new FSAction(FSAction.GetVariable),      // 28;
++        new FSAction(FSAction.SetVariable),      // 29;
++        null,
++        null,
++        new FSAction(FSAction.SetTarget2),       // 32;
++        new FSAction(FSAction.StringAdd),        // 33;
++        new FSAction(FSAction.GetProperty),      // 34;
++        new FSAction(FSAction.SetProperty),      // 35;
++        new FSAction(FSAction.CloneSprite),      // 36;
++        new FSAction(FSAction.RemoveSprite),     // 37;
++        new FSAction(FSAction.Trace),            // 38;
++        new FSAction(FSAction.StartDrag),        // 39;
++        new FSAction(FSAction.EndDrag),          // 40;
++        new FSAction(FSAction.StringLess),       // 41;
++        new FSAction(FSAction.Throw),            // 42;
++        new FSAction(FSAction.Cast),             // 43;
++        new FSAction(FSAction.Implements),       // 44;
++        null,
++        null,
++        null,
++        new FSAction(FSAction.RandomNumber),     // 48;
++        new FSAction(FSAction.MBStringLength),   // 49;
++        new FSAction(FSAction.CharToAscii),      // 50;
++        new FSAction(FSAction.AsciiToChar),      // 51;
++        new FSAction(FSAction.GetTime),          // 52;
++        new FSAction(FSAction.MBStringExtract),  // 53;
++        new FSAction(FSAction.MBCharToAscii),    // 54;
++        new FSAction(FSAction.MBAsciiToChar),    // 55;
++        null,
++        null,
++        new FSAction(FSAction.DeleteVariable),   // 58;
++        new FSAction(FSAction.Delete),            // 59;
++        new FSAction(FSAction.InitVariable),     // 60;
++        new FSAction(FSAction.ExecuteFunction),  // 61;
++        new FSAction(FSAction.Return),           // 62;
++        new FSAction(FSAction.Modulo),           // 63;
++        new FSAction(FSAction.NamedObject),      // 64;
++        new FSAction(FSAction.NewVariable),      // 65;
++        new FSAction(FSAction.NewArray),         // 66;
++        new FSAction(FSAction.NewObject),        // 67;
++        new FSAction(FSAction.GetType),          // 68;
++        new FSAction(FSAction.GetTarget),        // 69;
++        new FSAction(FSAction.Enumerate),        // 70;
++        new FSAction(FSAction.Add),              // 71;
++        new FSAction(FSAction.Less),             // 72;
++        new FSAction(FSAction.Equals),           // 73;
++        new FSAction(FSAction.ToNumber),         // 74;
++        new FSAction(FSAction.ToString),         // 75;
++        new FSAction(FSAction.Duplicate),        // 76;
++        new FSAction(FSAction.Swap),             // 77;
++        new FSAction(FSAction.GetAttribute),     // 78;
++        new FSAction(FSAction.SetAttribute),     // 79;
++        new FSAction(FSAction.Increment),        // 80;
++        new FSAction(FSAction.Decrement),        // 81;
++        new FSAction(FSAction.ExecuteMethod),    // 82;
++        new FSAction(FSAction.NewMethod),        // 83;
++        new FSAction(FSAction.InstanceOf),       // 84;
++        new FSAction(FSAction.EnumerateObject),  // 85;
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        new FSAction(FSAction.BitwiseAnd),           // 96;
++        new FSAction(FSAction.BitwiseOr),            // 97;
++        new FSAction(FSAction.BitwiseXOr),           // 98;
++        new FSAction(FSAction.LogicalShiftLeft),     // 99;
++        new FSAction(FSAction.ArithmeticShiftRight), // 100;
++        new FSAction(FSAction.LogicalShiftRight),    // 101;
++        new FSAction(FSAction.StrictEquals),         // 102;
++        new FSAction(FSAction.Greater),              // 103;
++        new FSAction(FSAction.StringGreater),        // 104;
++        new FSAction(FSAction.Extends),              // 105;
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,
++        null,  // 127
++    };
++
++    static FSAction getInstance(int type) { return actions[type]; }
++
+     /** Factory method for generating an FSAction object representing a NextFrame action. */
+-    public static FSAction NextFrame() { return new FSAction(FSAction.NextFrame); }
++    public static FSAction NextFrame() { return actions[FSAction.NextFrame]; }
+     /** Factory method for generating an FSAction object representing a PrevFrame action. */
+-    public static FSAction PrevFrame() { return new FSAction(FSAction.PrevFrame); }
++    public static FSAction PrevFrame() { return actions[FSAction.PrevFrame]; }
+     /** Factory method for generating an FSAction object representing a Play action. */
+-    public static FSAction Play() { return new FSAction(FSAction.Play); }
++    public static FSAction Play() { return actions[FSAction.Play]; }
+     /** Factory method for generating an FSAction object representing a Stop action. */
+-    public static FSAction Stop() { return new FSAction(FSAction.Stop); }
++    public static FSAction Stop() { return actions[FSAction.Stop]; }
+     /** Factory method for generating an FSAction object representing a ToggleQuality action. */
+-    public static FSAction ToggleQuality() { return new FSAction(FSAction.ToggleQuality); }
++    public static FSAction ToggleQuality() { return actions[FSAction.ToggleQuality]; }
+     /** Factory method for generating an FSAction object representing a StopSounds action. */
+-    public static FSAction StopSounds() { return new FSAction(FSAction.StopSounds); }
++    public static FSAction StopSounds() { return actions[FSAction.StopSounds]; }
+ // Flash 4    
+     /// Factory method for generating an FSAction object representing a Subtract action.
+-    public static FSAction Subtract() { return new FSAction(FSAction.Subtract); }
++    public static FSAction Subtract() { return actions[FSAction.Subtract]; }
+     /// Factory method for generating an FSAction object representing a Multiply action.
+-    public static FSAction Multiply() { return new FSAction(FSAction.Multiply); }
++    public static FSAction Multiply() { return actions[FSAction.Multiply]; }
+     /// Factory method for generating an FSAction object representing a Divide action.
+-    public static FSAction Divide() { return new FSAction(FSAction.Divide); }
++    public static FSAction Divide() { return actions[FSAction.Divide]; }
+     /// Factory method for generating an FSAction object representing a And action.
+-    public static FSAction And() { return new FSAction(FSAction.And); }
++    public static FSAction And() { return actions[FSAction.And]; }
+     /// Factory method for generating an FSAction object representing a Or action.
+-    public static FSAction Or() { return new FSAction(FSAction.Or); }
++    public static FSAction Or() { return actions[FSAction.Or]; }
+     /// Factory method for generating an FSAction object representing a Not action.
+-    public static FSAction Not() { return new FSAction(FSAction.Not); }
++    public static FSAction Not() { return actions[FSAction.Not]; }
+     /// Factory method for generating an FSAction object representing a StringEquals action.
+-    public static FSAction StringEquals() { return new FSAction(FSAction.StringEquals); }
++    public static FSAction StringEquals() { return actions[FSAction.StringEquals]; }
+     /// Factory method for generating an FSAction object representing a StringLength action.
+-    public static FSAction StringLength() { return new FSAction(FSAction.StringLength); }
++    public static FSAction StringLength() { return actions[FSAction.StringLength]; }
+     /// Factory method for generating an FSAction object representing a StringExtract action.
+-    public static FSAction StringExtract() { return new FSAction(FSAction.StringExtract); }
++    public static FSAction StringExtract() { return actions[FSAction.StringExtract]; }
+     /// Factory method for generating an FSAction object representing a Pop action.
+-    public static FSAction Pop() { return new FSAction(FSAction.Pop); }
++    public static FSAction Pop() { return actions[FSAction.Pop]; }
+     /// Factory method for generating an FSAction object representing a ToInteger action.
+-    public static FSAction ToInteger() { return new FSAction(FSAction.ToInteger); }
++    public static FSAction ToInteger() { return actions[FSAction.ToInteger]; }
+     /// Factory method for generating an FSAction object representing a GetVariable action.
+-    public static FSAction GetVariable() { return new FSAction(FSAction.GetVariable); }
++    public static FSAction GetVariable() { return actions[FSAction.GetVariable]; }
+     /// Factory method for generating an FSAction object representing a SetVariable action.
+-    public static FSAction SetVariable() { return new FSAction(FSAction.SetVariable); }
++    public static FSAction SetVariable() { return actions[FSAction.SetVariable]; }
+     /// Factory method for generating an FSAction object representing a SetTarget2 action.
+-    public static FSAction SetTarget2() { return new FSAction(FSAction.SetTarget2); }
++    public static FSAction SetTarget2() { return actions[FSAction.SetTarget2]; }
+     /// Factory method for generating an FSAction object representing a StringAdd action.
+-    public static FSAction StringAdd() { return new FSAction(FSAction.StringAdd); }
++    public static FSAction StringAdd() { return actions[FSAction.StringAdd]; }
+     /// Factory method for generating an FSAction object representing a GetProperty action.
+-    public static FSAction GetProperty() { return new FSAction(FSAction.GetProperty); }
++    public static FSAction GetProperty() { return actions[FSAction.GetProperty]; }
+     /// Factory method for generating an FSAction object representing a SetProperty action.
+-    public static FSAction SetProperty() { return new FSAction(FSAction.SetProperty); }
++    public static FSAction SetProperty() { return actions[FSAction.SetProperty]; }
+     /// Factory method for generating an FSAction object representing a CloneSprite action.
+-    public static FSAction CloneSprite() { return new FSAction(FSAction.CloneSprite); }
++    public static FSAction CloneSprite() { return actions[FSAction.CloneSprite]; }
+     /// Factory method for generating an FSAction object representing a RemoveSprite action.
+-    public static FSAction RemoveSprite() { return new FSAction(FSAction.RemoveSprite); }
++    public static FSAction RemoveSprite() { return actions[FSAction.RemoveSprite]; }
+     /// Factory method for generating an FSAction object representing a Trace action.
+-    public static FSAction Trace() { return new FSAction(FSAction.Trace); }
++    public static FSAction Trace() { return actions[FSAction.Trace]; }
+     /// Factory method for generating an FSAction object representing a StartDrag action.
+-    public static FSAction StartDrag() { return new FSAction(FSAction.StartDrag); }
++    public static FSAction StartDrag() { return actions[FSAction.StartDrag]; }
+     /// Factory method for generating an FSAction object representing a EndDrag action.
+-    public static FSAction EndDrag() { return new FSAction(FSAction.EndDrag); }
++    public static FSAction EndDrag() { return actions[FSAction.EndDrag]; }
+     /// Factory method for generating an FSAction object representing a StringLess action.
+-    public static FSAction StringLess() { return new FSAction(FSAction.StringLess); }
++    public static FSAction StringLess() { return actions[FSAction.StringLess]; }
+     /// Factory method for generating an FSAction object representing a RandomNumber action.
+-    public static FSAction RandomNumber() { return new FSAction(FSAction.RandomNumber); }
++    public static FSAction RandomNumber() { return actions[FSAction.RandomNumber]; }
+     /// Factory method for generating an FSAction object representing a MBStringLength action.
+-    public static FSAction MBStringLength() { return new FSAction(FSAction.MBStringLength); }
++    public static FSAction MBStringLength() { return actions[FSAction.MBStringLength]; }
+     /// Factory method for generating an FSAction object representing a CharToAscii action.
+-    public static FSAction CharToAscii() { return new FSAction(FSAction.CharToAscii); }
++    public static FSAction CharToAscii() { return actions[FSAction.CharToAscii]; }
+     /// Factory method for generating an FSAction object representing a AsciiToChar action.
+-    public static FSAction AsciiToChar() { return new FSAction(FSAction.AsciiToChar); }
++    public static FSAction AsciiToChar() { return actions[FSAction.AsciiToChar]; }
+     /// Factory method for generating an FSAction object representing a GetTime action.
+-    public static FSAction GetTime() { return new FSAction(FSAction.GetTime); }
++    public static FSAction GetTime() { return actions[FSAction.GetTime]; }
+     /// Factory method for generating an FSAction object representing a MBStringExtract action.
+-    public static FSAction MBStringExtract() { return new FSAction(FSAction.MBStringExtract); }
++    public static FSAction MBStringExtract() { return actions[FSAction.MBStringExtract]; }
+     /// Factory method for generating an FSAction object representing a MBCharToAscii action.
+-    public static FSAction MBCharToAscii() { return new FSAction(FSAction.MBCharToAscii); }
++    public static FSAction MBCharToAscii() { return actions[FSAction.MBCharToAscii]; }
+     /// Factory method for generating an FSAction object representing a MBAsciiToChar action.
+-    public static FSAction MBAsciiToChar() { return new FSAction(FSAction.MBAsciiToChar); }
++    public static FSAction MBAsciiToChar() { return actions[FSAction.MBAsciiToChar]; }
+ // Flash 5
+     /// Factory method for generating an FSAction object representing a DeleteVariable action.
+-    public static FSAction DeleteVariable() { return new FSAction(FSAction.DeleteVariable); }
++    public static FSAction DeleteVariable() { return actions[FSAction.DeleteVariable]; }
+     /// Factory method for generating an FSAction object representing a Delete action.
+-    public static FSAction Delete() { return new FSAction(FSAction.Delete); }
++    public static FSAction Delete() { return actions[FSAction.Delete]; }
+     /// Factory method for generating an FSAction object representing a InitVariable action.
+-    public static FSAction InitVariable() { return new FSAction(FSAction.InitVariable); }
++    public static FSAction InitVariable() { return actions[FSAction.InitVariable]; }
+     /// Factory method for generating an FSAction object representing a ExecuteFunction action.
+-    public static FSAction ExecuteFunction() { return new FSAction(FSAction.ExecuteFunction); }
++    public static FSAction ExecuteFunction() { return actions[FSAction.ExecuteFunction]; }
+     /// Factory method for generating an FSAction object representing a Return action.
+-    public static FSAction Return() { return new FSAction(FSAction.Return); }
++    public static FSAction Return() { return actions[FSAction.Return]; }
+     /// Factory method for generating an FSAction object representing a Modulo action.
+-    public static FSAction Modulo() { return new FSAction(FSAction.Modulo); }
++    public static FSAction Modulo() { return actions[FSAction.Modulo]; }
+     /// Factory method for generating an FSAction object representing a NamedObject action.
+-    public static FSAction NamedObject() { return new FSAction(FSAction.NamedObject); }
++    public static FSAction NamedObject() { return actions[FSAction.NamedObject]; }
+     /// Factory method for generating an FSAction object representing a NewVariable action.
+-    public static FSAction NewVariable() { return new FSAction(FSAction.NewVariable); }
++    public static FSAction NewVariable() { return actions[FSAction.NewVariable]; }
+     /// Factory method for generating an FSAction object representing a NewArray action.
+-    public static FSAction NewArray() { return new FSAction(FSAction.NewArray); }
++    public static FSAction NewArray() { return actions[FSAction.NewArray]; }
+     /// Factory method for generating an FSAction object representing a NewObject action.
+-    public static FSAction NewObject() { return new FSAction(FSAction.NewObject); }
++    public static FSAction NewObject() { return actions[FSAction.NewObject]; }
+     /// Factory method for generating an FSAction object representing a GetType action.
+-    public static FSAction GetType() { return new FSAction(FSAction.GetType); }
++    public static FSAction GetType() { return actions[FSAction.GetType]; }
+     /// Factory method for generating an FSAction object representing a GetTarget action.
+-    public static FSAction GetTarget() { return new FSAction(FSAction.GetTarget); }
++    public static FSAction GetTarget() { return actions[FSAction.GetTarget]; }
+     /// Factory method for generating an FSAction object representing a Enumerate action.
+-    public static FSAction Enumerate() { return new FSAction(FSAction.Enumerate); }
++    public static FSAction Enumerate() { return actions[FSAction.Enumerate]; }
+     /// Factory method for generating an FSAction object representing a Add action.
+-    public static FSAction Add() { return new FSAction(FSAction.Add); }
++    public static FSAction Add() { return actions[FSAction.Add]; }
+     /// Factory method for generating an FSAction object representing a Less action.
+-    public static FSAction Less() { return new FSAction(FSAction.Less); }
++    public static FSAction Less() { return actions[FSAction.Less]; }
+     /// Factory method for generating an FSAction object representing a Equals action.
+-    public static FSAction Equals() { return new FSAction(FSAction.Equals); }
++    public static FSAction Equals() { return actions[FSAction.Equals]; }
+     /// Factory method for generating an FSAction object representing a ToNumber action.
+-    public static FSAction ToNumber() { return new FSAction(FSAction.ToNumber); }
++    public static FSAction ToNumber() { return actions[FSAction.ToNumber]; }
+     /// Factory method for generating an FSAction object representing a ToString action.
+-    public static FSAction ToString() { return new FSAction(FSAction.ToString); }
++    public static FSAction ToString() { return actions[FSAction.ToString]; }
+     /// Factory method for generating an FSAction object representing a Duplicate action.
+-    public static FSAction Duplicate() { return new FSAction(FSAction.Duplicate); }
++    public static FSAction Duplicate() { return actions[FSAction.Duplicate]; }
+     /// Factory method for generating an FSAction object representing a Swap action.
+-    public static FSAction Swap() { return new FSAction(FSAction.Swap); }
++    public static FSAction Swap() { return actions[FSAction.Swap]; }
+     /// Factory method for generating an FSAction object representing a GetAttribute action.
+-    public static FSAction GetAttribute() { return new FSAction(FSAction.GetAttribute); }
++    public static FSAction GetAttribute() { return actions[FSAction.GetAttribute]; }
+     /// Factory method for generating an FSAction object representing a SetAttribute action.
+-    public static FSAction SetAttribute() { return new FSAction(FSAction.SetAttribute); }
++    public static FSAction SetAttribute() { return actions[FSAction.SetAttribute]; }
+     /// Factory method for generating an FSAction object representing a Increment action.
+-    public static FSAction Increment() { return new FSAction(FSAction.Increment); }
++    public static FSAction Increment() { return actions[FSAction.Increment]; }
+     /// Factory method for generating an FSAction object representing a Decrement action.
+-    public static FSAction Decrement() { return new FSAction(FSAction.Decrement); }
++    public static FSAction Decrement() { return actions[FSAction.Decrement]; }
+     /// Factory method for generating an FSAction object representing a ExecuteMethod action.
+-    public static FSAction ExecuteMethod() { return new FSAction(FSAction.ExecuteMethod); }
++    public static FSAction ExecuteMethod() { return actions[FSAction.ExecuteMethod]; }
+     /// Factory method for generating an FSAction object representing a NewMethod action.
+-    public static FSAction NewMethod() { return new FSAction(FSAction.NewMethod); }
++    public static FSAction NewMethod() { return actions[FSAction.NewMethod]; }
+     /// Factory method for generating an FSAction object representing a BitwiseAnd action.
+-    public static FSAction BitwiseAnd() { return new FSAction(FSAction.BitwiseAnd); }
++    public static FSAction BitwiseAnd() { return actions[FSAction.BitwiseAnd]; }
+     /// Factory method for generating an FSAction object representing a BitwiseOr action.
+-    public static FSAction BitwiseOr() { return new FSAction(FSAction.BitwiseOr); }
++    public static FSAction BitwiseOr() { return actions[FSAction.BitwiseOr]; }
+     /// Factory method for generating an FSAction object representing a BitwiseXOr action.
+-    public static FSAction BitwiseXOr() { return new FSAction(FSAction.BitwiseXOr); }
++    public static FSAction BitwiseXOr() { return actions[FSAction.BitwiseXOr]; }
+     /// Factory method for generating an FSAction object representing a LogicalShiftLeft action.
+-    public static FSAction LogicalShiftLeft() { return new FSAction(FSAction.LogicalShiftLeft); }
++    public static FSAction LogicalShiftLeft() { return actions[FSAction.LogicalShiftLeft]; }
+     /// Factory method for generating an FSAction object representing a ArithmeticShiftRight action.
+-    public static FSAction ArithmeticShiftRight() { return new FSAction(FSAction.ArithmeticShiftRight); }
++    public static FSAction ArithmeticShiftRight() { return actions[FSAction.ArithmeticShiftRight]; }
+     /// Factory method for generating an FSAction object representing a LogicalShiftRight action.
+-    public static FSAction LogicalShiftRight() { return new FSAction(FSAction.LogicalShiftRight); }
++    public static FSAction LogicalShiftRight() { return actions[FSAction.LogicalShiftRight]; }
+ // Flash 6
+     /// Factory method for generating an FSAction object representing a InstanceOf action.
+-    public static FSAction InstanceOf() { return new FSAction(FSAction.InstanceOf); }
++    public static FSAction InstanceOf() { return actions[FSAction.InstanceOf]; }
+     /// Factory method for generating an FSAction object representing a EnumerateObject action.
+-    public static FSAction EnumerateObject() { return new FSAction(FSAction.EnumerateObject); }
++    public static FSAction EnumerateObject() { return actions[FSAction.EnumerateObject]; }
+     /// Factory method for generating an FSAction object representing a Greater action.
+-    public static FSAction Greater() { return new FSAction(FSAction.Greater); }
++    public static FSAction Greater() { return actions[FSAction.Greater]; }
+     /// Factory method for generating an FSAction object representing a StringGreater action.
+-    public static FSAction StringGreater() { return new FSAction(FSAction.StringGreater); }
++    public static FSAction StringGreater() { return actions[FSAction.StringGreater]; }
+     /// Factory method for generating an FSAction object representing a StrictEquals action.
+-    public static FSAction StrictEquals() { return new FSAction(FSAction.StrictEquals); }
++    public static FSAction StrictEquals() { return actions[FSAction.StrictEquals]; }
+ // Flash 7
+     /// Factory method for generating an FSAction object representing a Cast action.
+-    public static FSAction Cast() { return new FSAction(FSAction.Cast); }
++    public static FSAction Cast() { return actions[FSAction.Cast]; }
+     /// Factory method for generating an FSAction object representing a Implements action.
+-    public static FSAction Implements() { return new FSAction(FSAction.Implements); }
++    public static FSAction Implements() { return actions[FSAction.Implements]; }
+     /// Factory method for generating an FSAction object representing a Throw action.
+-    public static FSAction Throw() { return new FSAction(FSAction.Throw); }
++    public static FSAction Throw() { return actions[FSAction.Throw]; }
+     /// Factory method for generating an FSAction object representing a Extends action.
+-    public static FSAction Extends() { return new FSAction(FSAction.Extends); }
++    public static FSAction Extends() { return actions[FSAction.Extends]; }
+     
+     /**
+      * Construct an FSAction object, initalizing it with values decoded from an
+
+Modified: trunk/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -86,7 +86,6 @@
+     public static final int ExceptionHandler = 143;
+ 
+     protected int type = 0;
+-    protected int size = 0;
+     protected int length = 0;
+     
+     protected FSActionObject(int aType)
+@@ -96,7 +95,6 @@
+     protected FSActionObject(FSActionObject obj)
+     {
+         type = obj.type;
+-        size = obj.size;
+         length = obj.length;
+     }  
+     /** Gets the code used that identifies the type of the action when it is encoded. 
+
+Modified: trunk/src/com/flagstone/transform/FSCall.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSCall.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -68,7 +68,18 @@
+  */  
+ public final class FSCall extends FSActionObject
+ {
++    private static final FSCall instance = new FSCall();
++    
+     /**
++     * Returns a canonical FSCall object.
++     * 
++     * @return an object that can safely be shared among objects.
++     */
++    public static FSCall getInstance()
++    {
++        return instance;
++    }
++    /**
+      * Construct an FSCall object, initalizing it with values decoded from an 
+      * encoded object.
+      * 
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -216,7 +216,8 @@
+         switch (type)
+         {
+             case FSMovieObject.ShowFrame:
+-                currentObject = new FSShowFrame(coder);
++                currentObject = FSShowFrame.getInstance();
++                coder.setPointer(next);
+                 break;
+             case FSMovieObject.DefineShape:
+                 currentObject = new FSDefineShape(coder);
+@@ -341,7 +342,8 @@
+                 break;
+ // Flash 4
+             case FSMovieObject.PathsArePostscript:
+-                currentObject = new FSPathsArePostscript(coder);
++                currentObject = FSPathsArePostscript.getInstance();
++                coder.setPointer(next);
+                 break;
+             case FSMovieObject.DefineTextField:
+                 currentObject = new FSDefineTextField(coder);
+@@ -446,7 +448,8 @@
+             case FSAction.Stop:
+             case FSAction.ToggleQuality:
+             case FSAction.StopSounds:
+-                anAction = new FSAction(coder);
++                anAction = FSAction.getInstance(type);
++                coder.adjustPointer(8);
+                 break;
+             case FSActionObject.GetUrl:
+                 anAction = new FSGetUrl(coder);
+@@ -499,10 +502,12 @@
+             case FSAction.MBStringExtract:
+             case FSAction.MBCharToAscii:
+             case FSAction.MBAsciiToChar:
+-                anAction = new FSAction(coder);
++                anAction = FSAction.getInstance(type);
++                coder.adjustPointer(8);
+                 break;
+             case FSActionObject.Call:
+-                anAction = new FSCall(coder);
++                anAction = FSCall.getInstance();
++                coder.setPointer(next);
+                 break;
+             case FSActionObject.Push:
+                 anAction = new FSPush(coder);
+@@ -555,7 +560,8 @@
+             case FSAction.GetTarget:
+             case FSAction.NewVariable:
+             case FSAction.InitVariable:
+-                anAction = new FSAction(coder);
++                anAction = FSAction.getInstance(type);
++                coder.adjustPointer(8);
+                 break;
+             case FSActionObject.Table:
+                 anAction = new FSTable(coder);
+@@ -581,14 +587,16 @@
+             case FSAction.Greater:
+             case FSAction.StringGreater:
+             case FSAction.StrictEquals:
+-                anAction = new FSAction(coder);
++                anAction = FSAction.getInstance(type);
++                coder.adjustPointer(8);
+                 break;
+ // Flash 7
+             case FSAction.Cast:
+             case FSAction.Extends:
+             case FSAction.Implements:
+             case FSAction.Throw:
+-                anAction = new FSAction(coder);
++                anAction = FSAction.getInstance(type);
++                coder.adjustPointer(8);
+                 break;
+             case FSActionObject.ExceptionHandler:
+                 anAction = new FSExceptionHandler(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSNull.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNull.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSNull.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -41,6 +41,18 @@
+  */  
+ public final class FSNull extends FSTransformObject
+ {
++    private static final FSNull instance = new FSNull();
++    
++    /**
++     * Returns a canonical FSNull object.
++     * 
++     * @return an object that can safely be shared among objects.
++     */
++    public static FSNull getInstance()
++    {
++        return instance;
++    }
++    
+     /** Constructs an FSNull object. */     
+     public FSNull()
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -63,7 +63,19 @@
+  */  
+ public final class FSPathsArePostscript extends FSMovieObject
+ {
++    private static final FSPathsArePostscript instance = new FSPathsArePostscript();
++    
+     /**
++     * Returns a canonical FSPathsArePostscript object.
++     * 
++     * @return an object that can safely be shared among objects.
++     */
++    public static FSPathsArePostscript getInstance()
++    {
++        return instance;
++    }
++    
++   /**
+      * Construct an FSPathsArePostscript object, initalizing it with values 
+      * decoded from an encoded object.
+      * 
+
+Modified: trunk/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSPush.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -642,11 +642,11 @@
+                     valuesLength -= 5;
+                     break;
+                 case 2:
+-                    values.add(new FSNull());
++                    values.add(FSNull.getInstance());
+                     valuesLength -= 1;
+                     break;
+                 case 3:
+-                    values.add(new FSVoid());
++                    values.add(FSVoid.getInstance());
+                     valuesLength -= 1;
+                     break;
+                 case 4:
+
+Modified: trunk/src/com/flagstone/transform/FSShowFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShowFrame.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSShowFrame.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -95,7 +95,18 @@
+  */
+ public final class FSShowFrame extends FSMovieObject
+ {
++    private static final FSShowFrame instance = new FSShowFrame();
++    
+     /**
++     * Returns a canonical FSShowFrame object.
++     * 
++     * @return an object that can safely be shared among objects.
++     */
++    public static FSShowFrame getInstance()
++    {
++        return instance;
++    }
++    /**
+      * Construct an FSShowFrame object, initalizing it with values decoded from
+      * an encoded object.
+      * 
+
+Modified: trunk/src/com/flagstone/transform/FSVoid.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVoid.java	2006-03-03 18:59:51 UTC (rev 110)
++++ trunk/src/com/flagstone/transform/FSVoid.java	2006-03-05 10:55:58 UTC (rev 111)
+@@ -41,6 +41,18 @@
+  */  
+ public final class FSVoid extends FSTransformObject
+ {
++    private static final FSVoid instance = new FSVoid();
++    
++    /**
++     * Returns a canonical FSVoid object.
++     * 
++     * @return an object that can safely be shared among objects.
++     */
++    public static FSVoid getInstance()
++    {
++        return instance;
++    }
++
+     /** 
+      * Constructs an FSVoid object. 
+      */     
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000051.html">[Transform-svn] r110 - in trunk: doc src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000053.html">[Transform-svn] r112 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

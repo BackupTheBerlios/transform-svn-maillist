@@ -1,0 +1,3051 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r87 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r87%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%20src/com/flagstone/transform/test%20src/com/flagstone/transform/util&In-Reply-To=%3C200602261715.k1QHFBeA011123%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000027.html">
+   <LINK REL="Next"  HREF="000029.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r87 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r87%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%20src/com/flagstone/transform/test%20src/com/flagstone/transform/util&In-Reply-To=%3C200602261715.k1QHFBeA011123%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r87 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Sun Feb 26 18:15:11 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000027.html">[Transform-svn] r86 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000029.html">[Transform-svn] r88 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#28">[ date ]</a>
+              <a href="thread.html#28">[ thread ]</a>
+              <a href="subject.html#28">[ subject ]</a>
+              <a href="author.html#28">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-26 18:14:50 +0100 (Sun, 26 Feb 2006)
+New Revision: 87
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSActionObject.java
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSDefineFont.java
+   trunk/src/com/flagstone/transform/FSDefineFont2.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/src/com/flagstone/transform/test/FSColorTest.java
+   trunk/src/com/flagstone/transform/util/FSCodec.java
+   trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+   trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Tidied up the FSCoder class, making all methods more reliable 
+merging in functionality from Transform Utilities FSCodec. All 
+decoding and encoding of data is now performed using FSCoder. 
+FSCodec is deprecated.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/doc/CHANGES.txt	2006-02-26 17:14:50 UTC (rev 87)
+@@ -1,3 +1,12 @@
++2006-02-26 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Tidied up the FSCoder class, making all methods more reliable merging in
++      functionality from Transform Utilities FSCodec. All decoding and encoding 
++      of data is now performed using FSCoder. FSCodec is deprecated.
++      
++    * The class TransformUtil is now deprecated.
++    
++
+ 2006-02-25 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Optimized the TextDump tool.
+
+Modified: trunk/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSActionObject.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/FSActionObject.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -105,7 +105,6 @@
+     static final int _NewFunction2     = 142;
+     static final int _ExceptionHandler = 143;
+ 
+-
+     protected int type = 0;
+     protected int size = 0;
+     protected int length = 0;
+@@ -140,7 +139,7 @@
+     {
+         int encodedLength = (type &gt; 128) ? 3 : 1;
+         
+-        encodedLength += length(new FSCoder());
++        encodedLength += length(new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[0]));
+         
+         return encodedLength;
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -32,33 +32,51 @@
+ 
+ import java.io.*;
+ 
++/**
++ * FSCoder is a similar to Java stream classes, allowing words and bit fields 
++ * to be read and written from an internal array of bytes. FSCoder supports both 
++ * little-endian and big-endian byte ordering.
++ * 
++ * The FSCoder class maintains an internal pointer which points to the next bit 
++ * in the internal array where data will be read or written. When calculating an 
++ * offset in bytes to jump to simply multiply the offset by 8 for the correct 
++ * bit position. The class provides accessor methods, getPointer() and 
++ * setPointer() to change the location of the internal pointer.
++ * 
++ * When writing to an array the size of the array is changed dynamically should 
++ * a write operation cause a buffer overflow. For reads if an overflow results 
++ * then the bits/bytes that overflowed will be set to zero, rather than throwing 
++ * an exception. The eof() method can be used to determine whether the end of 
++ * the buffer has been reached.
++ */
+ public final class FSCoder 
+ {
++    /** 
++     * Identifies that multibyte words are stored in little-endian format with 
++     * the least significant byte in a word stored first.
++     */
+     public static final int LITTLE_ENDIAN = 0;
++    /** 
++     * Identifies that multibyte words are stored in big-endian format with the 
++     * most significant byte in a word stored first.
++     */
+     public static final int BIG_ENDIAN = 1;
+     
+     /*
+-     * Index values for the context array in FSCoder.
++     * Methods used to calculate the size of fields when encoded.
+      */
+-    public static final int Action = 0;
+-    public static final int Version = 1;
+-    public static final int Type = 2;
+-    public static final int Empty = 3;
+-    public static final int Identifier = 4;
+-    public static final int TransparentColors = 5;
+-    public static final int NumberOfFillBits = 6;
+-    public static final int NumberOfLineBits = 7;
+-    public static final int NumberOfAdvanceBits = 8;
+-    public static final int NumberOfGlyphBits = 9;
+-    public static final int NumberOfShapeBits = 10;
+-    public static final int ArrayCountExtended = 11;
+-    public static final int WideCodes = 12;
+-    public static final int Delta = 13;
+-    public static final int CodingError = 14;
+-    public static final int TypeInError = 15;
+-    public static final int StartOfError = 16;
+-    public static final int ExpectedLength = 17;
+     
++    /**
++     * Calculates the minimum number of bits required to encoded an integer
++     * in a bit field.
++     * 
++     * @param value the value to be encoded.
++     * 
++     * @param signed where the value will be encoded as a signed or unsigned
++     * integer.
++     * 
++     * @return the number of bits required to encode the value.
++     */
+     static int size(int value, boolean signed)
+     {
+         int size = 0, i = 0;
+@@ -79,7 +97,17 @@
+         }
+         return size;
+     }
+-
++    /**
++     * Calculates the minimum number of bits required to encoded an array of
++     * integer values in a series of bit fields.
++     * 
++     * @param values the values to be encoded.
++     * 
++     * @param signed where the values will be encoded as a signed or unsigned
++     * integers.
++     * 
++     * @return the minimum number of bits required to encode all the values.
++     */
+     static int size(int[] values, boolean signed)
+     {
+         int size = 0;
+@@ -89,14 +117,28 @@
+ 
+         return size;
+     }
+-
++    /**
++     * Calculates the minimum number of bits required to encoded a floating
++     * point number as a fixed point number in 8.8 format. 
++     * 
++     * @param value the value to be encoded.
++     * 
++     * @return the number of bits required to encode the value.
++     */
+     static int fixedShortSize(float aNumber)
+     {
+         float floatValue = aNumber * 256.0f;
+         
+         return size((int)floatValue, true);
+     }
+-
++    /**
++     * Calculates the minimum number of bits required to encoded a series of
++     * floating point numbers in a fixed point number in 8.8 format. 
++     * 
++     * @param value the values to be encoded.
++     * 
++     * @return the minimum number of bits required to encode all the values.
++     */
+     static int fixedShortSize(float[] values)
+     {
+         int size = 0;
+@@ -106,14 +148,28 @@
+ 
+         return size;
+     }
+-    
++    /**
++     * Calculates the minimum number of bits required to encoded a floating
++     * point number as a fixed point number in 16.16 format. 
++     * 
++     * @param value the value to be encoded.
++     * 
++     * @return the number of bits required to encode the value.
++    */
+     static int fixedSize(float aNumber)
+     {
+         float floatValue = aNumber * 65536.0f;
+         
+         return size((int)floatValue, true);
+     }
+-
++    /**
++     * Calculates the minimum number of bits required to encoded a series of
++     * floating point numbers in a fixed point number in 16.16 format. 
++     * 
++     * @param value the values to be encoded.
++     * 
++     * @return the number of bits required to encode the value.
++     */
+     static int fixedSize(float[] values)
+     {
+         int size = 0;
+@@ -123,22 +179,84 @@
+ 
+         return size;
+     }
++    /**
++     * Calculates the length of a string when encoded.
++     * 
++     * @param string the string to be encoded.
++     * 
++     * @param encoding the format used to encode the string characters.
++     * 
++     * @param appendNull whether the string should be terminated with a null
++     * byte.
++     * 
++     * @return the number of bytes required to encode the string.
++     */
++    static int strlen(String string, String encoding, boolean appendNull)
++    {    
++        int length = 0;
++        
++        if (string != null)
++        {
++            try 
++            {
++                length += string.getBytes(encoding).length;
++                length += appendNull ? 1 : 0;
++            }
++            catch (UnsupportedEncodingException e) 
++            {
++            }
++        }
++        return length;
++    }
++    /**
++     * Calculates the length of a string when encoded.
++     * 
++     * @param string the string to be encoded.
++     * 
++     * @param appendNull whether the string should be terminated with a null
++     * byte.
++     * 
++     * @return the number of bytes required to encode the string.
++     */
++    static int strlen(String string, boolean appendNull)
++    {    
++        int length = 0;
++        
++        if (string != null)
++        {
++            try 
++            {
++                length += string.getBytes(&quot;UTF8&quot;).length;
++                length += appendNull ? 1 : 0;
++            }
++            catch (UnsupportedEncodingException e) 
++            {
++            }
++        }
++        return length;
++    }
+     
+     private FSMovieListener listener = null;
+     
+-    String stringEncoding = &quot;UTF8&quot;;
++    String encoding = &quot;UTF8&quot;;
+     
+-    public int[] context = new int[18];
+-    
++    private int byteOrder = LITTLE_ENDIAN;
+     private byte[] data = null;
+     private int ptr = 0;
+     private int end = 0;
+     
+-    public FSCoder(int size)
++    /**
++     * Constructs an FSCoder object containing an array of bytes with the 
++     * specified byte ordering.
++     * 
++     * @param order the byte-order for words, eitherLITTLE_ENDIAN or BIG_ENDIAN.
++     * @param size the size of the internal buffer to be created.
++     */
++    public FSCoder(int order, int size)
+     {
+-        for (int i=0; i&lt;context.length; i++)
+-            context[i] = 0;
++        clearContext();
+             
++        byteOrder = order;
+         data = new byte[size];
+         
+         for (int i=0; i&lt;size; i++)
+@@ -147,24 +265,25 @@
+         ptr = 0;
+         end = data.length &lt;&lt; 3;
+     }
+-        
+-    public FSCoder(byte[] bytes)
++    /**
++     * Constructs an FSCoder object containing an array of bytes with the
++     * specified byte order.
++     * 
++     * @param order the byte-order for words, either LITTLE_ENDIAN or BIG_ENDIAN.
++     * @param bytes an array of bytes where the data will be read or written.
++     */
++    public FSCoder(int order, byte[] bytes)
+     {
+-        for (int i=0; i&lt;context.length; i++)
+-            context[i] = 0;
++        clearContext();
+             
++        byteOrder = order;
+         data = bytes;
+         ptr = 0;
+         end = data.length &lt;&lt; 3;
+     }
+         
+-    public FSCoder()
+-    {
+-        for (int i=0; i&lt;context.length; i++)
+-            context[i] = 0;
+-    }
+     /**
+-     * @depracated The FSMovieListener interface does not enable recovery from
++     * @deprecated The FSMovieListener interface does not enable recovery from
+      * coding errors or corrupt Flash files and therefore will no longer be 
+      * used. Instead errors will be reported through exceptions.
+      */ 
+@@ -173,7 +292,7 @@
+         listener = aListener;
+     }
+     /**
+-     * @depracated The FSMovieListener interface does not enable recovery from
++     * @deprecated The FSMovieListener interface does not enable recovery from
+      * coding errors or corrupt Flash files and therefore will no longer be 
+      * used. Instead errors will be reported through exceptions.
+      */ 
+@@ -181,312 +300,584 @@
+     { 
+        return listener; 
+     }
++    /**
++     * @deprecated
++     * 
++     * @param name
++     */
++    void beginObject(String name)
++    {
++        if (listener != null)
++            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.Begin, ptr, 0, name));
++    }
++    /**
++     * @deprecated
++     * 
++     * @param name
++     */
++    void endObject(String name)
++    {
++        if (listener != null)
++            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.End, ptr, 0, name));
++    }
++    /**
++     * @deprecated
++     * 
++     */
++    void logValue(Object anObject, int location, int numberOfBits)
++    {
++        if (listener != null)
++            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.Value, location, numberOfBits, anObject));
++    }
++    /**
++     * @deprecated
++     * 
++     */
++    void logError(String errorKey, int location, int length)
++    {
++        if (listener != null)
++            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.Error, location, length, errorKey));
++    }
++    
++    /**
++     * Return the string representation of the character encoding scheme used
++     * when encoding or decoding strings as a sequence of bytes.
++     * 
++     * @return the string the name of the encoding schemd for characters.
++     */
++    public String getEncoding()
++    {
++        return encoding;
++    }
++    /**
++     * Sets the string representation of the character encoding scheme used
++     * when encoding or decoding strings as a sequence of bytes.
++     * 
++     * @return enc, the string the name of the encoding schemd for characters.
++     */
++    public void setEncoding(String enc)
++    {
++        encoding = enc;
++    }
+ 
++    /*
++     * Methods for accessing the encoded data
++     */
++
++    /**
++     * Returns a copy of the array of bytes.
++     * 
++     * @return a copy of the internal buffer.
++     */
+     public byte[] getData()
+     {
+-        return data;
++        int length = (ptr + 7) &gt;&gt; 3;
++        
++        byte[] bytes = new byte[length];
++        System.arraycopy(data, 0, bytes, 0, length);
++        
++        return bytes;
++    }    
++    /**
++     * Sets the array of bytes used to read or write data to.
++     * 
++     * @param order the byte-order for words, either FSCoder.LITTLE_ENDIAN or 
++     * FSCoder.BIG_ENDIAN.
++     * 
++     * @param bytes a byte array that will be used as the internal buffer.
++     */
++    public void setData(int order, byte[] bytes)
++    {
++        byteOrder = order;
++        data = new byte[bytes.length];
++        System.arraycopy(bytes, 0, data, 0, bytes.length);
++
++        ptr = 0;
++        end = data.length &lt;&lt; 3;
+     }
+-
+-    public void setData(byte[] bytes)
++    /**
++     * Increases the size of the internal buffer. This method is used when 
++     * encoding data to automatically adjust the buffer size to avoid overflows.
++     *  
++     * @param size the number of bytes to add to the buffer.
++     */
++    public void addCapacity(int size)
+     {
++        int length = (end &gt;&gt;&gt; 3) + size;
++        byte[] bytes = new byte[length];
++        
++        System.arraycopy(data, 0, bytes, 0, data.length);
+         data = bytes;
+-        ptr = 0;
++        
+         end = data.length &lt;&lt; 3;
+     }
+     
++   /**
++    * Return the size of the internal buffer in bytes.
++    * 
++    * @return the size of the buffer.
++    */
++    public int getCapacity()
++    {
++        return end &gt;&gt;&gt; 3;
++    }
++    
++    /*
++     * Methods for adjusting the locaion from where data is read or written
++     */
++    /**
++     * Returns the offset, in bits, from the start of the buffer where the next 
++     * value will be read or written.
++     * 
++     * @return the offset in bits where the next value will be read or written. 
++     */
+     public int getPointer()
+     {
+         return ptr;
+     }
+-
++    /**
++     * Sets the offset, in bits, from the start of the buffer where the next 
++     * value will be read or written. If the offset falls outside of the bits 
++     * range supported by the buffer then an IllegalArgumentException will
++     * be thrown.
++     *  
++     * @param offset the offset in bits from the start of the array of bytes.
++     */
+     public void setPointer(int location)
+     {
+-        if (location &lt; 0)
+-        {
+-            location = 0;
+-        }
+-        else if (location &gt; end)
+-        {
+-            location = end;
+-        }
++        if (location &lt; 0 || location &gt; end)
++            throw new IllegalArgumentException();
++
+         ptr = location;
+     }
+-
++    /**
++     * Adds offset, in bits, to the internal pointer to change the location 
++     * where the next value will be read or written. If the offset falls outside 
++     * of the range supported by the buffer then an IllegalArgumentException 
++     * will be thrown.
++     *  
++     * @param offset the offset in bits from the start of the array of bytes.
++     */
+     public void adjustPointer(int offset)
+     {
++        if (ptr+offset &lt; 0 || ptr+offset &gt; end)
++            throw new IllegalArgumentException();
++
+         ptr += offset;
+-        
+-        if (ptr &lt; 0)
+-        {
+-            ptr = 0;
+-        }
+-        else if (ptr &gt;= end)
+-        {
+-            ptr = end;
+-        }
+     }
+-    
++    /**
++     * Moves the internal pointer forward so it is aligned on a byte boundary. 
++     * All word values read and written to the internal buffer must be 
++     * byte-aligned.
++     */
+     public void alignToByte()
+     {
+-        ptr += (ptr % 8 &gt; 0) ? 8 - (ptr % 8) : 0;
++        ptr = (ptr+7) &amp; ~7;
+     }
+-    
++    /**
++     * Returns true of the internal pointer is at the end of the buffer.
++     * 
++     * @return true if the pointer is at the end of the buffer, false otherwise.
++     */
+     public boolean eof()
+     {
+         return ptr &gt;= end;
+     }
+-
+-    public void beginObject(String name)
++    
++    /*
++     * Core methods for readig and writing bits and multibyte words
++     */
++    /**
++     * Read a bit field from the internal buffer.
++     * 
++     * If a buffer overflow would occur then the bits which would cause the 
++     * error when read will be set to zero.
++     * 
++     * @param numberOfBits the number of bits to read.
++     * 
++     * @param signed a boolean flag indicating whether the value read should 
++     * be sign extended.
++     * 
++     * @return the value read.
++     */    
++    public int readBits(int numberOfBits, boolean signed)
+     {
+-        if (listener != null)
+-            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.Begin, ptr, 0, name));
+-    }
++        int value = 0;
++        
++        if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
++            throw new IllegalArgumentException(&quot;Number of bits must be in the range 1..32.&quot;);
++        
++        if (numberOfBits == 0)
++            return 0;
++        
++        int index = ptr &gt;&gt; 3;
++        int base = (data.length - index &gt; 4) ? 0 : (4 - (data.length - index))*8;
++        
++        for (int i=32; i&gt;base; i-=8, index++)
++            value |= (data[index] &amp; 0x000000FF) &lt;&lt; (i-8);
+ 
+-    public void endObject(String name)
+-    {
+-        if (listener != null)
+-            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.End, ptr, 0, name));
++        value &lt;&lt;= ptr % 8;
++
++        if (signed)
++            value &gt;&gt;= 32 - numberOfBits;
++        else 
++            value &gt;&gt;&gt;= 32 - numberOfBits;
++
++        ptr += numberOfBits;
++
++        if (ptr &gt; (data.length &lt;&lt; 3))
++            ptr = data.length &lt;&lt; 3;
++
++        return value;
+     }
+-    
+-    public void logValue(Object anObject, int location, int numberOfBits)
++    /**
++     * Write a bit value to the internal buffer. The buffer will resize 
++     * automatically if required.
++     * 
++     * @param value an integer containing the value to be written.
++     * @param numberOfBits the least significant n bits from the value that 
++     * will be written to the buffer.
++     */
++    public void writeBits(int value, int numberOfBits)
+     {
+-        if (listener != null)
+-            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.Value, location, numberOfBits, anObject));
++        if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
++            throw new IllegalArgumentException(&quot;Number of bits must be in the range 1..32.&quot;);
++        
++        if (ptr+numberOfBits &gt; end)
++            addCapacity(data.length/2);
++        
++        int index = ptr &gt;&gt; 3;
++
++        value &lt;&lt;= (32 - numberOfBits);    
++        value = value &gt;&gt;&gt; (ptr % 8);
++        value = value | (data[index] &lt;&lt; 24);
++
++        for (int i=24; i&gt;=0; i-=8, index++)
++            data[index] = (byte)(value &gt;&gt;&gt; i);
++        
++        ptr += numberOfBits;
++
++        if (ptr &gt; (data.length &lt;&lt; 3))
++            ptr = data.length &lt;&lt; 3;
+     }
+-
+-    public void logError(String errorKey, int location, int length)
++    /**
++     * Read a word from the internal buffer.
++     * 
++     * If a buffer overflow would occur then the bytes which would cause the 
++     * error when read will be set to zero.
++     * 
++     * @param numberOfBytes the number of bytes read in the range 1..4.
++     * 
++     * @param signed a boolean flag indicating whether the value read should be 
++     * sign extended.
++     * 
++     * @return the value read.
++     */
++    public int readWord(int numberOfBytes, boolean signed)
+     {
+-        if (listener != null)
+-            listener.logEvent(new FSMovieEvent(context[FSCoder.Action], FSMovieEvent.Error, location, length, errorKey));
+-    }
+-    
+-    public int strlen(String string, boolean appendNull)
+-    {    
+-        int length = 0;
++        int value = 0;
+         
+-        if (string != null)
++        if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
++            throw new IllegalArgumentException(&quot;Number of bytes must be in the range 1..4.&quot;);
++        
++        int index = ptr &gt;&gt; 3;
++        
++        if (index + numberOfBytes &gt; data.length)
++            numberOfBytes = data.length - index;
++        
++        int numberOfBits = numberOfBytes*8;
++
++        if (byteOrder == LITTLE_ENDIAN)
+         {
+-            try 
++            for (int i=0; i&lt;numberOfBits; i+=8, ptr+=8, index++)
++                value += (data[index] &amp; 0x000000FF) &lt;&lt; i;
++        }
++        else
++        {
++            for (int i=0; i&lt;numberOfBits; i+=8, ptr+=8, index++)
+             {
+-                length += string.getBytes(stringEncoding).length;
+-                length += appendNull ? 1 : 0;
++                value = value &lt;&lt; 8;
++                value += data[index] &amp; 0x000000FF;
+             }
+-            catch (UnsupportedEncodingException e) 
+-            {
+-            }
+         }
+-        return length;
+-    }
+-    
+-    public boolean findBits(int value, int numberOfBits, int step)
+-    {
+-        boolean found = false;
+         
+-        for (; ptr &lt; end; ptr += step)
++        if (signed)
+         {
+-            if (scanBits(numberOfBits, false) == value)
+-            {
+-                found = true;
+-                break;
+-            }
++            value &lt;&lt;= 32 - numberOfBits;
++            value &gt;&gt;= 32 - numberOfBits;
+         }
+-        return found;
++
++        return value;
+     }
+-
+-    public boolean findWord(int value, int numberOfBytes, int step)
++    /**
++     * Write a word to the internal buffer. The buffer will resize automatically
++     * if required.
++     * 
++     * @param value an integer containing the value to be written.
++     * @param numberOfBytes the least significant n bytes from the value that 
++     * will be written to the buffer.
++     */
++    public void writeWord(int value, int numberOfBytes)
+     {
+-        boolean found = false;
++        if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
++            throw new IllegalArgumentException(&quot;Number of bytes must be in the range 1..4.&quot;);
++            
++        int numberOfBits = numberOfBytes*8;
+         
+-        for (; ptr &lt; end; ptr += step)
++        if (ptr+numberOfBits &gt; end)
++            addCapacity(data.length/2);
++        
++        if (byteOrder == LITTLE_ENDIAN)
+         {
+-            if (scanWord(numberOfBytes, false) == value)
+-            {
+-                found = true;
+-                break;
+-            }
++            int index = ptr &gt;&gt;&gt; 3;
++            
++            for (int i=0; i&lt;numberOfBits; i+=8, ptr+=8, value &gt;&gt;&gt;= 8, index++)
++                data[index] = (byte)value;
+         }
+-        return found;
++        else
++        {
++            int index = (ptr + numberOfBits - 8) &gt;&gt;&gt; 3;
++            
++            for (int i=0; i&lt;numberOfBits; i+=8, ptr+=8, value &gt;&gt;&gt;= 8, index--)
++                data[index] = (byte)value;
++        }
+     }
+-
+-    public int scanBits(int numberOfBits, boolean signed)
++    /**
++     * Reads an array of bytes from the internal buffer. If a read overflow 
++     * would occur while reading the internal buffer then the remaining bytes 
++     * in the array will not be filled. The method returns the number of bytes 
++     * read.
++     * 
++     * @param bytes the array that will contain the bytes read.
++     * @return the number of bytes read from the buffer.
++     */
++    public int readBytes(byte[] bytes)
+     {
+-        int value = 0;
+-        int start = ptr;
++        int bytesRead = 0;
++        
++        if (bytes == null || bytes.length == 0)
++            return bytesRead;
+ 
+-        value = _readBits(numberOfBits, signed);
+-        ptr = start;
++        int index = ptr &gt;&gt;&gt; 3;
++        int numberOfBytes = bytes.length;
+         
+-        return value;
++        if (index + numberOfBytes &gt; data.length)
++            numberOfBytes = data.length - index;
++
++        for (int i=0; i&lt;numberOfBytes; i++, ptr+=8, index++, bytesRead++)
++            bytes[i] = data[index];
++
++        return bytesRead;
+     }
+-    
+-    public int scanWord(int numberOfBytes, boolean signed)
++    /**
++     * Writes an array of bytes from the internal buffer. The internal buffer 
++     * will be resized automatically if required.
++     * 
++     * @param bytes the array containing the data to be written.
++     * @return the number of bytes written to the buffer.
++     */
++    public int writeBytes(byte[] bytes)
+     {
+-        int value = 0;
+-        int start = ptr;
+-
+-        value = _readWord(numberOfBytes*8, signed);
+-        ptr = start;
++        int bytesWritten = 0;
+         
+-        return value;
+-    }
++        if (ptr+(bytes.length &lt;&lt; 3) &gt; end)
++            addCapacity(data.length/2);
+         
+-    public int readBits(int numberOfBits, boolean signed)
+-    {
+-        int location = ptr;
+-        int value = 0;
++        if (bytes == null || bytes.length == 0)
++            return bytesWritten;
+ 
+-        value = _readBits(numberOfBits, signed);
++        int index = ptr &gt;&gt;&gt; 3;
++        int numberOfBytes = bytes.length;
++
++        for (int i=0; i&lt;numberOfBytes; i++, ptr+=8, index++, bytesWritten++)
++            data[index] = bytes[i];
+         
+-        return value;
++        return bytesWritten;
+     }
+     
+-    public void writeBits(int value, int numberOfBits)
++    /*
++     * Methods to lookahead at the data without reading.
++     */
++    /**
++     * Read a bit field without adjusting the internal pointer.
++     * 
++     * @param numberOfBits the number of bits to read.
++     * 
++     * @param signed a boolean flag indicating whether the value read should 
++     * be sign extended.
++     * 
++     * @return the value read.
++     */
++    public int scanBits(int numberOfBits, boolean signed)
+     {
+-        int location = ptr;
+-    
+-        _writeBits(value, numberOfBits);
++        int start = ptr;
++        int value = readBits(numberOfBits, signed);
++        ptr = start;
++        
++        return value;
+     }
+-
+-    public int readWord(int numberOfBytes, boolean signed)
++    /**
++     * Read a word without adjusting the internal pointer.
++     * 
++     * @param numberOfBytes the number of bytes to read.
++     * 
++     * @param signed a boolean flag indicating whether the value read should 
++     * be sign extended.
++     * 
++     * @return the value read.
++     */
++    public int scanWord(int numberOfBytes, boolean signed)
+     {
+-        int location = ptr;
+-        int value = 0;
+-
+-        value = _readWord(numberOfBytes*8, signed);
++        int start = ptr;
++        int value = readWord(numberOfBytes, signed);
++        ptr = start;
+         
+         return value;
+     }
+-        
+-    public void writeWord(int value, int numberOfBytes)
+-    {
+-        int location = ptr;
+     
+-        _writeWord(value, numberOfBytes*8);
+-    }
+-    
++    /*
++     * Methods for accessing fixed point (8.8) and (16.16) values.
++     */
++    /**
++     * Read a fixed point number, in either (8.8) or (16.16) format from a bit 
++     * field.
++     * 
++     * @param numberOfBits the number of bits the number is encoded in.
++     * @param fractionSize the number of bits occupied by the fractional
++     * part of the number. The integer part will be signed extended.
++     * 
++     * @return the value read as a floating-point number.
++     */    
+     public float readFixedBits(int numberOfBits, int fractionSize)
+     {
+-        int location = ptr;
+-        float value = 0;
+-        float divisor = (float)(1 &lt;&lt; fractionSize);
++        float divisor = (float)(1 &lt;&lt; fractionSize);    
++        float value = ((float)readBits(numberOfBits, true)) / divisor;
+     
+-        value = ((float)_readBits(numberOfBits, true)) / divisor;
+-    
+         return value;
+     }
+-    
++    /**
++     * Write a fixed point number, in either (8.8) or (16.16) format to a bit 
++     * field.
++     * 
++     * @param the value to be ecoded.
++     * @param numberOfBits the number of bits the number is encoded in.
++     * @param fractionSize the number of bits occupied by the fractional
++     * part of the number. The integer part will be signed extended.
++     */    
+     public void writeFixedBits(float value, int numberOfBits, int fractionSize)
+     {
+-        int location = ptr; 
+-        float multiplier = (float)(1 &lt;&lt; fractionSize);
+-    
+-        _writeBits((int)(value*multiplier), numberOfBits);
++        float multiplier = (float)(1 &lt;&lt; fractionSize);   
++        writeBits((int)(value*multiplier), numberOfBits);
+     }
+-
++    /**
++     * Read a fixed point number, in either (8.8) or (16.16) format from a 
++     * word field, accounting for the byte-ordering used.
++     * 
++     * @param mantissaSize the number of bits occupied by the integer
++     * part of the number. This will be signed extended.
++     * @param fractionSize the number of bits occupied by the fractional
++     * part of the number.
++     * 
++     * @return the value read as a floating-point number.
++     */    
+     public float readFixedWord(int mantissaSize, int fractionSize)
+     {
+-        int location = ptr;
+-        int mantissa = 0;
+-        int fraction = 0;
++        float divisor = (float)(1 &lt;&lt; (fractionSize*8));    
++        int fraction = readWord(fractionSize, false);
++        int mantissa = readWord(mantissaSize, true) &lt;&lt; (fractionSize*8);
+         
+-        float value = 0;
+-        float divisor = (float)(1 &lt;&lt; fractionSize);
+-    
+-        fraction = _readWord(fractionSize, false);
+-        mantissa = _readWord(mantissaSize, true);
+-            
+-        mantissa &lt;&lt;= fractionSize;        
+-        value = (mantissa + fraction) / divisor;
+-        
+-        return value;
++        return (mantissa + fraction) / divisor;
+     }
+-    
++    /**
++     * Write a fixed point number, in either (8.8) or (16.16) format to a 
++     * word field, accounting for the byte-ordering used.
++     * 
++     * @value the value to be written.
++     * @param mantissaSize the number of bits occupied by the integer
++     * part of the number.
++     * @param fractionSize the number of bits occupied by the fractional
++     * part of the number.
++     */    
+     public void writeFixedWord(float value, int mantissaSize, int fractionSize)
+     {
+-        int location = ptr; 
+-        int mantissa = 0;
+-        int fraction = 0;
+-        
+-        float multiplier = (float)(1 &lt;&lt; fractionSize);
+-    
+-        fraction = (int)(value*multiplier);
+-        mantissa = (int)value;
++        float multiplier = (float)(1 &lt;&lt; (fractionSize*8));   
++        int fraction = (int)(value*multiplier);
++        int mantissa = (int)value;
+ 
+-        _writeWord(fraction, fractionSize);
+-        _writeWord(mantissa, mantissaSize);
++        writeWord(fraction, fractionSize);
++        writeWord(mantissa, mantissaSize);
+     }
++    
++    /*
++     * Methods for reading specific data types
++     */
++    
++    /**
++     * Read a double-precision floating point number from a sequence of bytes
++     * using the byte-ordering of the buffer.
++     * 
++     * @return the value.
++     */
+ 
+     public double readDouble()
+     {
+-        int location = ptr;
+-        double value = 0.0;
++        int upperInt = readWord(4, false);
++        int lowerInt = readWord(4, false);
+     
+-        int upperInt = _readWord(32, false);
+-        int lowerInt = _readWord(32, false);
+-    
+-        long longValue = 0;
+-    
+-        longValue |= (long)upperInt &lt;&lt; 32;
++        long longValue = (long)upperInt &lt;&lt; 32;
+         longValue |= (long)lowerInt &amp; 0x00000000FFFFFFFFL;
+     
+-        value = Double.longBitsToDouble(longValue);
+-
+-        return value;
++        return Double.longBitsToDouble(longValue);
+     }
+-
++    /**
++     * Write a double-precision floating point number as a sequence of bytes
++     * using the byte-ordering of the buffer.
++     * 
++     * @param value the value to be written.
++     */
+     public void writeDouble(double value)
+     {
+-        int location = ptr;
+-    
+         long longValue = Double.doubleToLongBits(value);
+     
+         int lowerInt = (int)longValue;
+         int upperInt = (int)(longValue &gt;&gt;&gt; 32);
+     
+-        _writeWord(upperInt, 32);
+-        _writeWord(lowerInt, 32);
++        writeWord(upperInt, 4);
++        writeWord(lowerInt, 4);
+     }
+-
+-    public int readBytes(byte[] bytes)
+-    {
+-        int location = ptr;
+-        int bytesRead = 0;
+-    
+-        bytesRead = _readBytes(bytes);
+-    
+-        return bytesRead;
+-    }
+-
+-    public int writeBytes(byte[] bytes)
+-    {
+-        int location = ptr;
+-        int bytesWritten = 0;
+-    
+-        bytesWritten = _writeBytes(bytes);
+-    
+-        return bytesWritten;
+-    }
+-    
++    /**
++     * Read a string containing the specified number of characters using the 
++     * default character encoding scheme.
++     * 
++     * @param length the number of characters to read.
++     * 
++     * @return the string containing the specified number of characters.
++     */
+     public String readString(int length)
+     {
+-        return readString(length, stringEncoding);
++        return readString(length, encoding);
+     }
+-
+-    public String readString(int length, String encoding)
++    /**
++     * Read a string containing the specified number of characters with the  
++     * given character encoding scheme.
++     * 
++     * @param length the number of characters to read.
++     * @return enc, the string the name of the encoding schemd for characters.
++     * 
++     * @return the string containing the specified number of characters.
++     */
++    public String readString(int length, String enc)
+     {
+         if (length == 0)
+-        {
+             return &quot;&quot;;
+-        }
+             
+-        int location = ptr;
+         String value = null;
+         byte[] str = new byte[length];
+     
+-        int len = _readBytes(str);
++        int len = readBytes(str);
+         
+         try { 
+-            value = new String(str, 0, len, encoding); 
++            value = new String(str, 0, len, enc); 
+         }
+         catch (java.io.UnsupportedEncodingException e) 
+         {
+@@ -494,20 +885,22 @@
+         }
+         return value;
+     }
+-
++    /**
++     * Read a null-terminated string using the default character encoding scheme.
++     * 
++     * @return the string read from the internal buffer.
++     */
+     public String readString()
+     {
+-        return readString(stringEncoding);
++        return readString(encoding);
+     }
+-    
+-    public int writeString(String str)
+-    {            
+-        return writeString(str, stringEncoding);
+-    }
+-
+-    public String readString(String encoding)
++    /**
++     * Read a null-terminated string using the specified character encoding scheme.
++     * 
++     * @return the string read from the internal buffer.
++     */
++    public String readString(String enc)
+     {
+-        int location = ptr;
+         String value = null;
+     
+         int start = ptr&gt;&gt;3;
+@@ -516,29 +909,48 @@
+         while (start &lt; data.length &amp;&amp; data[start++] != 0) length++;
+     
+         byte[] str = new byte[length];
+-        int len = _readBytes(str);
++        int len = readBytes(str);
+ 
+         try { 
+-            value = new String(str, 0, len, encoding); 
++            value = new String(str, 0, len, enc); 
+         }
+         catch (java.io.UnsupportedEncodingException e) 
+         {
+             value = &quot;&quot;;
+         }
+ 
+-        _readWord(8, false);
++        readWord(1, false);
+         len++;
+     
+         return value;
+     }
+-
+-    public int writeString(String str, String encoding)
++    /**
++     * Write a string to the internal buffer using the default character 
++     * encoding scheme.
++     * 
++     * @param str the string.
++     * 
++     * @return the number of bytes written.
++     */
++    public int writeString(String str)
+     {            
++        return writeString(str, encoding);
++    }
++    /**
++     * Write a string to the internal buffer using the specified character 
++     * encoding scheme.
++     * 
++     * @param str the string.
++     * 
++     * @return the number of bytes written.
++     */
++    public int writeString(String str, String enc)
++    {            
+         int bytesWritten = 0;
+ 
+         try 
+         {
+-            bytesWritten = writeBytes(str.getBytes(encoding)); 
++            bytesWritten = writeBytes(str.getBytes(enc)); 
+         }
+         catch (java.io.UnsupportedEncodingException e) 
+         {
+@@ -546,158 +958,125 @@
+         return bytesWritten;
+     }
+ 
+-    private int _readBits(int numberOfBits, boolean signed)
++    /*
++     * Methods for searching the data
++     */
++    
++    /**
++     * Searches the internal buffer for a bit pattern and advances the pointer 
++     * to the start of the bit field, returning true to signal a successful 
++     * search. If the bit pattern cannot be found then the method returns false 
++     * and the position of the internal pointer is not changed.
++     * 
++     * The step, in bits, added to the pointer can be specified, allowing the
++     * number of bits being searched to be independent of the location in the 
++     * internal buffer. This is useful for example when searching for a bit 
++     * field that begins on a byte or word boundary.
++     *  
++     * @param value an integer containing the bit patter to search for.
++     * @param numberOfBits least significant n bits in the value to search for.
++     * @param step the increment in bits to add to the internal pointer as the 
++     * buffer is searched.
++     * 
++     * @return true if the pattern was found, false otherwise.
++     */
++    public boolean findBits(int value, int numberOfBits, int step)
+     {
+-        int value = 0;
+-    
+-        if (numberOfBits == 0)
+-            return value;
++        boolean found = false;
+         
+-        try 
++        for (; ptr &lt; end; ptr += step)
+         {
+-            int index = ptr &gt;&gt; 3;
+-            int base = (data.length - index &gt; 4) ? 0  : (4 - (data.length - index))*8;
+-            
+-            for (int i=32; i&gt;base; i-=8, index++)
+-                value |= (data[index] &amp; 0x000000FF) &lt;&lt; (i-8);
+-    
+-            value &lt;&lt;= ptr % 8;
+-    
+-            if (signed)
+-                value &gt;&gt;= 32 - numberOfBits;
+-            else 
+-                value &gt;&gt;&gt;= 32 - numberOfBits;
+-    
+-            adjustPointer(numberOfBits);
++            if (scanBits(numberOfBits, false) == value)
++            {
++                found = true;
++                break;
++            }
+         }
+-        catch (ArrayIndexOutOfBoundsException e)
+-        {
+-            value = 0;
+-        }
+-        return value;
++        return found;
+     }
+-    
+-    private int _readWord(int numberOfBits, boolean signed)
++    /**
++     * Searches the internal buffer for a word and advances the pointer to the 
++     * location where the word was found, returning true to signal a successful 
++     * search. The search will begin on the next byte boundary. If word cannot 
++     * be found then the method returns false and the position of the internal 
++     * pointer is not changed.
++     * 
++     * Specifying the number of bytes in the search value allows word of either 
++     * 8, 16, 24 or 32 bits to be searched for. Searches for words are performed 
++     * faster than using the findBits() method.
++     * 
++     * @param value an integer containing the word to search for.
++     * 
++     * @param numberOfBytes least significant n bytes in the value to search 
++     * for.
++     * 
++     * @param step the increment in bits to add to the internal pointer as the 
++     * buffer is searched.
++     * 
++     * @return true if the pattern was found, false otherwise.
++     */
++    public boolean findWord(int value, int numberOfBytes, int step)
+     {
+-        int value = 0;
+-    
+-        if (numberOfBits == 0)
+-            return value;
+-
+-        try 
++        boolean found = false;
++        
++        for (; ptr &lt; end; ptr += step)
+         {
+-            int index = ptr &gt;&gt; 3;
+-    
+-            for (int i=0; i&lt;numberOfBits; i+=8, ptr+=8, index++)
+-                value += (data[index] &amp; 0x000000FF) &lt;&lt; i;
+-            
+-            if (signed)
++            if (scanWord(numberOfBytes, false) == value)
+             {
+-                value &lt;&lt;= 32 - numberOfBits;
+-                value &gt;&gt;= 32 - numberOfBits;
++                found = true;
++                break;
+             }
+         }
+-        catch (ArrayIndexOutOfBoundsException e)
+-        {
+-            value = 0;
+-        }
+-        return value;
++        return found;
+     }
+-    
+-    private int _readBytes(byte[] bytes)
+-    {
+-        int bytesRead = 0;
+-    
+-        if (bytes == null || bytes.length == 0)
+-            return bytesRead;
+ 
+-        try 
+-        {
+-            int index = ptr &gt;&gt;&gt; 3;
+-            int numberOfBytes = bytes.length;
++    /*
++     * Context variables are used to pass information between objects when
++     * they are being encoded or decoded. Context variables are primarily 
++     * used within the Transform classes however they are also used when 
++     * performing unit tests on classes.
++     */
+     
+-            for (int i=0; i&lt;numberOfBytes; i++, ptr+=8, index++, bytesRead++)
+-                bytes[i] = data[index];
+-        }
+-        catch (ArrayIndexOutOfBoundsException e)
+-        {
+-        }        
+-        return bytesRead;
+-    }
++    /**
++     * TransparentColors is used to pass information to FSCOlor objects when
++     * they are being encoded or decoded so that the alpha channel will be 
++     * included.
++     */
++    public static final int TransparentColors = 0;
+ 
+-    private void _writeBits(int value, int numberOfBits)
+-    {
+-        if (numberOfBits == 0)
+-            return;
++    static final int Action = 1;
++    static final int Version = 2;
++    static final int Type = 3;
++    static final int Empty = 4;
++    static final int Identifier = 5;
++    static final int NumberOfFillBits = 6;
++    static final int NumberOfLineBits = 7;
++    static final int NumberOfAdvanceBits = 8;
++    static final int NumberOfGlyphBits = 9;
++    static final int NumberOfShapeBits = 10;
++    static final int ArrayCountExtended = 11;
++    static final int WideCodes = 12;
++    static final int Delta = 13;
++    static final int CodingError = 14;
++    static final int TypeInError = 15;
++    static final int StartOfError = 16;
++    static final int ExpectedLength = 17;
+ 
+-        try 
+-        {
+-            int index = ptr &gt;&gt; 3;
+-            int base = (data.length - index &gt; 4) ? 0 : (4 - (data.length - index))*8;
+-
+-            value &lt;&lt;= (32 - numberOfBits);    
+-            value = value &gt;&gt;&gt; (ptr % 8);
+-            value = value | (data[index] &lt;&lt; 24);
++    int[] context = new int[18];
+     
+-            for (int i=24; i&gt;=base; i-=8, index++)
+-                data[index] = (byte)(value &gt;&gt;&gt; i);
+-            
+-            ptr += numberOfBits;
+-    
+-            if (ptr &gt; (data.length &lt;&lt; 3))
+-                ptr = data.length &lt;&lt; 3;
+-        }
+-        catch (ArrayIndexOutOfBoundsException e)
+-        {
+-        }
++    private void clearContext()
++    {
++        for (int i=0; i&lt;context.length; i++)
++            context[i] = 0;
+     }
+     
+-    private void _writeWord(int value, int numberOfBits)
++    public int getContext(int key)
+     {
+-        try 
+-        {
+-            int index = ptr &gt;&gt;&gt; 3;
+-    
+-            for (int i=0; i&lt;numberOfBits; i+=8, ptr+=8, value &gt;&gt;&gt;= 8, index++)
+-                data[index] = (byte)value;
+-        }
+-        catch (ArrayIndexOutOfBoundsException e)
+-        {
+-        }
++        return context[key];
+     }
+-
+-    private int _writeBytes(byte[] bytes)
+-    {
+-        int bytesWritten = 0;
+     
+-        if (bytes == null || bytes.length == 0)
+-            return bytesWritten;
+-
+-        try 
+-        {
+-            int index = ptr &gt;&gt;&gt; 3;
+-            int numberOfBytes = bytes.length;
+-    
+-            for (int i=0; i&lt;numberOfBytes; i++, ptr+=8, index++, bytesWritten++)
+-                data[index] = bytes[i];
+-        }
+-        catch (ArrayIndexOutOfBoundsException e)
+-        {
+-        }
+-        
+-        return bytesWritten;
+-    }
+-
+-    void writeWordAt(int location, int value, int numberOfBytes)
++    public void setContext(int key, int value)
+     {
+-        int currentLocation = ptr;
+-        
+-        ptr = location;
+-    
+-        _writeWord(value, numberOfBytes*8);
+-        
+-        ptr = currentLocation;
++        context[key] = value;
+     }
+-    
+-
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/FSDefineFont.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -173,7 +173,10 @@
+         coder.context[FSCoder.NumberOfFillBits] = 1;
+         coder.context[FSCoder.NumberOfLineBits] = 0;
+ 
+-         int tableStart = coder.getPointer();
++        int currentLocation;
++        int offset;
++        
++        int tableStart = coder.getPointer();
+         int tableEntry = tableStart;
+    
+         for (int i=0; i&lt;shapes.size(); i++)
+@@ -181,7 +184,13 @@
+ 
+         for (Iterator i=shapes.iterator(); i.hasNext(); tableEntry += 16) 
+         {
+-            coder.writeWordAt(tableEntry, ((coder.getPointer() - tableStart) &gt;&gt; 3), 2);
++            currentLocation = coder.getPointer();
++            offset = (coder.getPointer() - tableStart) &gt;&gt; 3;
++            
++            coder.setPointer(tableEntry);
++            coder.writeWord(offset, 2);
++            coder.setPointer(currentLocation);
++            
+             ((FSTransformObject)i.next()).encode(coder);
+         }
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -697,10 +697,14 @@
+         coder.writeWord(coder.context[FSCoder.Version] &gt; 5 ? language : 0, 1);
+         coder.writeWord(coder.strlen(name, false), 1);
+ 
+-         coder.writeString(name);
++        coder.writeString(name);
+         coder.writeWord(shapes.size(), 2);
+ 
+-         int tableStart = coder.getPointer();
++
++        int currentLocation;
++        int offset;
++        
++        int tableStart = coder.getPointer();
+         int tableEntry = tableStart;
+         int entrySize = wideOffsets ? 4 : 2;
+    
+@@ -709,11 +713,22 @@
+ 
+         for (Iterator i=shapes.iterator(); i.hasNext(); tableEntry += entrySize &lt;&lt; 3) 
+         {
+-            coder.writeWordAt(tableEntry, ((coder.getPointer() - tableStart) &gt;&gt; 3), entrySize);
++            currentLocation = coder.getPointer();
++            offset = (coder.getPointer() - tableStart) &gt;&gt; 3;
++            
++            coder.setPointer(tableEntry);
++            coder.writeWord(offset, entrySize);
++            coder.setPointer(currentLocation);
++
+             ((FSTransformObject)i.next()).encode(coder);
+         }
+ 
+-        coder.writeWordAt(tableEntry, ((coder.getPointer() - tableStart) &gt;&gt; 3), entrySize);
++        currentLocation = coder.getPointer();
++        offset = (coder.getPointer() - tableStart) &gt;&gt; 3;
++        
++        coder.setPointer(tableEntry);
++        coder.writeWord(offset, entrySize);
++        coder.setPointer(currentLocation);
+ 
+         for (Iterator codesIterator = codes.iterator(); codesIterator.hasNext();)
+             coder.writeWord(((Integer)codesIterator.next()).intValue(), (wideCodes == 1) ? 2 : 1);
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -1049,21 +1049,21 @@
+     */
+     public void decodeFromData(byte[] bytes) throws DataFormatException, IOException
+     {
+-        FSCoder coder = new FSCoder();
++        FSCoder coder = null;
+         FSMovieObject object = null;
+ 
+         isFlash(bytes);
+ 
+         if (bytes[0] == 0x43)
+-            coder.setData(unzip(bytes));
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
+         else
+-            coder.setData(bytes);
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+         
+         signature = coder.readString(3, &quot;UTF8&quot;);
+         version = coder.readWord(1, false);
+         /* length */ coder.readWord(4, false);
+         frameSize = new FSBounds(coder);
+-        frameRate = coder.readFixedWord(8, 8);
++        frameRate = coder.readFixedWord(1, 1);
+         frameCount = coder.readWord(2, false);
+         
+         coder.context[FSCoder.Version] = version;
+@@ -1099,29 +1099,27 @@
+      */
+     public void decodeFromData(byte[] bytes, FSMovieListener listener)
+     {
+-        FSCoder coder = new FSCoder();
+-
+-        FSMovieObject object = null;
++        FSCoder coder = null;
++        FSMovieObject object = null;       
+         
+-        coder.context[FSCoder.Action]  = FSMovieEvent.Decode;
+-        coder.setListener(listener);
+-        
+         try
+         {
+             isFlash(bytes);
+     
+             if (bytes[0] == 0x43)
+-                coder.setData(unzip(bytes));
++                coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
+             else
+-                coder.setData(bytes);
++                coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+         
++            coder.context[FSCoder.Action]  = FSMovieEvent.Decode;
++            coder.setListener(listener);
+             coder.beginObject(&quot;FSMovie&quot;);
+     
+             signature = coder.readString(3, &quot;UTF8&quot;);
+             version = coder.readWord(1, false);
+             length = coder.readWord(4, false);
+             frameSize = new FSBounds(coder);
+-            frameRate = coder.readFixedWord(8, 8);
++            frameRate = coder.readFixedWord(1, 1);
+             frameCount = coder.readWord(2, false);
+     
+             coder.context[FSCoder.Version] = version;
+@@ -1217,20 +1215,20 @@
+      */
+     public byte[] encode() throws IOException
+     {
+-        FSCoder coder = new FSCoder();
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[0]);
+         
+         coder.context[FSCoder.Action]  = FSMovieEvent.Encode;        
+         coder.context[FSCoder.Version] = version;
+ 
+         int fileLength = length(coder);
+ 
+-         coder.setData(new byte[fileLength]);         
++        coder.setData(FSCoder.LITTLE_ENDIAN, new byte[fileLength]);         
+ 
+         coder.writeString(signature, &quot;UTF8&quot;);
+         coder.writeWord(version, 1);
+         coder.writeWord(fileLength, 4);
+         frameSize.encode(coder);
+-        coder.writeFixedWord(frameRate, 8, 8);
++        coder.writeFixedWord(frameRate, 1, 1);
+         coder.writeWord(numberOfFrames(), 2);        
+ 
+         for (Iterator i = objects.iterator(); i.hasNext();)
+@@ -1286,14 +1284,14 @@
+      */
+     public byte[] encode(FSMovieListener listener)
+     {
+-        FSCoder coder = new FSCoder();
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[0]);
+         
+         coder.context[FSCoder.Action]  = FSMovieEvent.Encode;        
+         coder.context[FSCoder.Version] = version;
+ 
+         int fileLength = length(coder);
+         
+-         coder.setData(new byte[fileLength]);         
++         coder.setData(FSCoder.LITTLE_ENDIAN, new byte[fileLength]);         
+          coder.setListener(listener);
+          
+         coder.beginObject(&quot;FSMovie&quot;);
+
+Modified: trunk/src/com/flagstone/transform/test/FSColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSColorTest.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/test/FSColorTest.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -125,9 +125,10 @@
+     private void checkEncode(int count)
+     {
+         FSColor colour = null;
+-        FSCoder coder = new FSCoder(count);
+-        coder.context[FSCoder.TransparentColors] = (count == 4) ? 1:0;
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, count);
+         
++        coder.setContext(FSCoder.TransparentColors, (count == 4) ? 1:0);
++        
+         for (int i=0; i&lt;testValues.length; i++) 
+         {
+             if (count == 3)
+@@ -146,11 +147,11 @@
+     }
+     private void checkDecode(int count)
+     {
+-        FSCoder coder = new FSCoder(count);
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, count);
+         
+         for (int i=0; i&lt;testValues.length; i++) 
+         {
+-            coder.setData(testData[i]);
++            coder.setData(FSCoder.LITTLE_ENDIAN, testData[i]);
+             
+             compareAttributes(new FSColor(coder), testValues[i], count);
+ 
+
+Modified: trunk/src/com/flagstone/transform/util/FSCodec.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSCodec.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/util/FSCodec.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -31,6 +31,9 @@
+ package com.flagstone.transform.util;
+ 
+ /**
++ * @deprecated FSCoded is replaced by FSCoder from com.flagstone.transform so
++ * there is only one class for reading and writing data.
++ * 
+  * FSCodec is a similar to Java stream classes, allowing words and bit fields to be read
+  * and written from an internal array of bytes. FSCodec supports both little-endian
+  * and big-endian byte ordering. The primary use of the class is to support post-processing
+
+Modified: trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -39,8 +39,8 @@
+ import com.flagstone.transform.FSDefineImage2;
+ import com.flagstone.transform.FSDefineJPEGImage2;
+ import com.flagstone.transform.FSDefineShape3;
+-import com.flagstone.transform.Transform;
+ 
++import com.flagstone.transform.FSCoder;
+ import com.flagstone.transform.FSShape;
+ import com.flagstone.transform.FSCoordTransform;
+ import com.flagstone.transform.FSBounds;
+@@ -828,24 +828,24 @@
+     
+     private boolean jpegInfo()
+     {
+-        FSCodec coder = new FSCodec(FSCodec.BIG_ENDIAN, jpegImage);
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, jpegImage);
+                  
+-        if (coder.readShort(false) != 0xffd8)
++        if (coder.readWord(2, false) != 0xffd8)
+             return false;
+ 
+         while (true) 
+         {
+-            int marker = coder.readShort(false);
+-            int size = coder.readShort(false);
++            int marker = coder.readWord(2, false);
++            int size = coder.readWord(2, false);
+             
+             if ((marker &amp; 0xff00) != 0xff00) 
+                 return false;
+             
+             if (marker &gt;= 0xffc0 &amp;&amp; marker &lt;= 0xffcf &amp;&amp; marker != 0xffc4 &amp;&amp; marker != 0xffc8) 
+             {
+-                coder.readByte();
+-                height = coder.readShort(false);
+-                width = coder.readShort(false);
++                coder.readWord(1, false);
++                height = coder.readWord(2, false);
++                width = coder.readWord(2, false);
+                 return true;
+             } 
+             else 
+@@ -866,18 +866,18 @@
+ 
+     private void decodeBMP(byte[] bytes) throws DataFormatException
+     {
+-        FSCodec coder = new FSCodec(FSCodec.LITTLE_ENDIAN, bytes);
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+         
+         for (int i=0; i&lt;2; i++)
+         {
+-            if (coder.readByte() != bmpSignature[i])
++            if (coder.readWord(1, false) != bmpSignature[i])
+                 throw new DataFormatException(&quot;Not a valid BMP file&quot;);
+         }
+ 
+-        coder.readInt(); // fileSize
+-        coder.readInt(); // reserved
+-        int offset = coder.readInt();
+-        int headerSize = coder.readInt();
++        coder.readWord(4, false); // fileSize
++        coder.readWord(4, false); // reserved
++        int offset = coder.readWord(4, false);
++        int headerSize = coder.readWord(4, false);
+         
+         int bitsPerPixel = 0;
+         int coloursUsed = 0;
+@@ -885,22 +885,22 @@
+         switch (headerSize)
+         {
+             case 12:
+-                width = coder.readShort(false);
+-                height = coder.readShort(false);
+-                coder.readShort(false); // bitPlanes
+-                bitsPerPixel = coder.readShort(false);
++                width = coder.readWord(2, false);
++                height = coder.readWord(2, false);
++                coder.readWord(2, false); // bitPlanes
++                bitsPerPixel = coder.readWord(2, false);
+                 break;
+             case 40:
+-                width = coder.readInt();
+-                height = coder.readInt();
+-                coder.readShort(false); // bitPlanes
+-                bitsPerPixel = coder.readShort(false);
+-                attributes[COMPRESSION_METHOD] = coder.readInt();
+-                coder.readInt(); //imageSize
+-                coder.readInt(); // horizontalResolution
+-                coder.readInt(); // verticalResolution
+-                coloursUsed = coder.readInt();
+-                coder.readInt(); // importantColours
++                width = coder.readWord(4, false);
++                height = coder.readWord(4, false);
++                coder.readWord(2, false); // bitPlanes
++                bitsPerPixel = coder.readWord(2, false);
++                attributes[COMPRESSION_METHOD] = coder.readWord(4, false);
++                coder.readWord(4, false); //imageSize
++                coder.readWord(4, false); // horizontalResolution
++                coder.readWord(4, false); // verticalResolution
++                coloursUsed = coder.readWord(4, false);
++                coder.readWord(4, false); // importantColours
+                 break;
+             default:
+                 break;
+@@ -908,9 +908,9 @@
+         
+         if (attributes[COMPRESSION_METHOD] == BI_BITFIELDS)
+         {
+-            attributes[RED_MASK] = coder.readInt();
+-            attributes[GREEN_MASK] = coder.readInt();
+-            attributes[BLUE_MASK] = coder.readInt();
++            attributes[RED_MASK] = coder.readWord(4, false);
++            attributes[GREEN_MASK] = coder.readWord(4, false);
++            attributes[BLUE_MASK] = coder.readWord(4, false);
+         }
+         
+         switch (bitsPerPixel)
+@@ -935,19 +935,19 @@
+                 for (int i=0; i &lt; coloursUsed; i++) 
+                 {
+                     colourTable[i][3] = (byte)0xFF;
+-                    colourTable[i][2] = (byte)coder.readByte();
+-                    colourTable[i][1] = (byte)coder.readByte();
+-                    colourTable[i][0] = (byte)coder.readByte();
++                    colourTable[i][2] = (byte)coder.readWord(1, false);
++                    colourTable[i][1] = (byte)coder.readWord(1, false);
++                    colourTable[i][0] = (byte)coder.readWord(1, false);
+                 }
+             }
+             else
+             {
+                 for (int i=0; i &lt; coloursUsed; i++)
+                 {
+-                    colourTable[i][0] = (byte)coder.readByte();
+-                    colourTable[i][1] = (byte)coder.readByte();
+-                    colourTable[i][2] = (byte)coder.readByte();
+-                    colourTable[i][3] = (byte)(coder.readByte() | 0xFF);
++                    colourTable[i][0] = (byte)coder.readWord(1, false);
++                    colourTable[i][1] = (byte)coder.readWord(1, false);
++                    colourTable[i][2] = (byte)coder.readWord(1, false);
++                    colourTable[i][3] = (byte)(coder.readWord(1, false) | 0xFF);
+                 }
+             }
+                 
+@@ -975,7 +975,7 @@
+         }
+     }
+ 
+-    private void decodeIDX8(FSCodec coder)
++    private void decodeIDX8(FSCoder coder)
+     {
+         int h = 0;
+         int w = 0;
+@@ -993,7 +993,7 @@
+         }
+     }
+ 
+-    private void decodeRLE4(FSCodec coder)
++    private void decodeRLE4(FSCoder coder)
+     {
+         int row = height-1;
+         int col = 0;
+@@ -1002,11 +1002,11 @@
+ 
+         while (containsMorePixels) 
+         {       
+-            int count = coder.readByte();
++            int count = coder.readWord(1, false);
+         
+             if (count == 0)
+             {
+-                int code = coder.readByte();
++                int code = coder.readWord(1, false);
+                 
+                 switch (code)
+                 {
+@@ -1018,8 +1018,8 @@
+                         containsMorePixels = false; 
+                         break;
+                     case 2: 
+-                        col += coder.readShort(false);
+-                        row -= coder.readShort(false);
++                        col += coder.readWord(2, false);
++                        row -= coder.readWord(2, false);
+                     default:
+                         for (int i=0; i&lt;code; i+=2)
+                         {
+@@ -1027,7 +1027,7 @@
+                             indexedImage[row][col++] = (byte) coder.readBits(4, false);
+                         }
+                         
+-                        if ((code &amp; 2) == 2) coder.readByte();
++                        if ((code &amp; 2) == 2) coder.readWord(1, false);
+                         break;
+                 }
+             }
+@@ -1042,7 +1042,7 @@
+         }
+     }
+     
+-    private void decodeRLE8(FSCodec coder)
++    private void decodeRLE8(FSCoder coder)
+     {
+         int row = height-1;
+         int col = 0;
+@@ -1051,11 +1051,11 @@
+ 
+         while (containsMorePixels) 
+         {       
+-            int count = coder.readByte();
++            int count = coder.readWord(1, false);
+         
+             if (count == 0)
+             {
+-                int code = coder.readByte();
++                int code = coder.readWord(1, false);
+                 
+                 switch (code)
+                 {
+@@ -1067,19 +1067,19 @@
+                         containsMorePixels = false; 
+                         break;
+                     case 2: 
+-                        col += coder.readShort(false);
+-                        row -= coder.readShort(false);
++                        col += coder.readWord(2, false);
++                        row -= coder.readWord(2, false);
+                     default:
+                         for (int i=0; i&lt;code; i++)
+-                            indexedImage[row][col++] = (byte) coder.readByte();
++                            indexedImage[row][col++] = (byte) coder.readWord(1, false);
+                         
+-                        if ((code &amp; 1) == 1) coder.readByte();
++                        if ((code &amp; 1) == 1) coder.readWord(1, false);
+                         break;
+                 }
+             }
+             else
+             {
+-                byte index = (byte)coder.readByte();
++                byte index = (byte)coder.readWord(1, false);
+                 
+                 for (int i=0; i&lt;count; i++) 
+                     indexedImage[row][col++] = index;
+@@ -1087,7 +1087,7 @@
+         }
+     }
+     
+-    private void decodeRGB5(FSCodec coder)
++    private void decodeRGB5(FSCoder coder)
+     {
+         int h = 0;
+         int w = 0;
+@@ -1099,7 +1099,7 @@
+             {
+                 for (w=0, bitsRead=0; w&lt;width; w++)
+                 {                
+-                    int colour = coder.readShort(false) &amp; 0xFFFF;
++                    int colour = coder.readWord(2, false) &amp; 0xFFFF;
+                     
+                     colorImage[h][w][0] = (byte)((colour &amp; 0x7C00) &gt;&gt; 7);
+                     colorImage[h][w][1] = (byte)((colour &amp; 0x03E0) &gt;&gt; 2);
+@@ -1118,7 +1118,7 @@
+             {
+                 for (w=0, bitsRead=0; w&lt;width; w++)
+                 {
+-                    int colour = coder.readShort(false) &amp; 0xFFFF;
++                    int colour = coder.readWord(2, false) &amp; 0xFFFF;
+                     
+                     if (attributes[RED_MASK] == 0x7C00 &amp;&amp; attributes[GREEN_MASK] == 0x03E0 &amp;&amp; attributes[BLUE_MASK] == 0x001F)
+                     {
+@@ -1143,7 +1143,7 @@
+         
+     }
+ 
+-    private void decodeRGB8(FSCodec coder)
++    private void decodeRGB8(FSCoder coder)
+     {
+         int h = 0;
+         int w = 0;
+@@ -1165,7 +1165,7 @@
+         }
+     }
+ 
+-    private void decodeRGBA(FSCodec coder)
++    private void decodeRGBA(FSCoder coder)
+     {
+         int h = 0;
+         int w = 0;
+@@ -1174,10 +1174,10 @@
+         {
+             for (w=0; w&lt;width; w++)
+             {
+-                colorImage[h][w][2] = (byte)coder.readByte();
+-                colorImage[h][w][1] = (byte)coder.readByte();
+-                colorImage[h][w][0] = (byte)coder.readByte();
+-                colorImage[h][w][3] = (byte)coder.readByte();
++                colorImage[h][w][2] = (byte)coder.readWord(1, false);
++                colorImage[h][w][1] = (byte)coder.readWord(1, false);
++                colorImage[h][w][0] = (byte)coder.readWord(1, false);
++                colorImage[h][w][3] = (byte)coder.readWord(1, false);
+                 colorImage[h][w][3] = (byte)0xFF;
+             }
+         }
+@@ -1185,7 +1185,7 @@
+ 
+     private void decodePNG(byte[] bytes) throws DataFormatException
+     {
+-        FSCodec coder = new FSCodec(FSCodec.BIG_ENDIAN, bytes);
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, bytes);
+ 
+         int length = 0;
+         int chunkType = 0;
+@@ -1193,14 +1193,14 @@
+ 
+         for (int i=0; i&lt;8; i++)
+         {
+-            if (coder.readByte() != pngSignature[i])
++            if (coder.readWord(1, false) != pngSignature[i])
+                 throw new DataFormatException(&quot;Not a valid PNG file&quot;);
+         }
+         
+         while (moreChunks)
+         {
+-            length = coder.readInt();
+-            chunkType = coder.readInt();
++            length = coder.readWord(4, false);
++            chunkType = coder.readWord(4, false);
+             
+             int current = coder.getPointer();
+             int next = current + ((length+4) &lt;&lt; 3);
+@@ -1242,20 +1242,20 @@
+         decodeImage();
+     }
+ 
+-    private void decodeIHDR(FSCodec coder, int length)
++    private void decodeIHDR(FSCoder coder, int length)
+     {
+-        width = coder.readInt();
+-        height = coder.readInt();
+-        attributes[BIT_DEPTH] = coder.readByte();
+-        attributes[COLOUR_TYPE] = coder.readByte();
+-        attributes[COMPRESSION_METHOD] = coder.readByte();
+-        attributes[FILTER_METHOD] = coder.readByte();
+-        attributes[INTERLACE_METHOD] = coder.readByte();
++        width = coder.readWord(4, false);
++        height = coder.readWord(4, false);
++        attributes[BIT_DEPTH] = coder.readWord(1, false);
++        attributes[COLOUR_TYPE] = coder.readWord(1, false);
++        attributes[COMPRESSION_METHOD] = coder.readWord(1, false);
++        attributes[FILTER_METHOD] = coder.readWord(1, false);
++        attributes[INTERLACE_METHOD] = coder.readWord(1, false);
+         
+-        coder.readInt(); // crc
++        coder.readWord(4, false); // crc
+     }
+ 
+-    private void decodePLTE(FSCodec coder, int length)
++    private void decodePLTE(FSCoder coder, int length)
+     {
+         if (attributes[COLOUR_TYPE] == 3)
+         {
+@@ -1266,41 +1266,41 @@
+             for (int i=0; i&lt;paletteSize; i++)
+             {
+                 colourTable[i][3] = (byte)0xFF;
+-                colourTable[i][2] = (byte)coder.readByte();
+-                colourTable[i][1] = (byte)coder.readByte();
+-                colourTable[i][0] = (byte)coder.readByte();
++                colourTable[i][2] = (byte)coder.readWord(1, false);
++                colourTable[i][1] = (byte)coder.readWord(1, false);
++                colourTable[i][0] = (byte)coder.readWord(1, false);
+             }
+         }
+         else
+         {
+             coder.adjustPointer(length &lt;&lt; 3);
+         }        
+-        coder.readInt(); // crc
++        coder.readWord(4, false); // crc
+     }
+ 
+-    private void decodeTRNS(FSCodec coder, int length)
++    private void decodeTRNS(FSCoder coder, int length)
+     {
+         switch(attributes[COLOUR_TYPE])
+         {
+             case GREYSCALE:
+-                attributes[TRANSPARENT_GREY] = coder.readShort(false);
++                attributes[TRANSPARENT_GREY] = coder.readWord(2, false);
+                 break;
+             case TRUE_COLOUR:
+-                attributes[TRANSPARENT_RED] = coder.readShort(false);
+-                attributes[TRANSPARENT_GREEN] = coder.readShort(false);
+-                attributes[TRANSPARENT_BLUE] = coder.readShort(false);
++                attributes[TRANSPARENT_RED] = coder.readWord(2, false);
++                attributes[TRANSPARENT_GREEN] = coder.readWord(2, false);
++                attributes[TRANSPARENT_BLUE] = coder.readWord(2, false);
+                 break;
+             case INDEXED_COLOUR:
+                 for (int i=0; i&lt;length; i++)
+-                    colourTable[i][3] = (byte)coder.readByte();
++                    colourTable[i][3] = (byte)coder.readWord(1, false);
+                 break;
+             default:
+                 break;
+         }
+-        coder.readInt(); // crc
++        coder.readWord(4, false); // crc
+     }
+ 
+-    private void decodeIDAT(FSCodec coder, int length)
++    private void decodeIDAT(FSCoder coder, int length)
+     {
+         int currentLength = chunkData.length;
+         int newLength = currentLength + length;
+@@ -1310,11 +1310,11 @@
+         System.arraycopy(chunkData, 0, data, 0, currentLength);
+ 
+         for (int i=currentLength; i&lt;newLength; i++)
+-            data[i] = (byte)coder.readByte();
++            data[i] = (byte)coder.readWord(1, false);
+             
+         chunkData = data;
+         
+-        coder.readInt(); // crc
++        coder.readWord(4, false); // crc
+     }
+ 
+     private void decodeImage() throws DataFormatException
+@@ -1419,7 +1419,7 @@
+         
+                 System.arraycopy(current, 0, previous, 0, scanLength);
+                         
+-                FSCodec coder = new FSCodec(FSCodec.BIG_ENDIAN, current);
++                FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, current);
+                 
+                 for (col=colStart; col&lt;width; col+=colInc)
+                 {
+@@ -1450,7 +1450,7 @@
+         return c;
+     }
+ 
+-    private void decodeGreyscale(FSCodec coder, int row, int col)
++    private void decodeGreyscale(FSCoder coder, int row, int col)
+     {
+         int pixel = 0;
+         byte colour = 0;
+@@ -1460,8 +1460,8 @@
+             case 1:  pixel = coder.readBits(1, false); colour = (byte) monochrome[pixel]; break;
+             case 2:  pixel = coder.readBits(2, false); colour = (byte) greyscale2[pixel]; break;
+             case 4:  pixel = coder.readBits(4, false); colour = (byte) greyscale4[pixel]; break;
+-            case 8:  pixel = coder.readByte(); colour = (byte) pixel; break;
+-            case 16: pixel = coder.readShort(false); colour = (byte) (pixel &gt;&gt; 8); break;
++            case 8:  pixel = coder.readWord(1, false); colour = (byte) pixel; break;
++            case 16: pixel = coder.readWord(2, false); colour = (byte) (pixel &gt;&gt; 8); break;
+         }                    
+ 
+         colorImage[row][col][0] = colour;
+@@ -1470,7 +1470,7 @@
+         colorImage[row][col][3] = (byte)attributes[TRANSPARENT_GREY];
+     }
+     
+-    private void decodeTrueColour(FSCodec coder, int row, int col)
++    private void decodeTrueColour(FSCoder coder, int row, int col)
+     {
+         int pixel = 0;
+         byte colour = 0;
+@@ -1479,15 +1479,15 @@
+         {
+             switch (attributes[BIT_DEPTH])
+             {
+-                case 8:  pixel = coder.readByte(); colour = (byte) pixel; break;
+-                case 16: pixel = coder.readShort(false); colour = (byte) (pixel &gt;&gt; 8); break;
++                case 8:  pixel = coder.readWord(1, false); colour = (byte) pixel; break;
++                case 16: pixel = coder.readWord(2, false); colour = (byte) (pixel &gt;&gt; 8); break;
+             }                    
+             colorImage[row][col][i] = colour;
+         }
+         colorImage[row][col][3] = (byte)attributes[TRANSPARENT_RED];
+     }
+     
+-    private void decodeIndexedColour(FSCodec coder, int row, int col)
++    private void decodeIndexedColour(FSCoder coder, int row, int col)
+     {
+         int index = 0;
+         
+@@ -1496,13 +1496,13 @@
+             case 1:  index = coder.readBits(1, false); break;
+             case 2:  index = coder.readBits(2, false); break;
+             case 4:  index = coder.readBits(4, false); break;
+-            case 8:  index = coder.readByte(); break;
+-            case 16: index = coder.readShort(false); break;
++            case 8:  index = coder.readWord(1, false); break;
++            case 16: index = coder.readWord(2, false); break;
+         }                    
+         indexedImage[row][col] = (byte)index;
+     }
+     
+-    private void decodeAlphaGreyscale(FSCodec coder, int row, int col)
++    private void decodeAlphaGreyscale(FSCoder coder, int row, int col)
+     {
+         int pixel = 0;
+         byte colour = 0;
+@@ -1513,8 +1513,8 @@
+             case 1:  pixel = coder.readBits(1, false); colour = (byte) monochrome[pixel]; alpha = coder.readBits(1, false); break;
+             case 2:  pixel = coder.readBits(2, false); colour = (byte) greyscale2[pixel]; alpha = coder.readBits(2, false); break;
+             case 4:  pixel = coder.readBits(4, false); colour = (byte) greyscale4[pixel]; alpha = coder.readBits(4, false); break;
+-            case 8:  pixel = coder.readByte(); colour = (byte) pixel; alpha = coder.readByte(); break;
+-            case 16: pixel = coder.readShort(false); colour = (byte) (pixel &gt;&gt; 8); alpha = coder.readShort(false) &gt;&gt; 8; break;
++            case 8:  pixel = coder.readWord(1, false); colour = (byte) pixel; alpha = coder.readWord(1, false); break;
++            case 16: pixel = coder.readWord(2, false); colour = (byte) (pixel &gt;&gt; 8); alpha = coder.readWord(2, false) &gt;&gt; 8; break;
+         }                    
+ 
+         colorImage[row][col][0] = colour;
+@@ -1523,7 +1523,7 @@
+         colorImage[row][col][3] = (byte) alpha;
+     }
+     
+-    private void decodeAlphaTrueColour(FSCodec coder, int row, int col)
++    private void decodeAlphaTrueColour(FSCoder coder, int row, int col)
+     {
+         int pixel = 0;
+         byte colour = 0;
+@@ -1532,8 +1532,8 @@
+         {
+             switch (attributes[BIT_DEPTH])
+             {
+-                case 8:  pixel = coder.readByte(); colour = (byte) pixel; break;
+-                case 16: pixel = coder.readShort(false); colour = (byte) (pixel &gt;&gt; 8); break;
++                case 8:  pixel = coder.readWord(1, false); colour = (byte) pixel; break;
++                case 16: pixel = coder.readWord(2, false); colour = (byte) (pixel &gt;&gt; 8); break;
+             }                    
+             colorImage[row][col][i] = colour;
+         }
+
+Modified: trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -434,7 +434,7 @@
+ 
+     private void decodeWAV(String filename) throws FileNotFoundException, IOException, DataFormatException
+     {
+-        FSCodec coder = new FSCodec(FSCodec.LITTLE_ENDIAN, dataFromFile(filename));
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, dataFromFile(filename));
+         
+         int length = 0;
+         int chunkType = 0;
+@@ -442,22 +442,22 @@
+ 
+         for (int i=0; i&lt;4; i++)
+         {
+-            if (coder.readByte() != riffSignature[i])
++            if (coder.readWord(1, false) != riffSignature[i])
+                 throw new DataFormatException(&quot;Not a valid RIFF file&quot;);
+         }
+         
+-        coder.readInt();
++        coder.readWord(4, false);
+         
+         for (int i=0; i&lt;4; i++)
+         {
+-            if (coder.readByte() != wavSignature[i])
++            if (coder.readWord(1, false) != wavSignature[i])
+                 throw new DataFormatException(&quot;Not a valid WAV file&quot;);
+         }
+        
+         while (moreChunks)
+         {
+-            chunkType = coder.readInt();
+-            length = coder.readInt();
++            chunkType = coder.readWord(4, false);
++            length = coder.readWord(4, false);
+             
+             int blockStart = coder.getPointer();
+             
+@@ -483,21 +483,21 @@
+         }
+     }
+ 
+-    private void decodeFMT(FSCodec coder) throws DataFormatException
++    private void decodeFMT(FSCoder coder) throws DataFormatException
+     {
+         format = FSSound.PCM;
+         
+-        if (coder.readShort(false) != 1)
++        if (coder.readWord(2, false) != 1)
+             throw new DataFormatException(&quot;Compressed WAV files are not currently supported.&quot;);
+         
+-        numberOfChannels = coder.readShort(false);
+-        sampleRate = coder.readInt();
+-        coder.readInt(); // total data length
+-        coder.readShort(false); // total bytes per sample
+-        sampleSize = coder.readShort(false) / 8;
++        numberOfChannels = coder.readWord(2, false);
++        sampleRate = coder.readWord(4, false);
++        coder.readWord(4, false); // total data length
++        coder.readWord(2, false); // total bytes per sample
++        sampleSize = coder.readWord(2, false) / 8;
+     }
+     
+-    private void decodeDATA(FSCodec coder, int length)
++    private void decodeDATA(FSCoder coder, int length)
+     {
+         samplesPerChannel = length / (sampleSize*numberOfChannels);
+ 
+@@ -509,7 +509,7 @@
+ 
+     private void decodeMP3(byte[] bytes) throws DataFormatException
+     {
+-        FSCodec coder = new FSCodec(FSCodec.LITTLE_ENDIAN, bytes);
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+         
+         format = FSSound.MP3;
+         sampleSize = 2;
+@@ -517,11 +517,11 @@
+         coder.findBits(0x7FF, 11, 8);
+         
+         int frameStart = coder.getPointer();
+-        int dataLength = coder.getBuffer().length - (coder.getPointer() &gt;&gt; 3);
++        int dataLength = coder.getCapacity() - (coder.getPointer() &gt;&gt; 3);
+         
+         sound = new byte[dataLength];
+         
+-        System.arraycopy(coder.getBuffer(), (coder.getPointer() &gt;&gt; 3), sound, 0, dataLength);
++        System.arraycopy(coder.getData(), (coder.getPointer() &gt;&gt; 3), sound, 0, dataLength);
+         
+         int numberOfFrames = 0;
+         
+@@ -601,7 +601,7 @@
+     
+     private void initFrameTable(byte[] bytes)
+     {
+-        FSCodec coder = new FSCodec(FSCodec.LITTLE_ENDIAN, bytes);
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+                 
+         coder.findBits(0x7FF, 11, 8);
+         
+@@ -640,7 +640,7 @@
+         }
+     }
+     
+-    private int MP3FrameSize(FSCodec coder)
++    private int MP3FrameSize(FSCoder coder)
+     {
+         int frameSize = 4;
+         
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-26 17:12:16 UTC (rev 86)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-26 17:14:50 UTC (rev 87)
+@@ -1105,14 +1105,14 @@
+ 
+     private void decodeOpenTypeFont(String fontName) throws FileNotFoundException, IOException, DataFormatException
+     {
+-        FSCodec coder = new FSCodec(FSCodec.BIG_ENDIAN, dataFromFile(fontName));
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, dataFromFile(fontName));
+         
+         float version = coder.readFixedBits(32, 16);
+ 
+-        int tableCount = coder.readShort(false);
+-        int searchRange = coder.readShort(false);
+-        int entrySelector = coder.readShort(false);
+-        int rangeShift = coder.readShort(false);
++        int tableCount = coder.readWord(2, false);
++        int searchRange = coder.readWord(2, false);
++        int entrySelector = coder.readWord(2, false);
++        int rangeShift = coder.readWord(2, false);
+         
+         int os_2Offset = 0;
+         int headOffset = 0;
+@@ -1141,10 +1141,10 @@
+         
+         for (int i=0; i&lt;tableCount; i++) 
+         {
+-            chunkType = coder.readInt();
+-            checksum = coder.readInt();
+-            offset = coder.readInt() &lt;&lt; 3;
+-            length = coder.readInt();
++            chunkType = coder.readWord(4, false);
++            checksum = coder.readWord(4, false);
++            offset = coder.readWord(4, false) &lt;&lt; 3;
++            length = coder.readWord(4, false);
+             
+             /* 
+              * Chunks are encoded in ascending alphabetical order so
+@@ -1197,21 +1197,21 @@
+         glyphTable[spaceIndex].shape = new FSShape();
+         glyphTable[spaceIndex].advance = 250;
+     }
+-    private void decodeHEAD(FSCodec coder)
++    private void decodeHEAD(FSCoder coder)
+     {
+         byte[] date = new byte[8];
+     
+         coder.readFixedBits(32, 16); // table version 
+         coder.readFixedBits(32, 16); // font version 
+-        coder.readInt(); // checksum adjustment
+-        coder.readInt(); // magic number
++        coder.readWord(4, false); // checksum adjustment
++        coder.readWord(4, false); // magic number
+         coder.readBits(1, false); // baseline at y=0
+         coder.readBits(1, false); // side bearing at x=0;
+         coder.readBits(1, false); // instructions depend on point size
+         coder.readBits(1, false); // force ppem to integer values
+         coder.readBits(1, false); // instructions may alter advance
+         coder.readBits(11, false);
+-        attributes[SCALE] = coder.readShort(false) / 1024;  // units per em
++        attributes[SCALE] = coder.readWord(2, false) / 1024;  // units per em
+ 
+         if (attributes[SCALE] == 0) 
+             attributes[SCALE] = 1;
+@@ -1219,10 +1219,10 @@
+         coder.readBytes(date); // number of seconds since midnight, Jan 01 1904
+         coder.readBytes(date); // number of seconds since midnight, Jan 01 1904
+     
+-        coder.readShort(true); // xMin for all glyph bounding boxes
+-        coder.readShort(true); // yMin for all glyph bounding boxes
+-        coder.readShort(true); // xMax for all glyph bounding boxes
+-        coder.readShort(true); // yMax for all glyph bounding boxes
++        coder.readWord(2, true); // xMin for all glyph bounding boxes
++        coder.readWord(2, true); // yMin for all glyph bounding boxes
++        coder.readWord(2, true); // xMax for all glyph bounding boxes
++        coder.readWord(2, true); // yMax for all glyph bounding boxes
+     
+         /*
+          * Next two byte define font appearance on Macs, values are 
+@@ -1232,70 +1232,70 @@
+         isItalic = coder.readBits(1, false) != 0;
+         coder.readBits(14, false); // 
+ 
+-        coder.readShort(false);// smallest readable size in pixels
+-        coder.readShort(true); // font direction hint
+-        attributes[GLYPH_OFFSET_SIZE] = coder.readShort(true); 
+-        coder.readShort(true); // glyph data format
++        coder.readWord(2, false);// smallest readable size in pixels
++        coder.readWord(2, true); // font direction hint
++        attributes[GLYPH_OFFSET_SIZE] = coder.readWord(2, true); 
++        coder.readWord(2, true); // glyph data format
+     }
+-    private void decodeHHEA(FSCodec coder)
++    private void decodeHHEA(FSCoder coder)
+     {
+         coder.readFixedBits(32, 16); // table version
+     
+-        ascent = coder.readShort(true);
+-        descent = coder.readShort(true);
+-        leading = coder.readShort(true);
++        ascent = coder.readWord(2, true);
++        descent = coder.readWord(2, true);
++        leading = coder.readWord(2, true);
+         
+-        coder.readShort(false); // maximum advance in the htmx table
+-        coder.readShort(true); // minimum left side bearing in the htmx table
+-        coder.readShort(true); // minimum right side bearing in the htmx table
+-        coder.readShort(true); // maximum extent
+-        coder.readShort(true); // caret slope rise 
+-        coder.readShort(true); // caret slope run
+-        coder.readShort(true); // caret offset
++        coder.readWord(2, false); // maximum advance in the htmx table
++        coder.readWord(2, true); // minimum left side bearing in the htmx table
++        coder.readWord(2, true); // minimum right side bearing in the htmx table
++        coder.readWord(2, true); // maximum extent
++        coder.readWord(2, true); // caret slope rise 
++        coder.readWord(2, true); // caret slope run
++        coder.readWord(2, true); // caret offset
+     
+-        coder.readShort(false); // reserved
+-        coder.readShort(false); // reserved
+-        coder.readShort(false); // reserved
+-        coder.readShort(false); // reserved
++        coder.readWord(2, false); // reserved
++        coder.readWord(2, false); // reserved
++        coder.readWord(2, false); // reserved
++        coder.readWord(2, false); // reserved
+     
+-        coder.readShort(true); // metric data format 
++        coder.readWord(2, true); // metric data format 
+         
+-        attributes[NUMBER_OF_METRICS] = coder.readShort(false);    
++        attributes[NUMBER_OF_METRICS] = coder.readWord(2, false);    
+     }
+-    private void decodeOS_2(FSCodec coder)
++    private void decodeOS_2(FSCoder coder)
+     {
+         byte[] panose = new byte[10];
+         int[] unicodeRange = new int[4];
+         byte[] vendor = new byte[4];
+ 
+-        int version = coder.readShort(false); // version
+-        coder.readShort(true); // average character width
++        int version = coder.readWord(2, false); // version
++        coder.readWord(2, true); // average character width
+         
+-        switch (coder.readShort(false)) // weight class
++        switch (coder.readWord(2, false)) // weight class
+         {
+             case FONT_WEIGHT_BOLD: isBold = true; break;
+             default: break;
+         }
+ 
+-        coder.readShort(false); // width class
+-        coder.readShort(false); // embedding licence
++        coder.readWord(2, false); // width class
++        coder.readWord(2, false); // embedding licence
+         
+-        coder.readShort(true); // subscript x size
+-        coder.readShort(true); // subscript y size
+-        coder.readShort(true); // subscript x offset
+-        coder.readShort(true); // subscript y offset
+-        coder.readShort(true); // superscript x size
+-        coder.readShort(true); // superscript y size
+-        coder.readShort(true); // superscript x offset
+-        coder.readShort(true); // superscript y offset
+-        coder.readShort(true); // width of strikeout stroke
+-        coder.readShort(true); // strikeout stroke position
+-        coder.readShort(true); // font family class
++        coder.readWord(2, true); // subscript x size
++        coder.readWord(2, true); // subscript y size
++        coder.readWord(2, true); // subscript x offset
++        coder.readWord(2, true); // subscript y offset
++        coder.readWord(2, true); // superscript x size
++        coder.readWord(2, true); // superscript y size
++        coder.readWord(2, true); // superscript x offset
++        coder.readWord(2, true); // superscript y offset
++        coder.readWord(2, true); // width of strikeout stroke
++        coder.readWord(2, true); // strikeout stroke position
++        coder.readWord(2, true); // font family class
+     
+         coder.readBytes(panose);
+         
+         for (int i=0; i&lt;4; i++)
+-            unicodeRange[i] = coder.readInt();
++            unicodeRange[i] = coder.readWord(4, false);
+             
+         coder.readBytes(vendor); // font vendor identification
+         
+@@ -1304,46 +1304,46 @@
+         isBold = coder.readBits(1, false) != 0;
+         coder.readBits(10, false);
+         
+-        coder.readShort(false); // first unicode character code
+-        coder.readShort(false); // last unicode character code
++        coder.readWord(2, false); // first unicode character code
++        coder.readWord(2, false); // last unicode character code
+         
+-        ascent = coder.readShort(false);
+-        descent = coder.readShort(false);
+-        leading = coder.readShort(false);
++        ascent = coder.readWord(2, false);
++        descent = coder.readWord(2, false);
++        leading = coder.readWord(2, false);
+     
+-        coder.readShort(false); // ascent in Windows
+-        coder.readShort(false); // descent in Windows
++        coder.readWord(2, false); // ascent in Windows
++        coder.readWord(2, false); // descent in Windows
+         
+         if (version &gt; 0)
+         {
+-            coder.readInt(); // code page range 
+-            coder.readInt(); // code page range
++            coder.readWord(4, false); // code page range 
++            coder.readWord(4, false); // code page range
+ 
+             if (version &gt; 1)
+             {
+-                coder.readShort(true); // height
+-                coder.readShort(true); // Capitals height
+-                missingGlyph = coder.readShort(false);
+-                coder.readShort(false); // break character
+-                coder.readShort(false); // maximum context
++                coder.readWord(2, true); // height
++                coder.readWord(2, true); // Capitals height
++                missingGlyph = coder.readWord(2, false);
++                coder.readWord(2, false); // break character
++                coder.readWord(2, false); // maximum context
+             }
+         }
+     }
+-    private void decodeNAME(FSCodec coder)
++    private void decodeNAME(FSCoder coder)
+     {
+-        int format = coder.readShort(false);
+-        int numberOfNameRecords = coder.readShort(false);
+-        int stringTable = coder.readShort(false);
++        int format = coder.readWord(2, false);
++        int numberOfNameRecords = coder.readWord(2, false);
++        int stringTable = coder.readWord(2, false);
+         
+         for (int i=0; i&lt;numberOfNameRecords; i++) 
+         {
+-            int platformId = coder.readShort(false);
+-            int encodingId = coder.readShort(false);
+-            int languageId = coder.readShort(false);
+-            int nameId = coder.readShort(false);
++            int platformId = coder.readWord(2, false);
++            int encodingId = coder.readWord(2, false);
++            int languageId = coder.readWord(2, false);
++            int nameId = coder.readWord(2, false);
+             
+-            int stringLength = coder.readShort(false);
+-            int stringOffset = coder.readShort(false);
++            int stringLength = coder.readWord(2, false);
++            int stringOffset = coder.readWord(2, false);
+             
+             int current = coder.getPointer();
+             
+@@ -1384,36 +1384,36 @@
+             coder.setPointer(current);
+         }
+     }
+-    private void decodeMAXP(FSCodec coder)
++    private void decodeMAXP(FSCoder coder)
+     {
+         float version = coder.readFixedBits(32, 16);
+-        numberOfGlyphs = coder.readShort(false);
++        numberOfGlyphs = coder.readWord(2, false);
+         
+         if (version == 1.0)
+         {
+-            coder.readShort(false); // maximum number of points in a simple glyph
+-            coder.readShort(false); // maximum number of contours in a simple glyph
+-            coder.readShort(false); // maximum number of points in a composite glyph
+-            coder.readShort(false); // maximum number of contours in a composite glyph
+-            coder.readShort(false); // maximum number of zones
+-            coder.readShort(false); // maximum number of point in Z0
+-            coder.readShort(false); // number of storage area locations
+-            coder.readShort(false); // maximum number of FDEFs
+-            coder.readShort(false); // maximum number of IDEFs
+-            coder.readShort(false); // maximum stack depth
+-            coder.readShort(false); // maximum byte count for glyph instructions
+-            coder.readShort(false); // maximum number of components for composite glyphs
+-            coder.readShort(false); // maximum level of recursion
++            coder.readWord(2, false); // maximum number of points in a simple glyph
++            coder.readWord(2, false); // maximum number of contours in a simple glyph
++            coder.readWord(2, false); // maximum number of points in a composite glyph
++            coder.readWord(2, false); // maximum number of contours in a composite glyph
++            coder.readWord(2, false); // maximum number of zones
++            coder.readWord(2, false); // maximum number of point in Z0
++            coder.readWord(2, false); // number of storage area locations
++            coder.readWord(2, false); // maximum number of FDEFs
++            coder.readWord(2, false); // maximum number of IDEFs
++            coder.readWord(2, false); // maximum stack depth
++            coder.readWord(2, false); // maximum byte count for glyph instructions
++            coder.readWord(2, false); // maximum number of components for composite glyphs
++            coder.readWord(2, false); // maximum level of recursion
+         }
+     }
+-    private void decodeHMTX(FSCodec coder)
++    private void decodeHMTX(FSCoder coder)
+     {
+         int i = 0;
+         
+         for (i=0; i&lt;attributes[NUMBER_OF_METRICS]; i++) 
+         {
+-            glyphTable[i].advance = (coder.readShort(false) / attributes[SCALE]);
+-            coder.readShort(true); // left side bearing
++            glyphTable[i].advance = (coder.readWord(2, false) / attributes[SCALE]);
++            coder.readWord(2, true); // left side bearing
+         }
+         
+         int advance = glyphTable[i-1].advance;
+@@ -1422,14 +1422,14 @@
+             glyphTable[i].advance = advance;
+ 
+         for (; i&lt;numberOfGlyphs; i++)
+-            coder.readShort(true);
++            coder.readWord(2, true);
+     }
+-    private void decodeCMAP(FSCodec coder)
++    private void decodeCMAP(FSCoder coder)
+     {
+         int tableStart = coder.getPointer();
+         
+-        int version = coder.readShort(false);
+-        int numberOfTables = coder.readShort(false);
++        int version = coder.readWord(2, false);
++        int numberOfTables = coder.readWord(2, false);
+         
+         int platformId = 0;
+         int encodingId = 0;
+@@ -1452,9 +1452,9 @@
+         
+         for (i=0; i&lt;numberOfTables; i++)
+         {
+-            platformId = coder.readShort(false);
+-            encodingId = coder.readShort(false);
+-            offset = coder.readInt() &lt;&lt; 3;
++            platformId = coder.readWord(2, false);
++            encodingId = coder.readWord(2, false);
++            offset = coder.readWord(4, false) &lt;&lt; 3;
+             current = coder.getPointer();
+             
+             if (platformId == 0) // Unicode
+@@ -1482,22 +1482,22 @@
+ 
+             coder.setPointer(tableStart+offset);
+             
+-            format = coder.readShort(false);
+-            length = coder.readShort(false);
+-            language = coder.readShort(false);
++            format = coder.readWord(2, false);
++            length = coder.readWord(2, false);
++            language = coder.readWord(2, false);
+             
+             switch (format) 
+             {
+                 case 0: 
+                     for (n=0; n&lt;256; n++)
+-                        characterTable[n] = (short)coder.readByte();
++                        characterTable[n] = (short)coder.readWord(1, false);
+                     break;
+                 case 4:
+-                    segmentCount = coder.readShort(false) / 2;
++                    segmentCount = coder.readWord(2, false) / 2;
+     
+-                    coder.readShort(false); // search range
+-                    coder.readShort(false); // entry selector
+-                    coder.readShort(false); // range shift
++                    coder.readWord(2, false); // search range
++                    coder.readWord(2, false); // entry selector
++                    coder.readWord(2, false); // range shift
+ 
+                     startCount = new int[segmentCount];
+                     endCount = new int[segmentCount];
+@@ -1506,20 +1506,20 @@
+                     rangeAdr = new int[segmentCount];
+                     
+                     for (n=0; n&lt;segmentCount; n++)
+-                        endCount[n] = coder.readShort(false);
++                        endCount[n] = coder.readWord(2, false);
+ 
+-                    coder.readShort(false); // reserved padding
++                    coder.readWord(2, false); // reserved padding
+                 
+                     for (n=0; n&lt;segmentCount; n++)
+-                        startCount[n] = coder.readShort(false);
++                        startCount[n] = coder.readWord(2, false);
+                 
+                     for (n=0; n&lt;segmentCount; n++)
+-                        delta[n] = coder.readShort(true);
++                        delta[n] = coder.readWord(2, true);
+                 
+                     for (n=0; n&lt;segmentCount; n++)
+                     {
+                         rangeAdr[n] = coder.getPointer() &gt;&gt; 3;
+-                        range[n] = coder.readShort(true);
++                        range[n] = coder.readWord(2, true);
+                     }
+ 
+                     int glyphIndex = 0;
+@@ -1533,7 +1533,7 @@
+                             {
+                                 location = rangeAdr[n] + range[n] + ((code - startCount[n]) &lt;&lt; 1);
+                                 coder.setPointer(location &lt;&lt; 3);
+-                                glyphIndex = coder.readShort(false);
++                                glyphIndex = coder.readWord(2, false);
+                                 
+                                 if (glyphIndex != 0)
+                                     glyphIndex = (glyphIndex + delta[n]) % 65536;
+@@ -1557,7 +1557,7 @@
+         }
+         encoding = FSText.SJIS;
+     }
+-    private void decodeGlyphs(FSCodec coder, int glyfOffset)
++    private void decodeGlyphs(FSCoder coder, int glyfOffset)
+     {
+         int numberOfContours = 0;
+         int glyphStart = 0;
+@@ -1566,16 +1566,16 @@
+         int[] offsets = new int[numberOfGlyphs];
+         
+         if (attributes[GLYPH_OFFSET_SIZE] == ITLF_SHORT)
+-            offsets[0] = glyfOffset + (coder.readShort(false)*2 &lt;&lt; 3);
++            offsets[0] = glyfOffset + (coder.readWord(2, false)*2 &lt;&lt; 3);
+         else
+-            offsets[0] = glyfOffset + (coder.readInt() &lt;&lt; 3);
++            offsets[0] = glyfOffset + (coder.readWord(4, false) &lt;&lt; 3);
+ 
+         for (int i=1; i&lt;numberOfGlyphs; i++)
+         {
+             if (attributes[GLYPH_OFFSET_SIZE] == ITLF_SHORT)
+-                offsets[i] = glyfOffset + (coder.readShort(false)*2 &lt;&lt; 3);
++                offsets[i] = glyfOffset + (coder.readWord(2, false)*2 &lt;&lt; 3);
+             else
+-                offsets[i] = glyfOffset + (coder.readInt() &lt;&lt; 3);
++                offsets[i] = glyfOffset + (coder.readWord(4, false) &lt;&lt; 3);
+             
+             if (offsets[i] == offsets[i-1])
+                 offsets[i-1] = 0;
+@@ -1593,7 +1593,7 @@
+             {
+                 coder.setPointer(offsets[i]);
+                 
+-                numberOfContours = coder.readShort(true);
++                numberOfContours = coder.readWord(2, true);
+                 
+                 if (numberOfContours &gt;= 0)
+                     decodeSimpleGlyph(coder, i, numberOfContours);
+@@ -1608,29 +1608,29 @@
+             {
+                 coder.setPointer(offsets[i]);
+             
+-                if (coder.readShort(true) == -1)
++                if (coder.readWord(2, true) == -1)
+                     decodeCompositeGlyph(coder, i);
+             }
+         }
+         coder.setPointer(end);
+     }
+-    private void decodeSimpleGlyph(FSCodec coder, int glyphIndex, int numberOfContours)
++    private void decodeSimpleGlyph(FSCoder coder, int glyphIndex, int numberOfContours)
+     {
+-        int xMin = coder.readShort(true) / attributes[SCALE];
+-        int yMin = coder.readShort(true) / attributes[SCALE];
+-        int xMax = coder.readShort(true) / attributes[SCALE];
+-        int yMax = coder.readShort(true) / attributes[SCALE];
++        int xMin = coder.readWord(2, true) / attributes[SCALE];
++        int yMin = coder.readWord(2, true) / attributes[SCALE];
++        int xMax = coder.readWord(2, true) / attributes[SCALE];
++        int yMax = coder.readWord(2, true) / attributes[SCALE];
+         
+         int[] endPtsOfContours = new int[numberOfContours];
+ 
+         for (int i=0; i&lt;numberOfContours; i++)
+-            endPtsOfContours[i] = coder.readShort(false);
++            endPtsOfContours[i] = coder.readWord(2, false);
+ 
+-        int instructionCount = coder.readShort(false);   
++        int instructionCount = coder.readWord(2, false);   
+         int[] instructions = new int[instructionCount];
+             
+         for (int i=0; i&lt;instructionCount; i++)
+-            instructions[i] = coder.readByte();
++            instructions[i] = coder.readWord(1, false);
+                 
+         int numberOfPoints = (numberOfContours == 0) ? 0 : endPtsOfContours[endPtsOfContours.length-1]+1;
+         
+@@ -1651,11 +1651,11 @@
+             } 
+             else 
+             {
+-                flags[i] = coder.readByte();
++                flags[i] = coder.readWord(1, false);
+                     
+                 if ((flags[i] &amp; REPEAT_FLAG) &gt; 0) 
+                 {
+-                    repeatCount = coder.readByte();
++                    repeatCount = coder.readWord(1, false);
+                     repeatFlag = flags[i];
+                 }
+             }
+@@ -1669,16 +1669,16 @@
+             if ((flags[i] &amp; X_SHORT) &gt; 0) 
+             {
+                 if ((flags[i] &amp; X_POSITIVE) &gt; 0)
+-                    last = xCoordinates[i] = last + coder.readByte();
++                    last = xCoordinates[i] = last + coder.readWord(1, false);
+                 else 
+-                    last = xCoordinates[i] = last - coder.readByte();
++                    last = xCoordinates[i] = last - coder.readWord(1, false);
+             } 
+             else 
+             {
+                 if ((flags[i] &amp; X_SAME) &gt; 0)
+                     last = xCoordinates[i] = last;
+                 else
+-                    last = xCoordinates[i] = last + coder.readShort(true);
++                    last = xCoordinates[i] = last + coder.readWord(2, true);
+             }
+         }
+ 
+@@ -1689,16 +1689,16 @@
+             if ((flags[i] &amp; Y_SHORT) &gt; 0)
+             {
+                 if ((flags[i] &amp; Y_POSITIVE) &gt; 0)
+-                    last = yCoordinates[i] = last + coder.readByte();
++                    last = yCoordinates[i] = last + coder.readWord(1, false);
+                 else 
+-                    last = yCoordinates[i] = last - coder.readByte();
++                    last = yCoordinates[i] = last - coder.readWord(1, false);
+             } 
+             else 
+             {
+                 if ((flags[i] &amp; Y_SAME) &gt; 0)
+                     last = yCoordinates[i] = last;
+                 else 
+-                    last = yCoordinates[i] = last + coder.readShort(true);
++                    last = yCoordinates[i] = last + coder.readWord(2, true);
+             }
+         }
+             
+@@ -1780,15 +1780,15 @@
+         glyphTable[glyphIndex].onCurve = onCurve;
+         glyphTable[glyphIndex].endPoints = endPtsOfContours;
+     }
+-      private void decodeCompositeGlyph(FSCodec coder, int glyphIndex)
++      private void decodeCompositeGlyph(FSCoder coder, int glyphIndex)
+     {
+         FSShape shape = new FSShape();
+         FSCoordTransform transform = null;
+                         
+-        int xMin = coder.readShort(true);
+-        int yMin = coder.readShort(true);
+-        int xMax = coder.readShort(true);
+-        int yMax = coder.readShort(true);
++        int xMin = coder.readWord(2, true);
++        int yMin = coder.readWord(2, true);
++        int xMax = coder.readWord(2, true);
++        int yMax = coder.readWord(2, true);
+         
+         FSGlyph points = null;
+         
+@@ -1811,8 +1811,8 @@
+         do {
+             transform = new FSCoordTransform();
+             
+-            flags = coder.readShort(false);
+-            sourceGlyph = coder.readShort(false);
++            flags = coder.readWord(2, false);
++            sourceGlyph = coder.readWord(2, false);
+             
+             if (sourceGlyph &gt;= glyphTable.length || glyphTable[sourceGlyph] == null)
+             {
+@@ -1846,8 +1846,8 @@
+             
+             if ((flags &amp; ARG_1_AND_2_ARE_WORDS) == 0 &amp;&amp; (flags &amp; ARGS_ARE_XY_VALUES) == 0)
+             {
+-                destIndex = coder.readByte();
+-                sourceIndex = coder.readByte();
++                destIndex = coder.readWord(1, false);
++                sourceIndex = coder.readWord(1, false);
+                 
+                 //xCoordinates[destIndex] = glyphTable[sourceGlyph].xCoordinates[sourceIndex];
+                 //yCoordinates[destIndex] = glyphTable[sourceGlyph].yCoordinates[sourceIndex];
+@@ -1855,14 +1855,14 @@
+             }
+             else if ((flags &amp; ARG_1_AND_2_ARE_WORDS) == 0 &amp;&amp; (flags &amp; ARGS_ARE_XY_VALUES) &gt; 0)
+             {
+-                xOffset = (coder.readByte() &lt;&lt; 24) &gt;&gt; 24;
+-                yOffset = (coder.readByte() &lt;&lt; 24) &gt;&gt; 24;
++                xOffset = (coder.readWord(1, false) &lt;&lt; 24) &gt;&gt; 24;
++                yOffset = (coder.readWord(1, false) &lt;&lt; 24) &gt;&gt; 24;
+                 transform.translate(xOffset, yOffset);
+             }
+             else if ((flags &amp; ARG_1_AND_2_ARE_WORDS) &gt; 0 &amp;&amp; (flags &amp; ARGS_ARE_XY_VALUES) == 0)
+             {
+-                destIndex = coder.readShort(false);
+-                sourceIndex = coder.readShort(false);
++                destIndex = coder.readWord(2, false);
++                sourceIndex = coder.readWord(2, false);
+                 
+                 //xCoordinates[destIndex] = glyphTable[sourceGlyph].xCoordinates[sourceIndex];
+                 //yCoordinates[destIndex] = glyphTable[sourceGlyph].yCoordinates[sourceIndex];
+@@ -1870,8 +1870,8 @@
+             }
+             else
+             {
+-                xOffset = coder.readShort(true);
+-                yOffset = coder.readShort(true);
++                xOffset = coder.readWord(2, true);
++                yOffset = coder.readWord(2, true);
+                 transform.translate(xOffset, yOffset);
+             }
+             
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000027.html">[Transform-svn] r86 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000029.html">[Transform-svn] r88 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#28">[ date ]</a>
+              <a href="thread.html#28">[ thread ]</a>
+              <a href="subject.html#28">[ subject ]</a>
+              <a href="author.html#28">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

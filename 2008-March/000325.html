@@ -1,0 +1,1451 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r391%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200803261756.m2QHumKX017687%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000324.html">
+   <LINK REL="Next"  HREF="000326.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r391%20-%20in%20dev/dev-2-4/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200803261756.m2QHumKX017687%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar 26 18:56:48 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000324.html">[Transform-svn] r390 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000326.html">[Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#325">[ date ]</a>
+              <a href="thread.html#325">[ thread ]</a>
+              <a href="subject.html#325">[ subject ]</a>
+              <a href="author.html#325">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-26 18:56:38 +0100 (Wed, 26 Mar 2008)
+New Revision: 391
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/FSSoundInfo.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/FSSound.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSButtonSound.java
+   dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead.java
+   dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSStartSound.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+   dev/dev-2-4/src/com/flagstone/transform/util/MP3Decoder.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Sound.java
+   dev/dev-2-4/src/com/flagstone/transform/util/WAVDecoder.java
+Log:
+renamed FSSound to FSSoundInfo
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSButtonSound.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/FSButtonSound.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -122,7 +122,7 @@
+ public class FSButtonSound extends FSMovieObject
+ {
+ 	private int identifier;
+-	private FSSound[] sound = new FSSound[] {null, null, null, null};
++	private FSSoundInfo[] sound = new FSSoundInfo[] {null, null, null, null};
+ 
+ 	/**
+ 	 * Construct an FSButtonSound object, initialising it with values decoded
+@@ -158,7 +158,7 @@
+ 	 * FSButtonEvent.RollOver, FSButtonEvent.RollOut, FSButtonEvent.Press or 
+ 	 * FSButtonEvent.Release.
+ 	 */
+-	public FSButtonSound(int anIdentifier, int eventCode, FSSound aSound)
++	public FSButtonSound(int anIdentifier, int eventCode, FSSoundInfo aSound)
+ 	{
+ 		super(ButtonSound);
+ 
+@@ -182,7 +182,7 @@
+ 		for (int i=0; i&lt;4; i++)
+ 		{
+ 			if (obj.sound[i] != null)
+-				sound[i] = new FSSound(obj.sound[i]);
++				sound[i] = new FSSoundInfo(obj.sound[i]);
+ 		}
+ 	}
+ 
+@@ -210,7 +210,7 @@
+ 	 * FSButtonEvent.RollOver, FSButtonEvent.RollOut, FSButtonEvent.Press or 
+ 	 * FSButtonEvent.Release.
+ 	 */
+-	public FSSound getSoundForEvent(int eventCode)
++	public FSSoundInfo getSoundForEvent(int eventCode)
+ 	{
+ 		if (eventCode != FSButtonEvent.RollOut &amp;&amp; 
+ 						eventCode != FSButtonEvent.RollOver &amp;&amp;
+@@ -220,7 +220,7 @@
+ 			throw new IllegalArgumentException(&quot;Invalid event code.&quot;);
+ 		}
+ 		
+-		FSSound aSound = null;
++		FSSoundInfo aSound = null;
+ 
+ 		if (eventCode == FSButtonEvent.RollOut)
+ 			aSound = sound[0];
+@@ -265,7 +265,7 @@
+ 	 * FSButtonEvent.RollOver, FSButtonEvent.RollOut, FSButtonEvent.Press or 
+ 	 * FSButtonEvent.Release.
+ 	 */
+-	public void setSoundForEvent(int eventCode, FSSound aSound)
++	public void setSoundForEvent(int eventCode, FSSoundInfo aSound)
+ 	{
+ 		if (eventCode != FSButtonEvent.RollOut &amp;&amp; 
+ 						eventCode != FSButtonEvent.RollOver &amp;&amp;
+@@ -291,7 +291,7 @@
+ 
+ 		for (int i=0; i&lt;4; i++)
+ 		{
+-			anObject.sound[i] = (sound[i] != null) ? (FSSound) sound[i].clone() : null;
++			anObject.sound[i] = (sound[i] != null) ? (FSSoundInfo) sound[i].clone() : null;
+ 		}
+ 
+ 		return anObject;
+@@ -377,7 +377,7 @@
+ 		for (int i=0; i&lt;4; i++)
+ 		{
+ 			if (coder.scanWord(2, false) &gt; 0)
+-				sound[i] = new FSSound(coder, context);
++				sound[i] = new FSSoundInfo(coder, context);
+ 			else
+ 				coder.readWord(2, false);
+ 
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/FSSound.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSSound.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/FSSound.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -1,524 +0,0 @@
+-/*
+- * FSSound.java
+- * Transform
+- * 
+- * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-
+-package com.flagstone.transform;
+-
+-import java.util.ArrayList;
+-import java.util.Iterator;
+-
+-/**
+- * The FSSound class identifies a sound (previously defined using The
+- * FSDefineSound class) and controls how it is played.
+- * 
+- * &lt;p&gt;
+- * FSSound defines how the sound fades in and out, whether it is repeated as
+- * well as specifying an envelope that provides a finer degree of control over
+- * the levels at which the sound is played.
+- * &lt;/p&gt;
+- * 
+- * &lt;table class=&quot;datasheet&quot;&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;identifier&lt;/td&gt;
+- * &lt;td&gt;The identifier, in the range 1..65535, of the FSDefineSound object that
+- * contains the sound data.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;mode&lt;/td&gt;
+- * &lt;td&gt;Controls how the sound is played, either: Start - start playing the
+- * sound, Continue - start playing the sound if it is not already playing and
+- * Stop - stop playing the sound.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;inPoint&lt;/td&gt;
+- * &lt;td&gt;The sample number that the sound increases in volume to until full
+- * volume is reached. Optional. Set to 0 if the sound does not fade in.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;outPoint&lt;/td&gt;
+- * &lt;td&gt;The sample number at which the that the sound starts to fades until the
+- * sound has finished playing. Optional. Set to 0 if the sound does not fade
+- * out.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;loopCount&lt;/td&gt;
+- * &lt;td&gt;The number of times the sound is repeated. Optional. Must be at least 1
+- * if a sound is being played. Set to 0 if a sound is being stopped.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;envelopes&lt;/td&gt;
+- * &lt;td&gt;An array of FSEnvelope objects that control how the sound is played.
+- * Optional. May be set to null or an empty array if no envelope is defined.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;/table&gt;
+- * 
+- * &lt;p&gt;
+- * Not all the attributes are required to play a sound. Only the identifier and
+- * the mode is required. The other attributes are optional and may be added as a
+- * greater degree of control is required. The inPoint and outPoint attributes
+- * may be set to zero if the sound does not fade in or out respectively. The
+- * loopCount may be set to zero if a sound is being stopped. The envelopes array
+- * may be left empty if no envelope is defined for the sound. The class provides
+- * different constructors to specify different sets of attributes.
+- * &lt;/p&gt;
+- * 
+- * &lt;p&gt;
+- * The in and out point specify the sample number which marks the point in time
+- * at which the sound stops increasing or starts decreasing in volume
+- * respectively. Sounds are played by the Flash player at 44.1KHz so the sample
+- * number also indicates the time when the total number of samples in the sound
+- * is taken into account.
+- * &lt;/p&gt;
+- * 
+- * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+- * 
+- * &lt;p&gt;
+- * The FSSound class is based on the SoundInfo data structure from the
+- * Macromedia Flash (SWF) File Format Specification. However it also contains
+- * the identifier for the sound which is a separate attribute in the data
+- * structures defined in the specification that contain SoundInfo data.
+- * &lt;/p&gt;
+- */
+-public class FSSound implements Cloneable, Codeable
+-{
+-	/**
+-	 * Identifies an uncompressed pulse code modulated sound. The byte-order for
+-	 * 16-bit sound samples is dependent on the host platform on which the sound
+-	 * is played.
+-	 */
+-	public static final int NATIVE_PCM = 0;
+-
+-	/** 
+-	 * Identifies an adaptive pulse code modulated sound. 
+-	 */
+-	public static final int ADPCM = 1;
+-
+-	/** 
+-	 * Identifies an MP3 format sound. 
+-	 * */
+-	public static final int MP3 = 2;
+-
+-	/**
+-	 * Identifies an uncompressed pulse code modulated sound, little-endian byte
+-	 * order.
+-	 */
+-	public static final int PCM = 3;
+-
+-	/** 
+-	 * Nellymoser Asao encoded at 8KHz. Use only for Flash Video (flv) files,
+-	 * Do not use for SWF files.
+-	 */
+-	public static final int NELLYMOSER_8K = 5;
+-
+-	/** 
+-	 * Identifies a Nellymoser Asao encoded sound. 
+-	 */
+-	public static final int NELLYMOSER = 6;
+-
+-	/** 
+-	 * Start playing the sound. 
+-	 */
+-	public static final int Start = 0;
+-
+-	/** 
+-	 * Start playing the sound or continues if it is already playing. 
+-	 */
+-	public static final int Continue = 1;
+-
+-	/** 
+-	 * Stop playing the sound.
+-	 */
+-	public static final int Stop = 2;
+-
+-	private int identifier;
+-	private int mode;
+-	private int inPoint;
+-	private int outPoint;
+-	private int loopCount;
+-
+-	private ArrayList&lt;FSEnvelope&gt; envelopes;
+-
+-	/**
+-	 * Construct an FSSound object, initialising it with values decoded from an
+-	 * encoded object.
+-	 * 
+-	 * @param coder
+-	 *            an FSCoder containing the binary data.
+-	 */
+-	public FSSound(FSCoder coder, FSContext context)
+-	{
+-		decode(coder, context);
+-	}
+-
+-	/**
+-	 * Constructs and FSSound object specifying how the sound is played and the
+-	 * number of times the sound is repeated.
+-	 * 
+-	 * @param anIdentifier
+-	 *            the unique identifier of the object that contains the sound
+-	 *            data.
+-	 * @param aMode
+-	 *            how the sound is synchronised when the frames are displayed:
+-	 *            Play - do not play the sound if it is already playing and Stop -
+-	 *            stop playing the sound.
+-	 * @param aCount
+-	 *            the number of times the sound is repeated. May be set to zero
+-	 *            if the sound will not be repeated.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 * @throws IllegalArgumentException if the mode is not either Start, Stop or Continue.
+-	 * @throws IllegalArgumentException if the loop count is not in the range 0..65535.
+-	 */
+-	public FSSound(int anIdentifier, int aMode, int aCount)
+-	{
+-		setIdentifier(anIdentifier);
+-		setMode(aMode);
+-		setLoopCount(aCount);
+-		envelopes = new ArrayList&lt;FSEnvelope&gt;();
+-	}
+-
+-	/**
+-	 * Constructs an FSSound object by copying values from an existing object.
+-	 * 
+-	 * @param obj
+-	 *            an FSSound object.
+-	 */
+-	public FSSound(FSSound obj)
+-	{
+-		identifier = obj.identifier;
+-		mode = obj.mode;
+-		inPoint = obj.inPoint;
+-		outPoint = obj.outPoint;
+-		loopCount = obj.loopCount;
+-
+-		envelopes = new ArrayList&lt;FSEnvelope&gt;();
+-
+-		for (Iterator&lt;FSEnvelope&gt; i = obj.envelopes.iterator(); i.hasNext();)
+-			envelopes.add((FSEnvelope) i.next().clone());
+-	}
+-
+-	/**
+-	 * Add a FSEnvelope object to the array of envelope objects.
+-	 * 
+-	 * @param anEnvelope
+-	 *            an FSEnvelope object.
+-	 */
+-	public void add(FSEnvelope anEnvelope)
+-	{
+-		envelopes.add(anEnvelope);
+-	}
+-
+-	/**
+-	 * Gets the identifier of the sound to the played.
+-	 * 
+-	 * @return the sound identifier.
+-	 */
+-	public int getIdentifier()
+-	{
+-		return identifier;
+-	}
+-
+-	/**
+-	 * Gets the synchronisation mode: SyncNoMultiple - do not play the sound if
+-	 * it is already playing and SyncStop - stop playing the sound.
+-	 * 
+-	 * @return the synchronisation mode of the sound.
+-	 */
+-	public int getMode()
+-	{
+-		return mode;
+-	}
+-
+-	/**
+-	 * Gets the sample number at which the sound reaches full volume when fading
+-	 * in.
+-	 * 
+-	 * @return the in point
+-	 */
+-	public int getInPoint()
+-	{
+-		return inPoint;
+-	}
+-
+-	/**
+-	 * Gets the sample number at which the sound starts to fade.
+-	 * 
+-	 * @return the out point
+-	 */
+-	public int getOutPoint()
+-	{
+-		return outPoint;
+-	}
+-
+-	/**
+-	 * Gets the number of times the sound will be repeated.
+-	 * 
+-	 * @return the Loop Count.
+-	 */
+-	public int getLoopCount()
+-	{
+-		return loopCount;
+-	}
+-
+-	/**
+-	 * Gets the array of FSEnvelope objects that control the levels the sound is
+-	 * played.
+-	 * 
+-	 * @return an array of FSEnvelope objects.
+-	 */
+-	public ArrayList&lt;FSEnvelope&gt; getEnvelopes()
+-	{
+-		return envelopes;
+-	}
+-
+-	/**
+-	 * Sets the identifier of the sound to the played.
+-	 * 
+-	 * @param anIdentifier
+-	 *            the identifier for the sound to be played.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 */
+-	public void setIdentifier(int anIdentifier)
+-	{
+-		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
+-		}
+-		identifier = anIdentifier;
+-	}
+-
+-	/**
+-	 * Sets how the sound is synchronised when the frames are displayed: Start -
+-	 * start playing the sound, Continue - do not play the sound if it is
+-	 * already playing and Stop - stop playing the sound.
+-	 * 
+-	 * @param aMode
+-	 *            how the sound is played.
+-	 *            
+-	 * @throws IllegalArgumentException if the mode is not either Start, Stop or Continue.
+-	 */
+-	public void setMode(int aMode)
+-	{
+-		if (aMode &lt; 0 || aMode &gt; 2) {
+-			throw new IllegalArgumentException(&quot;Mode must either Start, Stop or Continue&quot;);
+-		}
+-		mode = aMode;
+-	}
+-
+-	/**
+-	 * Sets the sample number at which the sound reaches full volume when fading
+-	 * in. May be set to zero if the sound does not fade in.
+-	 * 
+-	 * @param aNumber
+-	 *            the sample number which the sound fades in to.
+-	 *            
+-	 * @throws IllegalArgumentException if the loop count is not in the range 0..65535.
+-	 */
+-	public void setInPoint(int aNumber)
+-	{
+-		if (aNumber &lt; 0 || aNumber &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Loop count must be in the range 0..65535.&quot;);
+-		}
+-		inPoint = aNumber;
+-	}
+-
+-	/**
+-	 * Sets the sample number at which the sound starts to fade. May be set to
+-	 * zero if the sound does not fade out.
+-	 * 
+-	 * @param aNumber
+-	 *            the sample number at which the sound starts to fade.
+-	 */
+-	public void setOutPoint(int aNumber)
+-	{
+-		outPoint = aNumber;
+-	}
+-
+-	/**
+-	 * Sets the number of times the sound is repeated. May be set to zero if the
+-	 * sound will not be repeated.
+-	 * 
+-	 * @param aNumber
+-	 *            the number of times the sound is repeated.
+-	 */
+-	public void setLoopCount(int aNumber)
+-	{
+-		loopCount = aNumber;
+-	}
+-
+-	/**
+-	 * Sets the array of FSEnvelope objects that define the levels at which a
+-	 * sound is played over the duration of the sound. May be set to null if no
+-	 * envelope is defined.
+-	 * 
+-	 * @param anArray
+-	 *            an array of FSEnvelope objects.
+-	 *            
+-	 * @throws NullPointerException if the array of envelopes is null.
+-	 */
+-	public void setEnvelopes(ArrayList&lt;FSEnvelope&gt; anArray)
+-	{
+-		if (anArray == null) {
+-			throw new NullPointerException(&quot;Array of envelopes cannot be null.&quot;);
+-		}
+-		envelopes = anArray;
+-	}
+-
+-	public Object clone()
+-	{
+-		FSSound anObject = null;
+-
+-		try {
+-			anObject = (FSSound) super.clone();
+-
+-			anObject.envelopes = new ArrayList&lt;FSEnvelope&gt;();
+-
+-			for (Iterator&lt;FSEnvelope&gt; i = envelopes.iterator(); i.hasNext();)
+-				anObject.envelopes.add((FSEnvelope) i.next().clone());
+-		} 
+-		catch (CloneNotSupportedException e) {
+-			throw new InternalError();
+-		}
+-		return anObject;
+-	}
+-
+-	public boolean equals(Object anObject)
+-	{
+-		boolean result = false;
+-
+-		if (super.equals(anObject))
+-		{
+-			FSSound typedObject = (FSSound) anObject;
+-
+-			result = identifier == typedObject.identifier;
+-			result = result &amp;&amp; mode == typedObject.mode;
+-			result = result &amp;&amp; inPoint == typedObject.inPoint;
+-			result = result &amp;&amp; outPoint == typedObject.outPoint;
+-			result = result &amp;&amp; loopCount == typedObject.loopCount;
+-			result = result &amp;&amp; envelopes.equals(typedObject.envelopes);
+-		}
+-		return result;
+-	}
+-
+-	public String toString()
+-	{
+-		StringBuffer buffer = new StringBuffer();
+-
+-		buffer.append(&quot;FSSound: { &quot;);
+-		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
+-		buffer.append(&quot;mode = &quot;).append(mode).append(&quot;; &quot;);
+-		buffer.append(&quot;inPoint = &quot;).append(inPoint).append(&quot;; &quot;);
+-		buffer.append(&quot;outPoint = &quot;).append(outPoint).append(&quot;; &quot;);
+-		buffer.append(&quot;loopCount = &quot;).append(loopCount).append(&quot;; &quot;);
+-		buffer.append(&quot;envelopes = &quot;).append(envelopes.toString()).append(&quot;; &quot;);
+-		buffer.append(&quot;}&quot;);
+-
+-		return buffer.toString();
+-	}
+-
+-	public int length(FSContext context)
+-	{
+-		int length = 3;
+-
+-		length += (inPoint != 0) ? 4 : 0;
+-		length += (outPoint != 0) ? 4 : 0;
+-		length += (loopCount != 0) ? 2 : 0;
+-		
+-		if (envelopes.size() &gt; 0) {
+-			length += 1 + envelopes.size() * 8;
+-		}
+-
+-		return length;
+-	}
+-
+-	public void encode(FSCoder coder, FSContext context)
+-	{
+-		coder.writeWord(identifier, 2);
+-		coder.writeBits(mode, 4);
+-		coder.writeBits(envelopes.size() &gt; 0 ? 1 : 0, 1);
+-		coder.writeBits(loopCount != 0 ? 1 : 0, 1);
+-		coder.writeBits(outPoint != 0 ? 1 : 0, 1);
+-		coder.writeBits(inPoint != 0 ? 1 : 0, 1);
+-
+-		if (inPoint != 0)
+-			coder.writeWord(inPoint, 4);
+-		if (outPoint != 0)
+-			coder.writeWord(outPoint, 4);
+-		if (loopCount != 0)
+-			coder.writeWord(loopCount, 2);
+-		if (envelopes.size() &gt; 0)
+-		{
+-			coder.writeWord(envelopes.size(), 1);
+-
+-			for (int i=0; i&lt;envelopes.size(); i++)
+-				envelopes.get(i).encode(coder, context);
+-		}
+-	}
+-
+-	public void decode(FSCoder coder, FSContext context)
+-	{
+-		int envelopeCount = 0;
+-		envelopes = new ArrayList&lt;FSEnvelope&gt;();
+-
+-		identifier = coder.readWord(2, false);
+-		mode = coder.readBits(4, false);
+-		boolean _containsEnvelopes = coder.readBits(1, false) != 0 ? true : false;
+-		boolean _containsLoopCount = coder.readBits(1, false) != 0 ? true : false;
+-		boolean _containsOutPoint = coder.readBits(1, false) != 0 ? true : false;
+-		boolean _containsInPoint = coder.readBits(1, false) != 0 ? true : false;
+-
+-		if (_containsInPoint)
+-			inPoint = coder.readWord(4, false);
+-
+-		if (_containsOutPoint)
+-			outPoint = coder.readWord(4, false);
+-
+-		if (_containsLoopCount)
+-			loopCount = coder.readWord(2, false);
+-
+-		if (_containsEnvelopes)
+-		{
+-			envelopeCount = coder.readByte();
+-
+-			for (int i = 0; i &lt; envelopeCount; i++)
+-				envelopes.add(new FSEnvelope(coder, context));
+-		}
+-	}
+-}
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/FSSoundInfo.java (from rev 385, dev/dev-2-4/src/com/flagstone/transform/FSSound.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSSound.java	2008-03-26 15:26:42 UTC (rev 385)
++++ dev/dev-2-4/src/com/flagstone/transform/FSSoundInfo.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -0,0 +1,524 @@
++/*
++ * FSSound.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++import java.util.ArrayList;
++import java.util.Iterator;
++
++/**
++ * The FSSound class identifies a sound (previously defined using The
++ * FSDefineSound class) and controls how it is played.
++ * 
++ * &lt;p&gt;
++ * FSSound defines how the sound fades in and out, whether it is repeated as
++ * well as specifying an envelope that provides a finer degree of control over
++ * the levels at which the sound is played.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;identifier&lt;/td&gt;
++ * &lt;td&gt;The identifier, in the range 1..65535, of the FSDefineSound object that
++ * contains the sound data.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;mode&lt;/td&gt;
++ * &lt;td&gt;Controls how the sound is played, either: Start - start playing the
++ * sound, Continue - start playing the sound if it is not already playing and
++ * Stop - stop playing the sound.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;inPoint&lt;/td&gt;
++ * &lt;td&gt;The sample number that the sound increases in volume to until full
++ * volume is reached. Optional. Set to 0 if the sound does not fade in.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;outPoint&lt;/td&gt;
++ * &lt;td&gt;The sample number at which the that the sound starts to fades until the
++ * sound has finished playing. Optional. Set to 0 if the sound does not fade
++ * out.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;loopCount&lt;/td&gt;
++ * &lt;td&gt;The number of times the sound is repeated. Optional. Must be at least 1
++ * if a sound is being played. Set to 0 if a sound is being stopped.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;envelopes&lt;/td&gt;
++ * &lt;td&gt;An array of FSEnvelope objects that control how the sound is played.
++ * Optional. May be set to null or an empty array if no envelope is defined.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Not all the attributes are required to play a sound. Only the identifier and
++ * the mode is required. The other attributes are optional and may be added as a
++ * greater degree of control is required. The inPoint and outPoint attributes
++ * may be set to zero if the sound does not fade in or out respectively. The
++ * loopCount may be set to zero if a sound is being stopped. The envelopes array
++ * may be left empty if no envelope is defined for the sound. The class provides
++ * different constructors to specify different sets of attributes.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The in and out point specify the sample number which marks the point in time
++ * at which the sound stops increasing or starts decreasing in volume
++ * respectively. Sounds are played by the Flash player at 44.1KHz so the sample
++ * number also indicates the time when the total number of samples in the sound
++ * is taken into account.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSSound class is based on the SoundInfo data structure from the
++ * Macromedia Flash (SWF) File Format Specification. However it also contains
++ * the identifier for the sound which is a separate attribute in the data
++ * structures defined in the specification that contain SoundInfo data.
++ * &lt;/p&gt;
++ */
++public class FSSoundInfo implements Cloneable, Codeable
++{
++	/**
++	 * Identifies an uncompressed pulse code modulated sound. The byte-order for
++	 * 16-bit sound samples is dependent on the host platform on which the sound
++	 * is played.
++	 */
++	public static final int NATIVE_PCM = 0;
++
++	/** 
++	 * Identifies an adaptive pulse code modulated sound. 
++	 */
++	public static final int ADPCM = 1;
++
++	/** 
++	 * Identifies an MP3 format sound. 
++	 * */
++	public static final int MP3 = 2;
++
++	/**
++	 * Identifies an uncompressed pulse code modulated sound, little-endian byte
++	 * order.
++	 */
++	public static final int PCM = 3;
++
++	/** 
++	 * Nellymoser Asao encoded at 8KHz. Use only for Flash Video (flv) files,
++	 * Do not use for SWF files.
++	 */
++	public static final int NELLYMOSER_8K = 5;
++
++	/** 
++	 * Identifies a Nellymoser Asao encoded sound. 
++	 */
++	public static final int NELLYMOSER = 6;
++
++	/** 
++	 * Start playing the sound. 
++	 */
++	public static final int Start = 0;
++
++	/** 
++	 * Start playing the sound or continues if it is already playing. 
++	 */
++	public static final int Continue = 1;
++
++	/** 
++	 * Stop playing the sound.
++	 */
++	public static final int Stop = 2;
++
++	private int identifier;
++	private int mode;
++	private int inPoint;
++	private int outPoint;
++	private int loopCount;
++
++	private ArrayList&lt;FSEnvelope&gt; envelopes;
++
++	/**
++	 * Construct an FSSound object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSSoundInfo(FSCoder coder, FSContext context)
++	{
++		decode(coder, context);
++	}
++
++	/**
++	 * Constructs and FSSound object specifying how the sound is played and the
++	 * number of times the sound is repeated.
++	 * 
++	 * @param anIdentifier
++	 *            the unique identifier of the object that contains the sound
++	 *            data.
++	 * @param aMode
++	 *            how the sound is synchronised when the frames are displayed:
++	 *            Play - do not play the sound if it is already playing and Stop -
++	 *            stop playing the sound.
++	 * @param aCount
++	 *            the number of times the sound is repeated. May be set to zero
++	 *            if the sound will not be repeated.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 * @throws IllegalArgumentException if the mode is not either Start, Stop or Continue.
++	 * @throws IllegalArgumentException if the loop count is not in the range 0..65535.
++	 */
++	public FSSoundInfo(int anIdentifier, int aMode, int aCount)
++	{
++		setIdentifier(anIdentifier);
++		setMode(aMode);
++		setLoopCount(aCount);
++		envelopes = new ArrayList&lt;FSEnvelope&gt;();
++	}
++
++	/**
++	 * Constructs an FSSound object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSSound object.
++	 */
++	public FSSoundInfo(FSSoundInfo obj)
++	{
++		identifier = obj.identifier;
++		mode = obj.mode;
++		inPoint = obj.inPoint;
++		outPoint = obj.outPoint;
++		loopCount = obj.loopCount;
++
++		envelopes = new ArrayList&lt;FSEnvelope&gt;();
++
++		for (Iterator&lt;FSEnvelope&gt; i = obj.envelopes.iterator(); i.hasNext();)
++			envelopes.add((FSEnvelope) i.next().clone());
++	}
++
++	/**
++	 * Add a FSEnvelope object to the array of envelope objects.
++	 * 
++	 * @param anEnvelope
++	 *            an FSEnvelope object.
++	 */
++	public void add(FSEnvelope anEnvelope)
++	{
++		envelopes.add(anEnvelope);
++	}
++
++	/**
++	 * Gets the identifier of the sound to the played.
++	 * 
++	 * @return the sound identifier.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
++
++	/**
++	 * Gets the synchronisation mode: SyncNoMultiple - do not play the sound if
++	 * it is already playing and SyncStop - stop playing the sound.
++	 * 
++	 * @return the synchronisation mode of the sound.
++	 */
++	public int getMode()
++	{
++		return mode;
++	}
++
++	/**
++	 * Gets the sample number at which the sound reaches full volume when fading
++	 * in.
++	 * 
++	 * @return the in point
++	 */
++	public int getInPoint()
++	{
++		return inPoint;
++	}
++
++	/**
++	 * Gets the sample number at which the sound starts to fade.
++	 * 
++	 * @return the out point
++	 */
++	public int getOutPoint()
++	{
++		return outPoint;
++	}
++
++	/**
++	 * Gets the number of times the sound will be repeated.
++	 * 
++	 * @return the Loop Count.
++	 */
++	public int getLoopCount()
++	{
++		return loopCount;
++	}
++
++	/**
++	 * Gets the array of FSEnvelope objects that control the levels the sound is
++	 * played.
++	 * 
++	 * @return an array of FSEnvelope objects.
++	 */
++	public ArrayList&lt;FSEnvelope&gt; getEnvelopes()
++	{
++		return envelopes;
++	}
++
++	/**
++	 * Sets the identifier of the sound to the played.
++	 * 
++	 * @param anIdentifier
++	 *            the identifier for the sound to be played.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 */
++	public void setIdentifier(int anIdentifier)
++	{
++		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
++		}
++		identifier = anIdentifier;
++	}
++
++	/**
++	 * Sets how the sound is synchronised when the frames are displayed: Start -
++	 * start playing the sound, Continue - do not play the sound if it is
++	 * already playing and Stop - stop playing the sound.
++	 * 
++	 * @param aMode
++	 *            how the sound is played.
++	 *            
++	 * @throws IllegalArgumentException if the mode is not either Start, Stop or Continue.
++	 */
++	public void setMode(int aMode)
++	{
++		if (aMode &lt; 0 || aMode &gt; 2) {
++			throw new IllegalArgumentException(&quot;Mode must either Start, Stop or Continue&quot;);
++		}
++		mode = aMode;
++	}
++
++	/**
++	 * Sets the sample number at which the sound reaches full volume when fading
++	 * in. May be set to zero if the sound does not fade in.
++	 * 
++	 * @param aNumber
++	 *            the sample number which the sound fades in to.
++	 *            
++	 * @throws IllegalArgumentException if the loop count is not in the range 0..65535.
++	 */
++	public void setInPoint(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Loop count must be in the range 0..65535.&quot;);
++		}
++		inPoint = aNumber;
++	}
++
++	/**
++	 * Sets the sample number at which the sound starts to fade. May be set to
++	 * zero if the sound does not fade out.
++	 * 
++	 * @param aNumber
++	 *            the sample number at which the sound starts to fade.
++	 */
++	public void setOutPoint(int aNumber)
++	{
++		outPoint = aNumber;
++	}
++
++	/**
++	 * Sets the number of times the sound is repeated. May be set to zero if the
++	 * sound will not be repeated.
++	 * 
++	 * @param aNumber
++	 *            the number of times the sound is repeated.
++	 */
++	public void setLoopCount(int aNumber)
++	{
++		loopCount = aNumber;
++	}
++
++	/**
++	 * Sets the array of FSEnvelope objects that define the levels at which a
++	 * sound is played over the duration of the sound. May be set to null if no
++	 * envelope is defined.
++	 * 
++	 * @param anArray
++	 *            an array of FSEnvelope objects.
++	 *            
++	 * @throws NullPointerException if the array of envelopes is null.
++	 */
++	public void setEnvelopes(ArrayList&lt;FSEnvelope&gt; anArray)
++	{
++		if (anArray == null) {
++			throw new NullPointerException(&quot;Array of envelopes cannot be null.&quot;);
++		}
++		envelopes = anArray;
++	}
++
++	public Object clone()
++	{
++		FSSoundInfo anObject = null;
++
++		try {
++			anObject = (FSSoundInfo) super.clone();
++
++			anObject.envelopes = new ArrayList&lt;FSEnvelope&gt;();
++
++			for (Iterator&lt;FSEnvelope&gt; i = envelopes.iterator(); i.hasNext();)
++				anObject.envelopes.add((FSEnvelope) i.next().clone());
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
++
++		if (super.equals(anObject))
++		{
++			FSSoundInfo typedObject = (FSSoundInfo) anObject;
++
++			result = identifier == typedObject.identifier;
++			result = result &amp;&amp; mode == typedObject.mode;
++			result = result &amp;&amp; inPoint == typedObject.inPoint;
++			result = result &amp;&amp; outPoint == typedObject.outPoint;
++			result = result &amp;&amp; loopCount == typedObject.loopCount;
++			result = result &amp;&amp; envelopes.equals(typedObject.envelopes);
++		}
++		return result;
++	}
++
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSSound: { &quot;);
++		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
++		buffer.append(&quot;mode = &quot;).append(mode).append(&quot;; &quot;);
++		buffer.append(&quot;inPoint = &quot;).append(inPoint).append(&quot;; &quot;);
++		buffer.append(&quot;outPoint = &quot;).append(outPoint).append(&quot;; &quot;);
++		buffer.append(&quot;loopCount = &quot;).append(loopCount).append(&quot;; &quot;);
++		buffer.append(&quot;envelopes = &quot;).append(envelopes.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++
++		return buffer.toString();
++	}
++
++	public int length(FSContext context)
++	{
++		int length = 3;
++
++		length += (inPoint != 0) ? 4 : 0;
++		length += (outPoint != 0) ? 4 : 0;
++		length += (loopCount != 0) ? 2 : 0;
++		
++		if (envelopes.size() &gt; 0) {
++			length += 1 + envelopes.size() * 8;
++		}
++
++		return length;
++	}
++
++	public void encode(FSCoder coder, FSContext context)
++	{
++		coder.writeWord(identifier, 2);
++		coder.writeBits(mode, 4);
++		coder.writeBits(envelopes.size() &gt; 0 ? 1 : 0, 1);
++		coder.writeBits(loopCount != 0 ? 1 : 0, 1);
++		coder.writeBits(outPoint != 0 ? 1 : 0, 1);
++		coder.writeBits(inPoint != 0 ? 1 : 0, 1);
++
++		if (inPoint != 0)
++			coder.writeWord(inPoint, 4);
++		if (outPoint != 0)
++			coder.writeWord(outPoint, 4);
++		if (loopCount != 0)
++			coder.writeWord(loopCount, 2);
++		if (envelopes.size() &gt; 0)
++		{
++			coder.writeWord(envelopes.size(), 1);
++
++			for (int i=0; i&lt;envelopes.size(); i++)
++				envelopes.get(i).encode(coder, context);
++		}
++	}
++
++	public void decode(FSCoder coder, FSContext context)
++	{
++		int envelopeCount = 0;
++		envelopes = new ArrayList&lt;FSEnvelope&gt;();
++
++		identifier = coder.readWord(2, false);
++		mode = coder.readBits(4, false);
++		boolean _containsEnvelopes = coder.readBits(1, false) != 0 ? true : false;
++		boolean _containsLoopCount = coder.readBits(1, false) != 0 ? true : false;
++		boolean _containsOutPoint = coder.readBits(1, false) != 0 ? true : false;
++		boolean _containsInPoint = coder.readBits(1, false) != 0 ? true : false;
++
++		if (_containsInPoint)
++			inPoint = coder.readWord(4, false);
++
++		if (_containsOutPoint)
++			outPoint = coder.readWord(4, false);
++
++		if (_containsLoopCount)
++			loopCount = coder.readWord(2, false);
++
++		if (_containsEnvelopes)
++		{
++			envelopeCount = coder.readByte();
++
++			for (int i = 0; i &lt; envelopeCount; i++)
++				envelopes.add(new FSEnvelope(coder, context));
++		}
++	}
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -516,7 +516,7 @@
+ 		buffer.append(&quot;streamSampleSize = &quot;).append(streamSampleSize).append(&quot;; &quot;);
+ 		buffer.append(&quot;streamSampleCount = &quot;).append(streamSampleCount).append(&quot;; &quot;);
+ 		
+-		if (format == FSSound.MP3) {
++		if (format == FSSoundInfo.MP3) {
+ 			buffer.append(&quot;latency = &quot;).append(latency).append(&quot;; &quot;);
+ 		}
+ 		buffer.append(&quot;}&quot;);
+@@ -530,7 +530,7 @@
+ 
+ 		length += 4;
+ 
+-		if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
+ 			length += 2;
+ 
+ 		return length;
+@@ -581,7 +581,7 @@
+ 		coder.writeBits(streamChannels - 1, 1);
+ 		coder.writeWord(streamSampleCount, 2);
+ 
+-		if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
+ 			coder.writeWord(latency, 2);
+ 	}
+ 
+@@ -629,7 +629,7 @@
+ 		streamChannels = coder.readBits(1, false) + 1;
+ 		streamSampleCount = coder.readWord(2, false);
+ 
+-		if (length == 6 &amp;&amp; format == FSSound.MP3)
++		if (length == 6 &amp;&amp; format == FSSoundInfo.MP3)
+ 			latency = coder.readWord(2, true);
+ 	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead2.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/FSSoundStreamHead2.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -514,7 +514,7 @@
+ 		buffer.append(&quot;streamSampleSize = &quot;).append(streamSampleSize).append(&quot;; &quot;);
+ 		buffer.append(&quot;streamSampleCount = &quot;).append(streamSampleCount).append(&quot;; &quot;);
+ 
+-		if (format == FSSound.MP3) {
++		if (format == FSSoundInfo.MP3) {
+ 			buffer.append(&quot;latency = &quot;).append(latency).append(&quot;; &quot;);
+ 		}
+ 		buffer.append(&quot;}&quot;);
+@@ -528,7 +528,7 @@
+ 
+ 		length += 4;
+ 
+-		if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
+ 			length += 2;
+ 
+ 		return length;
+@@ -579,7 +579,7 @@
+ 		coder.writeBits(streamChannels - 1, 1);
+ 		coder.writeWord(streamSampleCount, 2);
+ 
+-		if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
+ 			coder.writeWord(latency, 2);
+ 	}
+ 
+@@ -627,7 +627,7 @@
+ 		streamChannels = coder.readBits(1, false) + 1;
+ 		streamSampleCount = coder.readWord(2, false);
+ 
+-		if (length == 6 &amp;&amp; format == FSSound.MP3)
++		if (length == 6 &amp;&amp; format == FSSoundInfo.MP3)
+ 			latency = coder.readWord(2, true);
+ 	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSStartSound.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSStartSound.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/FSStartSound.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -67,7 +67,7 @@
+  */
+ public class FSStartSound extends FSMovieObject
+ {
+-	private FSSound sound;
++	private FSSoundInfo sound;
+ 
+ 	/**
+ 	 * Construct an FSStartSound object, initialising it with values decoded from
+@@ -91,7 +91,7 @@
+ 	 * 
+ 	 * @throws NullPointerException if the sound is null.
+ 	 */
+-	public FSStartSound(FSSound aSound)
++	public FSStartSound(FSSoundInfo aSound)
+ 	{
+ 		super(FSMovieObject.StartSound);
+ 		setSound(aSound);
+@@ -107,7 +107,7 @@
+ 	public FSStartSound(FSStartSound obj)
+ 	{
+ 		super(obj);
+-		sound = new FSSound(obj.sound);
++		sound = new FSSoundInfo(obj.sound);
+ 	}
+ 
+ 	/**
+@@ -115,7 +115,7 @@
+ 	 * 
+ 	 * @return the FSSound object.
+ 	 */
+-	public FSSound getSound()
++	public FSSoundInfo getSound()
+ 	{
+ 		return sound;
+ 	}
+@@ -128,7 +128,7 @@
+ 	 * 
+ 	 * @throws NullPointerException if the sound is null.
+ 	 */
+-	public void setSound(FSSound aSound)
++	public void setSound(FSSoundInfo aSound)
+ 	{
+ 		if (aSound == null) {
+ 			throw new NullPointerException(&quot;Sound cannot be null.&quot;);
+@@ -140,7 +140,7 @@
+ 	{
+ 		FSStartSound anObject = (FSStartSound) super.clone();
+ 
+-		anObject.sound = (FSSound) sound.clone();
++		anObject.sound = (FSSoundInfo) sound.clone();
+ 
+ 		return anObject;
+ 	}
+@@ -186,6 +186,6 @@
+ 	public void decode(FSCoder coder, FSContext context)
+ 	{
+ 		super.decode(coder, context);
+-		sound = new FSSound(coder, context);
++		sound = new FSSoundInfo(coder, context);
+ 	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -129,7 +129,7 @@
+         FSDefineSound sound = soundGenerator.defineSound(soundId);
+ 
+         movie.add(sound);
+-        movie.add(new FSStartSound(new FSSound(soundId, FSSound.Start, 0)));
++        movie.add(new FSStartSound(new FSSoundInfo(soundId, FSSoundInfo.Start, 0)));
+ 
+         /*
+          * Add frames to give the sound time to play.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/MP3Decoder.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/MP3Decoder.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/util/MP3Decoder.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -116,7 +116,7 @@
+         int numberOfFrames = 0;
+         int frameStart = 0;
+ 
+-        format = FSSound.MP3;
++        format = FSSoundInfo.MP3;
+         sampleSize = 2;
+         
+         while (coder.eof() == false)
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Sound.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Sound.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -174,12 +174,12 @@
+ 
+ 		        switch (format)
+ 		        {
+-		            case FSSound.PCM:
+-		            case FSSound.ADPCM:
++		            case FSSoundInfo.PCM:
++		            case FSSoundInfo.ADPCM:
+ 		                bytes = new byte[sound.length];
+ 		                System.arraycopy(sound, 0, bytes, 0, sound.length);
+ 		                break;
+-		            case FSSound.MP3:
++		            case FSSoundInfo.MP3:
+ 		                bytes = new byte[2+sound.length];
+ 		                bytes[0] = 0;
+ 		                bytes[1] = 0;
+@@ -256,7 +256,7 @@
+ 	    
+ 	 	switch (format)
+         {
+-            case FSSound.PCM:
++            case FSSoundInfo.PCM:
+         	    for (int i=0; i&lt;numberOfBlocks; i++)
+         	    {
+ 	                firstSample = i*samplesPerBlock;
+@@ -272,9 +272,9 @@
+ 	                blocks[i] = new FSSoundStreamBlock(bytes);
+         	    }
+                 break;
+-            case FSSound.ADPCM:
++            case FSSoundInfo.ADPCM:
+                 break;
+-            case FSSound.MP3:
++            case FSSoundInfo.MP3:
+                 FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+                 
+                 coder.findBits(0x7FF, 11, 8);
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/WAVDecoder.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/WAVDecoder.java	2008-03-26 17:55:16 UTC (rev 390)
++++ dev/dev-2-4/src/com/flagstone/transform/util/WAVDecoder.java	2008-03-26 17:56:38 UTC (rev 391)
+@@ -137,7 +137,7 @@
+ 
+     private void decodeFMT(FSCoder coder) throws DataFormatException
+     {
+-        format = FSSound.PCM;
++        format = FSSoundInfo.PCM;
+         
+         if (coder.readWord(2, false) != 1)
+             throw new DataFormatException(&quot;Compressed WAV files are not currently supported.&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000324.html">[Transform-svn] r390 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000326.html">[Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#325">[ date ]</a>
+              <a href="thread.html#325">[ thread ]</a>
+              <a href="subject.html#325">[ subject ]</a>
+              <a href="author.html#325">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

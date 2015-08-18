@@ -1,0 +1,1143 @@
+From smackay at berlios.de  Sat Apr  1 10:57:05 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Apr 2006 10:57:05 +0200
+Subject: [Transform-svn] r146 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites
+Message-ID: <200604010857.k318v5Q6013693@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-01 10:56:46 +0200 (Sat, 01 Apr 2006)
+New Revision: 146
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+   trunk/test/suites/FSTextConstructor.xml
+Log:
+Fixed a bug in FSTextConstructor.defineFont() where the character code was
+being set to the index of a glyph on the array rather than the actual
+character code. Added new test to check this.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/doc/CHANGES.txt	2006-04-01 08:56:46 UTC (rev 146)
+@@ -1,3 +1,9 @@
++2006-04-01 - smackay at flagstonesoftware.com
++
++    * Fixed a bug in FSTextConstructor.defineFont() where the character code was
++      being set to the index of a glyph on the array rather than the actual
++      character code.
++      
+ 2006-03-31 - smackay at flagstonesoftware.com
+ 
+     * Added advanceForChar(char, int) method to FSTextConstrutor so individual
+
+Modified: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-04-01 08:56:46 UTC (rev 146)
+@@ -141,6 +141,27 @@
+         }
+     }
+     /**
++     * @testng.test dataProvider="strings"
++     */
++    public void displayStrings(String str, String title)
++    {
++        try 
++        {
++            File destFile = new File(destDir, title+".swf");
++            
++            FSTextConstructor textGenerator = new FSTextConstructor(1, "Arial");
++         
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : "Count not create directory: "+destDir;
++            
++            encodeString(textGenerator, str, destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
+      * @testng.data-provider name="files"
+      */
+     public Object[][] findFiles()
+@@ -201,7 +222,21 @@
+         
+         return parameters;
+     }
+-      
++    /**
++     * @testng.data-provider name="strings"
++     */
++    public Object[][] strings()
++    {
++        Object[][] parameters = new Object[][] {
++            new Object[] { "The quick brown, fox jumped over the lazy dog.", "atoz" },                       
++            new Object[] { "This line contains the same no. of characters.", "fixed" },                       
++            new Object[] { "Lorem ipsum dolor sit amet, consectetuer elit.", "latin" },                       
++            new Object[] { "Rato roeu a rolha da garrafa do rei da Russia.", "rhyme" },                       
++        };
++        
++        return parameters;
++    }
++    
+     private void encodeFontToFile(FSTextConstructor textGenerator, File file) throws Exception
+     {
+         int fontSize = 280;
+@@ -370,4 +405,46 @@
+         movie.add(new FSShowFrame());
+         movie.encodeToFile(file.getPath());
+     }
++    private void encodeString(FSTextConstructor textGenerator, String str, File file) throws Exception
++    {
++        int fontSize = 280;
++        int margin = fontSize;
++        int layer = 1;
++        int x = margin;
++        int y = margin;
++                
++        FSMovie movie = new FSMovie();
++        FSShapeConstructor path = new FSShapeConstructor();
++         
++        textGenerator.willDisplay(str.toCharArray());
++        
++        int fontId = movie.newIdentifier();
++        FSDefineFont2 font = textGenerator.defineFont();
++        font.setIdentifier(fontId);        
++
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(font);
++
++        FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), str, fontSize, FSColorTable.black());        
++
++        int textWidth = text.getBounds().getWidth();
++        int textHeight = text.getBounds().getHeight();            
++        int shapeId = movie.newIdentifier();
++        
++        path.newPath();
++        path.add(new FSSolidLine(1, FSColorTable.darkblue()));
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++                        textWidth, textHeight);
++        
++        movie.add(path.defineShape(shapeId));
++        movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));        
++         
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
++        movie.add(new FSShowFrame());
++
++        movie.setFrameSize(new FSBounds(0, 0, textWidth+2*margin, textHeight+2*margin));
++        movie.encodeToFile(file.getPath());
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-04-01 08:56:46 UTC (rev 146)
+@@ -485,7 +485,7 @@
+             while (characterTable[character] != glyphIndex) character++;
+  
+             glyphsArray.add(glyphTable[glyphIndex].shape);
+-            codesArray.add(new Integer(i));
++            codesArray.add(new Integer(character));
+             advancesArray.add(new Integer(glyphTable[glyphIndex].advance));
+             boundsArray.add(glyphTable[glyphIndex].bounds);
+         }
+
+Modified: trunk/test/suites/FSTextConstructor.xml
+===================================================================
+--- trunk/test/suites/FSTextConstructor.xml	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/test/suites/FSTextConstructor.xml	2006-04-01 08:56:46 UTC (rev 146)
+@@ -89,5 +89,16 @@
+ 		</classes>
+   	</test>
+ 
++    <test name="Strings">
++		<parameter name="dstDir" value="test/results/FSTextConstructor/strings"/>
++		<classes>
++      		<class name="com.flagstone.transform.test.FSTextConstructorTest">
++      		    <methods>
++      				<include name="displayStrings" />
++    			</methods>
++      		</class>
++		</classes>
++  	</test>
++
+ </suite>
+ 
+
+
+
+From smackay at berlios.de  Sat Apr  1 11:17:27 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Apr 2006 11:17:27 +0200
+Subject: [Transform-svn] r147 - /
+Message-ID: <200604010917.k319HR7m031281@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-01 11:17:19 +0200 (Sat, 01 Apr 2006)
+New Revision: 147
+
+Added:
+   dev/
+Log:
+Created folder remotely
+
+
+
+From smackay at berlios.de  Sat Apr  1 11:18:21 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Apr 2006 11:18:21 +0200
+Subject: [Transform-svn] r148 - dev
+Message-ID: <200604010918.k319ILqS031909@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-01 11:18:16 +0200 (Sat, 01 Apr 2006)
+New Revision: 148
+
+Added:
+   dev/dev-2-2/
+Log:
+Created development branch for version 2.2
+
+Copied: dev/dev-2-2 (from rev 147, trunk)
+
+
+
+From smackay at berlios.de  Sat Apr  1 11:31:46 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Apr 2006 11:31:46 +0200
+Subject: [Transform-svn] r149 - trunk/doc
+Message-ID: <200604010931.k319VkaP002470@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-01 11:31:43 +0200 (Sat, 01 Apr 2006)
+New Revision: 149
+
+Modified:
+   trunk/doc/CHANGES.txt
+Log:
+Updated with comments about new dev branch.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-04-01 09:18:16 UTC (rev 148)
++++ trunk/doc/CHANGES.txt	2006-04-01 09:31:43 UTC (rev 149)
+@@ -4,6 +4,11 @@
+       being set to the index of a glyph on the array rather than the actual
+       character code.
+       
++    * Created branch dev/dev-2-2 for development work on the new release.
++    
++    * Backed out changes to JPEG image classes - they are included in the 
++      dev-2-2 branch.
++      
+ 2006-03-31 - smackay at flagstonesoftware.com
+ 
+     * Added advanceForChar(char, int) method to FSTextConstrutor so individual
+
+
+
+From smackay at berlios.de  Mon Apr  3 19:29:54 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Mon, 3 Apr 2006 19:29:54 +0200
+Subject: [Transform-svn] r150 - trunk
+Message-ID: <200604031729.k33HTsJC005832@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-03 19:29:48 +0200 (Mon, 03 Apr 2006)
+New Revision: 150
+
+Modified:
+   trunk/build.xml
+Log:
+Updated version number for release.
+
+Modified: trunk/build.xml
+===================================================================
+--- trunk/build.xml	2006-04-01 09:31:43 UTC (rev 149)
++++ trunk/build.xml	2006-04-03 17:29:48 UTC (rev 150)
+@@ -37,7 +37,7 @@
+ 
+     </description>
+ 
+-    <property name="version" value="2.1.1"/>
++    <property name="version" value="2.1.2"/>
+     
+     <property name="src.dir" location="src"/>
+     <property name="lib.dir" location="lib"/>
+
+
+
+From smackay at berlios.de  Mon Apr  3 19:33:28 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Mon, 3 Apr 2006 19:33:28 +0200
+Subject: [Transform-svn] r151 - trunk/src/com/flagstone/transform/util
+Message-ID: <200604031733.k33HXSuH007188@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-03 19:33:22 +0200 (Mon, 03 Apr 2006)
+New Revision: 151
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Fixed documentation warnings.
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-04-03 17:29:48 UTC (rev 150)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-04-03 17:33:22 UTC (rev 151)
+@@ -308,7 +308,7 @@
+      * font definition object generated and referenced by all the text object
+      * generated.
+      * 
+-     * @param fileName either the name of a Flash, TrueType or OpenType file 
++     * @param filename either the name of a Flash, TrueType or OpenType file 
+      * containing an existing font definition.
+      * 
+      * @throws FileNotFoundException if the fontName specifies a file and the 
+@@ -637,7 +637,7 @@
+         return boundsForText(glyphCodes, glyphAdvances, fontSize);
+     }
+     /**
+-     * Returns the advance, in twips to the next character. this method can be
++     * Returns the advance, in twips, to the next character. This method can be
+      * used when laying out sequences of individual characters, rather than as 
+      * as single string.
+      * 
+
+
+
+From smackay at berlios.de  Mon Apr  3 19:33:57 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Mon, 3 Apr 2006 19:33:57 +0200
+Subject: [Transform-svn] r152 - in trunk/doc: . releases
+Message-ID: <200604031733.k33HXv0u007330@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-03 19:33:51 +0200 (Mon, 03 Apr 2006)
+New Revision: 152
+
+Added:
+   trunk/doc/releases/transform-2.1.2.html
+Modified:
+   trunk/doc/CHANGES.txt
+Log:
+Updated for release
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-04-03 17:33:22 UTC (rev 151)
++++ trunk/doc/CHANGES.txt	2006-04-03 17:33:51 UTC (rev 152)
+@@ -1,3 +1,7 @@
++2006-04-03 - smackay at flagstonesoftware.com
++
++    * Released 2.1.2.
++
+ 2006-04-01 - smackay at flagstonesoftware.com
+ 
+     * Fixed a bug in FSTextConstructor.defineFont() where the character code was
+
+Added: trunk/doc/releases/transform-2.1.2.html
+===================================================================
+--- trunk/doc/releases/transform-2.1.2.html	2006-04-03 17:33:22 UTC (rev 151)
++++ trunk/doc/releases/transform-2.1.2.html	2006-04-03 17:33:51 UTC (rev 152)
+@@ -0,0 +1,169 @@
++<html>
++<head>
++<title>Release Notes for Transform SWF for Java, Version 2.1.2</title>
++<style type="text/CSS">
++<!--
++a:link { text-decoration: none; }
++a:visited { color: darkred; text-decoration: none; }
++a:active { text-decoration: none; }
++a:hover { color: #000066; text-decoration: none; }
++
++h1 { font-size: 140%; background-color: darkgray; padding: 3px 10px; }
++h2 { font-size: 120%; background-color: darkgray; padding: 3px 10px; }
++h3 { font-size: 110%; margin-bottom: 0px; }
++
++div.section { margin-left: 10px; margin-right: 10px; }
++
++p { margin-top: 0px; }
++pre { font-size: 90%; }
++ul { margin-left: 10px; }
++ul ol { margin-left: 10px; }
++table { margin-left: 10px;}
++-->
++</style>
++</head>
++<body>
++
++<h1>Release Notes for Transform SWF for Java, Version 2.1.2.</h1>
++
++<div class="section">
++<P>This a minor release fixing bugs.</P>
++
++</div><!-- section -->
++
++<ul>
++<li>Bug Fixes     
++<ol>     
++<li><a href="#fix1">FSImageConstructor: transparent, indexed, png files are now displayed correctly.</a></li>     
++<li><a href="#fix2">FSTextConstructor: Fixed bug in calculating the bounds of a block of text.</a></li>
++<li><a href="#fix3">FSTextConstructor: Fixed bug when creating font definitions on Macintoshes.</a></li>
++<li><a href="#fix4">FSTextConstructor: Character codes in font definitions are now set correctly.</a></li>
++<li><a href="#fix5">FSCoder: Fixed bug when expanding size of buffer on writes.</a></li>     
++</ol> 
++</li> 
++<li>Class Changes    
++<ol>     
++<li><a href="#class1">Fixed Javadoc errors in documentation for FSTextConstructor and FSCharacterTable.</a></li>     
++</ol> 
++</li> 
++<li>Testing Changes    
++<ol>     
++<li><a href="#test1">FSTextConstructorTest now displays bounding boxes around glyphs.</a></li>     
++</ol> 
++</li> 
++<li>Documentation Changes    
++<ol>     
++<li><a href="#doc1">Fixed Javadoc errors in documentation for FSTextConstructor and FSCharacterTable.</a></li>     
++</ol> 
++</li> 
++<li>Package Changes     
++<ol>     
++<li><a href="#pack1">Fixed bug in docs target of build.xml so utilities datasheets are generated.</a></li>     
++</ol> 
++</li> 
++</ul>  
++</div><!-- section -->
++
++<h2>Bug Fixes</H2>  
++
++<div class="section">
++<h3><a name="fix1">1. FSImageConstructor: transparent, indexed, png files are now displayed correctly.</a></h3>  
++
++<P>Transparent PNG files which were indexed rather than true colour would be 
++displayed with an opaque background. The root cause was that the image format 
++was not being updated to indicate alpha channel information was included when
++the transparency block defined in the image was decoded. Now fixed.</P> 
++
++<h3><a name="fix2">2. FSTextConstructor: Fixed bug in calculating the bounds of a block of text.</a></h3>  
++
++<P>The bounding box for blocks of text was not taking into account the ascent of 
++the first line and the descent of the last line. Only the line spacing time the 
++number of lines was used. While this was accurate it did not cover part of the 
++last line of the text and so for text that was animated or placed close together
++the last line would not be redrawn correctly. Now Fixed.</P>
++
++<h3><a name="fix3">3. FSTextConstructor: Fixed bug when creating font definitions on Macintoshes.</a></h3>  
++
++<P>When an AWT Font object was decoded the font coordinates were being translated
++so the glyph would fit within the EM Square. For Java code running on Windows or
++linux this would work (though the translation was actually being ignored). 
++However on Mac OS X the translation was being implemented. As a result glyphs 
++were drawn outside of the bounding box and were not displayed correctly. Now
++Fixed.</p> 
++
++<h3><a name="fix4">4. FSTextConstructor: Character codes in font definitions are now set correctly.</a></h3>  
++
++<P>The character codes in a font definition were being set to the index of the 
++glyph on the definition rather than the actual code for the character that the 
++glyph represented. For static text this did not represent much of a problem
++however text fields that used the font definition would not display correctly.
++Now Fixed.</p> 
++
++<h3><a name="fix5">5. FSCoder: Fixed bug when expanding size of buffer on writes.</a></h3>  
++
++<P>When writing a bit field within 32 bits of the end of the internal buffer 
++used by the FSCoder object an ArrayIndexOutOfBoundsException would be thrown.
++The buffer would not be resized to accomodate the overflow. Now Fixed.</p> 
++
++</div><!-- section -->
++
++<h2>Class Changes</H2>  
++
++<div class="section">
++<h3><a name="doc1">1. FSTextConstructor: added advanceForChar(char, int).</a></h3>  
++
++<P>Added advanceForChar(char c, int fontSize) method to FSTextConstrutor so 
++individual characters can be laid out in a sequence rather than as a string. 
++While it has some practical use it is currently used to lay out individual 
++characters when testing the alignment of the bounding box with respect to the 
++glyph outline.</p>
++
++</div><!-- section -->
++
++<h2>Testing Changes</H2>  
++
++<div class="section">
++<h3><a name="test1">1. FSTextConstructorTest now displays bounding boxes around glyphs.</a></h3>  
++
++<P>A blue bounding box is now drawn around text generated when testing the 
++FSTextConstructor class. This is used to check the alignment of the glyph 
++outlines with the bounding box defined for the FSDefineText2 object that contains
++the text.</p>
++
++</div><!-- section -->
++
++<h2>Documentation Changes</H2>  
++
++<div class="section">
++<h3><a name="doc1">1. Fixed Javadoc errors in documentation for FSTextConstructor and FSCharacterTable.</a></h3>  
++
++<P>Corrected errors in the method documentation for FSTextConstructor and 
++FSCharacterTable.</p>
++
++</div><!-- section -->
++
++<h2>Package Changes</H2>  
++
++<div class="section">
++<h3><a name="pack1">1. Fixed bug in docs target of build.xml so utilities datasheets are generated.</a></h3>  
++
++<P>The 'docs' target in the Ant build file now generates Javadoc datasheets 
++for all the classes in the package com.flagstone.transform.util.</p>
++
++</div><!-- section -->
++
++
++<h2>Additional Information</h2>
++
++<div class="section">
++<p>For Further Information please contact:</p>
++
++<p>Stuart MacKay<br/>
++Flagstone Software Ltd.<br/>
++92 High Street<br/>
++Wick, Caithness KW1 4LY<br/>
++Scotland<br/><br/>
++www.flagstonesoftware.com
++</div><!-- section -->
++</body>
++</html>
+
+
+
+From denis_bohm at berlios.de  Tue Apr  4 07:25:56 2006
+From: denis_bohm at berlios.de (denis_bohm at berlios.de)
+Date: Tue, 4 Apr 2006 07:25:56 +0200
+Subject: [Transform-svn] r153 - in trunk: doc src/com/flagstone/transform
+Message-ID: <200604040525.k345PuBZ010197@sheep.berlios.de>
+
+Author: denis_bohm
+Date: 2006-04-04 07:25:36 +0200 (Tue, 04 Apr 2006)
+New Revision: 153
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+Log:
+Always use 6 byte header for DefineLosslessImage2 (FSDefineImage2) because of bug in Flash players (same was already being done for FSDefineImage).
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-04-03 17:33:51 UTC (rev 152)
++++ trunk/doc/CHANGES.txt	2006-04-04 05:25:36 UTC (rev 153)
+@@ -1,3 +1,8 @@
++2006-04-03 - denis at fireflydesign.com
++
++    * Always use 6 byte header for DefineLosslessImage2 (FSDefineImage2) because
++      of bug in Flash players (same was already being done for FSDefineImage).
++
+ 2006-04-03 - smackay at flagstonesoftware.com
+ 
+     * Released 2.1.2.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-04-03 17:33:51 UTC (rev 152)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-04-04 05:25:36 UTC (rev 153)
+@@ -105,6 +105,7 @@
+     public FSDefineImage2(FSCoder coder)
+     {
+         super(DefineImage2, 0);
++        extendLength = true;
+         decode(coder);
+     }
+     /** Constructs an FSDefineImage2 object defining a colour-mapped image.
+@@ -118,6 +119,7 @@
+     public FSDefineImage2(int anIdentifier, int width, int height, int tableSize, byte[] compressedBytes)
+     {
+         super(DefineImage2, anIdentifier);
++        extendLength = true;
+         setWidth(width);
+         setHeight(height);
+         setPixelSize(8);
+@@ -135,6 +137,7 @@
+     public FSDefineImage2(int anIdentifier, int width, int height, byte[] compressedBytes)
+     { 
+         super(DefineImage2, anIdentifier);
++        extendLength = true;
+         setWidth(width);
+         setHeight(height);
+         setPixelSize(32);
+
+
+
+From smackay at berlios.de  Tue Apr  4 11:21:00 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Tue, 4 Apr 2006 11:21:00 +0200
+Subject: [Transform-svn] r154 - tags
+Message-ID: <200604040921.k349L0aF013817@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-04 11:20:53 +0200 (Tue, 04 Apr 2006)
+New Revision: 154
+
+Added:
+   tags/rel-2-1-2/
+Log:
+Release 2.1.2
+
+Copied: tags/rel-2-1-2 (from rev 153, trunk)
+
+
+
+From smackay at berlios.de  Wed Apr  5 09:38:09 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Wed, 5 Apr 2006 09:38:09 +0200
+Subject: [Transform-svn] r155 - trunk/lib
+Message-ID: <200604050738.k357c936014463@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-05 09:37:28 +0200 (Wed, 05 Apr 2006)
+New Revision: 155
+
+Modified:
+   trunk/lib/
+Log:
+Updated
+
+
+Property changes on: trunk/lib
+___________________________________________________________________
+Name: svn:ignore
+   - 
+testng-4.2-jdk14.jar
+
+   + 
+testng-4.2-jdk14.jar
+*.jar
+
+
+
+
+From smackay at berlios.de  Thu Apr 13 18:18:00 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Thu, 13 Apr 2006 18:18:00 +0200
+Subject: [Transform-svn] r157 - trunk
+Message-ID: <200604131618.k3DGI0Cl028055@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-13 18:17:57 +0200 (Thu, 13 Apr 2006)
+New Revision: 157
+
+Modified:
+   trunk/build.xml
+Log:
+Added property doc.release.dir identifying the directory
+containing release notes so they can be automatically uploaded to
+the flagstone web site.
+
+Modified: trunk/build.xml
+===================================================================
+--- trunk/build.xml	2006-04-05 08:29:39 UTC (rev 156)
++++ trunk/build.xml	2006-04-13 16:17:57 UTC (rev 157)
+@@ -55,6 +55,7 @@
+     <property name="doc.root.dir" location="doc"/>
+     <property name="doc.css.dir" value="${doc.root.dir}/css"/>
+     <property name="doc.datasheet.dir" value="${doc.root.dir}/datasheets"/>
++    <property name="doc.release.dir" value="${doc.root.dir}/releases"/>
+         
+ <!-- **********************************************************
+          Major targets for compiling and packaging the classes.
+
+
+
+From smackay at berlios.de  Thu Apr 13 18:20:52 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Thu, 13 Apr 2006 18:20:52 +0200
+Subject: [Transform-svn] r158 - trunk
+Message-ID: <200604131620.k3DGKqYm028350@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-13 18:20:48 +0200 (Thu, 13 Apr 2006)
+New Revision: 158
+
+Modified:
+   trunk/
+Log:
+Updated
+
+
+Property changes on: trunk
+___________________________________________________________________
+Name: svn:ignore
+   - 
+.classpath
+.project
+build
+transform.jar
+testng-failures.xml
+dist
+
+   + 
+.classpath
+.project
+build
+transform.jar
+testng-failures.xml
+dist
+web.xml
+
+
+
+
+From smackay at berlios.de  Thu Apr 13 18:25:52 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Thu, 13 Apr 2006 18:25:52 +0200
+Subject: [Transform-svn] r159 - trunk
+Message-ID: <200604131625.k3DGPqWc028684@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-13 18:25:49 +0200 (Thu, 13 Apr 2006)
+New Revision: 159
+
+Modified:
+   trunk/developer.xml
+Log:
+Removed the "patch" target. The release process is now smooth enough 
+so that bug releases can be distributed easily and so a path is 
+not needed.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2006-04-13 16:20:48 UTC (rev 158)
++++ trunk/developer.xml	2006-04-13 16:25:49 UTC (rev 159)
+@@ -117,49 +117,5 @@
+         <echo file="${dist.root.dir}/${dist.name}-gpg.txt" append="true" 
+             message="gpg --local-user support --armor --detach-sign --output ${dist.name}.zip.asc ${dist.name}.zip"/>
+     </target>
+-
+-    <target name="patch" description="Release source code for classes in advance of a release">
+-        
+-        <mkdir dir="${dist.dir}"/>
+-            
+-        <copy todir="${patch.dir}/src" overwrite="true">
+-            <fileset dir="${src.dir}">
+-                <include name="${package.dir}/FSPush.java" />
+-                <include name="${package.dir}/FSProperty.java" />
+-                <include name="${package.dir}/FSDefineJPEGImage2.java" />
+-                <include name="${package.dir}/FSDefineJPEGImage3.java" />
+-            </fileset>
+-        </copy>
+-
+-        <copy todir="${dist.dir}/doc" overwrite="true">
+-            <fileset dir="doc"/>
+-        </copy>
+-
+-        <tar destfile="${dist.root.dir}/${patch.name}.tar.gz"
+-             basedir="${patch.dir}"
+-             compression="gzip"
+-        />
+-        
+-        <exec dir="${dist.root.dir}" executable="md5">
+-            <arg value="-n" />
+-            <arg value="-o${patch.name}.tar.md5" />
+-            <arg value="${patch.name}.tar.gz" />
+-        </exec>
+-        
+-        <zip destfile="${dist.root.dir}/${patch.name}.zip"
+-             basedir="${patch.dir}"
+-        />
+-
+-        <exec dir="${dist.root.dir}" executable="md5">
+-            <arg value="-n" />
+-            <arg value="-o${patch.name}.zip.md5" />
+-            <arg value="${patch.name}.zip" />
+-        </exec>
+-        
+-        <echo file="${dist.root.dir}/${patch.name}-gpg.txt" append="false" 
+-            message="gpg --local-user support --armor --detach-sign --output ${patch.name}.tar.asc ${patch.name}.tar.gz${line.separator}"/>
+-        <echo file="${dist.root.dir}/${patch.name}-gpg.txt" append="true" 
+-            message="gpg --local-user support --armor --detach-sign --output ${patch.name}.zip.asc ${patch.name}.zip"/>
+-    </target>
+  
+ </project>
+
+
+
+From smackay at berlios.de  Thu Apr 13 18:27:52 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Thu, 13 Apr 2006 18:27:52 +0200
+Subject: [Transform-svn] r160 - trunk
+Message-ID: <200604131627.k3DGRpIE028839@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-13 18:27:49 +0200 (Thu, 13 Apr 2006)
+New Revision: 160
+
+Modified:
+   trunk/developer.xml
+Log:
+The 'dist' target now copies the testng jar files from the lib
+directory to the release.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2006-04-13 16:25:49 UTC (rev 159)
++++ trunk/developer.xml	2006-04-13 16:27:49 UTC (rev 160)
+@@ -83,6 +83,13 @@
+             </fileset>
+         </copy>
+ 
++        <copy todir="${dist.dir}/lib" overwrite="true">
++            <fileset dir="lib">
++                <include name="testng-4.7-jdk14.jar" />
++                <include name="testng-4.7-jdk15.jar" />
++            </fileset>
++        </copy>
++
+         <copy todir="${dist.dir}" overwrite="true">
+             <fileset dir=".">
+                 <include name="build.xml" />
+
+
+
+From smackay at berlios.de  Fri Apr 14 11:02:45 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Fri, 14 Apr 2006 11:02:45 +0200
+Subject: [Transform-svn] r161 - in trunk: . doc
+Message-ID: <200604140902.k3E92jMD030493@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-04-14 11:01:52 +0200 (Fri, 14 Apr 2006)
+New Revision: 161
+
+Modified:
+   trunk/doc/LICENCE.txt
+   trunk/doc/README.txt
+   trunk/test.xml
+Log:
+Added TestNG 
+
+Modified: trunk/doc/LICENCE.txt
+===================================================================
+--- trunk/doc/LICENCE.txt	2006-04-13 16:27:49 UTC (rev 160)
++++ trunk/doc/LICENCE.txt	2006-04-14 09:01:52 UTC (rev 161)
+@@ -1,7 +1,7 @@
+ /*
+- * All the files in this library, except those in the src/transform/contrib 
+- * directory, are  covered under the terms of the Berkeley Software Distribution 
+- * (BSD) License:
++ * All the files in this library, except those in the src/transform/contrib and
++ * lib directories, are  covered under the terms of the Berkeley Software 
++ * Distribution (BSD) License:
+  *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+
+Modified: trunk/doc/README.txt
+===================================================================
+--- trunk/doc/README.txt	2006-04-13 16:27:49 UTC (rev 160)
++++ trunk/doc/README.txt	2006-04-14 09:01:52 UTC (rev 161)
+@@ -24,6 +24,9 @@
+ distribute the code in source and/or binary form as long as you respect
+ the original copyright. Please see the LiCENCE.txt file for exact terms.
+ 
++The class libraries shipped with Transform in the lib directory each have their 
++own licence. For more details please see the 'Libraries' section below.
++
+ -----------------
+   Contributions
+ -----------------
+@@ -68,10 +71,9 @@
+ and decoding Flash files correctly. The tests use the TestNG framework developed 
+ by Cedric Beust, http://www.testng.org.
+ 
+-To run the tests you will need to download the latest version of the TestNG from
+-www.testng.com. Two versions of TestNG are available for Java 1.4 and Java 1.5
+-depending on which version of Java you are using. Place the testNG jar file in
+-the lib directory of the Transform framework.
++The lib directory of the release contains the jar files neccessary to run the
++TestNG suites. Two versions of TestNG are available for Java 1.4 and Java 1.5
++depending on which version of Java you are using.
+ 
+ The Ant build file, test.xml, contains the following targets to run the tests:
+ 
+@@ -136,6 +138,221 @@
+     com.flagstone.transform.examples.*;
+     com.flagstone.transform.test.*;
+ 
++-------------
++  Libraries
++-------------
++Transform SWF is distributed with the following libraries:
++
++    * TestNG from Cedric Beust, et al, http://www.testng.org/
++    
++These libraries are not covered by the licence associated with Transform. 
++Details of the licence terms are listed below:
++
++----------
++  TestNG 
++----------
++                                 Apache License
++                           Version 2.0, January 2004
++                        http://www.apache.org/licenses/
++
++   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
++
++   1. Definitions.
++
++      "License" shall mean the terms and conditions for use, reproduction,
++      and distribution as defined by Sections 1 through 9 of this document.
++
++      "Licensor" shall mean the copyright owner or entity authorized by
++      the copyright owner that is granting the License.
++
++      "Legal Entity" shall mean the union of the acting entity and all
++      other entities that control, are controlled by, or are under common
++      control with that entity. For the purposes of this definition,
++      "control" means (i) the power, direct or indirect, to cause the
++      direction or management of such entity, whether by contract or
++      otherwise, or (ii) ownership of fifty percent (50%) or more of the
++      outstanding shares, or (iii) beneficial ownership of such entity.
++
++      "You" (or "Your") shall mean an individual or Legal Entity
++      exercising permissions granted by this License.
++
++      "Source" form shall mean the preferred form for making modifications,
++      including but not limited to software source code, documentation
++      source, and configuration files.
++
++      "Object" form shall mean any form resulting from mechanical
++      transformation or translation of a Source form, including but
++      not limited to compiled object code, generated documentation,
++      and conversions to other media types.
++
++      "Work" shall mean the work of authorship, whether in Source or
++      Object form, made available under the License, as indicated by a
++      copyright notice that is included in or attached to the work
++      (an example is provided in the Appendix below).
++
++      "Derivative Works" shall mean any work, whether in Source or Object
++      form, that is based on (or derived from) the Work and for which the
++      editorial revisions, annotations, elaborations, or other modifications
++      represent, as a whole, an original work of authorship. For the purposes
++      of this License, Derivative Works shall not include works that remain
++      separable from, or merely link (or bind by name) to the interfaces of,
++      the Work and Derivative Works thereof.
++
++      "Contribution" shall mean any work of authorship, including
++      the original version of the Work and any modifications or additions
++      to that Work or Derivative Works thereof, that is intentionally
++      submitted to Licensor for inclusion in the Work by the copyright owner
++      or by an individual or Legal Entity authorized to submit on behalf of
++      the copyright owner. For the purposes of this definition, "submitted"
++      means any form of electronic, verbal, or written communication sent
++      to the Licensor or its representatives, including but not limited to
++      communication on electronic mailing lists, source code control systems,
++      and issue tracking systems that are managed by, or on behalf of, the
++      Licensor for the purpose of discussing and improving the Work, but
++      excluding communication that is conspicuously marked or otherwise
++      designated in writing by the copyright owner as "Not a Contribution."
++
++      "Contributor" shall mean Licensor and any individual or Legal Entity
++      on behalf of whom a Contribution has been received by Licensor and
++      subsequently incorporated within the Work.
++
++   2. Grant of Copyright License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      copyright license to reproduce, prepare Derivative Works of,
++      publicly display, publicly perform, sublicense, and distribute the
++      Work and such Derivative Works in Source or Object form.
++
++   3. Grant of Patent License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      (except as stated in this section) patent license to make, have made,
++      use, offer to sell, sell, import, and otherwise transfer the Work,
++      where such license applies only to those patent claims licensable
++      by such Contributor that are necessarily infringed by their
++      Contribution(s) alone or by combination of their Contribution(s)
++      with the Work to which such Contribution(s) was submitted. If You
++      institute patent litigation against any entity (including a
++      cross-claim or counterclaim in a lawsuit) alleging that the Work
++      or a Contribution incorporated within the Work constitutes direct
++      or contributory patent infringement, then any patent licenses
++      granted to You under this License for that Work shall terminate
++      as of the date such litigation is filed.
++
++   4. Redistribution. You may reproduce and distribute copies of the
++      Work or Derivative Works thereof in any medium, with or without
++      modifications, and in Source or Object form, provided that You
++      meet the following conditions:
++
++      (a) You must give any other recipients of the Work or
++          Derivative Works a copy of this License; and
++
++      (b) You must cause any modified files to carry prominent notices
++          stating that You changed the files; and
++
++      (c) You must retain, in the Source form of any Derivative Works
++          that You distribute, all copyright, patent, trademark, and
++          attribution notices from the Source form of the Work,
++          excluding those notices that do not pertain to any part of
++          the Derivative Works; and
++
++      (d) If the Work includes a "NOTICE" text file as part of its
++          distribution, then any Derivative Works that You distribute must
++          include a readable copy of the attribution notices contained
++          within such NOTICE file, excluding those notices that do not
++          pertain to any part of the Derivative Works, in at least one
++          of the following places: within a NOTICE text file distributed
++          as part of the Derivative Works; within the Source form or
++          documentation, if provided along with the Derivative Works; or,
++          within a display generated by the Derivative Works, if and
++          wherever such third-party notices normally appear. The contents
++          of the NOTICE file are for informational purposes only and
++          do not modify the License. You may add Your own attribution
++          notices within Derivative Works that You distribute, alongside
++          or as an addendum to the NOTICE text from the Work, provided
++          that such additional attribution notices cannot be construed
++          as modifying the License.
++
++      You may add Your own copyright statement to Your modifications and
++      may provide additional or different license terms and conditions
++      for use, reproduction, or distribution of Your modifications, or
++      for any such Derivative Works as a whole, provided Your use,
++      reproduction, and distribution of the Work otherwise complies with
++      the conditions stated in this License.
++
++   5. Submission of Contributions. Unless You explicitly state otherwise,
++      any Contribution intentionally submitted for inclusion in the Work
++      by You to the Licensor shall be under the terms and conditions of
++      this License, without any additional terms or conditions.
++      Notwithstanding the above, nothing herein shall supersede or modify
++      the terms of any separate license agreement you may have executed
++      with Licensor regarding such Contributions.
++
++   6. Trademarks. This License does not grant permission to use the trade
++      names, trademarks, service marks, or product names of the Licensor,
++      except as required for reasonable and customary use in describing the
++      origin of the Work and reproducing the content of the NOTICE file.
++
++   7. Disclaimer of Warranty. Unless required by applicable law or
++      agreed to in writing, Licensor provides the Work (and each
++      Contributor provides its Contributions) on an "AS IS" BASIS,
++      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
++      implied, including, without limitation, any warranties or conditions
++      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
++      PARTICULAR PURPOSE. You are solely responsible for determining the
++      appropriateness of using or redistributing the Work and assume any
++      risks associated with Your exercise of permissions under this License.
++
++   8. Limitation of Liability. In no event and under no legal theory,
++      whether in tort (including negligence), contract, or otherwise,
++      unless required by applicable law (such as deliberate and grossly
++      negligent acts) or agreed to in writing, shall any Contributor be
++      liable to You for damages, including any direct, indirect, special,
++      incidental, or consequential damages of any character arising as a
++      result of this License or out of the use or inability to use the
++      Work (including but not limited to damages for loss of goodwill,
++      work stoppage, computer failure or malfunction, or any and all
++      other commercial damages or losses), even if such Contributor
++      has been advised of the possibility of such damages.
++
++   9. Accepting Warranty or Additional Liability. While redistributing
++      the Work or Derivative Works thereof, You may choose to offer,
++      and charge a fee for, acceptance of support, warranty, indemnity,
++      or other liability obligations and/or rights consistent with this
++      License. However, in accepting such obligations, You may act only
++      on Your own behalf and on Your sole responsibility, not on behalf
++      of any other Contributor, and only if You agree to indemnify,
++      defend, and hold each Contributor harmless for any liability
++      incurred by, or claims asserted against, such Contributor by reason
++      of your accepting any such warranty or additional liability.
++
++   END OF TERMS AND CONDITIONS
++
++   APPENDIX: How to apply the Apache License to your work.
++
++      To apply the Apache License to your work, attach the following
++      boilerplate notice, with the fields enclosed by brackets "[]"
++      replaced with your own identifying information. (Don't include
++      the brackets!)  The text should be enclosed in the appropriate
++      comment syntax for the file format. We also recommend that a
++      file or class name and description of purpose be included on the
++      same "printed page" as the copyright notice for easier
++      identification within third-party archives.
++
++   Copyright [yyyy] [name of copyright owner]
++
++   Licensed under the Apache License, Version 2.0 (the "License");
++   you may not use this file except in compliance with the License.
++   You may obtain a copy of the License at
++
++       http://www.apache.org/licenses/LICENSE-2.0
++
++   Unless required by applicable law or agreed to in writing, software
++   distributed under the License is distributed on an "AS IS" BASIS,
++   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++   See the License for the specific language governing permissions and
++   limitations under the License.
++
+ --------------------------
+   Additional Information
+ --------------------------
+
+Modified: trunk/test.xml
+===================================================================
+--- trunk/test.xml	2006-04-13 16:27:49 UTC (rev 160)
++++ trunk/test.xml	2006-04-14 09:01:52 UTC (rev 161)
+@@ -3,14 +3,13 @@
+ 
+     <description>Test targets
+     
+-        test       run test suites on the classes to verify the framework
+-                   classes are correct.
++        clean-test remove all the files generated when running any of the tests.
+         
+-        tests      compile the classes used to test the framework.
++        build-test compile the classes used to test the framework.
+                     
+-        test-all   run a full test of all the classes in the framework.
++        test       run a full test of all the classes in the framework.
+         
+-        test-class run the unit tests for an individual class. The target will
++        class-test run the unit tests for an individual class. The target will
+                    prompt for the name of the class to test.
+         
+         benchmark  run a benchmark suite. The target will prompt for the name of
+@@ -27,8 +26,16 @@
+     <property name="test.result.dir" value="${test.dir}/results"/>
+     <property name="test.report.dir" value="${test.dir}/reports"/>
+     
+-    <taskdef resource="testngtasks"  classpath="${lib.dir}/testng-4.2-jdk14.jar"/>
++    <condition property="testng.jar" value="testng-4.7-jdk14.jar">
++        <equals arg1="${ant.java.version}" arg2="1.4"/>
++    </condition>
+     
++    <condition property="testng.jar" value="testng-4.7-jdk15.jar">
++        <equals arg1="${ant.java.version}" arg2="1.5"/>
++    </condition>
++    
++    <taskdef resource="testngtasks"  classpath="${lib.dir}/${testng.jar}"/>
++    
+     <target name="clean-test" 
+         description="Remove all the files and reports generating during testing">
+         
+
+
+

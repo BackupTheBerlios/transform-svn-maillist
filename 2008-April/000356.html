@@ -1,0 +1,656 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r420%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09test%20util&In-Reply-To=%3C200804012134.m31LYd0a003808%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000355.html">
+   <LINK REL="Next"  HREF="000357.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r420%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09test%20util&In-Reply-To=%3C200804012134.m31LYd0a003808%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 23:34:39 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000355.html">[Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util
+</A></li>
+        <LI>Next message: <A HREF="000357.html">[Transform-svn] r421 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#356">[ date ]</a>
+              <a href="thread.html#356">[ thread ]</a>
+              <a href="subject.html#356">[ subject ]</a>
+              <a href="author.html#356">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 23:34:31 +0200 (Tue, 01 Apr 2008)
+New Revision: 420
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/ImageTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/TrueTypeFontTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/WindowsFontTest.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+Log:
+Util classes that process files now have File objects passed as arguments.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -115,7 +115,7 @@
+ 
+         try
+         {
+-            Definition image = Image.defineImage(0, new File(sourceDir, files[0]).getAbsolutePath());
++            Definition image = Image.defineImage(0, new File(sourceDir, files[0]));
+ 
+             int screenWidth = ((Displayable)image).getWidth();
+             int screenHeight = ((Displayable)image).getHeight();
+@@ -139,7 +139,7 @@
+                           
+             movie.add(new FSDefineVideo(identifier, numberOfFrames, screenWidth, screenHeight, deblocking, smoothing, codec));     
+             
+-            List&lt;FSImageBlock&gt; prev = Image.getImageAsBlocks(blockWidth, blockHeight, new File(sourceDir, files[0]).getAbsolutePath());
++            List&lt;FSImageBlock&gt; prev = Image.getImageAsBlocks(blockWidth, blockHeight, new File(sourceDir, files[0]));
+             List&lt;FSImageBlock&gt; next;
+             List&lt;FSImageBlock&gt; delta;
+             
+@@ -155,7 +155,7 @@
+ 	    	{
+                 File srcFile = new File(sourceDir, files[i]);
+ 
+-                next = Image.getImageAsBlocks(blockWidth, blockHeight, srcFile.getAbsolutePath());
++                next = Image.getImageAsBlocks(blockWidth, blockHeight, srcFile);
+                 
+         		delta = new ArrayList&lt;FSImageBlock&gt;(prev.size());
+         		
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/ImageTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/ImageTest.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/test/ImageTest.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -64,7 +64,7 @@
+ 	                sourceFile = new File(sourceDir, files[i]);
+ 	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 	
+-	                encodeImageToFile(sourceFile.getPath(), destFile);
++	                encodeImageToFile(sourceFile, destFile);
+             	}
+             	catch (DataFormatException e)
+             	{
+@@ -80,14 +80,14 @@
+         }
+     }
+ 
+-    private void encodeImageToFile(String path, File file) throws Exception
++    private void encodeImageToFile(File imageFile, File file) throws Exception
+     {
+         FSMovie movie = new FSMovie();
+ 
+         int imageId = movie.newIdentifier();
+         int shapeId = movie.newIdentifier();
+         
+-        Definition image = Image.defineImage(imageId, path);
++        Definition image = Image.defineImage(imageId, imageFile);
+ 
+         int xOrigin = ((Displayable)image).getWidth()/2;
+         int yOrigin = ((Displayable)image).getHeight()/2;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -45,7 +45,7 @@
+ 	            	sourceFile = new File(sourceDir, files[i]);
+ 	            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 	
+-	            	encodeEventSoundToFile(sourceFile.getPath(), destFile);
++	            	encodeEventSoundToFile(sourceFile, destFile);
+             	}
+                 catch (DataFormatException e)
+                 {
+@@ -89,7 +89,7 @@
+ 	            	sourceFile = new File(sourceDir, files[i]);
+ 	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 	
+-		            encodeStreamingSoundToFile(sourceFile.getPath(), destFile);
++		            encodeStreamingSoundToFile(sourceFile, destFile);
+             	}
+                 catch (DataFormatException e)
+                 {
+@@ -103,7 +103,7 @@
+         }
+     }
+ 
+-    private void encodeEventSoundToFile(String source, File file) throws Exception
++    private void encodeEventSoundToFile(File source, File file) throws Exception
+     {
+         FSMovie movie = new FSMovie();
+ 
+@@ -122,7 +122,7 @@
+          * the sound playing.
+          */
+ 
+-        FSDefineSound sound = Sound.defineSound(soundId, source);
++        FSDefineSound sound = Sound.defineSound(source, soundId);
+ 
+         /*
+          * Calculate the time it takes to play the sound and the number of frames this
+@@ -143,7 +143,7 @@
+         movie.encodeToFile(file.getPath());
+     }
+ 
+-    private void encodeStreamingSoundToFile(String source, File file) throws Exception
++    private void encodeStreamingSoundToFile(File source, File file) throws Exception
+     {
+         float framesPerSecond = 12.0f;
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/TrueTypeFontTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/TrueTypeFontTest.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/test/TrueTypeFontTest.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -63,7 +63,7 @@
+             	sourceFile = new File(sourceDir, files[i]);
+             	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 
+-                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++                encodeFontToFile(new Font(sourceFile), destFile);
+             }
+         }
+         catch (Exception e)
+@@ -99,7 +99,7 @@
+             	sourceFile = new File(sourceDir, files[i]);
+             	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 
+-                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++                encodeFontToFile(new Font(sourceFile), destFile);
+             }
+         }
+         catch (Exception e)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/WindowsFontTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/WindowsFontTest.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/test/WindowsFontTest.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -63,7 +63,7 @@
+             	sourceFile = new File(sourceDir, files[i]);
+             	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 
+-                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++                encodeFontToFile(new Font(sourceFile), destFile);
+             }
+         }
+         catch (Exception e)
+@@ -99,7 +99,7 @@
+             	sourceFile = new File(sourceDir, files[i]);
+             	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+ 
+-                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++                encodeFontToFile(new Font(sourceFile), destFile);
+             }
+         }
+         catch (Exception e)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -256,9 +256,9 @@
+        }
+     }
+     
+-    public Font(String path) throws FileNotFoundException, IOException, DataFormatException
++    public Font(File file) throws FileNotFoundException, IOException, DataFormatException
+     {
+-        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, dataFromFile(path));
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, dataFromFile(file));
+         
+         float version = coder.readFixedBits(32, 16);
+ 
+@@ -1403,14 +1403,13 @@
+         //glyphTable[glyphIndex].endPoints = endPtsOfContours;
+     }
+ 
+-    private byte[] dataFromFile(String filename) throws FileNotFoundException, IOException
++    private byte[] dataFromFile(File file) throws FileNotFoundException, IOException
+     {
+-        File aFile = new File(filename);
+         FileInputStream imageContents = null;
+         
+-        byte[] bytes = new byte[(int)aFile.length()];
++        byte[] bytes = new byte[(int)file.length()];
+         
+-        imageContents = new FileInputStream(aFile);            
++        imageContents = new FileInputStream(file);            
+         imageContents.read(bytes);
+         imageContents.close();
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -219,12 +219,12 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+     
+-    public static Definition defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
++    public static Definition defineImage(int identifier, File file) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	Definition object = null;
+     	
+     	ImageInfo ii = new ImageInfo();
+-    	ii.setInput(new RandomAccessFile(path, &quot;r&quot;));
++    	ii.setInput(new RandomAccessFile(file, &quot;r&quot;));
+     	ii.setDetermineImageNumber(true);
+     	
+     	if (!ii.check()) 
+@@ -238,7 +238,7 @@
+ 			{
+ 				Class&lt;ImageDecoder&gt; obj = decoders.get(ii.getFormatName());
+ 				ImageDecoder decoder = (ImageDecoder) obj.newInstance();
+-				decoder.decode(dataFromFile(path));
++				decoder.decode(dataFromFile(file));
+ 				
+ 				int format = decoder.getFormat();
+ 				int width = decoder.getWidth();
+@@ -279,126 +279,7 @@
+     	
+     	return object;
+     }
+-    
+-    private static byte[] adjustScan(int width, int height, byte[] image)
+-    {
+-        int src = 0;
+-        int dst = 0;
+-        int row;
+-        int col;
+-        
+-        int scan = 0;
+-        byte[] formattedImage = null;
+-        
+-        scan = (width + 3) &amp; ~3;
+-        formattedImage = new byte[scan*height];
+-        
+-        for (row=0; row&lt;height; row++)
+-        {
+-            for (col=0; col&lt;width; col++)
+-                formattedImage[dst++] = image[src++];
+-            
+-            for (; col&lt;scan; col++)
+-                formattedImage[dst++] = 0;
+-        }
+ 
+-        return formattedImage;
+-    }
+-    
+-    private static byte[] packColours(int width, int height, byte[] image)
+-    {
+-        int src = 0;
+-        int dst = 0;
+-        int row;
+-        int col;
+-        
+-        int scan = width + (width &amp; 1);
+-        byte[] formattedImage = new byte[scan*height*2];
+-        
+-        for (row=0; row&lt;height; row++)
+-        {
+-            for (col=0; col&lt;width; col++, src++)
+-            {
+-                int red = (image[src++] &amp; 0xF8) &lt;&lt; 7;
+-                int green = (image[src++] &amp; 0xF8) &lt;&lt; 2;
+-                int blue = (image[src++] &amp; 0xF8) &gt;&gt; 3;
+-                int colour = (red | green | blue) &amp; 0x7FFF;
+-                
+-                formattedImage[dst++] = (byte) (colour &gt;&gt; 8);
+-                formattedImage[dst++] = (byte) colour;
+-            }
+-
+-            for (; col&lt;scan; col++)
+-            {
+-                formattedImage[dst++] = 0;
+-                formattedImage[dst++] = 0;
+-            }
+-        }
+-        return formattedImage;
+-    }
+-    
+-    private static void orderAlpha(byte[] image)
+-    {
+-    	byte alpha;
+-    	
+-        for (int i=0; i&lt;image.length; i+=4)
+-        {
+-        	alpha = image[i+3];
+-        	
+-        	image[i+3] = image[i+2];
+-        	image[i+2] = image[i+1];
+-        	image[i+1] = image[i];
+-        	image[i] = alpha;
+-        }
+-    }
+-
+-    private static void applyAlpha(byte[] image)
+-    {
+-    	int alpha; 
+-    	
+-    	for (int i=0; i&lt;image.length; i+=4)
+-    	{
+-            alpha = image[i+3] &amp; 0xFF;                
+-
+-            image[i] =   (byte)(((image[i]   &amp; 0xFF) * alpha) / 255);
+-            image[i+1] = (byte)(((image[i+1] &amp; 0xFF) * alpha) / 255);
+-            image[i+2] = (byte)(((image[i+2] &amp; 0xFf) * alpha) / 255);
+-    	}
+-    }
+-    
+-    private static byte[] merge(byte[] image, byte[] table)
+-    {
+-        byte[] merged = new byte[(table.length/4)*3+image.length];
+-        int dst = 0;
+-        
+-        for (int i=0; i&lt;table.length; i+=4)
+-        {
+-            merged[dst++] = table[i]; // R
+-            merged[dst++] = table[i+1]; // G
+-            merged[dst++] = table[i+2]; // B
+-        }
+-        
+-        for (int i=0; i&lt;image.length; i++)
+-            merged[dst++] = image[i];
+-
+-        return merged;
+-    }
+-  
+-    private static byte[] mergeAlpha(byte[] image, byte[] table)
+-    {
+-        byte[] merged = new byte[table.length+image.length];
+-        int dst = 0;
+-        
+-        for (int i=0; i&lt;table.length; i++) {
+-            merged[dst++] = table[i];
+-        }
+-        
+-        for (int i=0; i&lt;image.length; i++) {
+-            merged[dst++] = image[i];
+-        }
+-        return merged;
+-    }
+-
+     /**
+      * Generates the shape definition object that is required to display an image in a Flash movie.
+      * The shape is generated with a single fill style (FSBitmapFill object). The origin of the shape
+@@ -465,13 +346,13 @@
+      * @param blockHeight the height of a block in pixels
+      * @return an array of FMImageBlock objects.
+      */   
+-	public static List&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, String path) throws FileNotFoundException, IOException, DataFormatException
++	public static List&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, File file) throws FileNotFoundException, IOException, DataFormatException
+ 	{
+ 		ArrayList&lt;FSImageBlock&gt; blocks = new ArrayList&lt;FSImageBlock&gt;();
+     	Definition object = null;
+     	
+     	ImageInfo ii = new ImageInfo();
+-    	ii.setInput(new RandomAccessFile(path, &quot;r&quot;));
++    	ii.setInput(new RandomAccessFile(file, &quot;r&quot;));
+     	ii.setDetermineImageNumber(true);
+     	
+     	if (!ii.check()) 
+@@ -485,7 +366,7 @@
+ 			{
+ 				Class&lt;ImageDecoder&gt; obj = decoders.get(ii.getFormatName());
+ 				ImageDecoder decoder = (ImageDecoder) obj.newInstance();
+-				decoder.decode(dataFromFile(path));
++				decoder.decode(dataFromFile(file));
+ 				
+ 				int format = decoder.getFormat();
+ 				int width = decoder.getWidth();
+@@ -577,7 +458,126 @@
+ 
+ 		return blocks;
+ 	}
++  
++    private static byte[] adjustScan(int width, int height, byte[] image)
++    {
++        int src = 0;
++        int dst = 0;
++        int row;
++        int col;
++        
++        int scan = 0;
++        byte[] formattedImage = null;
++        
++        scan = (width + 3) &amp; ~3;
++        formattedImage = new byte[scan*height];
++        
++        for (row=0; row&lt;height; row++)
++        {
++            for (col=0; col&lt;width; col++)
++                formattedImage[dst++] = image[src++];
++            
++            for (; col&lt;scan; col++)
++                formattedImage[dst++] = 0;
++        }
+ 
++        return formattedImage;
++    }
++    
++    private static byte[] packColours(int width, int height, byte[] image)
++    {
++        int src = 0;
++        int dst = 0;
++        int row;
++        int col;
++        
++        int scan = width + (width &amp; 1);
++        byte[] formattedImage = new byte[scan*height*2];
++        
++        for (row=0; row&lt;height; row++)
++        {
++            for (col=0; col&lt;width; col++, src++)
++            {
++                int red = (image[src++] &amp; 0xF8) &lt;&lt; 7;
++                int green = (image[src++] &amp; 0xF8) &lt;&lt; 2;
++                int blue = (image[src++] &amp; 0xF8) &gt;&gt; 3;
++                int colour = (red | green | blue) &amp; 0x7FFF;
++                
++                formattedImage[dst++] = (byte) (colour &gt;&gt; 8);
++                formattedImage[dst++] = (byte) colour;
++            }
++
++            for (; col&lt;scan; col++)
++            {
++                formattedImage[dst++] = 0;
++                formattedImage[dst++] = 0;
++            }
++        }
++        return formattedImage;
++    }
++    
++    private static void orderAlpha(byte[] image)
++    {
++    	byte alpha;
++    	
++        for (int i=0; i&lt;image.length; i+=4)
++        {
++        	alpha = image[i+3];
++        	
++        	image[i+3] = image[i+2];
++        	image[i+2] = image[i+1];
++        	image[i+1] = image[i];
++        	image[i] = alpha;
++        }
++    }
++
++    private static void applyAlpha(byte[] image)
++    {
++    	int alpha; 
++    	
++    	for (int i=0; i&lt;image.length; i+=4)
++    	{
++            alpha = image[i+3] &amp; 0xFF;                
++
++            image[i] =   (byte)(((image[i]   &amp; 0xFF) * alpha) / 255);
++            image[i+1] = (byte)(((image[i+1] &amp; 0xFF) * alpha) / 255);
++            image[i+2] = (byte)(((image[i+2] &amp; 0xFf) * alpha) / 255);
++    	}
++    }
++    
++    private static byte[] merge(byte[] image, byte[] table)
++    {
++        byte[] merged = new byte[(table.length/4)*3+image.length];
++        int dst = 0;
++        
++        for (int i=0; i&lt;table.length; i+=4)
++        {
++            merged[dst++] = table[i]; // R
++            merged[dst++] = table[i+1]; // G
++            merged[dst++] = table[i+2]; // B
++        }
++        
++        for (int i=0; i&lt;image.length; i++)
++            merged[dst++] = image[i];
++
++        return merged;
++    }
++  
++    private static byte[] mergeAlpha(byte[] image, byte[] table)
++    {
++        byte[] merged = new byte[table.length+image.length];
++        int dst = 0;
++        
++        for (int i=0; i&lt;table.length; i++) {
++            merged[dst++] = table[i];
++        }
++        
++        for (int i=0; i&lt;image.length; i++) {
++            merged[dst++] = image[i];
++        }
++        return merged;
++    }
++
+     private static byte[] zip(byte[] image)
+     {
+         Deflater deflater = new Deflater();
+@@ -612,14 +612,13 @@
+ 		return newData;
+ 	}
+ 	
+-    private static byte[] dataFromFile(String filename) throws FileNotFoundException, IOException
++    private static byte[] dataFromFile(File file) throws FileNotFoundException, IOException
+     {
+-        File aFile = new File(filename);
+         FileInputStream imageContents = null;
+         
+-        byte[] bytes = new byte[(int)aFile.length()];
++        byte[] bytes = new byte[(int)file.length()];
+         
+-        imageContents = new FileInputStream(aFile);            
++        imageContents = new FileInputStream(file);            
+         imageContents.read(bytes);
+         imageContents.close();
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-01 21:15:20 UTC (rev 419)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-01 21:34:31 UTC (rev 420)
+@@ -153,7 +153,7 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+ 
+-    public static FSDefineSound defineSound(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
++    public static FSDefineSound defineSound(File file, int identifier) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	FSDefineSound object = null;
+     	String extension = null;
+@@ -164,7 +164,7 @@
+ 			{
+ 				Class&lt;SoundDecoder&gt; obj = decoders.get(extension);
+ 				SoundDecoder decoder = (SoundDecoder) obj.newInstance();
+-				decoder.decode(dataFromFile(path));
++				decoder.decode(dataFromFile(file));
+ 				
+ 				int format = decoder.getFormat();
+ 			    int channels = decoder.getNumberOfChannels();
+@@ -216,7 +216,7 @@
+      * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
+      * sound.
+      */
+-    public static List&lt;FSMovieObject&gt; streamSound(String path, int frameRate) throws FileNotFoundException, IOException, DataFormatException
++    public static List&lt;FSMovieObject&gt; streamSound(File file, int frameRate) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	String extension = null;
+     	ArrayList&lt;FSMovieObject&gt;array = new ArrayList&lt;FSMovieObject&gt;();
+@@ -227,7 +227,7 @@
+ 			{
+ 				Class&lt;SoundDecoder&gt; obj = decoders.get(extension);
+ 				SoundDecoder decoder = (SoundDecoder) obj.newInstance();
+-				decoder.decode(dataFromFile(path));
++				decoder.decode(dataFromFile(file));
+ 				
+ 		        int firstSample = 0;
+ 		        int firstSampleOffset = 0;
+@@ -378,14 +378,13 @@
+         return frameSize;
+     }
+ 	
+-    private static byte[] dataFromFile(String filename) throws FileNotFoundException, IOException
++    private static byte[] dataFromFile(File file) throws FileNotFoundException, IOException
+     {
+-        File aFile = new File(filename);
+         FileInputStream imageContents = null;
+         
+-        byte[] bytes = new byte[(int)aFile.length()];
++        byte[] bytes = new byte[(int)file.length()];
+         
+-        imageContents = new FileInputStream(aFile);            
++        imageContents = new FileInputStream(file);            
+         imageContents.read(bytes);
+         imageContents.close();
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000355.html">[Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util
+</A></li>
+	<LI>Next message: <A HREF="000357.html">[Transform-svn] r421 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#356">[ date ]</a>
+              <a href="thread.html#356">[ thread ]</a>
+              <a href="subject.html#356">[ subject ]</a>
+              <a href="author.html#356">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

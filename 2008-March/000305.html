@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r369%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181641.m2IGf5cj009193%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000304.html">
+   <LINK REL="Next"  HREF="000306.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r369%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181641.m2IGf5cj009193%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:41:05 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000304.html">[Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000306.html">[Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#305">[ date ]</a>
+              <a href="thread.html#305">[ thread ]</a>
+              <a href="subject.html#305">[ subject ]</a>
+              <a href="author.html#305">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:41:03 +0100 (Tue, 18 Mar 2008)
+New Revision: 369
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSPointer.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSPointer.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSPointer.java	2008-03-18 16:39:29 UTC (rev 368)
++++ dev/dev-2-4/src/com/flagstone/transform/FSPointer.java	2008-03-18 16:41:03 UTC (rev 369)
+@@ -31,127 +31,140 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSPointer defines an unsigned 32-bit pointer. 
+- 
+-&lt;p&gt;It is thought that this class was used by Macromedia's Generator product and 
+-its exact function is not known. It is included in the framework for completeness.&lt;/p&gt;
++ * FSPointer defines an unsigned 32-bit pointer.
++ * 
++ * &lt;p&gt;
++ * It is thought that this class was used by Macromedia's Generator product and
++ * its exact function is not known. It is included in the framework for
++ * completeness.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;pointer&lt;/td&gt;
++ * &lt;td&gt;The pointer value.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSPointer class represents the DefineBitsPtr tag from the Macromedia
++ * Flash (SWF) File Format Specification. It is not documented in later editions
++ * of the specification. It is not known when this tag was added.
++ * &lt;/p&gt;
++ */
++public class FSPointer extends FSMovieObject
++{
++	private int pointer;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSPointer object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSPointer(FSCoder coder)
++	{
++		super(DefineBitsPtr);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSPointer object, specifying the pointer.
++	 * 
++	 * @param aPointer
++	 *            the pointer.
++	 */
++	public FSPointer(int aPointer)
++	{
++		super(DefineBitsPtr);
++		setPointer(aPointer);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSPointer_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSPointer object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSPointer object.
++	 */
++	public FSPointer(FSPointer obj)
++	{
++		super(obj);
++		pointer = obj.pointer;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSPointer_1&quot;&gt;pointer&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The pointer value.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Gets the value for the pointer.
++	 * 
++	 * @return the pointer value.
++	 */
++	public int getPointer()
++	{
++		return pointer;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Sets the pointer.
++	 * 
++	 * @param aPointer
++	 *            the pointer.
++	 */
++	public void setPointer(int aPointer)
++	{
++		pointer = aPointer;
++	}
+ 
+-&lt;p&gt;The FSPointer class represents the DefineBitsPtr tag from the Macromedia Flash 
+-(SWF) File Format Specification. It is not documented in later editions of the 
+-specification. It is not known when this tag was added.&lt;/p&gt;
+- */  
+-public class FSPointer extends FSMovieObject
+-{
+-    private int pointer = 0;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-    /**
+-     * Construct an FSPointer object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSPointer(FSCoder coder)
+-    {
+-        super(DefineBitsPtr);
+-        decode(coder);
+-    }
+-    /** Constructs an FSPointer object, specifying the pointer.
++		if (super.equals(anObject))
++		{
++			result = pointer == ((FSPointer)anObject).pointer;
++		}
++		return result;
++	}
+ 
+-        @param aPointer the pointer.
+-        */
+-    public FSPointer(int aPointer)
+-    {
+-        super(DefineBitsPtr);
+-        setPointer(aPointer);
+-    }
+-    /**
+-     * Constructs an FSPointer object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSPointer object.
+-     */
+-    public FSPointer(FSPointer obj)
+-    {
+-        super(obj);
+-        pointer = obj.pointer;
+-    }    
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Gets the value for the pointer.
++		buffer.append(&quot;FSPointer: { &quot;);
++		buffer.append(&quot;pointer = &quot;).append(pointer).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @return the pointer value.
+-        */
+-    public int getPointer() { return pointer; }
++		return buffer.toString();
++	}
+ 
+-    /** Sets the pointer.
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
++		length += 4;
+ 
+-        @param aPointer the pointer.
+-        */
+-    public void setPointer(int aPointer)
+-    {
+-        pointer = aPointer;
+-    }
++		return length;
++	}
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSPointer typedObject = (FSPointer)anObject;
+-            
+-            result = pointer == typedObject.pointer;
+-        }
+-        return result;
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeWord(pointer, 4);
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;pointer&quot;, pointer);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        length += 4;
+-
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeWord(pointer, 4);
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        pointer = coder.readWord(4, false);
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		pointer = coder.readWord(4, false);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000304.html">[Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000306.html">[Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#305">[ date ]</a>
+              <a href="thread.html#305">[ thread ]</a>
+              <a href="subject.html#305">[ subject ]</a>
+              <a href="author.html#305">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

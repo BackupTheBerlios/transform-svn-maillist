@@ -1,0 +1,2538 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r419%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200804012116.m31LG6c0002183%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000354.html">
+   <LINK REL="Next"  HREF="000356.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r419%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20test%20util&In-Reply-To=%3C200804012116.m31LG6c0002183%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 23:16:06 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000354.html">[Transform-svn] r418 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000356.html">[Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#355">[ date ]</a>
+              <a href="thread.html#355">[ thread ]</a>
+              <a href="subject.html#355">[ subject ]</a>
+              <a href="author.html#355">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 23:15:20 +0200 (Tue, 01 Apr 2008)
+New Revision: 419
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java
+   dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineButton2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineFont.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineMovieClip.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java
+   dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java
+   dev/dev-3-0/src/com/flagstone/transform/FSExport.java
+   dev/dev-3-0/src/com/flagstone/transform/FSFontInfo.java
+   dev/dev-3-0/src/com/flagstone/transform/FSFontInfo2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSGradientFill.java
+   dev/dev-3-0/src/com/flagstone/transform/FSImport.java
+   dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMorphGradientFill.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMovie.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java
+   dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSPlaceObject2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+   dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java
+   dev/dev-3-0/src/com/flagstone/transform/FSShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+   dev/dev-3-0/src/com/flagstone/transform/FSTable.java
+   dev/dev-3-0/src/com/flagstone/transform/FSVideo.java
+   dev/dev-3-0/src/com/flagstone/transform/FSWith.java
+   dev/dev-3-0/src/com/flagstone/transform/test/FSFrameTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/FSLayerTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java
+   dev/dev-3-0/src/com/flagstone/transform/test/TextTest.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Frame.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Layer.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Text.java
+Log:
+Changed all Collection classes in method signatures to their respective interfaces.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSButtonEvent is used to define the actions that a button will execute in
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,7 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
+ 
+ /**
+  * FSClipEvent is used to define the actions that a movie clip will execute in
+@@ -399,7 +399,7 @@
+ 	 *            the array of actions that will be executed when the specified
+ 	 *            event occurs.
+ 	 */
+-	public FSClipEvent(int eventCode, ArrayList&lt;FSActionObject&gt; anArray)
++	public FSClipEvent(int eventCode, List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		setEvent(eventCode);
+ 		setActions(anArray);
+@@ -436,7 +436,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSClipEvent(int eventCode, int keyCode, ArrayList&lt;FSActionObject&gt; anArray)
++	public FSClipEvent(int eventCode, int keyCode, List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		setEvent(eventCode);
+ 		setKeyCode(keyCode);
+@@ -560,7 +560,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; array)
++	public void setActions(List&lt;FSActionObject&gt; array)
+ 	{
+ 		if (array == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineButton defines the appearance of a button and the actions performed
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineButton2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineButton2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineButton2 defines the appearance and actions of push and menu buttons.
+@@ -161,8 +163,8 @@
+ 	public static final int Menu = 1;
+ 
+ 	private int buttonType = Push;
+-	private ArrayList&lt;FSButtonShape&gt; buttonRecords = null;
+-	private ArrayList&lt;FSButtonEvent&gt; buttonEvents = null;
++	private List&lt;FSButtonShape&gt; buttonRecords = null;
++	private List&lt;FSButtonEvent&gt; buttonEvents = null;
+ 
+ 	/**
+ 	 * Construct an FSDefineButton2 object, initialising it with values decoded
+@@ -197,8 +199,8 @@
+ 	 * @throws NullPointerException if the array of FSButtonEvents is null.
+ 	 */
+ 	public FSDefineButton2(int anIdentifier, int buttonType,
+-							ArrayList&lt;FSButtonShape&gt; buttonRecordArray,
+-							ArrayList&lt;FSButtonEvent&gt; buttonEventArray)
++							List&lt;FSButtonShape&gt; buttonRecordArray,
++							List&lt;FSButtonEvent&gt; buttonEventArray)
+ 	{
+ 		super(DefineButton2, anIdentifier);
+ 		setButtonType(buttonType);
+@@ -266,7 +268,7 @@
+ 	 * 
+ 	 * @return the array of button records.
+ 	 */
+-	public ArrayList&lt;FSButtonShape&gt; getButtonRecords()
++	public List&lt;FSButtonShape&gt; getButtonRecords()
+ 	{
+ 		return buttonRecords;
+ 	}
+@@ -276,7 +278,7 @@
+ 	 * 
+ 	 * @return the array of button events.
+ 	 */
+-	public ArrayList&lt;FSButtonEvent&gt; getButtonEvents()
++	public List&lt;FSButtonEvent&gt; getButtonEvents()
+ 	{
+ 		return buttonEvents;
+ 	}
+@@ -300,7 +302,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of FSButton objects is null.
+ 	 */
+-	public void setButtonRecords(ArrayList&lt;FSButtonShape&gt; anArray)
++	public void setButtonRecords(List&lt;FSButtonShape&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of button records cannot be null.&quot;);
+@@ -317,7 +319,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of FSButtonEvent objects is null.
+ 	 */
+-	public void setButtonEvents(ArrayList&lt;FSButtonEvent&gt; anArray)
++	public void setButtonEvents(List&lt;FSButtonEvent&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of button events cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineFont.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineFont.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineFont defines the glyphs that are drawn when text characters are
+@@ -83,7 +85,7 @@
+  */
+ public class FSDefineFont extends Definition
+ {
+-	private ArrayList&lt;FSShape&gt; shapes;
++	private List&lt;FSShape&gt; shapes;
+ 
+ 	/**
+ 	 * Construct an FSCall object, initialising it with values decoded from an
+@@ -111,7 +113,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of shapes is null.
+ 	 */
+-	public FSDefineFont(int anIdentifier, ArrayList&lt;FSShape&gt; anArray)
++	public FSDefineFont(int anIdentifier, List&lt;FSShape&gt; anArray)
+ 	{
+ 		super(FSMovieObject.DefineFont, anIdentifier);
+ 		setShapes(anArray);
+@@ -155,7 +157,7 @@
+ 	 * 
+ 	 * @return an array of FSShape objects.
+ 	 */
+-	public ArrayList&lt;FSShape&gt; getShapes()
++	public List&lt;FSShape&gt; getShapes()
+ 	{
+ 		return shapes;
+ 	}
+@@ -169,7 +171,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of shapes is null.
+ 	 */
+-	public void setShapes(ArrayList&lt;FSShape&gt; anArray)
++	public void setShapes(List&lt;FSShape&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of shapes cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineFont2 defines the shapes and layout of the glyphs used in a font.
+@@ -184,14 +186,14 @@
+ 	private boolean bold;
+ 	private int language;
+ 	private String name;
+-	private ArrayList&lt;FSShape&gt; shapes;
+-	private ArrayList&lt;Integer&gt; codes;
++	private List&lt;FSShape&gt; shapes;
++	private List&lt;Integer&gt; codes;
+ 	private int ascent;
+ 	private int descent;
+ 	private int leading;
+-	private ArrayList&lt;Integer&gt; advances;
+-	private ArrayList&lt;FSBounds&gt; bounds;
+-	private ArrayList&lt;FSKerning&gt; kernings;
++	private List&lt;Integer&gt; advances;
++	private List&lt;FSBounds&gt; bounds;
++	private List&lt;FSKerning&gt; kernings;
+ 
+ 	/**
+ 	 * Construct an FSDefineFont2 object, initialising it with values decoded
+@@ -500,7 +502,7 @@
+ 	 * 
+ 	 * @return an array of FSShape objects
+ 	 */
+-	public ArrayList&lt;FSShape&gt; getShapes()
++	public List&lt;FSShape&gt; getShapes()
+ 	{
+ 		return shapes;
+ 	}
+@@ -513,7 +515,7 @@
+ 	 * @return an array of Integer objects that contain the character codes for
+ 	 *         each glyph in the font.
+ 	 */
+-	public ArrayList&lt;Integer&gt; getCodes()
++	public List&lt;Integer&gt; getCodes()
+ 	{
+ 		return codes;
+ 	}
+@@ -554,7 +556,7 @@
+ 	 * @return an array of Integer objects that contain the advance for each
+ 	 *         glyph in the font.
+ 	 */
+-	public ArrayList&lt;Integer&gt; getAdvances()
++	public List&lt;Integer&gt; getAdvances()
+ 	{
+ 		return advances;
+ 	}
+@@ -564,7 +566,7 @@
+ 	 * 
+ 	 * @return an array of FSBounds objects.
+ 	 */
+-	public ArrayList&lt;FSBounds&gt; getBounds()
++	public List&lt;FSBounds&gt; getBounds()
+ 	{
+ 		return bounds;
+ 	}
+@@ -576,7 +578,7 @@
+ 	 * @return an array of FSKerning objects that define the spacing adjustment
+ 	 *         between pairs of glyphs.
+ 	 */
+-	public ArrayList&lt;FSKerning&gt; getKernings()
++	public List&lt;FSKerning&gt; getKernings()
+ 	{
+ 		return kernings;
+ 	}
+@@ -643,7 +645,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setShapes(ArrayList&lt;FSShape&gt; anArray)
++	public void setShapes(List&lt;FSShape&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of shapes cannot be null.&quot;);
+@@ -660,7 +662,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setCodes(ArrayList&lt;Integer&gt; anArray)
++	public void setCodes(List&lt;Integer&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of character codes cannot be null.&quot;);
+@@ -724,7 +726,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setAdvances(ArrayList&lt;Integer&gt; anArray)
++	public void setAdvances(List&lt;Integer&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of advances cannot be null.&quot;);
+@@ -741,7 +743,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setBounds(ArrayList&lt;FSBounds&gt; anArray)
++	public void setBounds(List&lt;FSBounds&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of bounding boxes cannot be null.&quot;);
+@@ -758,7 +760,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setKernings(ArrayList&lt;FSKerning&gt; anArray)
++	public void setKernings(List&lt;FSKerning&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of kernings cannot be null.&quot;);
+@@ -1125,7 +1127,7 @@
+ 		return layout;
+ 	}
+ 
+-	private boolean wideOffsetsForIndexedArray(ArrayList&lt;FSShape&gt; anArray, FSContext context)
++	private boolean wideOffsetsForIndexedArray(List&lt;FSShape&gt; anArray, FSContext context)
+ 	{
+ 		boolean wideOffsets = false;
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineMorphShape defines a shape that will morph from one form into
+@@ -207,8 +209,8 @@
+ 	private FSBounds startBounds;
+ 	private FSBounds endBounds;
+ 
+-	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+-	private ArrayList&lt;FSMorphLineStyle&gt; lineStyles;
++	private List&lt;FSFillStyle&gt; fillStyles;
++	private List&lt;FSMorphLineStyle&gt; lineStyles;
+ 
+ 	private FSShape startShape;
+ 	private FSShape endShape;
+@@ -251,7 +253,7 @@
+ 	 * @throws NullPointerException if either of the shapes are null.       
+ 	 */
+ 	public FSDefineMorphShape(int anIdentifier, FSBounds startBounds, FSBounds endBounds, 
+-								ArrayList&lt;FSFillStyle&gt; fillStyleArray, ArrayList&lt;FSMorphLineStyle&gt; lineStyleArray, 
++								List&lt;FSFillStyle&gt; fillStyleArray, List&lt;FSMorphLineStyle&gt; lineStyleArray, 
+ 								FSShape startShape, FSShape endShape)
+ 	{
+ 		super(DefineMorphShape, anIdentifier);
+@@ -351,7 +353,7 @@
+ 	 * 
+ 	 * @return the array morph fill styles.
+ 	 */
+-	public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++	public List&lt;FSFillStyle&gt; getFillStyles()
+ 	{
+ 		return fillStyles;
+ 	}
+@@ -362,7 +364,7 @@
+ 	 * 
+ 	 * @return the array morph line styles.
+ 	 */
+-	public ArrayList&lt;FSMorphLineStyle&gt; getLineStyles()
++	public List&lt;FSMorphLineStyle&gt; getLineStyles()
+ 	{
+ 		return lineStyles;
+ 	}
+@@ -428,7 +430,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setFillStyles(ArrayList&lt;FSFillStyle&gt; anArray)
++	public void setFillStyles(List&lt;FSFillStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of fill styles cannot be null.&quot;);
+@@ -444,7 +446,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setLineStyles(ArrayList&lt;FSMorphLineStyle&gt; anArray)
++	public void setLineStyles(List&lt;FSMorphLineStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of line styles cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineMovieClip.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineMovieClip.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineMovieClip defines a movie clip that animates shapes within a movie.
+@@ -89,7 +91,7 @@
+  */
+ public class FSDefineMovieClip extends Definition
+ {
+-	private ArrayList&lt;FSMovieObject&gt; objects;
++	private List&lt;FSMovieObject&gt; objects;
+ 
+ 	/**
+ 	 * Construct an FSDefineMovieClip object, initialising it with values decoded
+@@ -131,7 +133,7 @@
+      * @throws IllegalArgumentException if the identifier is outside the range of 1..65535.
+      * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSDefineMovieClip(int anIdentifier, ArrayList&lt;FSMovieObject&gt; anArray)
++	public FSDefineMovieClip(int anIdentifier, List&lt;FSMovieObject&gt; anArray)
+ 	{
+ 		super(DefineMovieClip, anIdentifier);
+ 		setObjects(anArray);
+@@ -170,7 +172,7 @@
+ 	 * 
+ 	 * @return the array of movie objects.
+ 	 */
+-	public ArrayList&lt;FSMovieObject&gt; getObjects()
++	public List&lt;FSMovieObject&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -183,7 +185,7 @@
+ 	 *            
+      * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSMovieObject&gt; anArray)
++	public void setObjects(List&lt;FSMovieObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineShape defines a shape to be displayed.
+@@ -138,8 +140,8 @@
+ public class FSDefineShape extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+-	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+-	private ArrayList&lt;FSLineStyle&gt; lineStyles;
++	private List&lt;FSFillStyle&gt; fillStyles;
++	private List&lt;FSLineStyle&gt; lineStyles;
+ 	private FSShape shape;
+ 
+ 	/**
+@@ -175,7 +177,7 @@
+ 	 * @throws NullPointerException if the shape is null.
+ 	 */
+ 	public FSDefineShape(int anIdentifier, FSBounds aBounds,
+-							ArrayList&lt;FSFillStyle&gt; fillStyleArray, ArrayList&lt;FSLineStyle&gt; lineStyleArray,
++							List&lt;FSFillStyle&gt; fillStyleArray, List&lt;FSLineStyle&gt; lineStyleArray,
+ 							FSShape aShape)
+ 	{
+ 		super(FSMovieObject.DefineShape, anIdentifier);
+@@ -268,7 +270,7 @@
+ 	 * 
+ 	 * @return the fill styles used in the shape.
+ 	 */
+-	public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++	public List&lt;FSFillStyle&gt; getFillStyles()
+ 	{
+ 		return fillStyles;
+ 	}
+@@ -278,7 +280,7 @@
+ 	 * 
+ 	 * @return the line styles used in the shape.
+ 	 */
+-	public ArrayList&lt;FSLineStyle&gt; getLineStyles()
++	public List&lt;FSLineStyle&gt; getLineStyles()
+ 	{
+ 		return lineStyles;
+ 	}
+@@ -317,7 +319,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the fill style array is null.
+ 	 */
+-	public void setFillStyles(ArrayList&lt;FSFillStyle&gt; anArray)
++	public void setFillStyles(List&lt;FSFillStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of fill styles cannot be null&quot;);
+@@ -333,7 +335,7 @@
+ 	 *
+ 	 * @throws NullPointerException if the line style array is null.
+ 	 */
+-	public void setLineStyles(ArrayList&lt;FSLineStyle&gt; anArray)
++	public void setLineStyles(List&lt;FSLineStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of line styles cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineShape2 defines a shape to be displayed.
+@@ -140,8 +142,8 @@
+ public class FSDefineShape2 extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+-	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+-	private ArrayList&lt;FSLineStyle&gt; lineStyles;
++	private List&lt;FSFillStyle&gt; fillStyles;
++	private List&lt;FSLineStyle&gt; lineStyles;
+ 	private FSShape shape ;
+ 
+ 	/**
+@@ -177,7 +179,7 @@
+ 	 * @throws NullPointerException if the shape is null.
+ 	 */
+ 	public FSDefineShape2(int anIdentifier, FSBounds aBounds,
+-							ArrayList&lt;FSFillStyle&gt; fillStyleArray, ArrayList&lt;FSLineStyle&gt; lineStyleArray,
++							List&lt;FSFillStyle&gt; fillStyleArray, List&lt;FSLineStyle&gt; lineStyleArray,
+ 							FSShape aShape)
+ 	{
+ 		super(DefineShape2, anIdentifier);
+@@ -269,7 +271,7 @@
+ 	 * 
+ 	 * @return the fill styles used in the shape.
+ 	 */
+-	public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++	public List&lt;FSFillStyle&gt; getFillStyles()
+ 	{
+ 		return fillStyles;
+ 	}
+@@ -279,7 +281,7 @@
+ 	 * 
+ 	 * @return the line styles used in the shape.
+ 	 */
+-	public ArrayList&lt;FSLineStyle&gt; getLineStyles()
++	public List&lt;FSLineStyle&gt; getLineStyles()
+ 	{
+ 		return lineStyles;
+ 	}
+@@ -318,7 +320,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the fill style array is null.
+ 	 */
+-	public void setFillStyles(ArrayList&lt;FSFillStyle&gt; anArray)
++	public void setFillStyles(List&lt;FSFillStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of fill styles cannot be null&quot;);
+@@ -334,7 +336,7 @@
+ 	 *
+ 	 * @throws NullPointerException if the line style array is null.
+ 	 */
+-	public void setLineStyles(ArrayList&lt;FSLineStyle&gt; anArray)
++	public void setLineStyles(List&lt;FSLineStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of line styles cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineShape3 defines a transparent shape to be displayed.
+@@ -140,8 +142,8 @@
+ public class FSDefineShape3 extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+-	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+-	private ArrayList&lt;FSLineStyle&gt; lineStyles;
++	private List&lt;FSFillStyle&gt; fillStyles;
++	private List&lt;FSLineStyle&gt; lineStyles;
+ 	private FSShape shape;
+ 
+ 	/**
+@@ -177,7 +179,7 @@
+ 	 * @throws NullPointerException if the shape is null.
+ 	 */
+ 	public FSDefineShape3(int anIdentifier, FSBounds aBounds,
+-							ArrayList&lt;FSFillStyle&gt; fillStyleArray, ArrayList&lt;FSLineStyle&gt; lineStyleArray,
++							List&lt;FSFillStyle&gt; fillStyleArray, List&lt;FSLineStyle&gt; lineStyleArray,
+ 							FSShape aShape)
+ 	{
+ 		super(DefineShape3, anIdentifier);
+@@ -269,7 +271,7 @@
+ 	 * 
+ 	 * @return the fill styles used in the shape.
+ 	 */
+-	public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++	public List&lt;FSFillStyle&gt; getFillStyles()
+ 	{
+ 		return fillStyles;
+ 	}
+@@ -279,7 +281,7 @@
+ 	 * 
+ 	 * @return the line styles used in the shape.
+ 	 */
+-	public ArrayList&lt;FSLineStyle&gt; getLineStyles()
++	public List&lt;FSLineStyle&gt; getLineStyles()
+ 	{
+ 		return lineStyles;
+ 	}
+@@ -318,7 +320,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the fill style array is null.
+ 	 */
+-	public void setFillStyles(ArrayList&lt;FSFillStyle&gt; anArray)
++	public void setFillStyles(List&lt;FSFillStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of fill styles cannot be null&quot;);
+@@ -334,7 +336,7 @@
+ 	 *
+ 	 * @throws NullPointerException if the line style array is null.
+ 	 */
+-	public void setLineStyles(ArrayList&lt;FSLineStyle&gt; anArray)
++	public void setLineStyles(List&lt;FSLineStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of line styles cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineText defines one or more lines of text.
+@@ -153,7 +155,7 @@
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+-	private ArrayList&lt;FSSpan&gt; objects;
++	private List&lt;FSSpan&gt; objects;
+ 
+ 	/**
+ 	 * Construct an FSDefineText object, initialising it with values decoded from
+@@ -190,7 +192,7 @@
+ 	 * @throws NullPointerException if the array of text objects is null.
+ 	 */
+ 	public FSDefineText(int anIdentifier, FSBounds aBounds,
+-						FSCoordTransform aTransform, ArrayList&lt;FSSpan&gt; array)
++						FSCoordTransform aTransform, List&lt;FSSpan&gt; array)
+ 	{
+ 		super(FSMovieObject.DefineText, anIdentifier);
+ 		setBounds(aBounds);
+@@ -270,7 +272,7 @@
+ 	 * 
+ 	 * @return the array of text records (FSTextStyle and FSText objects).
+ 	 */
+-	public ArrayList&lt;FSSpan&gt; getObjects()
++	public List&lt;FSSpan&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -318,7 +320,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of text objects is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSSpan&gt; anArray)
++	public void setObjects(List&lt;FSSpan&gt; anArray)
+ 	{
+ 		if (objects == null) {
+ 			throw new NullPointerException(&quot;Array of text objects cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDefineText2 defines one or more lines of transparent text.
+@@ -154,7 +156,7 @@
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+-	private ArrayList&lt;FSSpan&gt; objects;
++	private List&lt;FSSpan&gt; objects;
+ 
+ 	/**
+ 	 * Construct an FSDefineText2 object, initialising it with values decoded
+@@ -191,7 +193,7 @@
+ 	 */
+ 	public FSDefineText2(int anIdentifier, FSBounds aBounds,
+ 							FSCoordTransform aTransform,
+-							ArrayList&lt;FSSpan&gt; textRecordArray)
++							List&lt;FSSpan&gt; textRecordArray)
+ 	{
+ 		super(DefineText2, anIdentifier);
+ 		setBounds(aBounds);
+@@ -271,7 +273,7 @@
+ 	 * 
+ 	 * @return the array of text records (FSTextStyle and FSText objects).
+ 	 */
+-	public ArrayList&lt;FSSpan&gt; getObjects()
++	public List&lt;FSSpan&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -319,7 +321,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of text objects is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSSpan&gt; anArray)
++	public void setObjects(List&lt;FSSpan&gt; anArray)
+ 	{
+ 		if (objects == null) {
+ 			throw new NullPointerException(&quot;Array of text objects cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,8 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.Map;
++import java.util.HashMap;
+ 
+ /**
+  * FSDefineTextField defines an editable text field.
+@@ -383,7 +384,7 @@
+ 
+ 	/**
+ 	 * Constructs an FSDefineTextField object setting the attributes added to
+-	 * the Hashtable. Each entry consists of a key-value pair. The key is one of
++	 * the Map. Each entry consists of a key-value pair. The key is one of
+ 	 * the pre-defined attribute names while the value is an instance of a
+ 	 * wrapper class (Boolean, Integer or String) that will be assigned to the
+ 	 * specified attribute.
+@@ -401,7 +402,7 @@
+ 	 * @throws NullPointerException if the table of attributes is null.
+ 	 */
+ 	public FSDefineTextField(int anIdentifier, FSBounds aBounds,
+-								Hashtable&lt;String,Object&gt; attributes)
++								Map&lt;String,Object&gt; attributes)
+ 	{
+ 		super(DefineTextField, anIdentifier);
+ 		setBounds(aBounds);
+@@ -685,16 +686,16 @@
+ 	}
+ 
+ 	/**
+-	 * Gets the list of attributes for the object. The Hashtable contains a list
++	 * Gets the list of attributes for the object. The Map contains a list
+ 	 * of key-value pairs. The key is one of the pre-defined attribute names
+ 	 * while the value is an instance of a wrapper class (Boolean, Integer or
+ 	 * String) that contains the corresponding object attribute.
+ 	 * 
+ 	 * @return the list of attributes for the object.
+ 	 */
+-	public Hashtable&lt;String,Object&gt; getAttributes()
++	public Map&lt;String,Object&gt; getAttributes()
+ 	{
+-		Hashtable&lt;String,Object&gt; attributes = new Hashtable&lt;String,Object&gt;();
++		HashMap&lt;String,Object&gt; attributes = new HashMap&lt;String,Object&gt;();
+ 
+ 		attributes.put(WordWrapped, new Boolean(isWordWrapped()));
+ 		attributes.put(Multiline, new Boolean(isMultiline()));
+@@ -1000,7 +1001,7 @@
+ 	}
+ 
+ 	/**
+-	 * Sets the attributes for the object. The Hashtable contains a list of
++	 * Sets the attributes for the object. The Map contains a list of
+ 	 * key-value pairs. The key is one of the pre-defined attribute names while
+ 	 * the value is an instance of a wrapper class (Boolean, Integer or String)
+ 	 * that will be assigned to the specified attribute.
+@@ -1008,7 +1009,7 @@
+ 	 * @param attributes
+ 	 *            the list of attributes for the object.
+ 	 */
+-	public void setAttributes(Hashtable&lt;String,Object&gt; attributes)
++	public void setAttributes(Map&lt;String,Object&gt; attributes)
+ 	{
+ 		if (attributes.get(WordWrapped) != null)
+ 			setWordWrapped(((Boolean) attributes.get(WordWrapped))
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSDoAction is used to specify a sequence of actions that are executed when a
+@@ -130,7 +132,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSDoAction(ArrayList&lt;FSActionObject&gt; anArray)
++	public FSDoAction(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		super(FSMovieObject.DoAction);
+ 		setActions(anArray);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,8 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
+ 
+ /**
+  * The FSExceptionHandler class is used to specify try..catch blocks so
+@@ -164,9 +165,9 @@
+ 	 * @throws NullPointerException if the array of actions for the try block are null.
+ 	 */
+ 
+-	public FSExceptionHandler(String name, ArrayList&lt;FSActionObject&gt; tryArray,
+-								ArrayList&lt;FSActionObject&gt; catchArray,
+-								ArrayList&lt;FSActionObject&gt; finallyArray)
++	public FSExceptionHandler(String name, List&lt;FSActionObject&gt; tryArray,
++								List&lt;FSActionObject&gt; catchArray,
++								List&lt;FSActionObject&gt; finallyArray)
+ 	{
+ 		super(ExceptionHandler);
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSExport.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSExport.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSExport.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.Map;
++import java.util.HashMap;
++import java.util.Iterator;
+ 
+ /**
+  * FSExport is used to export shapes and other objects so they can be used in
+@@ -55,7 +57,7 @@
+  * 
+  * &lt;tr&gt;
+  * &lt;td&gt;objects&lt;/td&gt;
+- * &lt;td&gt;A HashTable containing key-value pairs where the key is the identifier
++ * &lt;td&gt;A Map containing key-value pairs where the key is the identifier
+  * of the object being exported and the value is name assigned to the object so
+  * it can be referenced when it is imported into a Flash file.&lt;/td&gt;
+  * &lt;/tr&gt;
+@@ -90,7 +92,7 @@
+  */
+ public class FSExport extends FSMovieObject
+ {
+-	private Hashtable&lt;Integer,String&gt; objects = new Hashtable&lt;Integer,String&gt;();
++	private Map&lt;Integer,String&gt; objects = new HashMap&lt;Integer,String&gt;();
+ 
+ 	FSExport()
+ 	{
+@@ -140,7 +142,7 @@
+ 	{
+ 		super(obj);
+ 
+-		objects = new Hashtable&lt;Integer,String&gt;(obj.objects.size());
++		objects = new HashMap&lt;Integer,String&gt;(obj.objects.size());
+ 		
+ 		Integer key;
+ 
+@@ -173,9 +175,8 @@
+ 	 * 
+ 	 * @return the table of imported objects.
+ 	 */
+-	public Hashtable&lt;Integer,String&gt; getObjects()
++	public Map&lt;Integer,String&gt; getObjects()
+ 	{
+-		//TODO return a Map instead
+ 		return objects;
+ 	}
+ 
+@@ -187,7 +188,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the table is null.
+ 	 */
+-	public void setObjects(Hashtable&lt;Integer,String&gt; aTable)
++	public void setObjects(Map&lt;Integer,String&gt; aTable)
+ 	{
+ 		if (aTable == null) {
+ 			throw new NullPointerException(&quot;Export table cannot be null.&quot;);
+@@ -223,9 +224,9 @@
+ 
+ 		length += 2;
+ 
+-		for (Enumeration&lt;Integer&gt; e = objects.keys(); e.hasMoreElements();)
++		for (Iterator&lt;Integer&gt; e = objects.keySet().iterator(); e.hasNext();)
+ 		{
+-			String var = (String) (objects.get(e.nextElement()));
++			String var = (String) (objects.get(e.next()));
+ 
+ 			length += 2;
+ 			length += FSCoder.strlen(var, true);
+@@ -239,9 +240,9 @@
+ 
+ 		coder.writeWord(objects.size(), 2);
+ 
+-		for (Enumeration&lt;Integer&gt; e = objects.keys(); e.hasMoreElements();)
++		for (Iterator&lt;Integer&gt; e = objects.keySet().iterator(); e.hasNext();)
+ 		{
+-			Integer identifier = e.nextElement();
++			Integer identifier = e.next();
+ 			String var = (String) (objects.get(identifier));
+ 
+ 			coder.writeWord(identifier.intValue(), 2);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSFontInfo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSFontInfo.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSFontInfo.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSFontInfo defines the name and face of a font and maps the codes for a given
+@@ -138,7 +140,7 @@
+ 	private boolean italic;
+ 	private boolean bold;
+ 
+-	private ArrayList&lt;Integer&gt; codes = new ArrayList&lt;Integer&gt;();
++	private List&lt;Integer&gt; codes = new ArrayList&lt;Integer&gt;();
+ 
+ 	/*
+ 	 * attributes used to retain state during encoding.
+@@ -285,7 +287,7 @@
+ 	 * 
+ 	 * @return the array of character codes.
+ 	 */
+-	public ArrayList&lt;Integer&gt; getCodes()
++	public List&lt;Integer&gt; getCodes()
+ 	{
+ 		return codes;
+ 	}
+@@ -369,7 +371,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setCodes(ArrayList&lt;Integer&gt; anArray)
++	public void setCodes(List&lt;Integer&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;The array of character codes cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSFontInfo2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSFontInfo2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSFontInfo2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSFontInfo2 describes the mapping of codes for a given character set to the
+@@ -132,7 +134,7 @@
+ 	private boolean italic;
+ 	private boolean bold;
+ 	private int language;
+-	private ArrayList&lt;Integer&gt; codes = new ArrayList&lt;Integer&gt;();
++	private List&lt;Integer&gt; codes = new ArrayList&lt;Integer&gt;();
+ 
+ 	/**
+ 	 * Construct an FSFontInfo2 object, initialising it with values decoded from
+@@ -288,7 +290,7 @@
+ 	 * 
+ 	 * @return the array of character codes.
+ 	 */
+-	public ArrayList&lt;Integer&gt; getCodes()
++	public List&lt;Integer&gt; getCodes()
+ 	{
+ 		return codes;
+ 	}
+@@ -389,7 +391,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setCodes(ArrayList&lt;Integer&gt; anArray)
++	public void setCodes(List&lt;Integer&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;The array of character codes cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSGradientFill.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSGradientFill.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSGradientFill defines how a colour changes across an area to be filled with
+@@ -178,7 +180,7 @@
+ public class FSGradientFill extends FSFillStyle
+ {
+ 	private FSCoordTransform transform;
+-	private ArrayList&lt;FSGradient&gt; gradients;
++	private List&lt;FSGradient&gt; gradients;
+ 
+ 	/**
+ 	 * Construct an FSGradientFill object, initialising it with values decoded
+@@ -210,7 +212,7 @@
+ 	 * @throws NullPointerException if the transform is null.
+ 	 * @throws NullPointerException if the array of gradient points is null.
+ 	 */
+-	public FSGradientFill(int aType, FSCoordTransform aTransform, ArrayList&lt;FSGradient&gt; anArray)
++	public FSGradientFill(int aType, FSCoordTransform aTransform, List&lt;FSGradient&gt; anArray)
+ 	{
+ 		super(aType);
+ 		setTransform(aTransform);
+@@ -263,7 +265,7 @@
+ 	 * 
+ 	 * @return the array of control points.
+ 	 */
+-	public ArrayList&lt;FSGradient&gt; getGradients()
++	public List&lt;FSGradient&gt; getGradients()
+ 	{
+ 		return gradients;
+ 	}
+@@ -293,7 +295,7 @@
+ 	 * 
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setGradients(ArrayList&lt;FSGradient&gt; anArray)
++	public void setGradients(List&lt;FSGradient&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Gradient array cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSImport.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSImport.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSImport.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.HashMap;
++import java.util.Map;
++import java.util.Iterator;
+ 
+ /**
+  * FSImport is used to import shapes and other objects from another Flash file.
+@@ -62,7 +64,7 @@
+  * 
+  * &lt;tr&gt;
+  * &lt;td&gt;objects&lt;/td&gt;
+- * &lt;td&gt;A HashTable containing key-value pairs where the key is the identifier
++ * &lt;td&gt;A Map containing key-value pairs where the key is the identifier
+  * of the object being imported and the value is name assigned to the object
+  * when it was exported into a Flash file.&lt;/td&gt;
+  * &lt;/tr&gt;
+@@ -110,7 +112,7 @@
+ public class FSImport extends FSMovieObject
+ {
+ 	private String url;
+-	private Hashtable&lt;Integer,String&gt; objects;
++	private Map&lt;Integer,String&gt; objects;
+ 
+ 	FSImport()
+ 	{
+@@ -167,7 +169,7 @@
+ 		super(obj);
+ 		url = new String(obj.url);
+ 
+-		objects = new Hashtable&lt;Integer,String&gt;(obj.objects.size());
++		objects = new HashMap&lt;Integer,String&gt;(obj.objects.size());
+ 		Integer key;
+ 
+ 		for (Iterator&lt;Integer&gt; i = obj.objects.keySet().iterator(); i.hasNext();)
+@@ -202,7 +204,7 @@
+ 		}
+ 		
+ 		if (objects == null) {
+-			 objects = new Hashtable&lt;Integer,String&gt;();
++			 objects = new HashMap&lt;Integer,String&gt;();
+ 		}
+ 		objects.put(new Integer(anIdentifier), aString);
+ 	}
+@@ -224,7 +226,7 @@
+ 	 * 
+ 	 * @return the table of imported objects.
+ 	 */
+-	public Hashtable&lt;Integer,String&gt; getObjects()
++	public Map&lt;Integer,String&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -260,7 +262,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the table is null.
+ 	 */
+-	public void setObjects(Hashtable&lt;Integer,String&gt; aTable)
++	public void setObjects(Map&lt;Integer,String&gt; aTable)
+ 	{
+ 		objects = aTable;
+ 	}
+@@ -296,9 +298,9 @@
+ 		length += FSCoder.strlen(url, true);
+ 		length += 2;
+ 
+-		for (Enumeration&lt;Integer&gt; e = objects.keys(); e.hasMoreElements();)
++		for (Iterator&lt;Integer&gt; e = objects.keySet().iterator(); e.hasNext();)
+ 		{
+-			String name = (String) (objects.get(e.nextElement()));
++			String name = (String) (objects.get(e.next()));
+ 
+ 			length += 2;
+ 			length += FSCoder.strlen(name, true);
+@@ -316,9 +318,9 @@
+ 
+ 		coder.writeWord(objects.size(), 2);
+ 
+-		for (Enumeration&lt;Integer&gt; e = objects.keys(); e.hasMoreElements();)
++		for (Iterator&lt;Integer&gt; e = objects.keySet().iterator(); e.hasNext();)
+ 		{
+-			Integer identifier = e.nextElement();
++			Integer identifier = e.next();
+ 			String name = (String) (objects.get(identifier));
+ 
+ 			coder.writeWord(identifier.intValue(), 2);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSInitialize is used to specify a sequence of actions that are executed to
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMorphGradientFill.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMorphGradientFill.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMorphGradientFill.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSMorphGradientFill defines how a colour changes across an area filled in a
+@@ -194,7 +196,7 @@
+ {
+ 	private FSCoordTransform start;
+ 	private FSCoordTransform end;
+-	private ArrayList&lt;FSMorphGradient&gt; gradients;
++	private List&lt;FSMorphGradient&gt; gradients;
+ 
+ 	/**
+ 	 * Construct an FSMorphGradientFill object, initialising it with values
+@@ -230,7 +232,7 @@
+ 	 * @throws NullPointerException if either of the transforms are null.
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSMorphGradientFill(int aType, FSCoordTransform start, FSCoordTransform end, ArrayList&lt;FSMorphGradient&gt; gradients)
++	public FSMorphGradientFill(int aType, FSCoordTransform start, FSCoordTransform end, List&lt;FSMorphGradient&gt; gradients)
+ 	{
+ 		super(aType);
+ 		setStartTransform(start);
+@@ -302,7 +304,7 @@
+ 	 * 
+ 	 * @return the array of control points.
+ 	 */
+-	public ArrayList&lt;FSMorphGradient&gt; getGradients()
++	public List&lt;FSMorphGradient&gt; getGradients()
+ 	{
+ 		return gradients;
+ 	}
+@@ -349,7 +351,7 @@
+ 	 * 
+ 	 * @throws NullPointerException if the argument is null.
+ 	 */
+-	public void setGradients(ArrayList&lt;FSMorphGradient&gt; anArray)
++	public void setGradients(List&lt;FSMorphGradient&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Gradient array cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMovie.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMovie.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,10 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ import java.util.zip.*;
+ import java.io.*;
+ 
+@@ -199,7 +202,7 @@
+ 	private int length;
+ 	private float frameRate;
+ 	private int frameCount;
+-	private ArrayList&lt;FSMovieObject&gt; objects = new ArrayList&lt;FSMovieObject&gt;();
++	private List&lt;FSMovieObject&gt; objects = new ArrayList&lt;FSMovieObject&gt;();
+ 
+ 	/**
+ 	 * Constructs an FSMovie object with no objects. The Flash version defaults
+@@ -538,7 +541,7 @@
+ 	 * 
+ 	 * @return the array of objects that describe a coder.
+ 	 */
+-	public ArrayList&lt;FSMovieObject&gt; getObjects()
++	public List&lt;FSMovieObject&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -551,7 +554,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null
+ 	 */
+-	public void setObjects(ArrayList&lt;FSMovieObject&gt; anArray)
++	public void setObjects(List&lt;FSMovieObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null&quot;);
+@@ -583,7 +586,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null
+ 	 */
+-	public void add(ArrayList&lt;FSMovieObject&gt; array)
++	public void add(List&lt;FSMovieObject&gt; array)
+ 	{
+ 		if (array == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,7 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.ArrayList;
++import java.util.List;
+ import java.util.HashMap;
+ import java.util.Iterator;
+ 
+@@ -279,7 +279,7 @@
+ 		&quot;TabOrder&quot;,
+ 	};
+ 
+-	static int length(FSContext context, ArrayList&lt;FSMovieObject&gt; array)
++	static int length(FSContext context, List&lt;FSMovieObject&gt; array)
+ 	{
+ 		FSMovieObject object;
+ 		int length = 0;
+@@ -297,7 +297,7 @@
+ 		return total;
+ 	}
+ 
+-	static void encode(FSCoder coder, FSContext context, ArrayList&lt;FSMovieObject&gt; array)
++	static void encode(FSCoder coder, FSContext context, List&lt;FSMovieObject&gt; array)
+ 	{
+ 		FSMovieObject object;
+ 		int start;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * The FSNewFunction action is used to create a user-defined function.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * The FSNewFunction2 action is used to create a user-defined function.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSPlaceObject2.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSPlaceObject2.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSPlaceObject2 is used to add and manipulate objects (shape, button, etc.) on
+@@ -211,7 +213,7 @@
+ 	private float ratio;
+ 	private int clippingDepth;
+ 	private String name;
+-	private ArrayList&lt;FSClipEvent&gt; clipEvents;
++	private List&lt;FSClipEvent&gt; clipEvents;
+ 
+ 	/**
+ 	 * Construct an FSPlaceObject2 object, initialising it with values decoded
+@@ -384,7 +386,7 @@
+ 	 * 
+ 	 * @return the array of clip events
+ 	 */
+-	public ArrayList&lt;FSClipEvent&gt; getClipEvents()
++	public List&lt;FSClipEvent&gt; getClipEvents()
+ 	{
+ 		return clipEvents;
+ 	}
+@@ -402,7 +404,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setClipEvents(ArrayList&lt;FSClipEvent&gt; anArray)
++	public void setClipEvents(List&lt;FSClipEvent&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of clip events cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,10 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.HashMap;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSPush is used to push values on the Flash Player's internal stack.
+@@ -409,7 +412,7 @@
+ 		return identifier;
+ 	}
+ 
+-	private ArrayList&lt;Object&gt; values = new ArrayList&lt;Object&gt;();
++	private List&lt;Object&gt; values = new ArrayList&lt;Object&gt;();
+ 
+ 	/**
+ 	 * Construct an FSPush object, initialising it with values decoded from an
+@@ -555,7 +558,7 @@
+ 	 * 
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSPush(ArrayList&lt;Object&gt; anArray)
++	public FSPush(List&lt;Object&gt; anArray)
+ 	{
+ 		super(Push);
+ 		setValues(anArray);
+@@ -726,7 +729,7 @@
+ 	 * 
+ 	 * @return the array of values that will be pushed onto the stack.
+ 	 */
+-	public ArrayList&lt;Object&gt; getValues()
++	public List&lt;Object&gt; getValues()
+ 	{
+ 		return values;
+ 	}
+@@ -742,7 +745,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setValues(ArrayList&lt;Object&gt; anArray)
++	public void setValues(List&lt;Object&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,6 +30,7 @@
+ package com.flagstone.transform;
+ 
+ import java.util.ArrayList;
++import java.util.List;
+ import java.util.Iterator;
+ 
+ /**
+@@ -51,7 +52,7 @@
+ 
+ 	private int imageHeight;
+ 
+-	private ArrayList&lt;FSImageBlock&gt; imageBlocks;
++	private List&lt;FSImageBlock&gt; imageBlocks;
+ 
+ 	public FSScreenVideoPacket(byte[] data)
+ 	{
+@@ -60,7 +61,7 @@
+ 
+ 	public FSScreenVideoPacket(boolean key, int codec, int imageWidth,
+ 								int imageHeight, int blockWidth,
+-								int blockHeight, ArrayList&lt;FSImageBlock&gt; blocks)
++								int blockHeight, List&lt;FSImageBlock&gt; blocks)
+ 	{
+ 		setKeyFrame(key);
+ 		setCodec(codec);
+@@ -136,12 +137,12 @@
+ 		blockHeight = height;
+ 	}
+ 
+-	public ArrayList&lt;FSImageBlock&gt; getImageBlocks()
++	public List&lt;FSImageBlock&gt; getImageBlocks()
+ 	{
+ 		return imageBlocks;
+ 	}
+ 
+-	public void setImageBlocks(ArrayList&lt;FSImageBlock&gt; blocks)
++	public void setImageBlocks(List&lt;FSImageBlock&gt; blocks)
+ 	{
+ 		imageBlocks = new ArrayList&lt;FSImageBlock&gt;(blocks);
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSShape.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSShape.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSShape is a container for the shape objects (FSLine, FSCurve and
+@@ -66,7 +68,7 @@
+  */
+ public class FSShape implements Cloneable, Codeable
+ {
+-	private ArrayList&lt;FSShapeObject&gt; objects;
++	private List&lt;FSShapeObject&gt; objects;
+ 	private byte[] encodedObjects;
+ 
+ 	/*
+@@ -111,7 +113,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSShape(ArrayList&lt;FSShapeObject&gt; anArray)
++	public FSShape(List&lt;FSShapeObject&gt; anArray)
+ 	{
+ 		setObjects(anArray);
+ 	}
+@@ -158,7 +160,7 @@
+ 	 * 
+ 	 * @return the array of shape records.
+ 	 */
+-	public ArrayList&lt;FSShapeObject&gt; getObjects()
++	public List&lt;FSShapeObject&gt; getObjects()
+ 	{
+ 		if (encodedObjects != null)
+ 		{
+@@ -176,7 +178,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSShapeObject&gt; anArray)
++	public void setObjects(List&lt;FSShapeObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of shape objects cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,11 +30,12 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.List;
+ import java.util.ArrayList;
+ 
+ public abstract class FSShapeObject implements Cloneable, Codeable
+ {
+-	static ArrayList&lt;FSShapeObject&gt; decodeShape(byte[] bytes)
++	static List&lt;FSShapeObject&gt; decodeShape(byte[] bytes)
+ 	{
+ 		FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+ 		FSContext context = new FSContext();
+@@ -43,7 +44,7 @@
+ 	}
+ 
+ 	// TODO Can this be optimized
+-	static ArrayList&lt;FSShapeObject&gt; decodeShape(FSCoder coder, FSContext context)
++	static List&lt;FSShapeObject&gt; decodeShape(FSCoder coder, FSContext context)
+ 	{
+ 		ArrayList&lt;FSShapeObject&gt; objects = new ArrayList&lt;FSShapeObject&gt;();
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSShapeStyle is used to change the drawing environment when a shape is drawn.
+@@ -293,8 +295,8 @@
+ 	private int fillStyle;
+ 	private int altFillStyle;
+ 	private int lineStyle;
+-	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+-	private ArrayList&lt;FSLineStyle&gt; lineStyles;
++	private List&lt;FSFillStyle&gt; fillStyles;
++	private List&lt;FSLineStyle&gt; lineStyles;
+ 	
+ 	private boolean hasStyles;
+ 	private boolean hasLine;
+@@ -362,7 +364,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if either of the arrays are null.
+ 	 */
+-	public FSShapeStyle(ArrayList&lt;FSLineStyle&gt; lines, ArrayList&lt;FSFillStyle&gt; fills)
++	public FSShapeStyle(List&lt;FSLineStyle&gt; lines, List&lt;FSFillStyle&gt; fills)
+ 	{
+ 		setLineStyles(lines);
+ 		setFillStyles(fills);
+@@ -419,7 +421,7 @@
+ 	 * @throws NullPointerException if either of the arrays are null.
+ 	 */
+ 	public FSShapeStyle(int lineIndex, int fillIndex, int altIndex, 
+-	                    ArrayList&lt;FSLineStyle&gt; lines, ArrayList&lt;FSFillStyle&gt; fills)
++	                    List&lt;FSLineStyle&gt; lines, List&lt;FSFillStyle&gt; fills)
+ 	{
+ 		setLineStyle(lineIndex);
+ 		setFillStyle(fillIndex);
+@@ -455,7 +457,7 @@
+ 	 * @throws NullPointerException if either of the arrays are null.
+ 	 */
+ 	public FSShapeStyle(int lineIndex, int fillIndex, int altIndex, int relativeX, int relativeY,
+-						ArrayList&lt;FSLineStyle&gt; lines, ArrayList&lt;FSFillStyle&gt; fills)
++						List&lt;FSLineStyle&gt; lines, List&lt;FSFillStyle&gt; fills)
+ 	{
+ 		setLineStyle(lineIndex);
+ 		setFillStyle(fillIndex);
+@@ -598,7 +600,7 @@
+ 	 * 
+ 	 * @return the array of FSLineStyle objects.
+ 	 */
+-	public ArrayList&lt;FSLineStyle&gt; getLineStyles()
++	public List&lt;FSLineStyle&gt; getLineStyles()
+ 	{
+ 		return lineStyles;
+ 	}
+@@ -608,7 +610,7 @@
+ 	 * 
+ 	 * @return the array of fill style objects.
+ 	 */
+-	public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++	public List&lt;FSFillStyle&gt; getFillStyles()
+ 	{
+ 		return fillStyles;
+ 	}
+@@ -714,7 +716,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setLineStyles(ArrayList&lt;FSLineStyle&gt; anArray)
++	public void setLineStyles(List&lt;FSLineStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of line styles cannot be null.&quot;);
+@@ -731,7 +733,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setFillStyles(ArrayList&lt;FSFillStyle&gt; anArray)
++	public void setFillStyles(List&lt;FSFillStyle&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of line styles cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,6 +30,7 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.List;
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ 
+@@ -173,7 +174,7 @@
+ 	private int outPoint;
+ 	private int loopCount;
+ 
+-	private ArrayList&lt;FSEnvelope&gt; envelopes;
++	private List&lt;FSEnvelope&gt; envelopes;
+ 
+ 	/**
+ 	 * Construct an FSSound object, initialising it with values decoded from an
+@@ -303,7 +304,7 @@
+ 	 * 
+ 	 * @return an array of FSEnvelope objects.
+ 	 */
+-	public ArrayList&lt;FSEnvelope&gt; getEnvelopes()
++	public List&lt;FSEnvelope&gt; getEnvelopes()
+ 	{
+ 		return envelopes;
+ 	}
+@@ -393,7 +394,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of envelopes is null.
+ 	 */
+-	public void setEnvelopes(ArrayList&lt;FSEnvelope&gt; anArray)
++	public void setEnvelopes(List&lt;FSEnvelope&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of envelopes cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSText is used to display a line of text.
+@@ -249,7 +251,7 @@
+ 	private int offsetY;
+ 	private int height;
+ 
+-	private ArrayList&lt;FSCharacter&gt; characters;
++	private List&lt;FSCharacter&gt; characters;
+ 
+ 	/**
+ 	 * Construct an FSText object, initialising it with values decoded from an
+@@ -283,7 +285,7 @@
+ 	 * range -32768..32767.
+ 	 * @throws NullPointerException if the character array is null.
+ 	 */
+-	public FSSpan(int xOffset, int yOffset, ArrayList&lt;FSCharacter&gt; anArray)
++	public FSSpan(int xOffset, int yOffset, List&lt;FSCharacter&gt; anArray)
+ 	{
+ 		setOffsetX(xOffset);
+ 		setOffsetY(yOffset);
+@@ -316,7 +318,7 @@
+ 	 * @throws NullPointerException if the character array is null.
+ 	 */
+ 	public FSSpan(int anIdentifier, FSColor aColor, int xOffset, int yOffset,
+-					int aHeight, ArrayList&lt;FSCharacter&gt; anArray)
++					int aHeight, List&lt;FSCharacter&gt; anArray)
+ 	{
+ 		setIdentifier(anIdentifier);
+ 		setColor(aColor);
+@@ -495,7 +497,7 @@
+ 	 * 
+ 	 * @return the array of FSCharacter objects.
+ 	 */
+-	public ArrayList&lt;FSCharacter&gt; getCharacters()
++	public List&lt;FSCharacter&gt; getCharacters()
+ 	{
+ 		return characters;
+ 	}
+@@ -508,7 +510,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setCharacters(ArrayList&lt;FSCharacter&gt; anArray)
++	public void setCharacters(List&lt;FSCharacter&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of characters cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSTable.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSTable.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSTable is used to create a table of string literals that can be referenced
+@@ -121,7 +123,7 @@
+  */
+ public class FSTable extends FSActionObject
+ {
+-	private ArrayList&lt;String&gt; values;
++	private List&lt;String&gt; values;
+ 
+ 	/**
+ 	 * Construct an FSTable object, initialising it with values decoded from an
+@@ -152,7 +154,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSTable(ArrayList&lt;String&gt; anArray)
++	public FSTable(List&lt;String&gt; anArray)
+ 	{
+ 		super(Table);
+ 		setValues(anArray);
+@@ -192,7 +194,7 @@
+ 	 * 
+ 	 * @return the array of string literals.
+ 	 */
+-	public ArrayList&lt;String&gt; getValues()
++	public List&lt;String&gt; getValues()
+ 	{
+ 		return values;
+ 	}
+@@ -205,7 +207,7 @@
+ 	 * 
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setValues(ArrayList&lt;String&gt; anArray)
++	public void setValues(List&lt;String&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSVideo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSVideo.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSVideo.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -29,7 +29,10 @@
+  */
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ import java.util.zip.*;
+ import java.io.*;
+ 
+@@ -123,7 +126,7 @@
+ 
+ 	private String signature;
+ 	private int version;
+-	private ArrayList&lt;FSVideoObject&gt; objects;
++	private List&lt;FSVideoObject&gt; objects;
+ 
+ 	/**
+ 	 * Constructs an FSVideo object with no objects.
+@@ -202,7 +205,7 @@
+ 	 * 
+ 	 * @return the array of objects.
+ 	 */
+-	public ArrayList&lt;FSVideoObject&gt; getObjects()
++	public List&lt;FSVideoObject&gt; getObjects()
+ 	{
+ 		return objects;
+ 	}
+@@ -215,7 +218,7 @@
+ 	 *          
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setObjects(ArrayList&lt;FSVideoObject&gt; anArray)
++	public void setObjects(List&lt;FSVideoObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null.&quot;);
+@@ -248,7 +251,7 @@
+ 	 *          
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void add(ArrayList&lt;FSVideoObject&gt; array)
++	public void add(List&lt;FSVideoObject&gt; array)
+ 	{
+ 		if (array == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSWith.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/FSWith.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ /**
+  * FSWith is a stack-based action and supports the with statement from the
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSFrameTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSFrameTest.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSFrameTest.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -29,8 +29,12 @@
+  */
+ package com.flagstone.transform.test;
+ 
++import java.util.List;
+ import java.util.ArrayList;
+ 
++import com.flagstone.transform.FSActionObject;
++import com.flagstone.transform.FSLineStyle;
++import com.flagstone.transform.FSFillStyle;
+ import com.flagstone.transform.FSMovie;
+ import com.flagstone.transform.FSBounds;
+ import com.flagstone.transform.FSDefineShape;
+@@ -57,7 +61,7 @@
+ 	private FSFrameLabel name;
+ 	private FSRemoveObject2 remove;
+ 	private FSDoAction doAction;
+-	private ArrayList actions;
++	private List&lt;FSActionObject&gt; actions;
+ 	
+ 	protected void setUp()
+ 	{
+@@ -70,7 +74,7 @@
+ 		movie.setFrameSize(bounds);
+ 		movie.setFrameRate(1.0f);
+ 
+-		shape = new FSDefineShape(movie.newIdentifier(), bounds, new ArrayList(), new ArrayList(), new FSShape());
++		shape = new FSDefineShape(movie.newIdentifier(), bounds, new ArrayList&lt;FSFillStyle&gt;(), new ArrayList&lt;FSLineStyle&gt;(), new FSShape());
+ 		place = new FSPlaceObject2(shape.getIdentifier(), layer, 0,0);
+ 		name = new FSFrameLabel(label);
+ 		remove = new FSRemoveObject2(layer);
+@@ -92,7 +96,7 @@
+ 		movie.add(doAction);
+ 		movie.add(new FSShowFrame());
+ 
+-		ArrayList frames = Frame.framesFromMovie(movie);
++		List&lt;Frame&gt; frames = Frame.framesFromMovie(movie);
+ 		
+ 		assertEquals(frames.size(), 2);
+ 		
+@@ -124,7 +128,7 @@
+ 		frame.setActions(actions);
+ 		frame.addToMovie(movie);
+ 		
+-		ArrayList frames = Frame.framesFromMovie(movie);
++		List&lt;Frame&gt; frames = Frame.framesFromMovie(movie);
+ 		
+ 		assertEquals(frames.size(), 2);
+ 		
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSLayerTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSLayerTest.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSLayerTest.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -29,8 +29,10 @@
+  */
+ package com.flagstone.transform.test;
+ 
++import java.util.List;
+ import java.util.ArrayList;
+ 
++import com.flagstone.transform.FSMovieObject;
+ import com.flagstone.transform.FSMovie;
+ import com.flagstone.transform.FSBounds;
+ import com.flagstone.transform.FSColorTransform;
+@@ -148,7 +150,7 @@
+ 		Layer layer = new Layer(1);	
+ 		layer.select(shape);
+ 		
+-		ArrayList array = layer.getObjects();
++		List&lt;FSMovieObject&gt; array = layer.getObjects();
+ 		FSPlaceObject2 place = (FSPlaceObject2)array.get(1);
+ 
+ 	    assertEquals(place.getPlaceType(), FSPlaceObject2.New);
+@@ -161,7 +163,7 @@
+ 		layer.show();
+ 		layer.move(10, 10);
+ 		
+-		ArrayList array = layer.getObjects();
++		List&lt;FSMovieObject&gt; array = layer.getObjects();
+ 		FSPlaceObject2 place = (FSPlaceObject2)array.get(3);
+ 		
+ 	    assertEquals(place.getPlaceType(), FSPlaceObject2.Modify);
+@@ -175,7 +177,7 @@
+ 		layer.move(10, 10);
+ 		layer.replace(shape.getIdentifier());
+ 		
+-		ArrayList array = layer.getObjects();
++		List&lt;FSMovieObject&gt; array = layer.getObjects();
+ 		FSPlaceObject2 place = (FSPlaceObject2)array.get(3);
+ 		
+ 	    assertEquals(place.getPlaceType(), FSPlaceObject2.Replace);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,6 +30,8 @@
+ package com.flagstone.transform.test;
+ 
+ import java.io.*;
++
++import java.util.List;
+ import java.util.ArrayList;
+ 
+ import com.flagstone.transform.*;
+@@ -137,9 +139,9 @@
+                           
+             movie.add(new FSDefineVideo(identifier, numberOfFrames, screenWidth, screenHeight, deblocking, smoothing, codec));     
+             
+-            ArrayList&lt;FSImageBlock&gt; prev = Image.getImageAsBlocks(blockWidth, blockHeight, new File(sourceDir, files[0]).getAbsolutePath());
+-            ArrayList&lt;FSImageBlock&gt; next;
+-            ArrayList&lt;FSImageBlock&gt; delta;
++            List&lt;FSImageBlock&gt; prev = Image.getImageAsBlocks(blockWidth, blockHeight, new File(sourceDir, files[0]).getAbsolutePath());
++            List&lt;FSImageBlock&gt; next;
++            List&lt;FSImageBlock&gt; delta;
+             
+         	FSScreenVideoPacket packet = new FSScreenVideoPacket(true, codec, screenWidth, screenHeight, blockWidth, blockHeight, prev);
+             
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/test/SoundTest.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -3,6 +3,7 @@
+ import java.io.File;
+ import java.io.FilenameFilter;
+ 
++import java.util.List;
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ import java.util.zip.DataFormatException;
+@@ -160,7 +161,7 @@
+          * the size, in bytes, of each block compressed sound data.
+          */
+         
+-        ArrayList&lt;FSMovieObject&gt;stream = Sound.streamSound(source, (int)framesPerSecond);
++        List&lt;FSMovieObject&gt;stream = Sound.streamSound(source, (int)framesPerSecond);
+         
+         /*
+          * An FSSoundStreamHeader2 object defines the attributes of the streaming sound.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/TextTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/TextTest.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/test/TextTest.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -15,9 +15,9 @@
+         try
+         {
+             Object[][] parameters = new Object[][] {
+-                new Object[] { new Integer(CharacterTable.euro), &quot;euro&quot; },
+-                new Object[] { new Integer(CharacterTable.iso_646), &quot;iso-646&quot; },
+-                new Object[] { new Integer(CharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },
++               // new Object[] { new Integer(CharacterTable.euro), &quot;euro&quot; },
++               // new Object[] { new Integer(CharacterTable.iso_646), &quot;iso-646&quot; },
++               // new Object[] { new Integer(CharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },
+             };
+ 
+             File destDir = new File(&quot;test/results/FSTextConstructor/character-sets&quot;);
+@@ -32,7 +32,7 @@
+             {
+                 destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+ 
+-                encodeCharacterSet(font, CharacterTable.characterSet(((Integer)parameters[i][1]).intValue()), destFile);
++                // encodeCharacterSet(font, CharacterTable.characterSet(((Integer)parameters[i][1]).intValue()), destFile);
+             }
+         }
+         catch (Exception e)
+@@ -69,8 +69,7 @@
+             {
+                 destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+ 
+-                encodeBoundedCharacterSet(font,
+-                                CharacterTable.characterSetForLocale((Locale)parameters[i][1]), destFile);
++                //encodeBoundedCharacterSet(font, CharacterTable.characterSetForLocale((Locale)parameters[i][1]), destFile);
+             }
+        }
+         catch (Exception e)
+@@ -107,8 +106,7 @@
+             {
+                 destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+ 
+-                encodeCharacterSet(font,
+-                               CharacterTable.characterSetForLocale((Locale)parameters[i][0]), destFile);
++                //encodeCharacterSet(font, CharacterTable.characterSetForLocale((Locale)parameters[i][0]), destFile);
+             }
+         }
+         catch (Exception e)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -176,9 +176,9 @@
+     
+     private int lineWidth = 0;
+     
+-    ArrayList&lt;FSShapeObject&gt; objects = new ArrayList&lt;FSShapeObject&gt;();
+-    ArrayList&lt;FSLineStyle&gt; lineStyles = new ArrayList&lt;FSLineStyle&gt;();
+-    ArrayList&lt;FSFillStyle&gt; fillStyles = new ArrayList&lt;FSFillStyle&gt;();
++    List&lt;FSShapeObject&gt; objects = new ArrayList&lt;FSShapeObject&gt;();
++    List&lt;FSLineStyle&gt; lineStyles = new ArrayList&lt;FSLineStyle&gt;();
++    List&lt;FSFillStyle&gt; fillStyles = new ArrayList&lt;FSFillStyle&gt;();
+     
+     /**
+      * Creates an FSShapeConstructor object with no path defined.
+@@ -202,9 +202,9 @@
+ 
+         @return the line styles used in the shape.
+         */
+-    public ArrayList&lt;FSLineStyle&gt; getLineStyles() 
++    public List&lt;FSLineStyle&gt; getLineStyles() 
+     { 
+-    	ArrayList&lt;FSLineStyle&gt; array = new ArrayList&lt;FSLineStyle&gt;(lineStyles.size());
++    	List&lt;FSLineStyle&gt; array = new ArrayList&lt;FSLineStyle&gt;(lineStyles.size());
+     	
+     	for (Iterator&lt;FSLineStyle&gt;i=lineStyles.iterator(); i.hasNext();) {
+     		array.add((FSLineStyle)i.next().clone());
+@@ -217,9 +217,9 @@
+ 
+         @return the fill styles used in the shape.
+         */
+-    public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++    public List&lt;FSFillStyle&gt; getFillStyles()
+     {
+-    	ArrayList&lt;FSFillStyle&gt; array = new ArrayList&lt;FSFillStyle&gt;(fillStyles.size());
++    	List&lt;FSFillStyle&gt; array = new ArrayList&lt;FSFillStyle&gt;(fillStyles.size());
+     	
+     	for (Iterator&lt;FSFillStyle&gt;i=fillStyles.iterator(); i.hasNext();) {
+     		array.add((FSFillStyle)i.next().clone());
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -93,7 +93,7 @@
+     private int missingGlyph;
+     private int highestChar;
+     
+-    private ArrayList&lt;FSKerning&gt; kernings = new ArrayList&lt;FSKerning&gt;();
++    private List&lt;FSKerning&gt; kernings = new ArrayList&lt;FSKerning&gt;();
+     
+     private int scale;
+     private int metrics;
+@@ -396,7 +396,7 @@
+ 		return missingGlyph;
+ 	}
+ 
+-	public ArrayList&lt;FSKerning&gt; getKernings()
++	public List&lt;FSKerning&gt; getKernings()
+ 	{
+ 		return kernings;
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Frame.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Frame.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Frame.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -30,7 +30,9 @@
+ 
+ package com.flagstone.transform.util;
+ 
+-import java.util.*;
++import java.util.List;
++import java.util.ArrayList;
++import java.util.Iterator;
+ 
+ import com.flagstone.transform.Definition;
+ import com.flagstone.transform.FSActionObject;
+@@ -101,7 +103,7 @@
+ 	 *            an FSMovie object.
+ 	 * @return an array of Frame objects.
+ 	 */
+-	public static ArrayList&lt;Frame&gt; framesFromMovie(FSMovie aMovie)
++	public static List&lt;Frame&gt; framesFromMovie(FSMovie aMovie)
+ 	{
+ 		ArrayList&lt;Frame&gt; frames = new ArrayList&lt;Frame&gt;();
+ 
+@@ -138,9 +140,9 @@
+ 	}
+ 
+ 	private String label;
+-	private ArrayList&lt;Definition&gt; definitions;
+-	private ArrayList&lt;FSMovieObject&gt; commands;
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;Definition&gt; definitions;
++	private List&lt;FSMovieObject&gt; commands;
++	private List&lt;FSActionObject&gt; actions;
+ 
+ 	/**
+ 	 * Constructs an empty frame with no label defined and the definitions,
+@@ -176,8 +178,8 @@
+ 	 *            
+ 	 * @throws NullPointerException if any of the arrays are null.
+ 	 */
+-	public Frame(String label, ArrayList&lt;Definition&gt; definitions, ArrayList&lt;FSMovieObject&gt; commands,
+-					ArrayList&lt;FSActionObject&gt; actions)
++	public Frame(String label, List&lt;Definition&gt; definitions, List&lt;FSMovieObject&gt; commands,
++					List&lt;FSActionObject&gt; actions)
+ 	{
+ 		setLabel(label);
+ 		setDefinitions(definitions);
+@@ -261,7 +263,7 @@
+ 	 * 
+ 	 * @return the array of definitions.
+ 	 */
+-	public ArrayList&lt;Definition&gt; getDefinitions()
++	public List&lt;Definition&gt; getDefinitions()
+ 	{
+ 		return definitions;
+ 	}
+@@ -271,7 +273,7 @@
+ 	 * 
+ 	 * @return the array of commands objects.
+ 	 */
+-	public ArrayList&lt;FSMovieObject&gt; getCommands()
++	public List&lt;FSMovieObject&gt; getCommands()
+ 	{
+ 		return commands;
+ 	}
+@@ -282,7 +284,7 @@
+ 	 * 
+ 	 * @return the array of actions defined for the frame.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		return actions;
+ 	}
+@@ -306,7 +308,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setDefinitions(ArrayList&lt;Definition&gt; anArray)
++	public void setDefinitions(List&lt;Definition&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of definition objects cannot be null.&quot;);
+@@ -323,7 +325,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setCommands(ArrayList&lt;FSMovieObject&gt; anArray)
++	public void setCommands(List&lt;FSMovieObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of movie objects cannot be null.&quot;);
+@@ -339,7 +341,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -123,7 +123,7 @@
+  *     movie.add(imageConstructor.defineImage(movie.newIdentifier()));
+  * &lt;/pre&gt;
+  *
+- * &lt;P&gt;The defineImage()method returns an FSDefineObject (the abstract base class for all objects used 
++ * &lt;P&gt;The defineImage()method returns an Definition (the abstract base class for all objects used 
+  * to define shapes etc. in a Flash file. The exact class of the object generated depends of the format 
+  * of the image loaded.&lt;/P&gt;
+  *
+@@ -465,7 +465,7 @@
+      * @param blockHeight the height of a block in pixels
+      * @return an array of FMImageBlock objects.
+      */   
+-	public static ArrayList&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, String path) throws FileNotFoundException, IOException, DataFormatException
++	public static List&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, String path) throws FileNotFoundException, IOException, DataFormatException
+ 	{
+ 		ArrayList&lt;FSImageBlock&gt; blocks = new ArrayList&lt;FSImageBlock&gt;();
+     	Definition object = null;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Layer.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Layer.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Layer.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -153,7 +153,7 @@
+ 	 * @return an array of all the objects contained in each layer. This array
+ 	 *         can then be added to the movie.
+ 	 */
+-	public static ArrayList&lt;FSMovieObject&gt; merge(ArrayList&lt;Layer&gt; layers)
++	public static List&lt;FSMovieObject&gt; merge(List&lt;Layer&gt; layers)
+ 	{
+ 		ArrayList&lt;FSMovieObject&gt; objects = new ArrayList&lt;FSMovieObject&gt;();
+ 
+@@ -166,7 +166,7 @@
+ 
+ 		while (true)
+ 		{
+-			ArrayList&lt;FSMovieObject&gt; array = null;
++			List&lt;FSMovieObject&gt; array = null;
+ 			FSMovieObject object;
+ 
+ 			for (int i = 0; i &lt; idx.length; i++)
+@@ -204,7 +204,7 @@
+ 	private int layer;
+ 	private int identifier;
+ 	private FSPlaceObject2 place;
+-	private ArrayList&lt;FSMovieObject&gt; displayList;
++	private List&lt;FSMovieObject&gt; displayList;
+ 
+ 	/**
+ 	 * Create a new Layer object. Layers are used to define the order in which
+@@ -252,7 +252,7 @@
+ 	 *         (shape, text, etc) to be displayed and the associated commands
+ 	 *         that update the position of the object on the screen.
+ 	 */
+-	public ArrayList&lt;FSMovieObject&gt; getObjects()
++	public List&lt;FSMovieObject&gt; getObjects()
+ 	{
+ 		return displayList;
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -31,6 +31,7 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.util.List;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.zip.*;
+@@ -215,7 +216,7 @@
+      * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
+      * sound.
+      */
+-    public static ArrayList&lt;FSMovieObject&gt; streamSound(String path, int frameRate) throws FileNotFoundException, IOException, DataFormatException
++    public static List&lt;FSMovieObject&gt; streamSound(String path, int frameRate) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	String extension = null;
+     	ArrayList&lt;FSMovieObject&gt;array = new ArrayList&lt;FSMovieObject&gt;();
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Text.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Text.java	2008-04-01 15:52:02 UTC (rev 418)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Text.java	2008-04-01 21:15:20 UTC (rev 419)
+@@ -38,8 +38,8 @@
+ {
+     public static FSBounds boundsForText(String text, FSDefineFont2 font, int size)
+     {
+-        ArrayList&lt;Integer&gt;codes = font.getCodes();
+-        ArrayList&lt;Integer&gt;advances = font.getAdvances();
++        List&lt;Integer&gt;codes = font.getCodes();
++        List&lt;Integer&gt;advances = font.getAdvances();
+        
+         float scale = size/1024.0f;
+         int advance = 0;
+@@ -57,11 +57,11 @@
+         return new FSBounds(0, -(int)(font.getAscent()/scale), advance, (int)(font.getDescent()/scale));
+     }
+ 
+-    public static ArrayList&lt;FSCharacter&gt; charactersForText(String text, FSDefineFont2 font, int size)
++    public static List&lt;FSCharacter&gt; charactersForText(String text, FSDefineFont2 font, int size)
+     {
+-        ArrayList&lt;FSCharacter&gt;characters = new ArrayList&lt;FSCharacter&gt;(text.length());
+-        ArrayList&lt;Integer&gt;codes = font.getCodes();
+-        ArrayList&lt;Integer&gt;advances = font.getAdvances();
++        List&lt;FSCharacter&gt;characters = new ArrayList&lt;FSCharacter&gt;(text.length());
++        List&lt;Integer&gt;codes = font.getCodes();
++        List&lt;Integer&gt;advances = font.getAdvances();
+        
+         float scale = size/1024.0f;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000354.html">[Transform-svn] r418 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000356.html">[Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#355">[ date ]</a>
+              <a href="thread.html#355">[ thread ]</a>
+              <a href="subject.html#355">[ subject ]</a>
+              <a href="author.html#355">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

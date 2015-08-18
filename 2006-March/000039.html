@@ -1,0 +1,1270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r98%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%20src/com/flagstone/transform/test%20test/suites&In-Reply-To=%3C200603011543.k21FhbqF002791%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000038.html">
+   <LINK REL="Next"  HREF="000040.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r98%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%20src/com/flagstone/transform/test%20test/suites&In-Reply-To=%3C200603011543.k21FhbqF002791%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Wed Mar  1 16:43:37 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000038.html">[Transform-svn] r97 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000040.html">[Transform-svn] r99 - in trunk: src/com/flagstone/transform test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-01 16:43:15 +0100 (Wed, 01 Mar 2006)
+New Revision: 98
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDefineButton2.java
+   trunk/src/com/flagstone/transform/FSDefineFont.java
+   trunk/src/com/flagstone/transform/FSDefineFont2.java
+   trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+   trunk/src/com/flagstone/transform/FSDefineShape.java
+   trunk/src/com/flagstone/transform/FSDefineShape2.java
+   trunk/src/com/flagstone/transform/FSDefineShape3.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/src/com/flagstone/transform/FSPlaceObject2.java
+   trunk/src/com/flagstone/transform/FSShape.java
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+   trunk/test/suites/FSMovie.xml
+Log:
+Added methods to FSMovie and variables to FSCoder's context to 
+support lazy decoding of actions, shapes and glyphs (shapes in 
+fonts).
+	  
+Added lazy decoding of actions to FSButtonEvent, FSClipEvent, 
+FSDoAction,FSDefineButton, FSInitialize.
+	  
+Added lazy decoding of shapes to FSDefineShape, FSDefineShape2,
+FSDefineShape3, FSDefineMorphShape, FSDefineFont and FSDefineFont2.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/doc/CHANGES.txt	2006-03-01 15:43:15 UTC (rev 98)
+@@ -1,3 +1,17 @@
++2006-03-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++	* FSCharacterTable: Added remaining characters for Finnish and French. Added 
++	  character sets for Norwegian, Swedish, Dutch and Italian.
++	  
++	* Added methods to FSMovie and variables to FSCoder's context to support 
++	  lazy decoding of actions, shapes and glyphs (shapes in fonts).
++	  
++	* Added lazy decoding of actions to FSButtonEvent, FSClipEvent, FSDoAction,
++	  FSDefineButton, FSInitialize.
++	  
++	* Added lazy decoding of shapes to FSDefineShape, FSDefineShape2,
++	  FSDefineShape3, FSDefineMorphShape, FSDefineFont and FSDefineFont2.
++	  
+ 2006-02-28 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Removed old doxygen directives from FSMovie, FSSoundConstructor and
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -183,6 +183,14 @@
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+     
++    FSButtonEvent(FSCoder coder, int length)
++    {
++        if (coder.context[FSCoder.DecodeActions] == 0)
++            encodedActions = new byte[length-2];
++        
++        decode(coder);
++    }
++
+     FSButtonEvent(FSCoder coder)
+     {
+         decode(coder);
+@@ -218,13 +226,12 @@
+         */
+     public void add(FSActionObject anAction)
+     {
+-       if (actions == null)
+-           actions = new ArrayList();
+-            
+-       if (encodedActions != null)
+-           encodedActions = null;
+-            
+-       actions.add(anAction);
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }            
++        actions.add(anAction);
+     }
+ 
+     /** Gets the event code that this FSButtonEvent defines actions for.
+@@ -242,6 +249,11 @@
+         */   
+     public ArrayList getActions()
+     {
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }
+         return actions;
+     }
+ 
+@@ -406,12 +418,13 @@
+     {
+         event = coder.readWord(2, false);
+         
+-        actions = new ArrayList();
+-        FSActionObject action = null;
+-        
+-        while ((action = FSMovie.decodeAction(coder)) != null)
++        if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions.add(action);
++            actions = FSMovie.decodeActions(coder);
+         }
++        else
++        {
++            coder.readBytes(encodedActions);
++        }
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -287,12 +287,11 @@
+         */
+     public void add(FSActionObject anAction)
+     {
+-        if (actions == null)
+-            actions = new ArrayList();
+-            
+         if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
+             encodedActions = null;
+-            
++        }            
+         actions.add(anAction);
+     }
+ 
+@@ -354,6 +353,11 @@
+         */   
+     public ArrayList getActions()
+     {
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }
+         return actions;
+     }
+ 
+@@ -535,20 +539,23 @@
+         int eventSize = (coder.context[FSCoder.Version] &gt; 5) ? 4 : 2;
+ 
+         event = coder.readWord(eventSize, false);
+-        coder.readWord(4, false);
++        int length = coder.readWord(4, false);
+ 
+ // Flash 6
+-        if ((event &amp; KeyPress) != 0)
++        if ((event &amp; KeyPress) != 0) {
+             keyCode = coder.readWord(1, false);
++            length -= 1;
++        }
+ // End Flash 6
+-
+-        actions = new ArrayList();
+-        
+-        FSActionObject anAction = null;
+-
+-        while ((anAction = FSMovie.decodeAction(coder)) != null)
++    
++        if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions.add(anAction);
++            actions = FSMovie.decodeActions(coder);
+         }
++        else
++        {
++            encodedActions = new byte[length];
++            coder.readBytes(encodedActions);
++        }
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -1061,8 +1061,11 @@
+     static final int TypeInError = 15;
+     static final int StartOfError = 16;
+     static final int ExpectedLength = 17;
++    static final int DecodeActions = 18;
++    static final int DecodeShapes = 19;
++    static final int DecodeGlyphs = 20;
+ 
+-    int[] context = new int[18];
++    int[] context = new int[21];
+     
+     private void clearContext()
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -197,13 +197,12 @@
+         */
+     public void add(FSActionObject anAction)
+     {
+-        if (actions == null)
+-           actions = new ArrayList();
+-            
+-       if (encodedActions != null)
+-           encodedActions = null;
+-            
+-       actions.add(anAction);
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }            
++        actions.add(anAction);
+     }
+ 
+     /** Gets the array of button records defined for this button.
+@@ -216,7 +215,15 @@
+ 
+         @return the array of action objects defined for this button.
+         */
+-    public ArrayList getActions() { return actions; }
++    public ArrayList getActions() 
++    { 
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }
++        return actions;
++    }
+ 
+     /** Sets the array of button records defined for this button.
+ 
+@@ -392,20 +399,24 @@
+     {
+         super.decode(coder);
+         
++        int start = coder.getPointer();
++        
+         buttonRecords = new ArrayList();
+         
+         while (coder.scanWord(1, false) != 0)
+             buttonRecords.add(new FSButton(coder));
+             
+-        coder.readWord(1, false);
+-
+-        actions = new ArrayList();
+-        FSActionObject action = null;
++        coder.readWord(1, false); // character end
+         
+-        while ((action = FSMovie.decodeAction(coder)) != null) 
++        if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions.add(action);
++            actions = FSMovie.decodeActions(coder);
+         }
++        else
++        {
++            encodedActions = new byte[(coder.getPointer()-start) &gt;&gt;&gt; 3];
++            coder.readBytes(encodedActions);
++        }
+         coder.endObject(name());
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -410,6 +410,8 @@
+         buttonEvents = new ArrayList();
+ 
+         super.decode(coder);
++        
++        int start = coder.getPointer()-16;
+ 
+         coder.context[FSCoder.TransparentColors] = 1;
+ 
+@@ -429,7 +431,15 @@
+                 
+             do {
+                 actionsOffset = coder.readWord(2, false);
+-                buttonEvents.add(new FSButtonEvent(coder));
++                
++                if (actionsOffset != 0)
++                {
++                    buttonEvents.add(new FSButtonEvent(coder, actionsOffset-2));
++                }
++                else
++                {
++                    buttonEvents.add(new FSButtonEvent(coder, length - ((coder.getPointer()-start) &gt;&gt;&gt; 3)));
++                }
+             } while (actionsOffset != 0);
+ 
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineFont.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -156,7 +156,7 @@
+         coder.context[FSCoder.NumberOfLineBits] = 0;
+ 
+         length += shapes.size()*2;
+-
++        
+         for (Iterator shapeIterator = shapes.iterator(); shapeIterator.hasNext();) 
+             length += ((FSTransformObject)shapeIterator.next()).length(coder);
+ 
+@@ -206,14 +206,22 @@
+         
+         super.decode(coder);
+         
++        int start = coder.getPointer()-16;
++        
+         int shapeCount = coder.scanWord(2, false) / 2;
++        
++        int[] offset = new int[shapeCount];
+ 
+         for (int i=0; i&lt;shapeCount; i++)
+-            coder.readWord(2, false);
++            offset[i] = coder.readWord(2, false);
+             
+-        for (int i=0; i&lt;shapeCount; i++)
+-            shapes.add(new FSShape(coder));
++        for (int i=0; i&lt;shapeCount-1; i++)
++            shapes.add(new FSShape(coder, offset[i+1]-offset[i]));
++        
++        int bytesDecoded = (coder.getPointer()-start) &gt;&gt;&gt; 3;
+ 
++        shapes.add(new FSShape(coder, length-bytesDecoded));
++
+         coder.endObject(name());
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -796,13 +796,15 @@
+         name = coder.readString(nameLength);
+         glyphCount = coder.readWord(2, false);
+ 
++        int[] offset = new int[glyphCount+1];
++        
+         for (int i=0; i&lt;glyphCount; i++)
+-            coder.readWord((containsWideOffsets) ? 4 : 2, false);
++            offset[i] = coder.readWord((containsWideOffsets) ? 4 : 2, false);
+ 
+-        /* codeOffset */ coder.readWord((containsWideOffsets) ? 4 : 2, false);
++        offset[glyphCount] = coder.readWord((containsWideOffsets) ? 4 : 2, false);
+ 
+         for (int i=0; i&lt;glyphCount; i++)
+-            shapes.add(new FSShape(coder));
++            shapes.add(new FSShape(coder, offset[i+1]-offset[i]));
+ 
+         for (int i=0; i&lt;glyphCount; i++)
+             codes.add(new Integer(coder.readWord((containsWideCodes) ? 2 : 1, false)));
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -497,11 +497,14 @@
+ 
+         coder.context[FSCoder.TransparentColors] = 1;
+         coder.context[FSCoder.ArrayCountExtended] = 1;
+-
++        
++        int start = coder.getPointer()-16;
++        
+         startBounds = new FSBounds(coder);
+         endBounds = new FSBounds(coder);
+         
+-        /* offset */ coder.readWord(4, false);
++        int offset = coder.readWord(4, false);
++        int first = coder.getPointer();
+ 
+         fillStyleCount = coder.readWord(1, false);
+ 
+@@ -549,10 +552,15 @@
+ 
+         for (int i=0; i&lt;lineStyleCount; i++)
+             lineStyles.add(new FSMorphSolidLine(coder));
++        
++        int bytesDecoded = (coder.getPointer()-first) &gt;&gt; 3;
+ 
+-        startShape = new FSShape(coder);
+-        endShape = new FSShape(coder);
++        startShape = new FSShape(coder, offset-bytesDecoded);
+ 
++        bytesDecoded = (coder.getPointer()-start) &gt;&gt; 3;
++
++        endShape = new FSShape(coder, length-bytesDecoded);
++
+         coder.context[FSCoder.TransparentColors] = 0;
+         coder.context[FSCoder.ArrayCountExtended] = 0;
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineShape.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -356,6 +356,8 @@
+         int lineStyleCount = 0;
+         
+         super.decode(coder);
++        
++        int start = coder.getPointer()-16; // account for identifier
+ 
+         bounds = new FSBounds(coder);
+         fillStyleCount = coder.readWord(1, false);
+@@ -400,8 +402,10 @@
+         
+         for (int i=0; i&lt;lineStyleCount; i++)
+             lineStyles.add(new FSSolidLine(coder));
++        
++        int bytesDecoded = (coder.getPointer()-start) &gt;&gt; 3;
+ 
+-        shape = new FSShape(coder);
++        shape = new FSShape(coder, length-bytesDecoded);
+ 
+         coder.endObject(name());
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -380,6 +380,8 @@
+         
+         super.decode(coder);
+ 
++        int start = coder.getPointer()-16; // account for identifier
++
+         bounds = new FSBounds(coder);
+         fillStyleCount = coder.readWord(1, false);
+ 
+@@ -432,8 +434,10 @@
+ 
+         coder.context[FSCoder.ArrayCountExtended] = 1;
+ 
+-        shape = new FSShape(coder);
++        int bytesDecoded = (coder.getPointer()-start) &gt;&gt; 3;
+ 
++        shape = new FSShape(coder, length-bytesDecoded);
++
+         coder.context[FSCoder.ArrayCountExtended] = 0;
+ 
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -380,6 +380,8 @@
+         
+         super.decode(coder);
+ 
++        int start = coder.getPointer()-16; // account for identifier
++
+         coder.context[FSCoder.TransparentColors] = 1;
+ 
+         bounds = new FSBounds(coder);
+@@ -434,8 +436,10 @@
+ 
+         coder.context[FSCoder.ArrayCountExtended] = 1;
+ 
+-        shape = new FSShape(coder);
++        int bytesDecoded = (coder.getPointer()-start) &gt;&gt; 3;
+ 
++        shape = new FSShape(coder, length-bytesDecoded);
++
+         coder.context[FSCoder.TransparentColors] = 0;
+         coder.context[FSCoder.ArrayCountExtended] = 0;
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -119,12 +119,11 @@
+      */
+     public void add(FSActionObject anAction)
+     {
+-        if (actions == null)
+-            actions = new ArrayList();
+-            
+         if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
+             encodedActions = null;
+-            
++        }            
+         actions.add(anAction);
+     }
+ 
+@@ -132,8 +131,15 @@
+ 
+         @return the array of action objects.
+         */
+-    public ArrayList getActions() { return actions; }
+-
++    public ArrayList getActions() 
++    { 
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }
++        return actions;
++    }
+     /** 
+      * Set the array of actions that will be executed when the next ShowFrame 
+      * tag is executed by the Flash Player.  If the object already contains 
+@@ -147,7 +153,7 @@
+ 
+         if (encodedActions != null)
+             encodedActions = null;
+-       }
++    }
+ 
+     /** 
+      * Set the array of encoded actions generated by the classes in the Translate
+@@ -283,14 +289,16 @@
+     void decode(FSCoder coder)
+     {
+         super.decode(coder);
+-
+-        actions = new ArrayList();
+-        FSActionObject action = null;
+         
+-        while ((action = FSMovie.decodeAction(coder)) != null) 
++        if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions.add(action);
++            actions = FSMovie.decodeActions(coder);
+         }
++        else
++        {
++            encodedActions = new byte[length];
++            coder.readBytes(encodedActions);
++        }
+         coder.endObject(name());
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -89,6 +89,7 @@
+ {
+     private int identifier = 0;
+     private ArrayList actions = null;
++    private byte[] encodedActions = null;
+     
+     FSInitialize(FSCoder coder)
+     {
+@@ -109,6 +110,19 @@
+         setIdentifier(anIdentifier);
+         setActions(anArray);
+     }
++    /**  
++     * Constructs an FSInitialize object that will initialize the movie clip 
++     * with the specified identifier with the encoded actions.
++     *
++     * @param anIdentifier the identifier of the movie clip to initialize
++     * @param bytes an array of encoded action objects.
++     */
++    public FSInitialize(int anIdentifier, byte[] bytes)
++    {
++        super(_Initialize);
++        setIdentifier(anIdentifier);
++        setEncodedActions(bytes);
++    }
+ 
+     /** Returns the identifier of the movie clip that will be initialized. 
+ 
+@@ -135,6 +149,11 @@
+         */
+     public void add(FSActionObject anAction)
+     {
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }            
+         actions.add(anAction);
+     }
+ 
+@@ -142,7 +161,15 @@
+ 
+         @return the array of action objects.
+         */
+-    public ArrayList getActions() { return actions; }
++    public ArrayList getActions() 
++    { 
++        if (encodedActions != null)
++        {
++            actions = FSMovie.decodeActions(encodedActions);
++            encodedActions = null;
++        }
++        return actions;
++    }
+ 
+     /** Set the array of actions of the movie clip that will be initialized
+ 
+@@ -151,17 +178,41 @@
+     public void setActions(ArrayList anArray)
+     {
+         actions = anArray;
++
++        if (encodedActions != null)
++            encodedActions = null;
+     }
+ 
++    /** 
++     * Set the array of encoded actions generated by the classes in the Translate
++     * framework. If the object already contains an array of actions then they 
++     * will be deleted.
++     * 
++     * @param bytes the array of encoded actions.
++     */
++    public void setEncodedActions(byte[] bytes)
++    {
++        encodedActions = bytes;
++         
++        if (actions != null)
++            actions = null;
++    }
++
+     public Object clone()
+     {
+         FSInitialize anObject = (FSInitialize)super.clone();
+         
+-         anObject.actions = new ArrayList();
++        if (actions != null)
++        {
++            anObject.actions = new ArrayList();
+             
+-        for (Iterator i = actions.iterator(); i.hasNext();)
+-            anObject.actions.add(((FSActionObject)i.next()).clone());
+-
++            for (Iterator i = actions.iterator(); i.hasNext();)
++                anObject.actions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            anObject.encodedActions = Transform.clone(encodedActions);
++        }
+         return anObject;
+     }
+ 
+@@ -174,9 +225,12 @@
+             FSInitialize typedObject = (FSInitialize)anObject;
+             
+             result = identifier == typedObject.identifier;
+-            result = result &amp;&amp; actions.equals(typedObject.getActions());
++
++            if (actions != null)
++                result = result &amp;&amp; actions.equals(typedObject.actions);
++            else
++                result = result &amp;&amp; Transform.equals(encodedActions, typedObject.encodedActions);
+         }
+-
+         return result;
+     }
+ 
+@@ -188,7 +242,12 @@
+         {
+             buffer.append(&quot;: { &quot;);
+             Transform.append(buffer, &quot;identifier&quot;, identifier);
+-            Transform.append(buffer, &quot;actions&quot;, actions, depth);
++            
++            if (actions != null)
++                Transform.append(buffer, &quot;actions&quot;, actions, depth);
++            else
++                buffer.append(&quot;actions = &lt;data&gt;; &quot;);
++
+             buffer.append(&quot;}&quot;);
+         }
+     }
+@@ -199,13 +258,20 @@
+         
+         length += 2;
+ 
+-        for (int i=0; i&lt;actions.size(); i++)
++        if (actions != null)
+         {
+-            FSActionObject currentAction = (FSActionObject)actions.get(i);
++            for (Iterator i = actions.iterator(); i.hasNext();)
++            {
++                FSActionObject currentAction = (FSActionObject)i.next();
+             
+-            length += currentAction.length(coder);
+-            length += (currentAction.getType() &gt; 128) ? 3 : 1;
++                length += currentAction.length(coder);
++                length += (currentAction.getType() &gt; 128) ? 3 : 1;
++            }
+         }
++        else
++        {
++            length += encodedActions.length;
++        }
+         length += 1;
+         
+         return length;
+@@ -217,28 +283,36 @@
+         
+         coder.writeWord(identifier, 2);
+ 
+-        for (Iterator i=actions.iterator(); i.hasNext();)
++        if (actions != null)
+         {
+-            FSActionObject action = (FSActionObject)i.next();
++            for (Iterator i=actions.iterator(); i.hasNext();)
++            {
++                FSActionObject action = (FSActionObject)i.next();
+                 
+-            int objStart = coder.getPointer();
+-            int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+-            int next = start + (action.getLength() &lt;&lt; 3);
++                int objStart = coder.getPointer();
++                int length = action.getLength();
++                int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
++                int next = start + (length &lt;&lt; 3);
+             
+-            action.encode(coder);
+-            coder.setPointer(next);
++                action.encode(coder);
++                coder.setPointer(next);
+             
+-            int delta = (coder.getPointer() - next) &gt;&gt; 3;
++                int delta = (coder.getPointer() - next) &gt;&gt; 3;
+             
+-            if (delta != 0)
+-            {
+-                coder.context[FSCoder.CodingError] = 1;
+-                coder.context[FSCoder.TypeInError] = action.getType();
+-                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
+-                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
+-                coder.context[FSCoder.Delta] = delta;
++                if (delta != 0)
++                {
++                    coder.context[FSCoder.CodingError] = 1;
++                    coder.context[FSCoder.TypeInError] = action.getType();
++                    coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
++                    coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
++                    coder.context[FSCoder.Delta] = delta;
++                }
+             }
+         }
++        else
++        {
++            coder.writeBytes(encodedActions);
++        }
+         coder.writeWord(0, 1);
+ 
+         coder.endObject(name());
+@@ -250,12 +324,15 @@
+ 
+         identifier = coder.readWord(2, false);
+ 
+-        actions = new ArrayList();
+-        FSActionObject action = null;
+-        
+-        while ((action = FSMovie.decodeAction(coder)) != null)
+-            actions.add(action);
+-
++        if (coder.context[FSCoder.DecodeActions] == 1)
++        {
++            actions = FSMovie.decodeActions(coder);
++        }
++        else
++        {
++            encodedActions = new byte[length-2];
++            coder.readBytes(encodedActions);
++        }
+         coder.endObject(name());
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -621,7 +621,68 @@
+ 
+         return anAction;
+     }
++    
++    static ArrayList decodeActions(byte[] encodedActions)
++    {
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, encodedActions);
++        
++        return decodeActions(coder);
++    }
++    
++    static ArrayList decodeActions(FSCoder coder)
++    {
++        FSActionObject action = null;
++        
++        ArrayList array = new ArrayList();
++    
++        while ((action = FSMovie.decodeAction(coder)) != null) {
++            array.add(action);
++        }
++        return array;
++    }
+ 
++    static ArrayList decodeShape(byte[] bytes)
++    {
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++        
++        return decodeShape(coder);
++    }
++    
++    static ArrayList decodeShape(FSCoder coder)
++    {
++        ArrayList objects = new ArrayList();
++        
++        int fillBits = coder.readBits(4, false);
++        int lineBits = coder.readBits(4, false);
++
++        coder.context[FSCoder.NumberOfFillBits] = fillBits;
++        coder.context[FSCoder.NumberOfLineBits] = lineBits;
++
++        while (coder.scanBits(6, false) &gt; 0)
++        {
++            if ((coder.scanBits(6, false) &amp; 0x20) &gt; 0)
++            {
++                if ((coder.scanBits(6, false) &amp; 0x10) &gt; 0)
++                    objects.add(new FSLine(coder));
++                else
++                    objects.add(new FSCurve(coder));
++            }
++            else
++            {
++                objects.add(new FSShapeStyle(coder));
++            }
++        }
++    
++        coder.adjustPointer(6); // Skip over end of shape marker
++        coder.alignToByte();
++
++        return objects;
++    }
++    
++    private boolean decodeActions = true;
++    private boolean decodeShapes = true;
++    private boolean decodeGlyphs = true;
++    
+     private int identifier = 0;
+     private String encoding = &quot;UTF8&quot;;
+ 
+@@ -814,6 +875,30 @@
+         this.encoding = encoding;
+     }
+ 
++    public void setDecodeActions(boolean decode)
++    {
++        decodeActions = decode;
++    }
++    public boolean willDecodeActions()
++    {
++        return decodeActions;
++    }
++    public void setDecodeShapes(boolean decode)
++    {
++        decodeShapes = decode;
++    }
++    public boolean willDecodeShapes()
++    {
++        return decodeShapes;
++    }
++    public void setDecodeGlyphs(boolean decode)
++    {
++        decodeGlyphs = decode;
++    }
++    public boolean willDecodeGlyphs()
++    {
++        return decodeGlyphs;
++    }
+     /** 
+      * Gets the signature identifying that the movie contains Flash. Up to version 5 the string
+      * &quot;FWS&quot; identifies that data is encoded using the Flash file format. From Flash version 6 
+@@ -1067,6 +1152,9 @@
+         frameCount = coder.readWord(2, false);
+         
+         coder.context[FSCoder.Version] = version;
++        coder.context[FSCoder.DecodeActions] = decodeActions ? 1 : 0;
++        coder.context[FSCoder.DecodeShapes] = decodeShapes ? 1 : 0;
++        coder.context[FSCoder.DecodeGlyphs] = decodeGlyphs ? 1 : 0;
+                       
+         while ((object = decodeObject(coder)) != null)
+         {
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -963,27 +963,12 @@
+         if (containsRatio)
+             ratio = coder.readWord(2, false) / 65535.0f;
+ 
+-        /*
+-         * The order in which name and clipping depth was swapped
+-         * in Flash 6.
+-         */ 
+-//        if (coder.context[FSCoder.Version] &gt; 5)
+-//        {
+-            if (containsName)
+-                name = coder.readString();
++        if (containsName)
++            name = coder.readString();
+ 
+-            if (containsClippingDepth)
+-                clippingDepth = coder.readWord(2, false);
+-/*        }
+-        else
+-        {
+-            if (containsClippingDepth)
+-                clippingDepth = coder.readWord(2, false) - 1;
++        if (containsClippingDepth)
++            clippingDepth = coder.readWord(2, false);
+ 
+-            if (containsName)
+-                name = coder.readString();
+-        }
+-*/
+         if (containsClipEvents)
+         {
+             int eventSize = coder.context[FSCoder.Version] &gt; 5 ? 4 : 2;
+
+Modified: trunk/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShape.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/FSShape.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -56,7 +56,16 @@
+ public final class FSShape extends FSTransformObject
+ {
+     private ArrayList objects = null;
++    private byte[] encodedObjects = null; 
+ 
++    FSShape(FSCoder coder, int length)
++    {
++        if (coder.context[FSCoder.DecodeShapes] == 0)
++            encodedObjects = new byte[length];
++        
++        decode(coder);
++    }
++
+     FSShape(FSCoder coder)
+     {
+         decode(coder);
+@@ -83,8 +92,13 @@
+         */
+     public void add(FSTransformObject anObject)
+     {
++        if (encodedObjects != null)
++        {
++            objects = FSMovie.decodeShape(encodedObjects);
++            encodedObjects = null;
++        }            
+         objects.add(anObject);
+-    }
++     }
+ 
+     /** Gets the array of shape records that define the shape.
+ 
+@@ -92,6 +106,11 @@
+         */
+     public ArrayList getObjects() 
+     {
++        if (encodedObjects != null)
++        {
++            objects = FSMovie.decodeShape(encodedObjects);
++            encodedObjects = null;
++        }
+         return objects;
+     }
+ 
+@@ -153,62 +172,56 @@
+ 
+     int length(FSCoder coder)
+     {
+-        int numberOfBits = 8; // 4-bits each for number of line and fill bits plus.
++        int numberOfBits = 0;
+         
+         coder.context[FSCoder.NumberOfShapeBits] = numberOfBits;
+-    
+-        for (Iterator shapeIterator = objects.iterator(); shapeIterator.hasNext();) 
+-            numberOfBits += ((FSTransformObject)shapeIterator.next()).length(coder);
++        
++        if (objects != null)
++        {
++            numberOfBits += 8;
+             
+-        numberOfBits += 6; // Add size of end of shape
+-    
+-        numberOfBits += (numberOfBits % 8 &gt; 0) ? 8-(numberOfBits % 8) : 0;
+-    
++            for (Iterator shapeIterator = objects.iterator(); shapeIterator.hasNext();) 
++                numberOfBits += ((FSTransformObject)shapeIterator.next()).length(coder);
++                
++            numberOfBits += 6; // Add size of end of shape
++        
++            numberOfBits += (numberOfBits % 8 &gt; 0) ? 8-(numberOfBits % 8) : 0;
++        }
++        else
++        {
++            numberOfBits += encodedObjects.length &lt;&lt; 3;
++        }
+         return numberOfBits&gt;&gt;3;
+     }
+ 
+     void encode(FSCoder coder)
+     {
+-        // Number of line and fill bits is set by parent.
+-        coder.writeBits(coder.context[FSCoder.NumberOfFillBits], 4);
+-        coder.writeBits(coder.context[FSCoder.NumberOfLineBits], 4);
++        if (objects != null)
++        {      
++            coder.writeBits(coder.context[FSCoder.NumberOfFillBits], 4);
++            coder.writeBits(coder.context[FSCoder.NumberOfLineBits], 4);
+ 
+-        for (Iterator shapeIterator = objects.iterator(); shapeIterator.hasNext();) 
+-            ((FSTransformObject)shapeIterator.next()).encode(coder);
+-    
+-        coder.writeBits(0, 6); // End of shape
+-        coder.alignToByte();
++            for (Iterator shapeIterator = objects.iterator(); shapeIterator.hasNext();) 
++                ((FSTransformObject)shapeIterator.next()).encode(coder);
++        
++            coder.writeBits(0, 6); // End of shape
++            coder.alignToByte();
++        }
++        else
++        {
++            coder.writeBytes(encodedObjects);
++        }
+     }
+     
+     void decode(FSCoder coder)
+     {
+-        int fillBits = 0;
+-        int lineBits = 0;
+-
+-        objects = new ArrayList();
+-        
+-        fillBits = coder.readBits(4, false);
+-        lineBits = coder.readBits(4, false);
+-
+-        coder.context[FSCoder.NumberOfFillBits] = fillBits;
+-        coder.context[FSCoder.NumberOfLineBits] = lineBits;
+-
+-        while (coder.scanBits(6, false) &gt; 0)
++        if (coder.context[FSCoder.DecodeShapes] == 1)
+         {
+-            if ((coder.scanBits(6, false) &amp; 0x20) &gt; 0)
+-            {
+-                if ((coder.scanBits(6, false) &amp; 0x10) &gt; 0)
+-                    objects.add(new FSLine(coder));
+-                else
+-                    objects.add(new FSCurve(coder));
+-            }
+-            else
+-            {
+-                objects.add(new FSShapeStyle(coder));
+-            }
++            objects = FSMovie.decodeShape(coder);
+         }
+-    
+-        coder.adjustPointer(6); // Skip over end of shape marker
+-        coder.alignToByte();
++        else
++        {
++            coder.readBytes(encodedObjects);            
++        }
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-03-01 15:43:15 UTC (rev 98)
+@@ -90,6 +90,33 @@
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+      */
++    public void lazyCoding(String file)
++    {
++        try 
++        {
++            File srcFile = new File(sourceDir, file);
++            File destFile = new File(destDir, file);
++            
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            FSMovie movie = new FSMovie();
++            
++            movie.setDecodeActions(false);
++            movie.setDecodeShapes(false);
++            movie.setDecodeGlyphs(false);
++            
++            movie.decodeFromFile(srcFile.getPath());            
++            movie.encodeToFile(destFile.getPath());
++        }
++        catch (Exception e)
++        {
++            assert false : file+&quot;: &quot;+e.toString();
++        }
++    }
++    /**
++     * @testng.test dataProvider=&quot;files&quot;
++     */
+     public void clone(String file)
+     {
+         try 
+
+Modified: trunk/test/suites/FSMovie.xml
+===================================================================
+--- trunk/test/suites/FSMovie.xml	2006-03-01 08:31:05 UTC (rev 97)
++++ trunk/test/suites/FSMovie.xml	2006-03-01 15:43:15 UTC (rev 98)
+@@ -204,6 +204,57 @@
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
++  	
++   &lt;!--
++        Lazy decoding and encoding of actions and shapes in a movie. 
++    --&gt;
++    &lt;test name=&quot;Lazy Coding SWF4&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf4&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
+ 
++    &lt;test name=&quot;Lazy Coding SWF5&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf5&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Lazy Coding SWF6&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf6&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Lazy Coding SWF7&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf7&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
+ &lt;/suite&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000038.html">[Transform-svn] r97 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000040.html">[Transform-svn] r99 - in trunk: src/com/flagstone/transform test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

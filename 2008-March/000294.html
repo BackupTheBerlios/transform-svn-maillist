@@ -1,0 +1,1755 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r358%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181602.m2IG2CYq005041%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000293.html">
+   <LINK REL="Next"  HREF="000295.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r358%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181602.m2IG2CYq005041%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:02:12 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000293.html">[Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000295.html">[Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#294">[ date ]</a>
+              <a href="thread.html#294">[ thread ]</a>
+              <a href="subject.html#294">[ subject ]</a>
+              <a href="author.html#294">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:02:06 +0100 (Tue, 18 Mar 2008)
+New Revision: 358
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSShapeStyle.java
+Log:
+Updated code to eliminate Transform.VALUE_NOT_SET.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSShapeStyle.java	2008-03-18 14:26:49 UTC (rev 357)
++++ dev/dev-2-4/src/com/flagstone/transform/FSShapeStyle.java	2008-03-18 16:02:06 UTC (rev 358)
+@@ -33,798 +33,976 @@
+ import java.util.*;
+ 
+ /**
+-FSShapeStyle is used to change the drawing environment when a shape is drawn. 
+- 
+-&lt;p&gt;Three operations can be performed:&lt;/p&gt;
++ * FSShapeStyle is used to change the drawing environment when a shape is drawn.
++ * Three operations can be performed:
++ * 
++ * &lt;ul&gt;
++ * &lt;li&gt;Select a line style or fill style.&lt;/li&gt;
++ * &lt;li&gt;Move the current drawing point.&lt;/li&gt;
++ * &lt;li&gt;Define a new set of line and fill styles.&lt;/li&gt;
++ * &lt;/ul&gt;
++ * 
++ * &lt;p&gt;
++ * An FSShapeStyle object can specify one or more of the operations rather than
++ * specifying them in separate FSShapeStyle objects - compacting the size of the
++ * binary data when the object is encoded. Conversely if an operation is not
++ * defined then the values may be omitted.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;lineStyle&lt;/td&gt;
++ * &lt;td&gt;The index of the line style in the parent shape's line style array.
++ * Optional. May be set to zero if no style is selected or a negative number if
++ * no style is specified.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;fillStyle&lt;/td&gt;
++ * &lt;td&gt;The index of the fill style in the parent shape's fill style array.
++ * Optional. May be set to zero if no style is selected or a negative number if
++ * no style is specified.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;altFillStyle&lt;/td&gt;
++ * &lt;td&gt;The index of the alternate fill style in the parent shape's fill style
++ * array. Optional. May be set to zero if no style is selected or a negative 
++ * number if no style is specified.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;moveX&lt;/td&gt;
++ * &lt;td&gt;The relative x-coordinate of the new drawing point. Optional. Set to zero
++ * if there is no move specified.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;moveY&lt;/td&gt;
++ * &lt;td&gt;The relative y-coordinate of the new drawing point. Optional. Set to zero
++ * if there is no move specified.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;lineStyles&lt;/td&gt;
++ * &lt;td&gt;An array of new line styles for the parent shape. Optional. May be set
++ * to null or an empty array if no line or fill styles are being added.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;fillStyles&lt;/td&gt;
++ * &lt;td&gt;An array of new fill styles for the parent shape. Optional. May be set
++ * to null or an empty array if no line or fill styles are being added.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Line and Fill styles are selected by the index position, starting at 1, of
++ * the style in an array of styles. An index of zero means that no style is
++ * selected. Using a negative value means that the current
++ * style is unchanged. Two types of fill style are supported: fillStyle is used
++ * where a shape does not contain overlapping areas and altFillStyle is used
++ * where areas overlap. This differs from graphics environments that only
++ * support one fill style as the overlapping area would form a hole in the shape
++ * and not be filled.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * In the following example, when a shape is drawn the fillStyle defines the
++ * style to the left of the line drawing the outline while the altFillStyle
++ * defines the style applied to the right of the outline.
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;doc-files/fillStyles.gif&quot;&gt;
++ * &lt;p&gt;
++ * New fill and line styles can be added to the FSShapeStyle object to change
++ * the way shapes are drawn.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * A new drawing point is specified using the absolute x and y coordinates. If
++ * an FSShapeStyle object is the first in a shape then the current drawing point
++ * is the origin of the shape (0,0).
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Optional Attributes&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * Since the FSShapeStyle object can encode three different types of operation,
++ * the unused attributes are optional. Setting line or fill styles to a negative
++ * value omits the attribute when the object is encoded - reducing the size.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * For the line and fill styles setting the respective attribute to a negative
++ * value is different from setting to zero. When the attribute
++ * is negative the attribute is not encoded. When the attribute is set to zero 
++ * then that instructs the Flash Player that no current line or fill style is 
++ * selected. The latter is important when filling areas of a shape that overlap 
++ * - the altFillStyle attribute will be set to the desired style while the 
++ * lineStyle and fillStyle attributes are set to zero.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Similarly moveX and moveY may be set to zero to indicate that the current 
++ * drawing point will not be changed.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The line or fill style arrays May be null or empty if no new styles are being
++ * specified.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Note that the values for the moveX and moveY attributes and the line and fill
++ * styles arrays are defined in pairs and are optional only if both are set to
++ * zero or NULL respectively.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The class provides a range of constructors which define different subsets of
++ * the attributes according to the type of operation that will be performed. If
++ * an attribute is not specified in a constructor then it will omitted when 
++ * the object is encoded.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * 1. Select line and fill styles.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSDefineShape shape = new FSShape(movie.newIdentifier(), ...);
++ * 
++ * // Add fill styles to the shape definition
++ * shape.add(new FSSolidFill(FSColor(0, 0, 255)));
++ * shape.add(new FSBitmapFill(FSFillStyle.Tiled, imageId, transform));
++ * 
++ * // Add a line styles to the shape definition
++ * shape.add(new FSLineStyle(20, FSColor(0, 0, 0)));
++ * 
++ * // Select the solid line style and the bitmap fill style. Note that the
++ * // ordinal position of the styles is used. A style index of 0 means that
++ * // style is not set.
++ * 
++ * shape.add(new FSShapeStyle(1, 2, 0));
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * 2. Move the current drawing point.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The drawing point is changed by specifying the position from the current
++ * drawing point:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSShapeStyle style = new FSShapeStyle(x, y);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * 3. Specifying New Styles.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Adding a new set of styles to an FSShapeStyle object will replace the
++ * existing set of styles defined for the shape.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSDefineShape shape = new FSDefineShape(movie.newIdentifier(), bounds,
++ * 				fillStyles, lineStyles, shape);
++ * 
++ * // Replace the existing set of fill and line styles in the shape definition
++ * ArrayList fillStyles = new ArrayList();
++ * ArrayList lineStyles = new ArrayList();
++ * 
++ * fillStyles.add(new FSSolidFill(FSColor(255, 0, 0)));
++ * fillStyles.add(new FSSolidFill(FSColor(0, 255, 0)));
++ * fillStyles.add(new FSSolidFill(FSColor(0, 0, 255)));
++ * 
++ * lineStyles.add(new FSLineStyle(1, FSColor(0, 0, 0)));
++ * 
++ * shape.add(new FSShapeStyle(lineStyles, fillStyles));
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * 4. Creating an overlapping shape.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * // Create the bounding rectangle for the shape. Two rectangles 100 x 100 pixels 
++ * // are drawn. The area overlap area is 50 x 50 pixels.
++ * FSBounds bounds = new FSBounds(0, -50, 150, 100);
++ * 
++ * // Define the styles for the shape.
++ * ArrayList fillStyles = new ArrayList();
++ * ArrayList lineStyles = new ArrayList();
++ * 
++ * fillStyles.add(new FSSolidFill(new FSColor(255, 0, 0)));
++ * fillStyles.add(new FSSolidFill(new FSColor(255, 255, 0)));
++ * fillStyles.add(new FSSolidFill(new FSColor(16, 123, 255)));
++ * 
++ * lineStyles.add(new FSLineStyle(20, new FSColor(0, 0, 0)));
++ * 
++ * FSDefineShape shape = new FSDefineShape(movie.newIdentifier, bounds,
++ * 				fillStyles, lineStyles, new FSShape());
++ * &lt;/pre&gt;
++ * 
++ * &lt;pre&gt;
++ * // To create the overlapping shape shown above the following styles 
++ * // selections are made while the shape is drawn.
++ * 
++ * shape.add(new FSShapeStyle(1, 1, 0, 0, 0));
++ * shape.add(new FSLine(50, 0));
++ * shape.add(new FSShapeStyle(1, 1, 3));
++ * shape.add(new FSLine(0, 50));
++ * shape.add(new FSLine(50, 0));
++ * shape.add(new FSShapeStyle(1, 0, 2));
++ * shape.add(new FSLine(50, 0));
++ * shape.add(new FSLine(0, -100));
++ * shape.add(new FSLine(-100, 0));
++ * shape.add(new FSLine(0, 50));
++ * shape.add(new FSShapeStyle(1, 3, 2));
++ * shape.add(new FSLine(50, 0));
++ * shape.add(new FSLine(0, 50));
++ * shape.add(new FSShapeStyle(1, 1, 0));
++ * shape.add(new FSLine(0, 50));
++ * shape.add(new FSLine(-100, 0));
++ * shape.add(new FSLine(0, -100));
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * &lt;p&gt;
++ * The FSShapeStyle class represents the StyleChange record from the Macromedia
++ * Flash (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSShapeStyle extends FSShapeObject implements Cloneable, Codeable
++{
++	private int moveX;
++	private int moveY;
++	private int fillStyle;
++	private int altFillStyle;
++	private int lineStyle;
++	private ArrayList&lt;FSFillStyle&gt; fillStyles;
++	private ArrayList&lt;FSLineStyle&gt; lineStyles;
++	
++	private boolean hasStyles;
++	private boolean hasLine;
++	private boolean hasAlt;
++	private boolean hasFill;
++	private boolean hasMove;
+ 
+-&lt;ul&gt;
+-&lt;li&gt;Select a line style or fill style.&lt;/li&gt;
+-&lt;li&gt;Move the current drawing point.&lt;/li&gt;
+-&lt;li&gt;Define a new set of line and fill styles.&lt;/li&gt;
+-&lt;/ul&gt;
++	/**
++	 * Construct an FSShapeStyle object, initialising it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSShapeStyle(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;p&gt;An FSShapeStyle object can specify one or more of the operations rather than specifying them in separate FSShapeStyle objects - compacting the size of the binary data when the object is encoded. Conversely if an operation is not defined then the values may be omitted.&lt;/p&gt;
++	/**
++	 * Constructs an FSShapeStyle object, selecting the line and fill styles.
++	 * 
++	 * @param lineIndex
++	 *            selects the line style at lineIndex in the line styles
++	 *            array of the parent FSShape object.
++	 * @param fillIndex
++	 *            selects the fill style at fillIndex in the fill styles
++	 *            array of the parent FSShape object.
++	 * @param altIndex
++	 *            selects the alternate fill style at altIndex in the
++	 *            fill styles array of the parent FSShape object.
++	 */
++	public FSShapeStyle(int lineIndex, int fillIndex, int altIndex)
++	{
++		setLineStyle(lineIndex);
++		setFillStyle(fillIndex);
++		setAltFillStyle(altIndex);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSShapeStyle object, selecting the relative drawing point.
++	 * 
++	 * @param relativeX
++	 *            move the current point by relativeX in the x direction.
++	 * @param relativeY
++	 *            move the current point by relativeY in the y direction.
++	 */
++	public FSShapeStyle(int relativeX, int relativeY)
++	{
++		setMoveX(relativeX);
++		setMoveY(relativeY);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSShapeStyle object, specifying the new set of line and
++	 * fill styles for the parent shape.
++	 * 
++	 * @param lines
++	 *            an array of FSLineStyle objects.
++	 * @param fills
++	 *            an array of fill style objects.
++	 */
++	public FSShapeStyle(ArrayList&lt;FSLineStyle&gt; lines, ArrayList&lt;FSFillStyle&gt; fills)
++	{
++		setLineStyles(lines);
++		setFillStyles(fills);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_0&quot;&gt;lineStyle&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The index of the line style in the parent shape's line style array. Optional. May be set to the framework constant Transform.VALUE_NOT_SET if no style is selected.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSShapeStyle object, selecting the line and fill styles and
++	 * drawing point.
++	 * 
++	 * @param lineIndex
++	 *            selects the line style at lineIndex in the line styles
++	 *            array of the parent FSShape object.
++	 * @param fillIndex
++	 *            selects the fill style at fillIndex in the fill styles
++	 *            array of the parent FSShape object.
++	 * @param altIndex
++	 *            selects the alternate fill style at altIndex in the
++	 *            fill styles array of the parent FSShape object.
++	 * @param relativeX
++	 *            move the current point by relativeX in the x direction.
++	 * @param relativeY
++	 *            move the current point by relativeY in the y direction.
++	 */
++	public FSShapeStyle(int lineIndex, int fillIndex, int altIndex, int relativeX, int relativeY)
++	{
++		setLineStyle(lineIndex);
++		setFillStyle(fillIndex);
++		setAltFillStyle(altIndex);
++		setMoveX(relativeX);
++		setMoveY(relativeY);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_1&quot;&gt;fillStyle&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The index of the fill style in the parent shape's fill style array. Optional. May be set to the framework constant Transform.VALUE_NOT_SET if no style is selected.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSShapeStyle object, selecting the line and fill styles,
++	 * new line and new fill styles.
++	 * 
++	 * @param lineIndex
++	 *            selects the line style at lineIndex in the line styles
++	 *            array of the parent FSShape object.
++	 * @param fillIndex
++	 *            selects the fill style at fillIndex in the fill styles
++	 *            array of the parent FSShape object.
++	 * @param altIndex
++	 *            selects the alternate fill style at altIndex in the
++	 *            fill styles array of the parent FSShape object.
++	 * @param lines
++	 *            an array of FSLineStyle objects.
++	 * @param fills
++	 *            an array of fill style objects.
++	 */
++	public FSShapeStyle(int lineIndex, int fillIndex, int altIndex, 
++	                    ArrayList&lt;FSLineStyle&gt; lines, ArrayList&lt;FSFillStyle&gt; fills)
++	{
++		setLineStyle(lineIndex);
++		setFillStyle(fillIndex);
++		setAltFillStyle(altIndex);
++		setLineStyles(lines);
++		setFillStyles(fills);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_2&quot;&gt;altFillStyle&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The index of the alternate fill style in the parent shape's fill style array. Optional. May be set to the framework constant Transform.VALUE_NOT_SET if no style is selected.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSShapeStyle object, selecting the line and fill styles,
++	 * drawing point, new line and new fill styles.
++	 * 
++	 * @param lineIndex
++	 *            selects the line style at lineIndex in the line styles
++	 *            array of the parent FSShape object.
++	 * @param fillIndex
++	 *            selects the fill style at fillIndex in the fill styles
++	 *            array of the parent FSShape object.
++	 * @param altIndex
++	 *            selects the alternate fill style at altIndex in the
++	 *            fill styles array of the parent FSShape object.
++	 * @param relativeX
++	 *            move the current point by relativeX in the x direction.
++	 * @param relativeY
++	 *            move the current point by relativeY in the y direction.
++	 * @param lines
++	 *            an array of line style objects.
++	 * @param fills
++	 *            an array of fill style objects.
++	 */
++	public FSShapeStyle(int lineIndex, int fillIndex, int altIndex, int relativeX, int relativeY,
++						ArrayList&lt;FSLineStyle&gt; lines, ArrayList&lt;FSFillStyle&gt; fills)
++	{
++		setLineStyle(lineIndex);
++		setFillStyle(fillIndex);
++		setAltFillStyle(altIndex);
++		setMoveX(relativeX);
++		setMoveY(relativeY);
++		setLineStyles(lines);
++		setFillStyles(fills);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_3&quot;&gt;moveX&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The absolute x-coordinate of the new drawing point. Optional. May be set to the framework constant Transform.VALUE_NOT_SET if the drawing point is not being moved.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSShapeStyle object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSShapeStyle object.
++	 */
++	public FSShapeStyle(FSShapeStyle obj)
++	{
++		moveX = obj.moveX;
++		moveY = obj.moveY;
++		
++		fillStyle = obj.fillStyle;
++		altFillStyle = obj.altFillStyle;
++		lineStyle = obj.lineStyle;
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_4&quot;&gt;moveY&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The absolute y-coordinate of the new drawing point. Optional. May be set to the framework constant Transform.VALUE_NOT_SET if the drawing point is not being moved.&lt;/td&gt;
+-&lt;/tr&gt;
++		if (obj.fillStyles != null)
++		{
++			fillStyles = new ArrayList&lt;FSFillStyle&gt;();
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_5&quot;&gt;lineStyles&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of new line styles for the parent shape. Optional. May be set to null or an empty array if no line or fill styles are being added.&lt;/td&gt;
+-&lt;/tr&gt;
++			for (Iterator&lt;FSFillStyle&gt; i = obj.fillStyles.iterator(); i.hasNext();)
++				fillStyles.add((FSFillStyle) i.next().clone());
++		}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSShapeStyle_6&quot;&gt;fillStyles&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of new fill styles for the parent shape. Optional. May be set to null or an empty array if no line or fill styles are being added.&lt;/td&gt;
+-&lt;/tr&gt;
++		if (obj.lineStyles != null)
++		{
++			lineStyles = new ArrayList&lt;FSLineStyle&gt;();
+ 
+-&lt;/table&gt;
++			for (Iterator&lt;FSLineStyle&gt; i = obj.lineStyles.iterator(); i.hasNext();)
++				lineStyles.add((FSLineStyle) i.next().clone());
++		}
++	}
+ 
+-&lt;p&gt;Line and Fill styles are selected by the index position, starting at 1, of the style in an array of styles. An index of zero means that no style is selected. Using the constant Transform.VALUE_NOT_SET means that the current style is unchanged. Two types of fill style are supported: fillStyle is used where a shape does not contain overlapping areas and altFillStyle is used where areas overlap. This differs from graphics environments that only support one fill style as the overlapping area would form a hole in the shape and not be filled.&lt;/p&gt;
++	/**
++	 * Add a FSLineStyle object to the array of line styles.
++	 * 
++	 * @param style
++	 *            and FSLineStyle object.
++	 *            
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void add(FSLineStyle style)
++	{
++		if (style == null) {
++			throw new NullPointerException(&quot;Line style cannot be null.&quot;);
++		}
++		
++		if (lineStyles == null) {
++			lineStyles = new ArrayList&lt;FSLineStyle&gt;();
++		}
++		lineStyles.add(style);
++	}
+ 
+-&lt;p&gt;In the following example, when a shape is drawn the fillStyle defines the style to the left of the line drawing the outline while the altFillStyle defines the style applied to the right of the outline.&lt;/p&gt;
++	/**
++	 * Add the fill style object to the array of fill styles.
++	 * 
++	 * @param style
++	 *            and FSFillStyle object.
++	 *            
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void add(FSFillStyle style)
++	{
++		if (style == null) {
++			throw new NullPointerException(&quot;Line style cannot be null.&quot;);
++		}
++		
++		if (fillStyles == null) {
++			fillStyles = new ArrayList&lt;FSFillStyle&gt;();
++		}
++		fillStyles.add(style);
++	}
+ 
+-&lt;img src=&quot;doc-files/fillStyles.gif&quot;&gt;
++	/**
++	 * Gets the x-coordinate of any relative move specified.
++	 * 
++	 * @return the x-coordinate of the relative move.
++	 */
++	public int getMoveX()
++	{
++		return moveX;
++	}
+ 
+-&lt;p&gt;New fill and line styles can be added to the FSShapeStyle object to change the way shapes are drawn.&lt;/p&gt;
++	/**
++	 * Gets the y-coordinate of any relative move specified. 
++	 * 
++	 * @return the y-coordinate of the relative move.
++	 */
++	public int getMoveY()
++	{
++		return moveY;
++	}
+ 
+-&lt;p&gt;A new drawing point is specified using the absolute x and y coordinates. If an FSShapeStyle object is the first in a shape then the current drawing point is the origin of the shape (0,0).&lt;/p&gt;
++	/**
++	 * Gets the index of the line style that will be applied to any line drawn.
++	 * Returns a negative value if no line style is defined.
++	 * 
++	 * @return the index of the selected line style.
++	 */
++	public int getLineStyle()
++	{
++		return lineStyle;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Optional Attributes&lt;/h1&gt;
++	/**
++	 * Gets the index of the fill style that will be applied to any area filled.
++	 * Returns a negative value if no fill style is defined.
++	 * 
++	 * @return the index of the selected fill style.
++	 */
++	public int getFillStyle()
++	{
++		return fillStyle;
++	}
+ 
+-&lt;p&gt;Since the FSShapeStyle object can encode three different types of operation, the unused attributes are optional. Setting line or fill styles to the framework constant Transform.VALUE_NOT_SET omits the attribute when the object is encoded - reduced the size.&lt;/p&gt;
++	/**
++	 * Gets the index of the fill style that will be applied to any overlapping
++	 * area filled. Returns a negative value if no alternate fill style is 
++	 * defined.
++	 * 
++	 * @return the index of the selected alternate style.
++	 */
++	public int getAltFillStyle()
++	{
++		return altFillStyle;
++	}
+ 
+-&lt;p&gt;For the line and fill styles setting the respective attribute to Transform.VALUE_NOT_SET is different from setting to zero. When the attribute is set to Transform.VALUE_NOT_SET attribute is not encoded. When the attribute is set to zero then that instructs the Flash Player that no current line or fill style is selected. The latter is important when filling areas of a shape that overlap - the altFillStyle attribute will be set to the desired style while the lineStyle and fillStyle attributes are set to zero.&lt;/p&gt;
++	/**
++	 * Gets the array of new line styles or null if no line styles were defined.
++	 * 
++	 * @return the array of FSLineStyle objects.
++	 */
++	public ArrayList&lt;FSLineStyle&gt; getLineStyles()
++	{
++		return lineStyles;
++	}
+ 
+-&lt;p&gt;Similarly moveX and moveY may be set to Transform.VALUE_NOT_SET to indicate that the current drawing point will not be changed.  This can also be achieved by setting moveX and moveY to zero. However using Transform.VALUE_NOT_SET means that the attributes are not encoded reducing the binary representation. For large files the savings can be significant.&lt;/p&gt;
++	/**
++	 * Gets the array of new fill styles or null if no line styles were defined.
++	 * 
++	 * @return the array of fill style objects.
++	 */
++	public ArrayList&lt;FSFillStyle&gt; getFillStyles()
++	{
++		return fillStyles;
++	}
+ 
+-&lt;p&gt;The line or fill style arrays May be empty if no new styles are being specified.&lt;/p&gt;
++	/**
++	 * Sets the x-coordinate of any relative move. If the value is zero then it 
++	 * will not be encoded.
++	 * 
++	 * @param p
++	 *            move the current point by aNumber in the x direction.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setMoveX(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		moveX = p;
++	}
+ 
+-&lt;p&gt;Note that the values for the moveX and moveY attributes and the line and fill styles arrays are defined in pairs and are optional only if both are set to zero or NULL respectively.&lt;/p&gt;
++	/**
++	 * Sets the y-coordinate of any relative move. If the value is zero then it 
++	 * will not be encoded.
++	 * 
++	 * @param aNumber
++	 *            move the current point by aNumber in the y direction.
++	 *
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setMoveY(int p)
++	{
++		if (p != Transform.VALUE_NOT_SET &amp;&amp; (p &lt; -65535 || p &gt; 65535)) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		moveY = p;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++	/**
++	 * Sets the drawing point.
++	 * 
++	 * @param x
++	 *            the x-coordinate of the drawing point.
++	 * @param y
++	 *            the y-coordinate of the drawing point.
++	 *	 
++	 * @throws IllegalArgumentException if the arguments are not in the range -65535..65535.
++	 */
++	public void setMove(int x, int y)
++	{
++		setMoveX(x);
++		setMoveY(y);
++	}
+ 
+-&lt;p&gt;The class provides a range of constructors which define different subsets of the attributes according to the type of operation that will be performed. If an attribute is not specified in a constructor then it will be assigned the default value of Transform.VALUE_NOT_SET and will be omitted when the object is encoded.&lt;/p&gt;
++	/**
++	 * Sets the index of the fill style that will be applied to any area filled.
++	 * May be set to zero if no style is selected or negative if the attribute 
++	 * should not be encoded.
++	 * 
++	 * @param anIndex
++	 *            selects the fill style at anIndex in the fill styles array of
++	 *            the parent FSShape object.
++	 */
++	public void setFillStyle(int anIndex)
++	{
++		fillStyle = anIndex;
++	}
+ 
+-&lt;p&gt;1. Select line and fill styles.&lt;/p&gt;
++	/**
++	 * Sets the index of the fill style that will be applied to any overlapping
++	 * area filled. May be set to zero if no style is selected or negative
++	 * if the attribute should not be encoded.
++	 * 
++	 * @param anIndex
++	 *            selects the alternate fill style at anIndex in the fill styles
++	 *            array of the parent FSShape object.
++	 */
++	public void setAltFillStyle(int anIndex)
++	{
++		altFillStyle = anIndex;
++	}
+ 
+-&lt;pre&gt;
+-FSDefineShape shape = new FSShape(movie.newIdentifier(), ...);
++	/**
++	 * Sets the index of the line style that will be applied to any line drawn.
++	 * May be set to zero if no style is selected or negative if the attribute
++	 * should not be encoded.
++	 * 
++	 * @param anIndex
++	 *            selects the line style at anIndex in the line styles array of
++	 *            the parent FSShape object.
++	 */
++	public void setLineStyle(int anIndex)
++	{
++		lineStyle = anIndex;
++	}
+ 
+-// Add fill styles to the shape definition
++	/**
++	 * Sets the array of new line styles. May be set to null if no styles are
++	 * being defined.
++	 * 
++	 * @param anArray
++	 *            an array of FSLineStyle objects.
++	 */
++	public void setLineStyles(ArrayList&lt;FSLineStyle&gt; anArray)
++	{
++		lineStyles = anArray;
++	}
+ 
+-shape.add(new FSSolidFill(FSColor(0, 0, 255)));
+-shape.add(new FSBitmapFill(FSFillStyle.Tiled, imageId, transform));
++	/**
++	 * Sets the array of new fill styles. May be set to null if no styles are
++	 * being defined.
++	 * 
++	 * @param anArray
++	 *            an array of fill style objects.
++	 */
++	public void setFillStyles(ArrayList&lt;FSFillStyle&gt; anArray)
++	{
++		fillStyles = anArray;
++	}
+ 
+-// Add a line styles to the shape definition
++	public Object clone()
++	{
++		FSShapeStyle anObject;
+ 
+-shape.add(new FSSolidLine(20, FSColor(0, 0, 0)));
++		try
++		{
++			anObject = (FSShapeStyle) super.clone();
+ 
+-// Select the solid line style and the bitmap fill style. Note that the
+-// ordinal position of the styles is used. A style index of 0 means that
+-// style is not set.
++			if (fillStyles != null)
++			{
++				anObject.fillStyles = new ArrayList&lt;FSFillStyle&gt;();
+ 
+-shape.add(new FSShapeStyle(1, 2, 0));
+-&lt;/pre&gt;
++				for (Iterator&lt;FSFillStyle&gt; i = fillStyles.iterator(); i.hasNext();)
++					anObject.fillStyles.add((FSFillStyle)i.next().clone());
++			}
+ 
+-&lt;p&gt;2. Move the current drawing point.&lt;/p&gt;
++			if (lineStyles != null)
++			{
++				anObject.lineStyles = new ArrayList&lt;FSLineStyle&gt;();
+ 
+-&lt;p&gt;The drawing point is changed by specifying the position from the current drawing point:&lt;/p&gt;
++				for (Iterator&lt;FSLineStyle&gt; i = lineStyles.iterator(); i.hasNext();)
++					anObject.lineStyles.add((FSLineStyle) i.next().clone());
++			}
++		} 
++		catch (CloneNotSupportedException e)
++		{
++			throw new InternalError();
++		}
+ 
+-&lt;pre&gt;
+-FSShapeStyle style = new FSShapeStyle(x, y);
+-&lt;/pre&gt;
++		return anObject;
++	}
+ 
+-&lt;p&gt;3. Specifying New Styles.&lt;/p&gt;
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-&lt;p&gt;Adding a new set of styles to an FSShapeStyle object will replace the existing set of styles defined for the shape.&lt;/p&gt;
++		if (obj == null)
++		{
++			return false;
++		}
+ 
+-&lt;pre&gt;
+-FSDefineShape shape = new FSDefineShape(movie.newIdentifier(), bounds, fillStyles, lineStyles, shape);
++		if (obj == this)
++		{
++			return true;
++		}
+ 
+-// Replace the existing set of fill and line styles in the shape definition
++		if (obj instanceof FSShapeStyle)
++		{
++			FSShapeStyle shapeStyle = (FSShapeStyle) obj;
+ 
+-ArrayList fillStyles = new ArrayList();
+-ArrayList lineStyles = new ArrayList();
++			result = moveX == shapeStyle.moveX;
++			result = result &amp;&amp; moveY == shapeStyle.moveY;
++			result = result &amp;&amp; fillStyle == shapeStyle.fillStyle;
++			result = result &amp;&amp; altFillStyle == shapeStyle.altFillStyle;
++			result = result &amp;&amp; lineStyle == shapeStyle.lineStyle;
+ 
+-fillStyles.add(new FSSolidFill(FSColor(255, 0, 0)));
+-fillStyles.add(new FSSolidFill(FSColor(0, 255, 0)));
+-fillStyles.add(new FSSolidFill(FSColor(0, 0, 255)));
++			if (fillStyles != null)
++				result = result &amp;&amp; fillStyles.equals(shapeStyle.fillStyles);
++			else
++				result = result &amp;&amp; fillStyles == shapeStyle.fillStyles;
+ 
+-lineStyles.add(new FSSolidLine(1, FSColor(0, 0, 0)));
++			if (lineStyles != null)
++				result = result &amp;&amp; lineStyles.equals(shapeStyle.lineStyles);
++			else
++				result = result &amp;&amp; lineStyles == shapeStyle.lineStyles;
++		}
++		return result;
++	}
+ 
+-shape.add(new FSShapeStyle(lineStyles, fillStyles));
+-&lt;/pre&gt;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-&lt;p&gt;4. Creating an overlapping shape.&lt;/p&gt;
++		buffer.append(&quot;FSShapeStyle : {&quot;);
++		buffer.append(&quot;x = &quot;).append(moveX).append(&quot;; &quot;);
++		buffer.append(&quot;y = &quot;).append(moveY).append(&quot;; &quot;);
++		buffer.append(&quot;fill = &quot;).append(fillStyle).append(&quot;; &quot;);
++		buffer.append(&quot;alt = &quot;).append(altFillStyle).append(&quot;; &quot;);
++		buffer.append(&quot;line = &quot;).append(lineStyle).append(&quot;; &quot;);
+ 
+-&lt;pre&gt;
+-// Create the bounding rectangle for the shape. Two rectangles 100 x 100 pixels 
+-// are drawn. The area overlap area is 50 x 50 pixels.
++		if (fillStyles != null) {
++			buffer.append(&quot;fillStyles = array[&quot;).append(fillStyles.size()).append(&quot;]; &quot;);
++		}
++		if (lineStyles != null) {
++			buffer.append(&quot;lineStyles = array[&quot;).append(fillStyles.size()).append(&quot;]; &quot;);
++		}
++		buffer.append(&quot;}&quot;);
+ 
+-FSBounds bounds = new FSBounds(0, -50, 150, 100);
++		return buffer.toString();
++	}
+ 
+-// Define the styles for the shape.
++	public int length(FSCoder coder)
++	{
++		hasLine = lineStyle &gt;= 0;
++		hasFill = fillStyle &gt;= 0;
++		hasAlt = altFillStyle &gt;= 0;
++		hasMove = moveX == 0 &amp;&amp; moveY == 0;
++		hasStyles = lineStyles != null || fillStyles != null;
++		
++		int numberOfBits = 6;
+ 
+-ArrayList fillStyles = new ArrayList();
+-ArrayList lineStyles = new ArrayList();
++		if (hasMove)
++		{
++			int _moveFieldSize = FSCoder.size(new int[] {moveX, moveY }, true);
++			numberOfBits += 5 + _moveFieldSize * 2;
++		}
+ 
+-fillStyles.add(new FSSolidFill(new FSColor(255, 0, 0)));
+-fillStyles.add(new FSSolidFill(new FSColor(255, 255, 0)));
+-fillStyles.add(new FSSolidFill(new FSColor(16, 123, 255)));
++		numberOfBits += hasFill ? coder.context[FSCoder.NumberOfFillBits] : 0;
++		numberOfBits += hasAlt ? coder.context[FSCoder.NumberOfFillBits] : 0;
++		numberOfBits += (hasLine) ? coder.context[FSCoder.NumberOfLineBits] : 0;
+ 
+-lineStyles.add(new FSSolidLine(20, new FSColor(0, 0, 0)));
++		coder.context[FSCoder.NumberOfShapeBits] += numberOfBits;
+ 
+-FSDefineShape shape = new FSDefineShape(movie.newIdentifier, bounds, fillStyles, lineStyles, new FSShape());
+-&lt;/pre&gt;
++		if (hasStyles)
++		{
++			if (lineStyles == null) {
++				lineStyles = new ArrayList&lt;FSLineStyle&gt;();
++			}
++			if (fillStyles == null) {
++				fillStyles = new ArrayList&lt;FSFillStyle&gt;();
++			}
++			
++			int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
++			int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+ 
+-&lt;pre&gt;
+-// To create the overlapping shape shown above the following styles 
+-// selections are made while the shape is drawn.
++			boolean countExtended = coder.context[FSCoder.ArrayCountExtended] != 0;
+ 
+-shape.add(new FSShapeStyle(1, 1, 0, 0, 0));
+-shape.add(new FSLine(50,0));
+-shape.add(new FSShapeStyle(1, 1, 3));
+-shape.add(new FSLine(0,50));
+-shape.add(new FSLine(50,0));
+-shape.add(new FSShapeStyle(1, 0, 2));
+-shape.add(new FSLine(50,0));
+-shape.add(new FSLine(0,-100));
+-shape.add(new FSLine(-100,0));
+-shape.add(new FSLine(0,50));
+-shape.add(new FSShapeStyle(1, 3, 2));
+-shape.add(new FSLine(50,0));
+-shape.add(new FSLine(0,50));
+-shape.add(new FSShapeStyle(1, 1, 0));
+-shape.add(new FSLine(0,50));
+-shape.add(new FSLine(-100,0));
+-shape.add(new FSLine(0,-100));
+-&lt;/pre&gt;
++			int numberOfStyleBits = 0;
++			int flushBits = coder.context[FSCoder.NumberOfShapeBits];
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++			numberOfStyleBits += (flushBits % 8 &gt; 0) ? 8 - (flushBits % 8) : 0;
++			numberOfStyleBits += (countExtended &amp;&amp; fillStyles.size() &gt;= 255) ? 24 : 8;
+ 
+-&lt;p&gt;The FSShapeStyle class represents the StyleChange record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSShapeStyle extends FSTransformObject
+-{
+-    private int moveX = Transform.VALUE_NOT_SET;
+-    private int moveY = Transform.VALUE_NOT_SET;
+-    private int fillStyle = Transform.VALUE_NOT_SET;
+-    private int altFillStyle = Transform.VALUE_NOT_SET;
+-    private int lineStyle = Transform.VALUE_NOT_SET;
+-    private ArrayList fillStyles = null;
+-    private ArrayList lineStyles = null;
++			for (Iterator&lt;FSFillStyle&gt;i = fillStyles.iterator(); i.hasNext();)
++				numberOfStyleBits += i.next().length(coder) * 8;
+ 
+-    /**
+-     * Construct an FSShapeStyle object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSShapeStyle(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSShapeStyle object, selecting the line and fill styles.
++			numberOfStyleBits += (countExtended &amp;&amp; lineStyles.size() &gt;= 255) ? 24 : 8;
+ 
+-        @param lineStyleIndex selects the line style at lineStyleIndex in the line styles array of the parent FSShape object.
+-        @param fillStyleIndex selects the fill style at fillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param altFillStyleIndex selects the alternate fill style at altFillStyleIndex in the fill styles array of the parent FSShape object.
+-        */
+-    public FSShapeStyle(int lineStyleIndex, int fillStyleIndex, int altFillStyleIndex)
+-    {
+-        setLineStyle(lineStyleIndex);
+-        setFillStyle(fillStyleIndex);
+-        setAltFillStyle(altFillStyleIndex);
+-    }
+-    /** Constructs an FSShapeStyle object, selecting the relative drawing point.
++			for (Iterator&lt;FSLineStyle&gt;i = lineStyles.iterator(); i.hasNext();)
++				numberOfStyleBits += i.next().length(coder) * 8;
+ 
+-        @param relativeX move the current point by relativeX in the x direction.
+-        @param relativeY move the current point by relativeY in the y direction.
+-        */
+-    public FSShapeStyle(int relativeX, int relativeY)
+-    {
+-        setMoveX(relativeX);
+-        setMoveY(relativeY);
+-    }
+-    /** Constructs an FSShapeStyle object, specifying the new set of line and fill styles for the parent shape.
++			numberOfStyleBits += 8;
+ 
+-        @param lineStylesArray an array of FSLineStyle objects.
+-        @param fillStylesArray an array of fill style objects.
+-        */
+-    public FSShapeStyle(ArrayList lineStylesArray, ArrayList fillStylesArray)
+-    {
+-        setLineStyles(lineStylesArray);
+-        setFillStyles(fillStylesArray);
+-    }
++			coder.context[FSCoder.NumberOfFillBits] = numberOfFillBits;
++			coder.context[FSCoder.NumberOfLineBits] = numberOfLineBits;
++			coder.context[FSCoder.NumberOfShapeBits] += numberOfStyleBits;
+ 
+-    /** Constructs an FSShapeStyle object, selecting the line and fill styles and drawing point.
++			numberOfBits += numberOfStyleBits;
++		}
++		return numberOfBits;
++	}
+ 
+-        @param lineStyleIndex selects the line style at lineStyleIndex in the line styles array of the parent FSShape object.
+-        @param fillStyleIndex selects the fill style at fillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param altFillStyleIndex selects the alternate fill style at altFillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param relativeX move the current point by relativeX in the x direction.
+-        @param relativeY move the current point by relativeY in the y direction.
+-        */
+-    public FSShapeStyle(int lineStyleIndex, int fillStyleIndex, int altFillStyleIndex, int relativeX, int relativeY)
+-    {
+-        setLineStyle(lineStyleIndex);
+-        setFillStyle(fillStyleIndex);
+-        setAltFillStyle(altFillStyleIndex);
+-        setMoveX(relativeX);
+-        setMoveY(relativeY);
+-    }
++	public void encode(FSCoder coder)
++	{
++		int numberOfFillBits = coder.context[FSCoder.NumberOfFillBits];
++		int numberOfLineBits = coder.context[FSCoder.NumberOfLineBits];
+ 
+-    /** Constructs an FSShapeStyle object, selecting the line and fill styles, new line and new fill styles.
++		coder.writeBits(0, 1);
++		coder.writeBits(hasStyles ? 1 : 0, 1);
++		coder.writeBits(hasLine ? 1 : 0, 1);
++		coder.writeBits(hasAlt ? 1 : 0, 1);
++		coder.writeBits(hasFill ? 1 : 0, 1);
++		coder.writeBits(hasMove ? 1 : 0, 1);
+ 
+-        @param lineStyleIndex selects the line style at lineStyleIndex in the line styles array of the parent FSShape object.
+-        @param fillStyleIndex selects the fill style at fillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param altFillStyleIndex selects the alternate fill style at altFillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param lineStylesArray an array of FSLineStyle objects.
+-        @param fillStylesArray an array of fill style objects.
+-        */
+-    public FSShapeStyle(int lineStyleIndex, int fillStyleIndex, int altFillStyleIndex, ArrayList lineStylesArray, ArrayList fillStylesArray)
+-    {
+-        setLineStyle(lineStyleIndex);
+-        setFillStyle(fillStyleIndex);
+-        setAltFillStyle(altFillStyleIndex);
+-        setLineStyles(lineStylesArray);
+-        setFillStyles(fillStylesArray);
+-    }
++		if (hasMove)
++		{
++			int _moveFieldSize = FSCoder.size(new int[]{ moveX, moveY }, true);
+ 
+-    /** Constructs an FSShapeStyle object, selecting the line and fill styles, drawing point, new line and new fill styles.
++			coder.writeBits(_moveFieldSize, 5);
++			coder.writeBits(moveX, _moveFieldSize);
++			coder.writeBits(moveY, _moveFieldSize);
++		}
+ 
+-        @param lineStyleIndex selects the line style at lineStyleIndex in the line styles array of the parent FSShape object.
+-        @param fillStyleIndex selects the fill style at fillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param altFillStyleIndex selects the alternate fill style at altFillStyleIndex in the fill styles array of the parent FSShape object.
+-        @param relativeX move the current point by relativeX in the x direction.
+-        @param relativeY move the current point by relativeY in the y direction.
+-        @param lineStylesArray an array of FSLineStyle objects.
+-        @param fillStylesArray an array of fill style objects.
+-        */
+-    public FSShapeStyle(int lineStyleIndex, int fillStyleIndex, int altFillStyleIndex, int relativeX, int relativeY, ArrayList lineStylesArray, ArrayList fillStylesArray)
+-    {
+-        setLineStyle(lineStyleIndex);
+-        setFillStyle(fillStyleIndex);
+-        setAltFillStyle(altFillStyleIndex);
+-        setMoveX(relativeX);
+-        setMoveY(relativeY);
+-        setLineStyles(lineStylesArray);
+-        setFillStyles(fillStylesArray);
+-    }
+-    /**
+-     * Constructs an FSShapeStyle object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSShapeStyle object.
+-     */
+-    public FSShapeStyle(FSShapeStyle obj)
+-    {
+-        moveX = obj.moveX;
+-        moveY = obj.moveY;
+-        fillStyle = obj.fillStyle;
+-        altFillStyle = obj.altFillStyle;
+-        lineStyle = obj.lineStyle;
++		if (hasFill)
++			coder.writeBits(fillStyle, numberOfFillBits);
+ 
+-        if (obj.fillStyles != null)
+-        {
+-            fillStyles = new ArrayList();
+-            
+-            for (Iterator i = obj.fillStyles.iterator(); i.hasNext();)
+-                fillStyles.add(((FSFillStyle)i.next()).clone());
+-        }
++		if (hasAlt)
++			coder.writeBits(altFillStyle, numberOfFillBits);
+ 
+-        if (obj.lineStyles != null)
+-        {
+-            lineStyles = new ArrayList();
+-            
+-            for (Iterator i = obj.lineStyles.iterator(); i.hasNext();)
+-                lineStyles.add(((FSLineStyle)i.next()).clone());
+-        }
+-    }    
++		if (hasLine)
++			coder.writeBits(lineStyle, numberOfLineBits);
+ 
+-    /** Add a FSSolidLine object to the array of line styles.
++		if (hasStyles)
++		{
++			boolean countExtended = coder.context[FSCoder.ArrayCountExtended] != 0;
+ 
+-        @param aLineStyle and FSSolidLine object.
+-        */
+-    public void add(FSLineStyle aLineStyle)
+-    {
+-        lineStyles.add(aLineStyle);
+-    }
++			coder.alignToByte();
+ 
+-    /** Add the fill style object to the array of fill styles.
++			if (countExtended &amp;&amp; fillStyles.size() &gt;= 255)
++			{
++				coder.writeBits(0xFF, 8);
++				coder.writeBits(fillStyles.size(), 16);
++			} 
++			else
++			{
++				coder.writeBits(fillStyles.size(), 8);
++			}
+ 
+-        @param aFillStyle and FSFillStyle object.
+-        */
+-    public void add(FSFillStyle aFillStyle)
+-    {
+-        fillStyles.add(aFillStyle);
+-    }
++			for (Iterator&lt;FSFillStyle&gt; i = fillStyles.iterator(); i.hasNext();)
++				i.next().encode(coder);
+ 
+-    /** Gets the x-coordinate of any relative move specified.
++			if (countExtended &amp;&amp; lineStyles.size() &gt;= 255)
++			{
++				coder.writeBits(0xFF, 8);
++				coder.writeBits(lineStyles.size(), 16);
++			} 
++			else
++			{
++				coder.writeBits(lineStyles.size(), 8);
++			}
+ 
+-        @return the x-coordinate of the relative move.
+-        */
+-    public int getMoveX() 
+-    {
+-        return moveX;
+-    }
++			for (Iterator&lt;FSLineStyle&gt; i = lineStyles.iterator(); i.hasNext();)
++				i.next().encode(coder);
+ 
+-    /** Gets the y-coordinate of any relative move specified. If the attribute is set to Transform.VALUE_NOT_SET then the value is not affected.
++			numberOfFillBits = FSCoder.size(fillStyles.size(), false);
++			numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+ 
+-        @return the y-coordinate of the relative move.
+-        */
+-    public int getMoveY()
+-    {
+-        return moveY;
+-    }
++			coder.writeBits(numberOfFillBits, 4);
++			coder.writeBits(numberOfLineBits, 4);
+ 
+-    /** Gets the index of the line style that will be applied to any line drawn. Returns the value Transform.VALUE_NOT_SET if no line style is defined.
++			// Update the stream with the new numbers of line and fill bits
++			coder.context[FSCoder.NumberOfFillBits] = numberOfFillBits;
++			coder.context[FSCoder.NumberOfLineBits] = numberOfLineBits;
++		}
++	}
+ 
+-        @return the index of the selected line style.
+-        */
+-    public int getLineStyle() { return lineStyle; }
++	public void decode(FSCoder coder)
++	{
++		int numberOfFillBits = coder.context[FSCoder.NumberOfFillBits];
++		int numberOfLineBits = coder.context[FSCoder.NumberOfLineBits];
+ 
+-    /** Gets the index of the fill style that will be applied to any area filled. Returns the value Transform.VALUE_NOT_SET if no fill style is defined.
++		/* shapeType */coder.readBits(1, false);
++		hasStyles = coder.readBits(1, false) != 0 ? true : false;
++		hasLine = coder.readBits(1, false) != 0 ? true : false;
++		hasAlt = coder.readBits(1, false) != 0 ? true : false;
++		hasFill = coder.readBits(1, false) != 0 ? true : false;
++		hasMove = coder.readBits(1, false) != 0 ? true : false;
+ 
+-        @return the index of the selected fill style.
+-        */
+-    public int getFillStyle() { return fillStyle; }
++		if (hasMove)
++		{
++			int moveFieldSize = coder.readBits(5, false);
++			moveX = coder.readBits(moveFieldSize, true);
++			moveY = coder.readBits(moveFieldSize, true);
++		}
+ 
+-    /** Gets the index of the fill style that will be applied to any overlapping area filled. Returns the value Transform.VALUE_NOT_SET if no alternate fill style is defined.
++		fillStyle = hasFill ? coder.readBits(numberOfFillBits, false) : -1;
++		altFillStyle = hasAlt ? coder.readBits(numberOfFillBits, false) : -1;
++		lineStyle = hasLine ? coder.readBits(numberOfLineBits, false) : -1;
+ 
+-        @return the index of the selected alternate style.
+-        */
+-    public int getAltFillStyle() { return altFillStyle; }
++		if (hasStyles)
++		{
++			coder.alignToByte();
+ 
+-    /** Gets the array of new line styles.
++			fillStyles = new ArrayList&lt;FSFillStyle&gt;();
++			lineStyles = new ArrayList&lt;FSLineStyle&gt;();
+ 
+-        @return the array of FSLineStyle objects.
+-        */
+-    public ArrayList getLineStyles() { return lineStyles; }
++			int fillStyleCount = coder.readByte();
+ 
+-    /** Gets the array of new fill styles.
++			if (coder.context[FSCoder.ArrayCountExtended] != 0 &amp;&amp; fillStyleCount == 0xFF)
++				fillStyleCount = coder.readWord(2, false);
+ 
+-        @return the array of fill style objects.
+-        */
+-    public ArrayList getFillStyles() { return fillStyles; }
++			for (int i=0; i&lt;fillStyleCount; i++) {
++				fillStyles.add(FSFillStyle.decodeStyle(coder));
++			}
+ 
+-    /** Sets the x-coordinate of any relative move. May be set to Transform.VALUE_NOT_SET if the attribute should not be encoded.
++			int lineStyleCount = coder.readByte();
+ 
+-        @param aNumber move the current point by aNumber in the x direction.
+-        */
+-    public void setMoveX(int aNumber)
+-    {
+-        moveX = aNumber;
+-    }
++			if (coder.context[FSCoder.ArrayCountExtended] != 0 &amp;&amp; lineStyleCount == 0xFF)
++				lineStyleCount = coder.readWord(2, false);
+ 
+-    /** Sets the y-coordinate of any relative move. May be set to Transform.VALUE_NOT_SET if the attribute should not be encoded.
++			for (int i = 0; i &lt; lineStyleCount; i++)
++				lineStyles.add(new FSLineStyle(coder));
+ 
+-        @param aNumber move the current point by aNumber in the y direction.
+-    */
+-    public void setMoveY(int aNumber)
+-    {
+-        moveY = aNumber;
+-    }
++			numberOfFillBits = coder.readBits(4, false);
++			numberOfLineBits = coder.readBits(4, false);
+ 
+-    /** Sets the drawing point.
+-        
+-        @param x the x-coordinate of the drawing point.
+-        @param y the y-coordinate of the drawing point.
+-        */
+-    public void setMove(int x, int y)
+-    {
+-        moveX = x;
+-        moveY = y;
+-    }
+-
+-    /**    Sets the index of the fill style that will be applied to any area filled. May be set to zero if no style is selected or Transform.VALUE_NOT_SET if the attribute should not be encoded.
+-
+-     @param anIndex selects the fill style at anIndex in the fill styles array of the parent FSShape object.
+-    */
+-    public void setFillStyle(int anIndex)
+-    {
+-        fillStyle = anIndex;
+-    }
+-
+-    /** Sets the index of the fill style that will be applied to any overlapping area filled. May be set to zero if no style is selected or Transform.VALUE_NOT_SET if the attribute should not be encoded.
+-
+-        @param anIndex selects the alternate fill style at anIndex in the fill styles array of the parent FSShape object.
+-        */
+-    public void setAltFillStyle(int anIndex)
+-    {
+-        altFillStyle = anIndex;
+-    }
+-
+-    /** Sets the index of the line style that will be applied to any line drawn. May be set to zero if no style is selected or Transform.VALUE_NOT_SET if the attribute should not be encoded.
+-
+-        @param anIndex selects the line style at anIndex in the line styles array of the parent FSShape object.
+-        */
+-    public void setLineStyle(int anIndex)
+-    {
+-        lineStyle = anIndex;
+-    }
+-
+-    /** Sets the array of new line styles. May be set to null if no styles are being defined.
+-
+-        @param anArray an array of FSLineStyle objects.
+-        */
+-    public void setLineStyles(ArrayList anArray)
+-    {
+-        lineStyles = anArray;
+-    }
+-
+-    /** Sets the array of new fill styles. May be set to null if no styles are being defined.
+-
+-        @param anArray an array of fill style objects.
+-        */
+-    public void setFillStyles(ArrayList anArray)
+-    {
+-        fillStyles = anArray;
+-    }
+-
+-    public Object clone()
+-    {
+-        FSShapeStyle anObject = (FSShapeStyle)super.clone();
+-        
+-        if (fillStyles != null)
+-        {
+-            anObject.fillStyles = new ArrayList();
+-            
+-            for (Iterator i = fillStyles.iterator(); i.hasNext();)
+-                anObject.fillStyles.add(((FSFillStyle)i.next()).clone());
+-        }
+-
+-        if (lineStyles != null)
+-        {
+-            anObject.lineStyles = new ArrayList();
+-            
+-            for (Iterator i = lineStyles.iterator(); i.hasNext();)
+-                anObject.lineStyles.add(((FSLineStyle)i.next()).clone());
+-        }
+-
+-        return anObject;
+-    }
+-
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSShapeStyle typedObject = (FSShapeStyle)anObject;
+-            
+-            result = moveX == typedObject.moveX;
+-            result = result &amp;&amp; moveY == typedObject.moveY;
+-            result = result &amp;&amp; fillStyle == typedObject.fillStyle;
+-            result = result &amp;&amp; altFillStyle == typedObject.altFillStyle;
+-            result = result &amp;&amp; lineStyle == typedObject.lineStyle;
+-            
+-            if (fillStyles != null)
+-                result = result &amp;&amp; fillStyles.equals(typedObject.fillStyles);
+-            else
+-                result = result &amp;&amp; fillStyles == typedObject.fillStyles;
+-            
+-            if (lineStyles != null)
+-                result = result &amp;&amp; lineStyles.equals(typedObject.lineStyles);
+-            else
+-                result = result &amp;&amp; lineStyles == typedObject.lineStyles;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;moveX&quot;, moveX);
+-            Transform.append(buffer, &quot;moveY&quot;, moveY);
+-            Transform.append(buffer, &quot;fillStyle&quot;, fillStyle);
+-            Transform.append(buffer, &quot;altFillStyle&quot;, altFillStyle);
+-            Transform.append(buffer, &quot;lineStyle&quot;, lineStyle);
+-            Transform.append(buffer, &quot;fillStyles&quot;, fillStyles, depth);
+-            Transform.append(buffer, &quot;lineStyles&quot;, lineStyles, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        boolean _containsStyles = containsStyles();
+-        boolean _containsLineStyle = containsLineStyle();
+-        boolean _containsAltFillStyle = containsAltFillStyle();
+-        boolean _containsFillStyle = containsFillStyle();
+-        boolean _containsMove = containsMove();
+-    
+-        int numberOfBits = 0;
+-    
+-        numberOfBits += 6;
+-
+-        if (_containsMove)
+-        {
+-            int _moveFieldSize = FSCoder.size(new int[] {moveX, moveY}, true);
+-
+-            numberOfBits += 5 + _moveFieldSize*2;
+-        }
+-    
+-        numberOfBits += (_containsFillStyle) ? coder.context[FSCoder.NumberOfFillBits] : 0;
+-        numberOfBits += (_containsAltFillStyle) ? coder.context[FSCoder.NumberOfFillBits] : 0;
+-        numberOfBits += (_containsLineStyle) ? coder.context[FSCoder.NumberOfLineBits] : 0;
+-        
+-        coder.context[FSCoder.NumberOfShapeBits] += numberOfBits;
+-
+-        if (_containsStyles)
+-        {
+-            int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+-            int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+-            
+-            boolean countExtended = coder.context[FSCoder.ArrayCountExtended] != 0;
+-
+-            int numberOfStyleBits = 0;
+-            int flushBits = coder.context[FSCoder.NumberOfShapeBits];
+-            
+-            numberOfStyleBits += (flushBits % 8 &gt; 0) ? 8 - (flushBits % 8) : 0;
+-            numberOfStyleBits += (countExtended &amp;&amp; fillStyles.size() &gt;= 255) ? 24 : 8;
+-    
+-            for (Iterator styleIterator = fillStyles.iterator(); styleIterator.hasNext();) 
+-                numberOfStyleBits += ((FSTransformObject)styleIterator.next()).length(coder)*8;
+-
+-            numberOfStyleBits += (countExtended &amp;&amp; lineStyles.size() &gt;= 255) ? 24 : 8;
+-    
+-            for (Iterator styleIterator = lineStyles.iterator(); styleIterator.hasNext();) 
+-                numberOfStyleBits += ((FSTransformObject)styleIterator.next()).length(coder)*8;
+-
+-            numberOfStyleBits += 8;
+-    
+-            coder.context[FSCoder.NumberOfFillBits] = numberOfFillBits;
+-            coder.context[FSCoder.NumberOfLineBits] = numberOfLineBits;
+-            coder.context[FSCoder.NumberOfShapeBits] += numberOfStyleBits;
+-
+-            numberOfBits += numberOfStyleBits;
+-        }
+-        return numberOfBits;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        boolean _containsStyles = containsStyles();
+-        boolean _containsLineStyle = containsLineStyle();
+-        boolean _containsAltFillStyle = containsAltFillStyle();
+-        boolean _containsFillStyle = containsFillStyle();
+-        boolean _containsMove = containsMove();
+-    
+-        int numberOfFillBits = coder.context[FSCoder.NumberOfFillBits];
+-        int numberOfLineBits = coder.context[FSCoder.NumberOfLineBits];
+-            
+-        coder.writeBits(0, 1);
+-        coder.writeBits(_containsStyles ? 1 : 0, 1);
+-        coder.writeBits(_containsLineStyle ? 1 : 0, 1);
+-        coder.writeBits(_containsAltFillStyle ? 1 : 0, 1);
+-        coder.writeBits(_containsFillStyle ? 1 : 0, 1);
+-        coder.writeBits(_containsMove ? 1 : 0, 1);
+-
+-        if (_containsMove)
+-        {
+-            int _moveFieldSize = FSCoder.size(new int[] { moveX, moveY }, true);
+-            
+-            coder.writeBits(_moveFieldSize, 5);
+-            coder.writeBits(moveX, _moveFieldSize);
+-            coder.writeBits(moveY, _moveFieldSize);
+-        }
+-    
+-        if (_containsFillStyle)
+-            coder.writeBits(fillStyle, numberOfFillBits);
+-    
+-        if (_containsAltFillStyle)
+-            coder.writeBits(altFillStyle, numberOfFillBits);
+-    
+-        if (_containsLineStyle)
+-            coder.writeBits(lineStyle, numberOfLineBits);
+-    
+-        if (_containsStyles)
+-        {
+-            boolean countExtended = coder.context[FSCoder.ArrayCountExtended] != 0;
+-            
+-            if (lineStyles == null) {
+-            	lineStyles = new ArrayList();
+-            }
+-            
+-            if (fillStyles == null) {
+-            	fillStyles = new ArrayList();
+-            }
+-
+-            coder.alignToByte();
+-        
+-            if (countExtended &amp;&amp; fillStyles.size() &gt;= 255)
+-            {
+-                coder.writeBits(0xFF, 8);
+-                coder.writeBits(fillStyles.size(), 16);
+-            }
+-            else
+-            {
+-                coder.writeBits(fillStyles.size(), 8);
+-            }
+-    
+-            for (Iterator styleIterator = fillStyles.iterator(); styleIterator.hasNext();) 
+-                ((FSTransformObject)styleIterator.next()).encode(coder);           	
+-     
+-            if (countExtended &amp;&amp; lineStyles.size() &gt;= 255)
+-            {
+-                coder.writeBits(0xFF, 8);
+-                coder.writeBits(lineStyles.size(), 16);
+-            }
+-            else
+-            {
+-                coder.writeBits(lineStyles.size(), 8);
+-            }
+-    
+-            for (Iterator styleIterator = lineStyles.iterator(); styleIterator.hasNext();) 
+-                ((FSTransformObject)styleIterator.next()).encode(coder);
+-            	    
+-            numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+-            numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+-        
+-            coder.writeBits(numberOfFillBits, 4);
+-            coder.writeBits(numberOfLineBits, 4);
+-
+-            // Update the stream with the new numbers of line and fill bits
+-            coder.context[FSCoder.NumberOfFillBits] = numberOfFillBits;
+-            coder.context[FSCoder.NumberOfLineBits] = numberOfLineBits;
+-        }
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        boolean containsStyles = false;
+-        boolean containsLineStyle = false;
+-        boolean containsAltFillStyle = false;
+-        boolean containsFillStyle = false;
+-        boolean containsMove = false;
+-        
+-        int numberOfFillBits = coder.context[FSCoder.NumberOfFillBits];
+-        int numberOfLineBits = coder.context[FSCoder.NumberOfLineBits];
+-
+-        /* shapeType */ coder.readBits(1, false);
+-        containsStyles = coder.readBits(1, false) != 0 ? true : false;
+-        containsLineStyle = coder.readBits(1, false) != 0 ? true : false;
+-        containsAltFillStyle = coder.readBits(1, false) != 0 ? true : false;
+-        containsFillStyle = coder.readBits(1, false) != 0 ? true : false;
+-        containsMove = coder.readBits(1, false) != 0 ? true : false;
+-        
+-        if (containsMove)
+-        {
+-            int moveFieldSize = coder.readBits(5, false);
+-            moveX = coder.readBits(moveFieldSize, true);
+-            moveY = coder.readBits(moveFieldSize, true);
+-        }
+-
+-        if (containsFillStyle)
+-            fillStyle = coder.readBits(numberOfFillBits, false);
+-
+-        if (containsAltFillStyle)
+-            altFillStyle = coder.readBits(numberOfFillBits, false);
+-
+-        if (containsLineStyle)
+-            lineStyle = coder.readBits(numberOfLineBits, false);
+-
+-        if (containsStyles)
+-        {
+-            coder.alignToByte();
+-            
+-            fillStyles = new ArrayList();
+-            lineStyles = new ArrayList();
+-        
+-            int fillStyleCount = coder.readWord(1, false);
+-
+-            if (coder.context[FSCoder.ArrayCountExtended] != 0 &amp;&amp; fillStyleCount == 0xFF)
+-                fillStyleCount = coder.readWord(2, false);
+-
+-            fillStyles = new ArrayList();
+-
+-            for (int i=0; i&lt;fillStyleCount; i++)
+-            {
+-                switch (coder.scanWord(1, false))
+-                {
+-                    case FSFillStyle.Solid:
+-                        fillStyles.add(new FSSolidFill(coder));
+-                        break;
+-                    case FSFillStyle.Linear:
+-                        fillStyles.add(new FSGradientFill(coder));
+-                        break;
+-                    case FSFillStyle.Radial:
+-                        fillStyles.add(new FSGradientFill(coder));
+-                        break;
+-                    case FSFillStyle.Tiled:
+-                        fillStyles.add(new FSBitmapFill(coder));
+-                        break;
+-                    case FSFillStyle.Clipped:
+-                        fillStyles.add(new FSBitmapFill(coder));
+-                        break;
+-                    case FSFillStyle.Unsmoothed_Tiled:
+-                        fillStyles.add(new FSBitmapFill(coder));
+-                        break;
+-                    case FSFillStyle.Unsmoothed_Clipped:
+-                        fillStyles.add(new FSBitmapFill(coder));
+-                        break;
+-                    default:
+-                        break;    
+-                }        
+-            }
+-            
+-            int lineStyleCount = coder.readWord(1, false);
+-
+-            if (coder.context[FSCoder.ArrayCountExtended] != 0 &amp;&amp; lineStyleCount == 0xFF)
+-                lineStyleCount = coder.readWord(2, false);
+-
+-            for (int i=0; i&lt;lineStyleCount; i++)
+-                lineStyles.add(new FSSolidLine(coder));
+-            
+-            numberOfFillBits = coder.readBits(4, false);
+-            numberOfLineBits = coder.readBits(4, false);
+-    
+-            coder.context[FSCoder.NumberOfFillBits] = numberOfFillBits;
+-            coder.context[FSCoder.NumberOfLineBits] = numberOfLineBits;
+-        }
+-    }
+-
+-    private boolean containsStyles()
+-    {
+-        return lineStyles != null || fillStyles != null;
+-    }
+-
+-    private boolean containsLineStyle()
+-    {
+-        return lineStyle != Transform.VALUE_NOT_SET;
+-    }
+-
+-    private boolean containsAltFillStyle()
+-    {
+-        return altFillStyle != Transform.VALUE_NOT_SET;
+-    }
+-
+-    private boolean containsFillStyle()
+-    {
+-        return fillStyle != Transform.VALUE_NOT_SET;
+-    }
+-
+-    private boolean containsMove()
+-    {
+-        return moveX != Transform.VALUE_NOT_SET &amp;&amp; moveY != Transform.VALUE_NOT_SET;
+-    }
++			coder.context[FSCoder.NumberOfFillBits] = numberOfFillBits;
++			coder.context[FSCoder.NumberOfLineBits] = numberOfLineBits;
++		}
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000293.html">[Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000295.html">[Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#294">[ date ]</a>
+              <a href="thread.html#294">[ thread ]</a>
+              <a href="subject.html#294">[ subject ]</a>
+              <a href="author.html#294">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

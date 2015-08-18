@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r426%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804020950.m329o36k011746%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000361.html">
+   <LINK REL="Next"  HREF="000363.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r426%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804020950.m329o36k011746%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  2 11:50:03 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000361.html">[Transform-svn] r425 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000363.html">[Transform-svn] r427 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#362">[ date ]</a>
+              <a href="thread.html#362">[ thread ]</a>
+              <a href="subject.html#362">[ subject ]</a>
+              <a href="author.html#362">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-02 11:50:00 +0200 (Wed, 02 Apr 2008)
+New Revision: 426
+
+Removed:
+   dev/dev-3-0/src/com/flagstone/transform/test/DataTypeTests.java
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java
+Log:
+Removed DataType tests - there are only two levels of test: individual classes and package level.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java	2008-04-02 09:49:08 UTC (rev 425)
++++ dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java	2008-04-02 09:50:00 UTC (rev 426)
+@@ -1,19 +1,16 @@
+ package com.flagstone.transform.test;
+ 
+-import junit.framework.Test;
+-import junit.framework.TestSuite;
++import org.junit.runner.RunWith;
++import org.junit.runners.Suite;
+ 
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">+ at RunWith</A>(Suite.class)
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">+ at Suite.SuiteClasses</A>({
++	MovieObjectTests.class,
++	MovieTests.class,
++	VideoTests.class,
++	ConstructorTests.class,
++	UtilityTests.class,
++        })
+ public class AllTests
+ {
+-    public static Test suite()
+-    {
+-        TestSuite suite= new TestSuite();
+-        suite.addTest(DataTypeTests.suite());
+-        suite.addTest(MovieObjectTests.suite());
+-        suite.addTest(MovieTests.suite());
+-        suite.addTest(VideoTests.suite());
+-        suite.addTest(ConstructorTests.suite());
+-        suite.addTest(UtilityTests.suite());
+-        return suite;
+-    }
+ }
+
+Deleted: dev/dev-3-0/src/com/flagstone/transform/test/DataTypeTests.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/DataTypeTests.java	2008-04-02 09:49:08 UTC (rev 425)
++++ dev/dev-3-0/src/com/flagstone/transform/test/DataTypeTests.java	2008-04-02 09:50:00 UTC (rev 426)
+@@ -1,14 +0,0 @@
+-package com.flagstone.transform.test;
+-
+-import junit.framework.Test;
+-import junit.framework.TestSuite;
+-
+-public class DataTypeTests
+-{
+-    public static Test suite()
+-    {
+-        TestSuite suite= new TestSuite();
+-        suite.addTestSuite(FSColorTest.class);
+-        return suite;
+-    }
+-}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000361.html">[Transform-svn] r425 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000363.html">[Transform-svn] r427 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#362">[ date ]</a>
+              <a href="thread.html#362">[ thread ]</a>
+              <a href="subject.html#362">[ subject ]</a>
+              <a href="author.html#362">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

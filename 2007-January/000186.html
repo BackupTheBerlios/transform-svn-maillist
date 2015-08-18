@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r250 - trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r250%20-%20trunk&In-Reply-To=%3C200701031537.l03FbKmv002301%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000185.html">
+   <LINK REL="Next"  HREF="000187.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r250 - trunk</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r250%20-%20trunk&In-Reply-To=%3C200701031537.l03FbKmv002301%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r250 - trunk">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Jan  3 16:37:20 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000185.html">[Transform-svn] r249 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000187.html">[Transform-svn] r251 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#186">[ date ]</a>
+              <a href="thread.html#186">[ thread ]</a>
+              <a href="subject.html#186">[ subject ]</a>
+              <a href="author.html#186">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-01-03 16:37:17 +0100 (Wed, 03 Jan 2007)
+New Revision: 250
+
+Modified:
+   trunk/developer.xml
+Log:
+Change name of program to generate md5 sums for releases.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2007-01-03 11:30:54 UTC (rev 249)
++++ trunk/developer.xml	2007-01-03 15:37:17 UTC (rev 250)
+@@ -107,22 +107,22 @@
+              compression=&quot;gzip&quot;
+         /&gt;
+         
+-        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5&quot;&gt;
+-            &lt;arg value=&quot;-n&quot; /&gt;
+-            &lt;arg value=&quot;-o${dist.name}.tar.md5&quot; /&gt;
+-            &lt;arg value=&quot;${dist.name}.tar.gz&quot; /&gt;
+-        &lt;/exec&gt;
+-        
++        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5sums&quot; output=&quot;${dist.root.dir}/${dist.name}.tar.md5&quot;&gt;
++            &lt;arg value=&quot;-n&quot; /&gt;
++            &lt;arg value=&quot;-b&quot; /&gt;
++            &lt;arg value=&quot;${dist.name}.tar.gz&quot; /&gt;
++        &lt;/exec&gt;
++        
+         &lt;zip destfile=&quot;${dist.root.dir}/${dist.name}.zip&quot;
+              basedir=&quot;${dist.dir}&quot;
+         /&gt;
+ 
+-        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5&quot;&gt;
+-            &lt;arg value=&quot;-n&quot; /&gt;
+-            &lt;arg value=&quot;-o${dist.name}.zip.md5&quot; /&gt;
+-            &lt;arg value=&quot;${dist.name}.zip&quot; /&gt;
+-        &lt;/exec&gt;
+-        
++        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5sums&quot; output=&quot;${dist.root.dir}/${dist.name}.zip.md5&quot;&gt;
++            &lt;arg value=&quot;-n&quot; /&gt;
++            &lt;arg value=&quot;-b&quot; /&gt;
++            &lt;arg value=&quot;${dist.name}.zip&quot; /&gt;
++        &lt;/exec&gt;
++        
+         &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;false&quot; 
+             message=&quot;gpg --local-user support --armor --detach-sign --output ${dist.name}.tar.asc ${dist.name}.tar.gz${line.separator}&quot;/&gt;
+         &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;true&quot; 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000185.html">[Transform-svn] r249 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000187.html">[Transform-svn] r251 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#186">[ date ]</a>
+              <a href="thread.html#186">[ thread ]</a>
+              <a href="subject.html#186">[ subject ]</a>
+              <a href="author.html#186">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,3443 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r398 - in trunk: . doc doc/releases src	src/com/flagstone/transform src/com/flagstone/transform/test	src/com/flagstone/transform/util test/data test/data/scv
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r398%20-%20in%20trunk%3A%20.%20doc%20doc/releases%20src%0A%09src/com/flagstone/transform%20src/com/flagstone/transform/test%0A%09src/com/flagstone/transform/util%20test/data%20test/data/scv&In-Reply-To=%3C200803311458.m2VEwJ7b014712%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000333.html">
+   <LINK REL="Next"  HREF="000335.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r398 - in trunk: . doc doc/releases src	src/com/flagstone/transform src/com/flagstone/transform/test	src/com/flagstone/transform/util test/data test/data/scv</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r398%20-%20in%20trunk%3A%20.%20doc%20doc/releases%20src%0A%09src/com/flagstone/transform%20src/com/flagstone/transform/test%0A%09src/com/flagstone/transform/util%20test/data%20test/data/scv&In-Reply-To=%3C200803311458.m2VEwJ7b014712%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r398 - in trunk: . doc doc/releases src	src/com/flagstone/transform src/com/flagstone/transform/test	src/com/flagstone/transform/util test/data test/data/scv">smackay at mail.berlios.de
+       </A><BR>
+    <I>Mon Mar 31 16:58:19 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000333.html">[Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+        <LI>Next message: <A HREF="000335.html">[Transform-svn] r399 - in trunk/test/data: . flv
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#334">[ date ]</a>
+              <a href="thread.html#334">[ thread ]</a>
+              <a href="subject.html#334">[ subject ]</a>
+              <a href="author.html#334">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-31 16:56:31 +0200 (Mon, 31 Mar 2008)
+New Revision: 398
+
+Added:
+   trunk/doc/releases/transform-2.3.0.txt
+   trunk/doc/releases/transform-3.0.0.txt
+   trunk/src/com/flagstone/transform/FSAudioData.java
+   trunk/src/com/flagstone/transform/FSImageBlock.java
+   trunk/src/com/flagstone/transform/FSScreenVideoPacket.java
+   trunk/src/com/flagstone/transform/FSVideo.java
+   trunk/src/com/flagstone/transform/FSVideoData.java
+   trunk/src/com/flagstone/transform/FSVideoMetaData.java
+   trunk/src/com/flagstone/transform/FSVideoObject.java
+   trunk/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+   trunk/src/com/flagstone/transform/test/FSVideoTest.java
+   trunk/src/com/flagstone/transform/test/VideoTests.java
+   trunk/test/data/scv/
+   trunk/test/data/scv/frame_01.png
+   trunk/test/data/scv/frame_02.png
+   trunk/test/data/scv/frame_03.png
+   trunk/test/data/scv/frame_04.png
+   trunk/test/data/scv/frame_05.png
+   trunk/test/data/scv/frame_06.png
+   trunk/test/data/scv/frame_07.png
+   trunk/test/data/scv/frame_08.png
+   trunk/test/data/scv/frame_09.png
+   trunk/test/data/scv/frame_10.png
+   trunk/test/data/scv/frame_11.png
+   trunk/test/data/scv/frame_12.png
+   trunk/test/data/scv/frame_13.png
+   trunk/test/data/scv/frame_14.png
+   trunk/test/data/scv/frame_15.png
+   trunk/test/data/scv/frame_16.png
+   trunk/test/data/scv/frame_17.png
+Removed:
+   trunk/doc/releases/transform-pre-2.3.0.txt
+   trunk/doc/releases/transform-pre-3.0.0.txt
+   trunk/src/com/flagstone/transform/examples/
+   trunk/src/transform/
+Modified:
+   trunk/build.xml
+   trunk/doc/CHANGES.txt
+   trunk/doc/README.txt
+   trunk/src/com/flagstone/transform/FSSerialNumber.java
+   trunk/src/com/flagstone/transform/FSShapeStyle.java
+   trunk/src/com/flagstone/transform/Transform.java
+   trunk/src/com/flagstone/transform/test/AllTests.java
+   trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+Log:
+Merged 2.3 branch onto the trunk.
+
+Modified: trunk/build.xml
+===================================================================
+--- trunk/build.xml	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/build.xml	2008-03-31 14:56:31 UTC (rev 398)
+@@ -23,16 +23,12 @@
+         classes    compile the classes in the packages com.flagstone.transform
+                    and com.flagstone.transform,util.
+ 
+-        examples   compile the examples.
+-
+-        contrib    compile all the classes contributed to the framework.
+-
+         jar        packages all of the compiled classes in the build directory
+                    into the JAR file, transform.jar.
+ 
+     &lt;/description&gt;
+ 
+-    &lt;property name=&quot;version&quot; value=&quot;2.2.1&quot;/&gt;
++    &lt;property name=&quot;version&quot; value=&quot;2.3.0&quot;/&gt;
+ 
+     &lt;property name=&quot;src.dir&quot; location=&quot;src&quot;/&gt;
+     &lt;property name=&quot;lib.dir&quot; location=&quot;lib&quot;/&gt;
+@@ -46,7 +42,7 @@
+          Major targets for compiling and packaging the classes.
+      ********************************************************** --&gt;
+ 
+-    &lt;target name=&quot;build&quot; depends=&quot;clean,classes,contrib,jar&quot;
++    &lt;target name=&quot;build&quot; depends=&quot;clean,classes,jar&quot;
+         description=&quot;Compile optimized versions of the classes for deployment&quot;/&gt;
+ 
+ &lt;!-- *******************************************************************
+@@ -70,32 +66,6 @@
+ 
+     &lt;/target&gt;
+ 
+-    &lt;target name=&quot;examples&quot; description=&quot;Compile the examples&quot;&gt;
+-
+-        &lt;mkdir dir=&quot;${build.dir}&quot;/&gt;
+-
+-        &lt;javac srcdir=&quot;${src.dir}&quot; destdir=&quot;${build.dir}&quot; debug=&quot;on&quot; optimize=&quot;off&quot;&gt;
+-            &lt;include name=&quot;${package.dir}/examples/*.java&quot; /&gt;
+-        &lt;/javac&gt;
+-
+-    &lt;/target&gt;
+-
+-    &lt;target name=&quot;contrib&quot; description=&quot;Compile the classes contributed to the framework&quot;&gt;
+-
+-        &lt;mkdir dir=&quot;${build.dir}&quot;/&gt;
+-
+-        &lt;javac srcdir=&quot;${src.dir}&quot;
+-               destdir=&quot;${build.dir}&quot;
+-               classpath=&quot;${build.dir}&quot;
+-               debug=&quot;off&quot;
+-               optimize=&quot;on&quot;
+-               source=&quot;1.4&quot;&gt;
+-            &lt;compilerarg value=&quot;-Xlint&quot;/&gt;
+-            &lt;include name=&quot;${package.contrib.dir}/**&quot; /&gt;
+-        &lt;/javac&gt;
+-
+-    &lt;/target&gt;
+-
+     &lt;target name=&quot;jar&quot; description=&quot;Package all of the classes in a JAR file&quot;&gt;
+ 
+         &lt;jar jarfile=&quot;${package.name}.jar&quot;&gt;
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/doc/CHANGES.txt	2008-03-31 14:56:31 UTC (rev 398)
+@@ -1,6 +1,36 @@
++2008-03-31 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Released version 2.3.
++
++2008-03-14 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Fixed a bug in FSSerialNumber where the encoded length was 1 byte longer
++      than it should be.
++      
++    * FSShapeStyle will now encode empty line and fill style arrays.
++    
++2008-03-14 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Added FSVideoMetaData class for undocumented meta-data block in FLV 
++      files.
++      
++2008-03-13 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++  
++    * Added ScreenVideo classes: FSScreenVideoPacket, FsImageBlock.
++    
++    * Added method to FSImageConstructor to generate an array of FSImageBlock
++      objects for generating ScreenVideo streams.
++      
++    * Added Unit Test for generating ScreenVideo stream.
++    
++    * Debugged FSScreenVideoPacket which contains fields not documented in
++      flash file format specification version 7.
++
+ 2008-03-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Released version 2.2.1
++	
++    * Added classes for Flash Video files.
+ 
+ 2008-02-29 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+
+Modified: trunk/doc/README.txt
+===================================================================
+--- trunk/doc/README.txt	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/doc/README.txt	2008-03-31 14:56:31 UTC (rev 398)
+@@ -17,10 +17,10 @@
+ examples.
+ 
+ IMPORTANT: If you downloaded Transform then the framework only contains the
+-classes for reading and writing Flash files along with some examples. All the
+-classes used to perform testing and benchmarking are not included. If you want
+-to do any development then you should check out all the files directly from the
+-Subversion repository: <A HREF="https://svn.berlios.de/svnroot/repos/transform/trunk">https://svn.berlios.de/svnroot/repos/transform/trunk</A>
++classes for reading and writing Flash files. All the classes used to perform 
++testing and benchmarking are not included. If you want to do any development 
++then you should check out all the files directly from the Subversion repository: 
++<A HREF="https://svn.berlios.de/svnroot/repos/transform/trunk">https://svn.berlios.de/svnroot/repos/transform/trunk</A>
+ 
+ -------------
+   Licencing
+@@ -61,8 +61,6 @@
+ 
+     clean    remove all the compiled classes and jars.
+     classes  compile the framework classes for production.
+-    examples compile the examples.
+-    contrib  compile the contributed classes.
+     jar      package all the compiled classes in a JAR.
+ 
+ -------------------------
+
+Added: trunk/doc/releases/transform-2.3.0.txt
+===================================================================
+--- trunk/doc/releases/transform-2.3.0.txt	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/doc/releases/transform-2.3.0.txt	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,124 @@
++----------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.3.
++----------------------------------------------------------
++
++The release adds new classes to decode and encode Flash Video (.flv) files and 
++adds support for ScreenVideo in .swf files.
++
++
++Bug Fixes
++    FSSerialNUmber now encodes length correctly. 
++
++Class Changes
++    New classes for handling Flash Video.
++    New classes for handling ScreenVideo.
++    FSImageConstructor updated to support ScreenVideo.
++    FSShapeStyle now encodes empty style arrays. 
++     
++Documentation Changes
++    None scheduled
++
++Testing Changes
++    Unit Test added for Flash Video classes.
++    Unit Test added for creating ScreenVideo streams.
++    
++Package Changes
++    Contributed code is no longer included in the release.
++	Examples are no longer included in the release.
++
++	
++-------------
++  Bug Fixes  
++-------------
++
++1. FSSerialNUmber now encodes length correctly.
++
++The null byte that terminates the serial number string was counted twice when
++calculating the length of the object when encoded. This is now fixed.
++
++-----------------
++  Class Changes  
++-----------------
++
++1. New classes for handling Flash Video.
++
++Four new classes have been added to decode and encode Flash Video files.
++
++   FSVideo - a collection class similar to FSMovie.
++   FSVideoObject - an abstract parent class similar to FSMovieObject.
++   FSAudioData - contains the encoded audio.
++   FSVideoData - contains the encoded video.
++   FSVideoMetaData - contains information on the video stream.
++   
++The classes provide basic information on the format used to encode the audio
++and video streams and provide access to the binary data - no encoding or 
++decoding is performed. For video streams that are encoded using the ScreenVideo
++format then the new FSScreenVideoPacket class can be used o decode the binary
++video data.
++
++2. New classes for handling ScreenVideo.
++
++Two new classes were added to generate ScreenVideo streams:
++
++   FSScreenVideoPacket - container for a single frame of video in Adobe's
++   ScreenVideo format.
++    
++   FSImageBlock - container for a block of image data contained in a ScreenVideo
++   frame.
++   
++3. FSImageConstructor updated to support ScreenVideo.
++
++A new method:
++
++	public ArrayList getImageAsBlocks(int blockWidth, int blockHeight)
++
++was added to FSImageConstructor to return an image as an array of FSImageBlocks.
++
++4. FSShapeStyle now encodes empty style arrays.
++
++The line and fill style arrays in an FSShapeStyle object are optional. If the 
++attributes were null then they we not included when the object was encoded. They
++were also not encoded if they were empty - though this was not well documented.
++From examining existing flash files empty style arrays are valid and so the class
++has been updated to encode empty style arrays. This only increases the size of 
++the encoded object by three bytes however it greatly simplifies regression 
++testing when comparing the original flash file with one that was decoded then
++re-encoded.
++
++-------------------------
++  Documentation Changes  
++-------------------------
++
++None
++
++-------------------
++  Testing Changes  
++-------------------
++
++1. Unit Test added for Flash Video classes.
++
++A Unit test, FSVideoTest, was added to verify the correct decoding and encoding 
++of an existing set of Flash Video files.
++
++2. Unit Test added for creating ScreenVideo streams.
++
++a Unit Test, FSScreenVideoPacketTest, was added to generate a flash file 
++containing a stream of ScreenVideo created from an array of screen shots.
++
++
++-------------------
++  Package Changes  
++-------------------
++
++1. Contributed code is no longer included in the release.
++
++The code in the transform.contrib package has been removed from the release.
++Instead the code will be hosted in the new Cookbook section of the web site.
++
++2. Examples are no longer included in the release.
++
++As with the contributed code package the examples in the package, 
++com.flagstone.transform.examples have been removed and will be hosted in the 
++cookbook section of the Flagstone web site. The aim is to expand the examples
++the available without causing bloat to the releases.
++
+
+Added: trunk/doc/releases/transform-3.0.0.txt
+===================================================================
+--- trunk/doc/releases/transform-3.0.0.txt	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/doc/releases/transform-3.0.0.txt	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,177 @@
++-------------------------------------------------
++  Release Notes for Transform SWF, Version 3.0. 
++-------------------------------------------------
++
++IMPORTANT: This document contains the set of proposed changes for version 3.0 
++of the Transfrom SWF framework. This document will be updated regularly and 
++everything is, of course, subject to change.
++ 
++Introduction
++Over the past year I have been involved in projects that used existing Flash 
++files as a template. Transform was used to decode the file then update or 
++replace objects to create a customised version.
++
++The changes proposed for Transform 3.0 will update the code to include all 
++the lessons learned from this work and also generally clean up the code base - 
++fixing mistakes, dumb decisions and generally making the framework easier to 
++use.
++
++Architecturally the changes should be minor - the same philosophy of 
++providing a low-level API which exposes all the data structures in a Flash file 
++as objects will be maintained. Files will still be generated and parsed in the 
++same way. Most of the changes will essentially be cosmetic - fixing code that 
++simply bad or poorly implemented. As a result migrating code from Transform 2 
++to Transform 3 should be very simple and extensive rewrites will not be 
++necessary.
++
++Class Changes
++
++    Flatten class hierarchy and use interfaces to identify object types.
++    Enforce encapsulation and add support for references.
++    Add factory methods.
++    More use of Java 'native' classes.
++    
++    Rename existing classes:
++    
++        Rename FSGradient to FSGradientColor.
++        Rename FSEnvelope to FSSoundLevel.
++        Rename FSShapeStyle to FSStyle.
++        Rename FSUnknownObject to FSBinaryObject.
++
++    New Classes:
++
++        FSScript - a wrapper for encoded actions generated by Translate.
++        FSEnvelope - a collection class for FSSoundLevels.
++        FSGradient - a collection class for FSGradientColors.
++        FSGlyph - a collection class for font information.
++
++Internal Class Changes
++
++    To be defined
++
++Package Changes
++
++    None planned.
++
++
++-----------------
++  Class Changes
++-----------------
++
++1. Flatten class hierarchy and use interfaces to identify object types.
++
++In short the current class hierarchy: 
++
++    FSTransformObject -&gt; FSMovieObject -&gt; FSDefineObject 
++    
++adds very little to the project. Code reuse is minimal and the overhead slows 
++down the encoding and decoding of files.
++
++To fix this the hierarchy will be flattened to a single level. For code that 
++need to identify where an object was a definition or a display list command Java 
++interfaces will be used to effectively create types of object. For example 
++rather than inheriting from FSTransformObject objects will implement the 
++FSTransformable interface which defines where an object knows how to encode and 
++decode itself from binary data.
++
++Examples of the interfaces that will be defined include:
++
++    public interface Transformable
++    {
++        public int decode(FSCoder coder);
++        public void precode(FSCoder coder);
++        public int encode(FSCoder coder);
++    }
++
++    public interface MovieObject
++    {
++        public int getType();
++        public boolean isDefinition();
++        public boolean isShape();
++        public boolean isImage();
++        public boolean isSound();
++        public boolean isFont();
++        public boolean isText();
++    }
++    
++    public interface DefinitionObject
++    {
++        public int getIdentifier();
++        public void setIdentifier(int identifier);
++    }
++
++The methods, of course, is all subject to change should a better idea come 
++to light.
++
++
++2. Enforce encapsulation and add support for references.
++
++Flash files are simply large data structures. An object in Transform is 
++simply a data structure that knows how to encode and decode itself. As a result 
++a deliberate decision was taken to break encapsulation and support accessor 
++methods that simply used references rather than copies. This avoided the 
++overhead of creating trees of objects whenever the objects in a Flash file were 
++traversed. Enforcing encapsulation would have required creating several trees 
++of objects as the graph was traversed to change for example a small-grained 
++object such as a shape's colour.
++
++The move to use lazily decoded arrays potentially requires encapsulation to 
++be enforced since it would make it explicitly clear when an array of objects 
++was modified and required encoding when a files was saved.
++
++For the 3.0 release the default policy will most likely be that normal 
++get/set accessor methods create copies of objects. Methods will be added to 
++return references so that excessive copying when traversing the object tree is 
++avoided.
++
++
++3. Add factory methods.
++
++Constructors for simple objects such as shape definitions and some display 
++list commands are easy to use. However for multipurpose objects which have 
++optional attributes including constructors for every option is tedious and 
++confusing, FSPlaceObject2 is the obvious culprit. The basic set of constructors
++was standardised in version 2.1. For version 3.0 the factory methods will be
++updated.
++
++
++4. More use of Java 'native' classes.
++
++The FSMovie class is the obvious example of how classes in Transform fail to 
++make use of Java classes. Rather than using File objects the names of Flash 
++files are presented using Strings - which are used internally to create File 
++objects. This situation arose as I wanted to keep the API for the Java and C++ 
++versions as close as possible to minimise the effort of maintaining the code - 
++a poor decision. So Transform 3.0 will make better use of Java objects to provide 
++a more 'natural' API.
++
++
++5. Rename existing classes.
++
++With a new version comes a chance to clean up and ugliness. The following 
++classes will be renamed to make their role clearer and hopefully more intuitive:
++
++Rename FSGradient to FSGradientColor to support the new FSGradient collection 
++class for FSGradientColours - specifying how the colour of a shape changes 
++across the Gradient Square.
++
++Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class 
++for a FSSoundLevels which describes the waveform applied to a sound.
++
++Rename FSShapeStyle to FSStyle - easier to type.
++
++Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly 
++by Transform Utilities classes to generate encoded version of objects.
++
++ 
++6. New Classes
++
++The new classes that will be added in Transform 3.0 are designed to support 
++lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
++FSGradient are  simple collection classes.
++
++FSGlyph is more complicated as it will support all the information that 
++describes a font glyph: shape, advance, character code and bounding box. This 
++will simply the use of the FSTextConstructor class in Tranform Utilities and 
++handling of the FSDefineFont2 class in Transform.
++
+
+Deleted: trunk/doc/releases/transform-pre-2.3.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.3.0.txt	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/doc/releases/transform-pre-2.3.0.txt	2008-03-31 14:56:31 UTC (rev 398)
+@@ -1,64 +0,0 @@
+-----------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.3.
+-----------------------------------------------------------
+-
+-The release adds new classes to decode and process Flash Video (.flv) files.
+-
+-
+-Bug Fixes
+-    None scheduled
+-
+-Class Changes
+-    New classes for handling Flash Video.
+-     
+-Documentation Changes
+-    None scheduled
+-
+-Testing Changes
+-    None scheduled
+-    
+-Package Changes
+-    None scheduled
+-
+-  
+--------------
+-  Bug Fixes  
+--------------
+-
+-None
+-
+------------------
+-  Class Changes  
+------------------
+-
+-1. New classes for handling Flash Video.
+-
+-Four new classes have been added to decode and encode Flash Video files.
+-
+-   FSVideoObject - an abstract parent class similar to FSMovieObject.
+-   FSVideo - a collection class similar to FSMovie.
+-   FSAudioData - contains the encoded audio.
+-   FSVideoData - contains the encoded video.
+-   
+-The classes provide basic information on the format used to encode the audio
+-and video streams and provide access to the binary data - no encoding or 
+-decoding is performed.
+-
+--------------------------
+-  Documentation Changes  
+--------------------------
+-
+-None
+-
+--------------------
+-  Testing Changes  
+--------------------
+-
+-None
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+-None
+-
+
+Deleted: trunk/doc/releases/transform-pre-3.0.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-3.0.0.txt	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/doc/releases/transform-pre-3.0.0.txt	2008-03-31 14:56:31 UTC (rev 398)
+@@ -1,177 +0,0 @@
+--------------------------------------------------
+-  Release Notes for Transform SWF, Version 3.0. 
+--------------------------------------------------
+-
+-IMPORTANT: This document contains the set of proposed changes for version 3.0 
+-of the Transfrom SWF framework. This document will be updated regularly and 
+-everything is, of course, subject to change.
+- 
+-Introduction
+-Over the past year I have been involved in projects that used existing Flash 
+-files as a template. Transform was used to decode the file then update or 
+-replace objects to create a customised version.
+-
+-The changes proposed for Transform 3.0 will update the code to include all 
+-the lessons learned from this work and also generally clean up the code base - 
+-fixing mistakes, dumb decisions and generally making the framework easier to 
+-use.
+-
+-Architecturally the changes should be minor - the same philosophy of 
+-providing a low-level API which exposes all the data structures in a Flash file 
+-as objects will be maintained. Files will still be generated and parsed in the 
+-same way. Most of the changes will essentially be cosmetic - fixing code that 
+-simply bad or poorly implemented. As a result migrating code from Transform 2 
+-to Transform 3 should be very simple and extensive rewrites will not be 
+-necessary.
+-
+-Class Changes
+-
+-    Flatten class hierarchy and use interfaces to identify object types.
+-    Enforce encapsulation and add support for references.
+-    Add factory methods.
+-    More use of Java 'native' classes.
+-    
+-    Rename existing classes:
+-    
+-        Rename FSGradient to FSGradientColor.
+-        Rename FSEnvelope to FSSoundLevel.
+-        Rename FSShapeStyle to FSStyle.
+-        Rename FSUnknownObject to FSBinaryObject.
+-
+-    New Classes:
+-
+-        FSScript - a wrapper for encoded actions generated by Translate.
+-        FSEnvelope - a collection class for FSSoundLevels.
+-        FSGradient - a collection class for FSGradientColors.
+-        FSGlyph - a collection class for font information.
+-
+-Internal Class Changes
+-
+-    To be defined
+-
+-Package Changes
+-
+-    None planned.
+-
+-
+------------------
+-  Class Changes
+------------------
+-
+-1. Flatten class hierarchy and use interfaces to identify object types.
+-
+-In short the current class hierarchy: 
+-
+-    FSTransformObject -&gt; FSMovieObject -&gt; FSDefineObject 
+-    
+-adds very little to the project. Code reuse is minimal and the overhead slows 
+-down the encoding and decoding of files.
+-
+-To fix this the hierarchy will be flattened to a single level. For code that 
+-need to identify where an object was a definition or a display list command Java 
+-interfaces will be used to effectively create types of object. For example 
+-rather than inheriting from FSTransformObject objects will implement the 
+-FSTransformable interface which defines where an object knows how to encode and 
+-decode itself from binary data.
+-
+-Examples of the interfaces that will be defined include:
+-
+-    public interface Transformable
+-    {
+-        public int decode(FSCoder coder);
+-        public void precode(FSCoder coder);
+-        public int encode(FSCoder coder);
+-    }
+-
+-    public interface MovieObject
+-    {
+-        public int getType();
+-        public boolean isDefinition();
+-        public boolean isShape();
+-        public boolean isImage();
+-        public boolean isSound();
+-        public boolean isFont();
+-        public boolean isText();
+-    }
+-    
+-    public interface DefinitionObject
+-    {
+-        public int getIdentifier();
+-        public void setIdentifier(int identifier);
+-    }
+-
+-The methods, of course, is all subject to change should a better idea come 
+-to light.
+-
+-
+-2. Enforce encapsulation and add support for references.
+-
+-Flash files are simply large data structures. An object in Transform is 
+-simply a data structure that knows how to encode and decode itself. As a result 
+-a deliberate decision was taken to break encapsulation and support accessor 
+-methods that simply used references rather than copies. This avoided the 
+-overhead of creating trees of objects whenever the objects in a Flash file were 
+-traversed. Enforcing encapsulation would have required creating several trees 
+-of objects as the graph was traversed to change for example a small-grained 
+-object such as a shape's colour.
+-
+-The move to use lazily decoded arrays potentially requires encapsulation to 
+-be enforced since it would make it explicitly clear when an array of objects 
+-was modified and required encoding when a files was saved.
+-
+-For the 3.0 release the default policy will most likely be that normal 
+-get/set accessor methods create copies of objects. Methods will be added to 
+-return references so that excessive copying when traversing the object tree is 
+-avoided.
+-
+-
+-3. Add factory methods.
+-
+-Constructors for simple objects such as shape definitions and some display 
+-list commands are easy to use. However for multipurpose objects which have 
+-optional attributes including constructors for every option is tedious and 
+-confusing, FSPlaceObject2 is the obvious culprit. The basic set of constructors
+-was standardised in version 2.1. For version 3.0 the factory methods will be
+-updated.
+-
+-
+-4. More use of Java 'native' classes.
+-
+-The FSMovie class is the obvious example of how classes in Transform fail to 
+-make use of Java classes. Rather than using File objects the names of Flash 
+-files are presented using Strings - which are used internally to create File 
+-objects. This situation arose as I wanted to keep the API for the Java and C++ 
+-versions as close as possible to minimise the effort of maintaining the code - 
+-a poor decision. So Transform 3.0 will make better use of Java objects to provide 
+-a more 'natural' API.
+-
+-
+-5. Rename existing classes.
+-
+-With a new version comes a chance to clean up and ugliness. The following 
+-classes will be renamed to make their role clearer and hopefully more intuitive:
+-
+-Rename FSGradient to FSGradientColor to support the new FSGradient collection 
+-class for FSGradientColours - specifying how the colour of a shape changes 
+-across the Gradient Square.
+-
+-Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class 
+-for a FSSoundLevels which describes the waveform applied to a sound.
+-
+-Rename FSShapeStyle to FSStyle - easier to type.
+-
+-Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly 
+-by Transform Utilities classes to generate encoded version of objects.
+-
+- 
+-6. New Classes
+-
+-The new classes that will be added in Transform 3.0 are designed to support 
+-lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
+-FSGradient are  simple collection classes.
+-
+-FSGlyph is more complicated as it will support all the information that 
+-describes a font glyph: shape, advance, character code and bounding box. This 
+-will simply the use of the FSTextConstructor class in Tranform Utilities and 
+-handling of the FSDefineFont2 class in Transform.
+-
+
+Added: trunk/src/com/flagstone/transform/FSAudioData.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSAudioData.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSAudioData.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,359 @@
++/*
++ * FSAudioData.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++/** 
++ * FSAudioData is used to define sounds for a Flash Video (flv) file. It is 
++ * similar in function to the FSDefineSound class.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;&lt;a name=&quot;FSAudioData_0&quot;&gt;timestamp&lt;/a&gt;&lt;/td&gt;
++ * &lt;td&gt;The time in milliseconds at which the sound will be played. The timestamp 
++ * is used exclusively for determining when sound or video will be played. Any 
++ * internal timing information in the audio or video data is ignored.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;format&lt;/td&gt;
++ * &lt;td&gt;The format of the sound data - PCM, ADPCM,  MP3, NATIVE_PCM or NELLYMOSER.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;playbackRate&lt;/td&gt;
++ * &lt;td&gt;The rate the sound will be played in Hertz: 5512, 11025, 22050 or 44100. 
++ * Note: sounds encoded using the Nellymoser have a fixed playback rate of 8KHz.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;playbackChannels&lt;/td&gt;
++ * &lt;td&gt;The number of channels in the sound, typically 1 (mono) or 2 (stereo).&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;playbackSampleSize&lt;/td&gt;
++ * &lt;td&gt;The number of bytes in a sample: 1 or 2.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;&lt;a name=&quot;FSAudioData_5&quot;&gt;sound&lt;/a&gt;&lt;/td&gt;
++ * &lt;td&gt;The sampled sound data.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * Five encoded formats for the sound data are supported:
++ * 
++ * &lt;ul&gt;
++ * &lt;li&gt;NATIVE_PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 
++ * bytes. For two-byte samples the byte order is dependent on the platform on which 
++ * the Flash Player is hosted. Sounds created on a platform which supports big-endian 
++ * byte order will not be played correctly when listened to on a platform which 
++ * supports little-endian byte order.&lt;/li&gt;
++ * 
++ * &lt;li&gt;PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 bytes 
++ * with the latter presented in Little-Endian byte order. This ensures that sounds 
++ * can be played across different platforms.&lt;/li&gt;
++ * 
++ * &lt;li&gt;ADPCM - compressed ADaptive Pulse Code Modulated: samples are encoded and 
++ * compressed by comparing the difference between successive sound sample which 
++ * dramatically reduces the size of the encoded sound when compared to the 
++ * uncompressed PCM formats. Use this format whenever possible.&lt;/li&gt;
++ * 
++ * &lt;li&gt;MP3 - compressed MPEG Audio Layer-3.&lt;/li&gt;
++ * 
++ * &lt;li&gt;NELLYMOSER - compressed Nellymoser Asao format supporting low bit-rate sound 
++ * for improving synchronisation between the sound and frame rate of movies.&lt;/li&gt;
++ * &lt;/ul&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&lt;
++ * 
++ * &lt;p&gt;The FSAudioData class represents the FLV Tag with the Audio Data section 
++ * from Macromedia's Flash (SWF) File Format Specification. It was added in 
++ * Flash Video 1.&lt;/p&gt;
++ */  
++public final class FSAudioData extends FSVideoObject
++{
++	private int format = 0;
++	private int playbackRate = 5512;
++	private int playbackChannels = 1;
++	private int playbackSampleSize = 1;
++	private byte[] soundData = null;
++
++	FSAudioData(FSCoder coder)
++	{
++        super(FSVideoObject.AudioData, 0);
++		decode(coder);
++	}
++
++    /** 
++     * Constructs an FSAudioData object specifying the parameters required to 
++     * describe the sound.
++     * 
++     * @param timestamp time in milliseconds from the start of the file that the 
++     * sound will be played..
++     * @param aFormat the encoding format for the sound, either FSSound.NATIVE_PCM, 
++     * FSSound.PCM, FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
++     * @param rate the number of samples per second that the sound is played at, 
++     * either 5512, 11025, 22050 or 44100.
++     * @param channels the number of channels in the sound, either 1 (Mono) or 
++     * 2 (Stereo).
++     * @param sampleSize the size of an uncompressed sound sample in bits, 
++     * either 8 or 16.
++     * @param bytes the sound data.
++     */
++	public FSAudioData(int timestamp, int aFormat, int rate, int channels, int sampleSize, byte[] bytes)
++	{
++		super(FSVideoObject.AudioData, timestamp);
++		setFormat(aFormat);
++		setPlaybackRate(rate);
++        setPlaybackChannels(channels);
++		setPlaybackSampleSize(sampleSize);
++		setSoundData(bytes);
++	}
++
++    /**	
++     * Gets the compression format used, either FSSound.NATIVE_PCM, FSSound.PCM, 
++     * FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
++     * 
++     * @return a constant defining the type of compression.
++     */
++    public int getFormat() 
++    {
++        return format;
++    }
++
++    /** 
++     * Sets the encoding format used, either FSSound.NATIVE_PCM, FSSound.PCM, 
++     * FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
++     * 
++     * @param encoding the format for the sound.
++     */
++    public void setFormat(int encoding)
++	{
++		format = encoding;
++	}
++
++    /** 
++     * Gets the rate at which the sound will be played, in Hertz: 5512, 11025, 
++     * 22050 or 44100. Note that the playback rate for Nellymoser encoded audio 
++     * is fixed at 8Khz so the playback rate attribute has no effect.
++     * 
++     * @return the rate at which the sound was sampled.
++     */
++    public int getPlaybackRate()
++    {
++        return playbackRate;
++    }
++
++    /** 
++     * Sets the sampling rate in Hertz. Must be one of: 5512, 11025, 22050 or 
++     * 44100.
++     * 
++     * @param rate the rate at which the sounds is played in Hz.
++     */
++    public void setPlaybackRate(int rate)
++	{
++		playbackRate = rate;
++	}
++
++    /** 
++     * Gets the number of sound channels, 1 (Mono) or 2 (Stereo).
++     * 
++     * @return the number of channels.
++     */
++    public int getPlaybackChannels()
++    {
++        return playbackChannels;
++    }
++
++    /** 
++     * Sets the number of channels defined in the sound.
++     * 
++     * @param channels the number of channels in the sound, either 1 (Mono) or 
++     * 2 (Stereo).
++     */
++    public void setPlaybackChannels(int channels)
++    {
++        playbackChannels = channels;
++    }
++
++    /** 
++     * Gets the size of an uncompressed sample in bytes.
++     * 
++     * @return the number of bytes per sample when the sound is uncompressed.
++     */
++    public int getPlaybackSampleSize() 
++    {
++        return playbackSampleSize;
++    }
++
++    /** 
++     * Sets the sample size in bytes. Must be either 1 or 2.
++     * 
++     * @param sampleSize the size of sound samples in bytes.
++     */
++    public void setPlaybackSampleSize(int sampleSize)
++	{
++		playbackSampleSize = sampleSize;
++	}
++
++    /** 
++     * Gets the sound data.
++     * 
++     * @return an array of bytes containing the sampled sound.
++     */
++    public byte[] getSoundData()
++    {
++        return soundData;
++    }
++
++    /** 
++     * Sets the sound data.
++     * 
++     * @param bytes the sound data.
++     */
++    public void setSoundData(byte[] bytes)
++	{
++		soundData = bytes;
++	}
++
++    public Object clone()
++	{
++        FSAudioData anObject = (FSAudioData)super.clone();
++        
++        anObject.soundData = Transform.clone(soundData);
++        
++		return anObject;
++	}
++
++    public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++        {
++            FSAudioData typedObject = (FSAudioData)anObject;
++            
++            result = format == typedObject.format;
++            result = result &amp;&amp; playbackRate == typedObject.playbackRate;
++            result = result &amp;&amp; playbackChannels == typedObject.playbackChannels;
++            result = result &amp;&amp; playbackSampleSize == typedObject.playbackSampleSize;
++            result = result &amp;&amp; Transform.equals(soundData, typedObject.soundData);
++        }
++		return result;
++	}
++
++	public void appendDescription(StringBuffer buffer, int depth)
++	{
++		buffer.append(name());
++		
++		if (depth &gt; 0)
++		{
++			buffer.append(&quot;: { &quot;);
++			Transform.append(buffer, &quot;format&quot;, format);
++			Transform.append(buffer, &quot;playbackRate&quot;, playbackRate);
++			Transform.append(buffer, &quot;playbackChannels&quot;, playbackChannels);
++			Transform.append(buffer, &quot;playbackSampleSize&quot;, playbackSampleSize);
++			buffer.append(&quot;}&quot;);
++		}
++		else
++		{
++			buffer.append(name());
++		}
++	}
++
++	int length(FSCoder coder)
++	{
++		super.length(coder);
++	
++		length += 1 + soundData.length;
++	
++		return length;
++	}
++	
++	void encode(FSCoder coder)
++	{
++        super.encode(coder);
++		
++		coder.writeBits(format, 4);
++        
++        switch (playbackRate)
++        {
++            case 5512:
++                coder.writeBits(0, 2);
++                break;
++            case 11025:
++                coder.writeBits(1, 2);
++                break;
++            case 22050:
++                coder.writeBits(2, 2);
++                break;
++            case 44100:
++                coder.writeBits(3, 2);
++                break;
++        }
++        coder.writeBits(playbackSampleSize-1, 1);
++		coder.writeBits(playbackChannels-1, 1);
++		coder.writeBytes(soundData);
++	}
++	
++	void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		
++		format = coder.readBits(4, false);
++
++        switch (coder.readBits(2, false))
++        {
++            case 0:
++                playbackRate = 5512;
++                break;
++            case 1:
++                playbackRate = 11025;
++                break;
++            case 2:
++                playbackRate = 22050;
++                break;
++            case 3:
++                playbackRate = 44100;
++                break;
++        }
++
++        playbackSampleSize = coder.readBits(1, false)+1;
++		playbackChannels = coder.readBits(1, false)+1;	
++		soundData = new byte[length-1];
++		coder.readBytes(soundData);
++	}
++}
+\ No newline at end of file
+
+Added: trunk/src/com/flagstone/transform/FSImageBlock.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSImageBlock.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSImageBlock.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,146 @@
++package com.flagstone.transform;
++
++import java.util.zip.DataFormatException;
++import java.util.zip.Inflater;
++
++/**
++ * When an image is sent in a ScreenVideo stream only pixel information for the 
++ * portions of the image that change are sent. FSImageBlock is used to sub-divide
++ * an image into a set of blocks. The blocks from successive frames can then 
++ * be compared to determine which blocks are encoded in the stream.
++ * 
++ * An image is divided by tiling the blocks across the image from top-left to
++ * bottom right. If the image is not covered an integer number of blocks then
++ * the size of the blocks along the right and bottom edges of the image are 
++ * reduced in size.
++ * 
++ * The FSImageBlock is a contains class for the image data and is used in 
++ * conjunction with the FsStreamVideoPacket class.
++ */
++public class FSImageBlock implements Cloneable
++{
++	private int width;
++	private int height;
++	private byte[] block;
++
++	/**
++	 * Create a new image block with the specified width and height and image
++	 * data. The image is compressed using the zip format.
++	 * 
++	 * @param width the width of the block in pixels.
++	 * @param height the height of the block in pixels
++	 * @param data the pixels covered by the block, compressed using the zip 
++	 * format.
++	 */
++    public FSImageBlock(int width, int height, byte[] data)
++	{
++    	this.width = width;
++    	this.height = height;
++    	block = data;
++	}
++	
++    /**
++     * Return the width of the block. although the block size is specified in 
++     * parent FSScreenVideoPacket object the actual block size used may vary
++     * if the tiled array of blocks overlaps the edge of the image.
++     * 
++     * @return the width of the block in pixels.
++     */
++    public int getWidth() 
++    {
++        return width;
++    }
++
++    /**
++     * Return the height of the block. although the block size is specified in 
++     * parent FSScreenVideoPacket object the actual block size used may vary
++     * if the tiled array of blocks overlaps the edge of the image.
++     * 
++     * @return the height of the block in pixels.
++     */
++    public int getHeight() 
++    {
++        return height;
++    }
++
++    /**
++     * Returns the zipped image data for the block.
++     * 
++     * @return an array of bytes containing the portion of the image in the 
++     * block.
++     */
++    public byte[] getData() 
++    {
++        return block;
++    }
++    
++    /**
++     * When a ScreenVideo stream is created only the image blocks that change
++     * are included. The blocks that do not change are encoded as empty blocks
++     * which have width and height of zero and do not contain any image data.
++     * This convenience method is used to determine when an image block contains
++     * any valid image data.
++     * 
++     * @return true if the block covers an area of the image that changed or 
++     * false if no image data is included.
++     */
++    public boolean isEmpty()
++    {
++    	return width == 0 || height == 0 || block == null || block.length == 0;
++    }
++
++    public Object clone()
++    {
++    	return new FSImageBlock(width, height, block);
++    }
++    
++    public boolean equals(Object anObject)
++    {
++        if (anObject == null) {
++        	return false;
++        }
++        
++        if (this == anObject) {
++        	return true;
++        }
++        
++        boolean result = false;
++        
++        if (anObject instanceof FSImageBlock)
++        {
++            FSImageBlock typedObject = (FSImageBlock)anObject;
++            
++            try
++            {
++                result = width == typedObject.width;
++                result = result &amp;&amp; height == typedObject.height;
++                
++            	byte[] a = unzip(block);
++            	byte[] b = unzip(typedObject.block);
++            	
++                result = result &amp;&amp; Transform.equals(a, b);
++            }
++            catch (DataFormatException e)
++            {
++            	result = false;
++            }
++        }
++        return result;
++    }
++
++    private byte[] unzip(byte[] bytes) throws DataFormatException
++    {
++        byte[] data = new byte[width*height*3];
++        int count = 0;
++        
++        Inflater inflater = new Inflater();
++        inflater.setInput(bytes);
++        count = inflater.inflate(data);
++        
++        byte[] uncompressedData = new byte[count];
++        
++        System.arraycopy(data, 0, uncompressedData, 0, count);
++
++        return uncompressedData;
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/FSScreenVideoPacket.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,283 @@
++/*
++ * FSScreenVideoPacket.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++import java.util.ArrayList;
++import java.util.Iterator;
++
++/**
++ * The FSScreenVideoPacket class is used to encode or decode a frame of video data using 
++ * Macromedia's ScreenVideo format.
++ * 
++ */
++public final class FSScreenVideoPacket implements Cloneable
++{
++    private boolean keyFrame;
++    private int codec;
++    
++    private int blockWidth;
++    private int blockHeight;
++
++    private int imageWidth;
++    private int imageHeight;
++    
++    private ArrayList imageBlocks;
++
++	public FSScreenVideoPacket(byte[] data)
++	{
++		decode(data);
++	}
++
++    public FSScreenVideoPacket(boolean key, int codec, int imageWidth, int imageHeight, int blockWidth, int blockHeight, ArrayList blocks)
++	{
++    	setKeyFrame(key);
++    	setCodec(codec);
++        setImageWidth(imageWidth);
++        setImageHeight(imageHeight);
++        setBlockWidth(blockWidth);
++        setBlockHeight(blockHeight);
++        setImageBlocks(blocks);
++	}
++    
++    public void add(FSImageBlock block)
++    {
++        imageBlocks.add(block);
++    }
++
++	public boolean getKeyFrame() 
++    {
++        return keyFrame; 
++    }
++
++	public void setKeyFrame(boolean key) 
++    {
++        keyFrame = key; 
++    }
++
++	public int getCodec() 
++    {
++        return codec; 
++    }
++
++	public void setCodec(int codec) 
++    {
++        this.codec = codec; 
++    }
++
++	public int getImageWidth() 
++    {
++        return imageWidth; 
++    }
++
++	public void setImageWidth(int width) 
++    {
++        imageWidth = width; 
++    }
++
++    public int getImageHeight() 
++    { 
++        return imageHeight; 
++    }
++
++	public void setImageHeight(int height) 
++    {
++        imageHeight = height; 
++    }
++
++	public int getBlockWidth() 
++    {
++        return blockWidth; 
++    }
++
++	public void setBlockWidth(int width) 
++    {
++        blockWidth = width; 
++    }
++
++    public int getBlockHeight() 
++    { 
++        return blockHeight; 
++    }
++
++	public void setBlockHeight(int height) 
++    {
++        blockHeight = height; 
++    }
++
++    public ArrayList getImageBlocks() 
++    { 
++        return imageBlocks; 
++    }
++
++	public void setImageBlocks(ArrayList blocks) 
++    {
++        imageBlocks = new ArrayList(blocks); 
++    }
++
++    public Object clone()
++	{
++        FSScreenVideoPacket anObject = null;
++        
++        try
++        {
++            anObject = (FSScreenVideoPacket)super.clone();
++        
++            anObject.imageBlocks = new ArrayList();
++			
++            for (Iterator i = imageBlocks.iterator(); i.hasNext();)
++                anObject.imageBlocks.add(((FSImageBlock)i.next()).clone());
++	    }
++	    catch (CloneNotSupportedException e)
++	    {
++            throw new InternalError();
++	    }
++		return anObject;
++	}
++
++    public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++		{
++			FSScreenVideoPacket typedObject = (FSScreenVideoPacket)anObject;
++			
++            result = keyFrame == typedObject.keyFrame;
++            result = result &amp;&amp; codec == typedObject.codec;
++            result = result &amp;&amp; imageWidth == typedObject.imageWidth;
++            result = result &amp;&amp; imageHeight == typedObject.imageHeight;
++            result = result &amp;&amp; blockHeight == typedObject.blockHeight;
++            result = result &amp;&amp; blockWidth == typedObject.blockWidth;
++            result = result &amp;&amp; imageBlocks.equals(typedObject.imageBlocks);	
++        }
++		return result;
++    }
++
++    private int length()
++	{
++		int length = 5;
++        
++        FSImageBlock block;
++        
++		for (Iterator i = imageBlocks.iterator(); i.hasNext();) 
++		{
++			block = (FSImageBlock)i.next();
++			
++			length += 2;
++
++			if (!block.isEmpty()) {
++				length += block.getData().length;
++			}
++        }
++		return length;
++	}
++
++	public byte[] encode()
++	{
++        byte[] data = new byte[length()];
++        
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, data);
++    
++        coder.writeBits(keyFrame ? FSVideo.KeyFrame : FSVideo.Frame, 4);
++        coder.writeBits(codec, 4);
++        
++        coder.writeBits((blockWidth/16)-1, 4);
++        coder.writeBits(imageWidth, 12);
++        coder.writeBits((blockHeight/16)-1, 4);
++        coder.writeBits(imageHeight, 12);
++        
++        FSImageBlock block;
++        byte[] blockData;
++
++        for (Iterator i=imageBlocks.iterator(); i.hasNext();) 
++		{
++			block = (FSImageBlock)i.next();
++			
++			if (block.isEmpty()) {
++		        coder.writeWord(0, 2);
++			}
++			else {
++				blockData = block.getData();
++		        coder.writeBits(blockData.length, 16);
++		        coder.writeBytes(blockData);				
++			}
++        }
++		
++        return coder.getData();
++	}
++	
++	public void decode(byte[] data)
++	{        
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, data);
++        
++        keyFrame = coder.readBits(4, false) == 1 ? true : false;
++        codec = coder.readBits(4, false);
++        
++        blockWidth = (coder.readBits(4, false) + 1) * 16;
++        imageWidth = coder.readBits(12, false);
++        blockHeight = (coder.readBits(4, false) + 1) * 16;
++        imageHeight = coder.readBits(12, false);
++
++        int columns = imageWidth / blockWidth + ((imageWidth % blockWidth &gt; 0) ? 1 : 0);
++        int rows = imageHeight / blockHeight + ((imageHeight % blockHeight &gt; 0) ? 1 : 0);
++        
++        int height = imageHeight;
++        int width = imageWidth;
++        
++        imageBlocks = new ArrayList(rows*columns);
++        FSImageBlock block;
++
++        for (int i=0; i&lt;rows; i++, height -= blockHeight)
++        {
++            for (int j=0; j&lt;columns; j++, width -= blockWidth)
++            {
++                int length = coder.readBits(16, false);
++                
++                if (length != 0)
++                {
++                    byte[] blockData = new byte[length];
++                    
++                    coder.readBytes(blockData);
++                    
++                    int dataHeight = (height &lt; blockHeight) ? height : blockHeight;
++                    int dataWidth = (width &lt; blockWidth) ? width : blockWidth;
++            
++                    block = new FSImageBlock(dataHeight, dataWidth, blockData);
++                }
++                else 
++                {
++                	block = new FSImageBlock(0, 0, null);
++                }
++        
++                imageBlocks.add(block);
++            }
++        }
++	}
++}
+
+Modified: trunk/src/com/flagstone/transform/FSSerialNumber.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSerialNumber.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSSerialNumber.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -159,7 +159,8 @@
+     public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+-        serialNumber = coder.readString(length);
++        serialNumber = coder.readString(length-1);
++        coder.readWord(1, false);
+         coder.endObject(name());
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShapeStyle.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSShapeStyle.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -661,6 +661,14 @@
+         {
+             boolean countExtended = coder.context[FSCoder.ArrayCountExtended] != 0;
+             
++            if (lineStyles == null) {
++            	lineStyles = new ArrayList();
++            }
++            
++            if (fillStyles == null) {
++            	fillStyles = new ArrayList();
++            }
++
+             coder.alignToByte();
+         
+             if (countExtended &amp;&amp; fillStyles.size() &gt;= 255)
+@@ -797,7 +805,7 @@
+ 
+     private boolean containsStyles()
+     {
+-        return (lineStyles != null &amp;&amp; lineStyles.size() &gt; 0) || (fillStyles != null &amp;&amp; fillStyles.size() &gt; 0);
++        return lineStyles != null || fillStyles != null;
+     }
+ 
+     private boolean containsLineStyle()
+
+Added: trunk/src/com/flagstone/transform/FSVideo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideo.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSVideo.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,449 @@
++/*
++ * FSVideo.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++import java.util.*;
++import java.util.zip.*;
++import java.io.*;
++
++/** 
++ * FSVideo is a container class for the objects that represents the data 
++ * structures in a Flash video file. It is very similar to the FSMovie class
++ * for flash (.swf) files and provides a simple API for decoding and encoding 
++ * files and accessing the objects that represent the different data structures
++ * used for audio and video data.
++ */ 
++public final class FSVideo implements Cloneable
++{
++    /** 
++     * Indicates that the video data was encoded using the Sorenson
++     * modified H263 format.
++     */
++    public static final int H263 = 2;
++    /** 
++     * Indicates that the video data was encoded using Macromedia's 
++     * ScreenVideo format.
++     */
++    public static final int ScreenVideo = 3;
++    
++    /**
++     * Indicates a frame is a key frame in the video stream.
++     */
++    public static final int KeyFrame = 1;
++    
++    /**
++     * Indicates a frame is a normal frame (one displayed between key frames)
++     * in the video stream.
++     */
++    public static final int Frame = 2;
++
++    /**
++     * Indicates a frame is an optional frame - one that may be deleted to maintain
++     * real-time display of the video stream. Used only with video encoded using
++     * the Sorenson modified H263 format.
++     */
++    public static final int Optional = 3;
++    
++    
++    /*
++     * Index values for the context array in FSVideoCoder.
++     */
++	static final int Action = 0;
++	static final int Version = 1;
++	static final int Type = 2;
++    static final int Delta = 3;
++	static final int Identifier = 4;
++	static final int Codec = 5;
++	
++    static FSVideoObject decodeObject(FSCoder coder)
++    {
++		FSVideoObject currentObject = null;
++        
++        int start = coder.getPointer();
++
++		int type = coder.readWord(1, false);
++		int length = coder.readWord(3, false) &amp; 0x00FFFFFF;
++		int next = start + ((11 + length) &lt;&lt; 3);
++		
++		coder.setPointer(start);
++		
++ 		switch (type)
++		{
++			case FSVideoObject.AudioData:
++				currentObject = new FSAudioData(coder);
++				break;
++			case FSVideoObject.VideoData:
++				currentObject = new FSVideoData(coder);
++				break;
++			case FSVideoObject.MetaData:
++				currentObject = new FSVideoMetaData(coder);
++				break;
++			default:
++				break;
++		}
++    
++        int delta = next - coder.getPointer();            
++        coder.context[FSVideo.Delta] = delta;
++		coder.setPointer(next);
++        
++		return currentObject;
++    }
++    
++	private String signature = &quot;FLV&quot;;
++    private int version = 1;
++    private ArrayList objects = new ArrayList();
++
++    /** 
++     * Constructs an FSVideo object with no objects.
++     */
++	public FSVideo()
++	{
++	}
++
++    /** Constructs an FSVideo object and decodes the contents of the specified file to generate an 
++        array of objects representing the video file. If an error occurs while reading and parsing 
++        the file then an exception is thrown.
++
++        @param fileName the path to the Flash Video file that will be parsed.
++        @throws FileNotFoundException - if an error occurs while reading the file.
++        @throws DataFormatException - if the file does not contain Flash data.
++        @throws IOException - if an error occurs while reading and decoding the file.
++        */
++	public FSVideo(String fileName) throws FileNotFoundException, IOException, DataFormatException
++	{
++		decodeFromFile(fileName);
++	}
++
++    /** 
++     * Constructs an FSVideo object and decodes the binary data presented in the byte array to generate 
++     * an array of objects representing the Flash Video data. If an error occurs while parsing the data then 
++     * an exception is thrown. 
++     *
++     * @param data an array of bytes containing the Flash Video binary data.
++        @throws DataFormatException - if the file does not contain Flash data.
++        @throws IOException - if an error occurs while reading and decoding the data.
++     */
++    public FSVideo(byte[] data) throws IOException, DataFormatException
++	{
++        decodeFromData(data);
++	}
++    
++    /** Gets the number representing the version of Flash Video that the video represents.
++
++        @return an integer defining the Flash Video version number for the coder.
++        */
++    public int getVersion()
++    {
++        return version;
++    }
++
++	/** Sets the Flash Video version.
++
++		@param aNumber the version of the Flash Video file format that this object utilises.
++		*/
++	public void setVersion(int aNumber)
++	{
++		version = aNumber;
++	}
++
++    /** Gets the array of video objects.
++
++        @return the array of objects.
++        */
++    public ArrayList getObjects() { return objects; }
++
++    /** Sets the array of objects contained in the Movie.
++
++        @param anArray the array of objects that describe a coder.
++        */
++    public void setObjects(ArrayList anArray)
++    {
++        objects = anArray;
++    }
++
++    /** Adds the object to the Movie.
++
++        @param anObject the object to be added to the coder.
++        */
++    public void add(FSVideoObject anObject)
++    {
++        objects.add(anObject);
++    }
++
++    /** Adds the array of object to the Video.
++
++        @param array an array of FSVideoObjects that will be added to the video in the order they are 
++        in the array.
++        */
++    public void add(ArrayList array)
++    {
++        objects.addAll(array);
++    }
++
++    /** 
++     * Decodes the contents of the specified file. An object for each tag decoded 
++     * from the file is placed in the object array in the order they were read
++     * from the file. If an error occurs while reading and parsing the file then 
++     * an exception is thrown.
++     *
++     * @param fileName the path to the Flash Video file that will be parsed.
++     * 
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws DataFormatException - if the file does not contain Flash data.
++     * @throws IOException - if an error occurs while reading and decoding the file.
++     */
++	public void decodeFromFile(String fileName) throws FileNotFoundException, DataFormatException, IOException
++	{
++        FileInputStream fileContents = null;
++        File swfFile = new File(fileName);
++        
++        fileContents = new FileInputStream(swfFile);
++        
++        int fileLength = (int)swfFile.length();
++        byte[] contents = new byte[fileLength];
++        
++        fileContents.read(contents);
++        fileContents.close();
++        
++        decodeFromData(contents);
++    }
++
++   /** 
++    * Decodes the binary Flash Video data stored in the byte array. If an error 
++    * occurs while the data is being decoded an exception is thrown.
++    *
++    * @param bytes an array of bytes that contain the encoded Flash Video objects.
++    *
++    * @throws DataFormatException - if the file does not contain Flash data.
++    * @throws IOException - if an error occurs while reading and decoding the file.
++    */
++	public void decodeFromData(byte[] bytes) throws DataFormatException, IOException
++	{
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, bytes);
++        FSVideoObject object = null;
++        
++        boolean containsAudio = false;
++        boolean containsVideo = false;
++        
++        isFlashVideo(bytes);
++
++        signature = coder.readString(3, &quot;UTF8&quot;);
++        version = coder.readWord(1, false);
++        coder.readBits(5, false);
++        containsAudio = coder.readBits(1, false) != 0;
++        coder.readBits(1, false);
++        containsVideo = coder.readBits(1, false) != 0;
++
++        int offset = coder.readWord(4, false);
++        offset = coder.readWord(4, false);
++        
++        do {
++            objects.add(decodeObject(coder));
++            
++            if (coder.context[Delta] != 0)
++                throw new IOException();
++            
++            offset = coder.readWord(4, false);    
++
++        } while (!coder.eof());
++	}
++    
++    /** 
++     * Encodes the array of objects and writes the data to the specified file. 
++     * If an error occurs while encoding the file then an exception is thrown.
++     *
++     * @param fileName the path to the file that the video will be encoded to.
++     *
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws IOException - if an error occurs while encoding and writing the file.
++     */
++	public void encodeToFile(String fileName) throws FileNotFoundException, IOException
++	{
++		FileOutputStream fileContents = new FileOutputStream(fileName);
++    
++        byte[] encodedData = encode();
++
++        fileContents.write(encodedData);
++        fileContents.close();
++    }
++
++    /** 
++     * Returns the encoded representation of the array of objects that this Video
++     * contains. If an error occurs while encoding the file then an exception is 
++     * thrown.
++     *
++     * @return the array of bytes representing the encoded objects.
++     * @throws IOException if an error occurs while the data is being decoded.
++     */
++    public byte[] encode() throws IOException
++    {
++		FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, 0);
++        
++        coder.context[FSVideo.Version] = version;
++
++        int fileLength = length(coder);
++
++ 		coder.setData(FSCoder.BIG_ENDIAN, new byte[fileLength]);         
++        
++        boolean containsAudio = false;
++        boolean containsVideo = false;
++        
++        for (Iterator i=objects.iterator(); i.hasNext(); )
++		{
++			int type = ((FSVideoObject)(i.next())).getType();
++			
++			if (type == FSVideoObject.AudioData)
++				containsAudio = true;
++			else if (type == FSVideoObject.VideoData)
++				containsVideo = true;
++		}
++
++		coder.writeString(signature, &quot;UTF8&quot;);
++        coder.writeWord(version, 1);
++        coder.writeBits(0, 5);
++        coder.writeBits(containsAudio ? 1 : 0, 1);
++        coder.writeBits(0, 1);
++        coder.writeBits(containsVideo ? 1 : 0, 1);
++        coder.writeWord(9, 4);
++        coder.writeWord(0, 4);
++        
++        for (Iterator i = objects.iterator(); i.hasNext();)
++        {
++			FSVideoObject object = (FSVideoObject)i.next();
++
++            int length = object.getLength();
++            int start = coder.getPointer();
++            int next = start + (length &lt;&lt; 3);
++            
++            object.encode(coder);
++            coder.setPointer(next);
++            
++            if (((next - coder.getPointer()) &gt;&gt; 3) != 0)
++                throw new IOException();
++            
++            coder.writeWord(length+11, 4);
++        }
++		return coder.getData();
++    }
++    
++    /** 
++     * Creates a deep copy of the entire video.
++     * 
++     * @return a copy of the object.
++     */
++	public Object clone()
++	{
++        FSVideo anObject = null;
++        
++        try {
++            anObject = (FSVideo)super.clone();
++
++			anObject.objects = new ArrayList();
++			
++			for (Iterator i = objects.iterator(); i.hasNext();)
++				anObject.objects.add(((FSVideoObject)i.next()).clone());
++        }
++        catch (CloneNotSupportedException e)
++        {
++            throw new InternalError();
++        }
++        
++		return anObject;
++	}
++
++    /** 
++     * Returns true if anObject is equal to this one. The comparison is performed 
++     * on all the objects contained in the video. Objects are considered equal 
++     * if they would generate identical binary data when they are encoded to a 
++     * Flash Video file.
++     *
++	 * @return true if this object would be identical to anObject when encoded.
++     */
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++        {
++            FSVideo typedObject = (FSVideo)anObject;
++
++            result = version == typedObject.version;
++            result = result &amp;&amp; objects.equals(((FSVideo)anObject).getObjects());            
++        }
++		return result;
++	}
++
++    /** 
++     * AppendDescription is used to present a string description of the object 
++     * including all nested objects up to a specified depth. 
++     *
++     * The representation of the object is appended to the StringBuffer, showing 
++     * the name of the class and values of the attributes it contains. If the 
++     * object contains any attributes that are objects then the object graph will 
++     * be traversed up to the specified depth. If objects are nested at a level 
++     * less than specified depth then the full string representation of the 
++     * object is displayed. For objects at the specified depth only the name of 
++     * the class is displayed. Any objects below this depth are not displayed.	
++     *
++     * @param buffer a StringBuffer to which the description of each object is appended.
++     * @param depth the maximum level of nesting up to which objects will be displayed. 
++     */
++	public void appendDescription(StringBuffer buffer, int depth)
++	{
++		buffer.append(&quot;FSVideo&quot;);
++		buffer.append(&quot; : { &quot;);
++		Transform.append(buffer, &quot;signature&quot;, signature);
++		Transform.append(buffer, &quot;version&quot;, version);
++		Transform.append(buffer, &quot;objects&quot;, objects, depth);
++		buffer.append(&quot;}&quot;);
++	}
++
++	private int length(FSCoder coder)
++	{
++        int length = 13;
++
++        for (Iterator i = objects.iterator(); i.hasNext();)
++		{
++            length += 4 + ((FSVideoObject)(i.next())).length(coder);
++		}
++        return length;
++	}
++
++    private void isFlashVideo(byte[] bytes) throws DataFormatException
++    {
++		if (bytes == null || bytes.length &lt; 8)
++			throw new DataFormatException();
++            
++        boolean isFlashVideo = bytes[0] == 0x46 &amp;&amp; bytes[1] == 0x4C &amp;&amp; bytes[2] == 0x56;
++        
++        if (isFlashVideo == false)
++            throw new DataFormatException();
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/FSVideoData.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoData.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSVideoData.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,259 @@
++/*
++ * FSVideoData.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++/**  
++ * The FSVideoData class is used to store the data for a single video frame.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;timestamp&lt;/td&gt;
++ * &lt;td&gt;The time in milliseconds at which the sound will be played. The timestamp 
++ * is used exclusively for determining when sound or video will be played. Any 
++ * internal timing information in the audio or video data is ignored.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;codec&lt;/td&gt;
++ * &lt;td&gt;Identifies the format of the video data. FSVideo.H263 represents data 
++ * encoded using the Sorenson modified H263 format.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;frameType&lt;/td&gt;
++ * &lt;td&gt;The type of frame being displayed, either FSVideo.KeyFrame, FSVideo.Frame 
++ * or FSVideo.Optional.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;data&lt;/td&gt;
++ * &lt;td&gt;The encoded video data.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * The FSVideoData class represents the FLV Tag with the Video Data section from 
++ * Macromedia's Flash (SWF) File Format Specification. It was added in Flash 
++ * Video 1 with support for the Sorenson modified H263 format. Support for 
++ * Macromedia's ScreenVideo format was added when Flash 7 was released.&lt;/p&gt;
++ */  
++public final class FSVideoData extends FSVideoObject
++{
++	private int codec = 0;
++	private int frameType = 0;
++    private byte[] data = null;
++
++	FSVideoData(FSCoder coder)
++	{
++        super(FSVideoObject.VideoData, 0);
++		decode(coder);
++	}
++
++    /**
++     * Constructs a new FSVideoData object specifying the time which the video 
++     * should be displayed, the video data and the format used to encode it and 
++     * the type of frame that the video represents - either a key frame, regular 
++     * frame or an optional frame which can be discarded (H263 format only). 
++     *
++	 * @param timestamp the time in milliseconds at which the data should be played.
++     * @param format the format used to encode the video either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
++     * @param type the type of frame being displayed, either FSVideo.KeyFrame, 
++     * FSVideo.Frame or FSVideo.Optional.
++     * @param data an array of bytes containing the video encoded using the 
++     * format indicated in the codec attribute, either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
++     */
++	public FSVideoData(int timestamp, int format, int type, byte[] data)
++	{
++		super(FSVideoObject.VideoData, timestamp);
++		setCodec(codec);
++		setFrameType(frameType);
++		setData(data);
++	}
++
++    /**
++     * Gets the scheme used to encode the video data, either FSVideo.H263 for 
++     * data that was encoded using the modified Sorenson H263 format or 
++     * FSVideo.ScreenVideo for video that was encoded using Macromedia's 
++     * ScreenVideo format.
++     *
++     * @return the format used to encode the video either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
++     */
++    public int getCodec()
++    {
++        return codec;
++    }
++
++    /**
++     * Sets the format used to encode the video data, either FSVideo.H263 for 
++     * data that was encoded using the modified Sorenson H263 format or
++     * FSVideo.ScreenVideo for video that was encoded using Macromedia's 
++     * ScreenVideo format.
++     *
++     * @param format the format used to encode the video either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
++     */
++    public void setCodec(int format)
++	{
++		codec = format;
++	}
++    
++    /**
++     * Gets the type of frame that will be displayed, either FSVideo.KeyFrame, 
++     * FSVideo.Frame or FSVideo.Optional. The latter is used only to indicate 
++     * disposable frame and is only used with the Sorenson modified H263 format.
++     *
++     * @return the type of frame, either FSVideo.KeyFrame, FSVideo.Frame or 
++     * FSVideo.Optional.
++     */
++    public int getFrameType() 
++    {
++        return frameType;
++    }
++
++    /**
++     * Sets the type of frame type indicating whether it is a key frame 
++     * (FSVideo.KeyFrame), a normal frame (FSVideo.Frame) displayed between key 
++     * frames other whether display of the frame is optional ( FSVideo.Optional). 
++     * The latter is used only with video encoded using the Sorenson modified 
++     * H263 format.
++     *
++     * @param type the type of frame being displayed, either FSVideo.KeyFrame, 
++     * FSVideo.Frame or FSVideo.Optional.
++     */
++    public void setFrameType(int type)
++	{
++		frameType = type;
++	}
++    
++    /**
++     * Get the encoded video data.
++     *
++     * @return an array of bytes encoded using the format indicated in the codec 
++     * attribute, either FSVideo.H263 or FSVideo.ScreenVideo.
++     */
++    public byte[] getData() 
++    {
++        return data;
++    }
++
++    /**
++     * Sets the encoded video data for the frame.
++     *
++     * @param data an array of bytes containing the video encoded using the 
++     * format indicated in the codec attribute, either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
++     */
++    public void setData(byte[] data)
++	{
++		this.data = data;
++	}
++    
++    public Object clone()
++	{
++        FSVideoData anObject = (FSVideoData)super.clone();
++        
++        anObject.data = Transform.clone(data);
++        
++		return anObject;
++	}
++
++    public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++        {
++            FSVideoData typedObject = (FSVideoData)anObject;
++            
++            result = codec == typedObject.codec;
++            result = result &amp;&amp; frameType == typedObject.frameType;
++
++            if (data != null)
++                result = result &amp;&amp; Transform.equals(data, typedObject.data);
++            else
++                result = result &amp;&amp; typedObject.data == null;
++        }
++		return result;
++	}
++
++	public void appendDescription(StringBuffer buffer, int depth)
++	{
++		buffer.append(name());
++
++		if (depth &gt; 0)
++		{
++			buffer.append(&quot;: { &quot;);
++			Transform.append(buffer, &quot;codec&quot;, codec);
++			Transform.append(buffer, &quot;frameType&quot;, frameType);
++            Transform.append(buffer, &quot;data&quot;, &quot;&lt;data&gt;&quot;);
++
++			buffer.append(&quot;}&quot;);
++		}
++	}
++
++	int length(FSCoder coder)
++	{
++		super.length(coder);
++	
++		length += 1 + data.length;
++	
++		return length;
++	}
++	
++	void encode(FSCoder coder)
++	{
++        super.encode(coder);
++		
++		coder.writeBits(codec, 4);
++		coder.writeBits(frameType, 4);
++        coder.writeBytes(data);
++	}
++	
++	void decode(FSCoder coder)
++	{
++		super.decode(coder);
++        
++        data = new byte[length-1];
++        
++		codec = coder.readBits(4, false);
++		frameType = coder.readBits(4, false);
++        coder.readBytes(data);
++	}
++}
+\ No newline at end of file
+
+Added: trunk/src/com/flagstone/transform/FSVideoMetaData.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoMetaData.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSVideoMetaData.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,128 @@
++/*
++ * FSVideoData.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++/** 
++ * The FSVideoMetaData class is used to store infromation on how the video
++ * stream should be displayed.
++ * 
++ * Although meta-data can be found in all flash Video files there is no 
++ * documentation published by Adobe that describes the data structure. As a 
++ * result the information is decoded as a simple block of binary data.
++ */  
++public final class FSVideoMetaData extends FSVideoObject
++{
++	private byte[] data;
++	
++	FSVideoMetaData(FSCoder coder)
++	{
++        super(FSVideoObject.MetaData, 0);
++		decode(coder);
++	}
++    
++    /**
++     * Get the encoded meta data that decribes how the video stream should be 
++     * played.
++     *
++     * @return an array of bytes containing the encoded meta-data.
++     */
++    public byte[] getData() 
++    {
++        return data;
++    }
++
++    /**
++     * Sets the encoded meta data that decribes how the video stream should be 
++     * played.
++     * 
++     * @param data an array of bytes containing the encoded meta-data.
++     */
++    public void setData(byte[] data)
++	{
++		this.data = data;
++	}
++    
++    public Object clone()
++	{
++        FSVideoMetaData anObject = (FSVideoMetaData)super.clone();
++        
++		return anObject;
++	}
++
++    public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++        {
++            FSVideoMetaData typedObject = (FSVideoMetaData)anObject;
++            
++            if (data != null)
++                result = result &amp;&amp; Transform.equals(data, typedObject.data);
++            else
++                result = result &amp;&amp; typedObject.data == null;
++        }
++		return result;
++	}
++
++	public void appendDescription(StringBuffer buffer, int depth)
++	{
++		buffer.append(name());
++
++		if (depth &gt; 0)
++		{
++			buffer.append(&quot;: { &quot;);
++            Transform.append(buffer, &quot;data&quot;, &quot;&lt;data&gt;&quot;);
++			buffer.append(&quot;}&quot;);
++		}
++	}
++
++	int length(FSCoder coder)
++	{
++		super.length(coder);
++	
++		length += data.length;
++	
++		return length;
++	}
++	
++	void encode(FSCoder coder)
++	{
++        super.encode(coder);
++		coder.writeBytes(data);
++	}
++	
++	void decode(FSCoder coder)
++	{
++		super.decode(coder);
++        data = new byte[length];
++        coder.readBytes(data);
++	}
++}
+\ No newline at end of file
+
+Added: trunk/src/com/flagstone/transform/FSVideoObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoObject.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/FSVideoObject.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,194 @@
++/*
++ * FSVideoObject.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++/** 
++ * The FSVideoObject is the root class for objects that represent each of the 
++ * tagged data structures that make up the Flash Video file format specification.
++ *
++ * Each of the major data structures defined in the Flash file format specification 
++ * start with a header that contains the type identifying the data structure followed 
++ * by the number of bytes that the body of the encoded data structure occupies in 
++ * the file. The FSVideoObject manages the encoding and decoding of this information.
++ *
++ * This class is primarily used internally in the library however the getType()
++ * method is useful when manipulating decoded video files. Rather than using the 
++ * runtime type checking provided in the Java environment the method can be used 
++ * to identify the class, derived from FSVideoObject, that represents each data 
++ * structure, improving performance.
++ */
++
++public abstract class FSVideoObject extends Object implements Cloneable
++{
++    /** Type identifying objects containing sound */
++    public static final int AudioData = 8;
++    /** Type identifying objects containing video */
++    public static final int VideoData = 9;
++    /** Type identifying objects containing meta-data */
++    public static final int MetaData = 18;
++
++    protected int type = 0;
++	protected int length = 0;
++	protected int timestamp = 0;
++
++	/**
++	 * Constructs a movie object with the specified type. The timestamp identifies the 
++     * time, in milliseconds, relative to the start of the file that the audio or video
++     * will be played.
++     *
++     * The timestamp is used exclusively for determining when sound or video will be 
++     * played. Any internal timing information in the audio or video data is ignored. 
++     *
++	 * @param type an identifier indicating the type of movie object.
++	 * @param timestamp the time in milliseconds at which the data should be played.
++	 */
++    public FSVideoObject(int type, int timestamp)
++	{
++		this.type = type;
++        this.timestamp = timestamp;
++	}
++
++    /** 
++     * Gets the code used that identifies the type of the object when it is 
++     * encoded. 
++ 	 *
++     * @return the code used to denote the type of the object.
++     */
++	public int getType() 
++    {
++        return type;
++    }
++    
++    int getLength()
++    {
++    	return length;
++    }
++
++    /**
++     * Gets the timestamp, in milliseconds, relative to the start of the file, when the 
++     * audio or video will be played.
++     *
++     * @return the time when the data will be played.
++     */
++	public int getTimestamp() 
++    {
++        return timestamp;
++    }
++    
++    /**
++     * Sets the timestamp, in milliseconds, relative to the start of the file, when the 
++     * audio or video will be played.
++     *
++     * @return time the time in milliseconds relative to the start of the file.
++     */
++	public void setTimestamp(int time) 
++    {
++        timestamp = time;
++    }
++    
++	public boolean equals(Object anObject)
++	{
++        boolean result = false; 
++        
++        if (getClass().isInstance(anObject))
++        {
++            FSVideoObject typedObject = (FSVideoObject)anObject;
++            
++            result = type == typedObject.type;
++            result = result &amp;&amp; timestamp == typedObject.timestamp;
++        }
++        return result;
++	}
++
++	/** 
++	 * Return the name of the class without the package prefix. This method is used when 
++	 * logging events to identify the object being encoded or decoded.
++	 *
++	 * @return the name of the class, e.g. FSDefineShape.
++	 */
++	public String name()
++	{
++		String className = getClass().getName();
++		int index = className.lastIndexOf(&quot;.&quot;)+1;
++
++		return className.substring(index, className.length());
++	}
++   
++	/** Creates a deep copy of the entire object.
++
++		 @return a copy of the object.
++		 */
++	public Object clone()
++	{
++		Object anObject = null;
++        
++		try 
++		{
++			anObject = super.clone();
++		}
++		catch (CloneNotSupportedException e)
++		{
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	public void appendDescription(StringBuffer buffer, int depth)
++	{
++		buffer.append(name());
++	}
++
++	int length(FSCoder coder)
++	{
++		coder.context[FSCoder.Type] = type;
++        
++        length = 11;
++        
++		return length;
++	}
++
++	void encode(FSCoder coder)
++	{
++		coder.context[FSCoder.Type] = type;
++		
++        coder.writeWord(type, 1);			
++        coder.writeWord(length, 3);			
++        coder.writeWord(timestamp, 3);			
++        coder.writeWord(0, 4);			
++	}
++	
++	void decode(FSCoder coder)
++	{
++        type = coder.readWord(1, false);
++        length = coder.readWord(3, false);
++        timestamp = coder.readWord(3, false);
++        coder.readWord(4, false); // reserved
++	}
++}
+
+Modified: trunk/src/com/flagstone/transform/Transform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/Transform.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/Transform.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -57,13 +57,13 @@
+      * MINOR is used to identify the current minor version of the framework. This
+      * is incremented when new functionality is added or API changes are made.
+      */
+-    public static final int MINOR = 0;
++    public static final int MINOR = 3;
+     /** 
+      * The RELEASE number is used to differentiate between different releases. 
+      * This number is incremented when an enhancement or bug fix has been made 
+      * and the API is unchanged.
+      */
+-    public static final int RELEASE = 6;
++    public static final int RELEASE = 0;
+     /** 
+      * VALUE_NOT_SET is used to signify that a field has not yet assigned a value. Some Flash 
+      * tags contain optional fields to reduce the size of the binary data when a tag is encoded. 
+
+Modified: trunk/src/com/flagstone/transform/test/AllTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/AllTests.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/test/AllTests.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -11,6 +11,7 @@
+         suite.addTest(DataTypeTests.suite());
+         suite.addTest(MovieObjectTests.suite());
+         suite.addTest(MovieTests.suite());
++        suite.addTest(VideoTests.suite());
+         suite.addTest(ConstructorTests.suite());
+         suite.addTest(UtilityTests.suite());
+         return suite;
+
+Added: trunk/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,184 @@
++/*
++ * FSVideoTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.ArrayList;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++import junit.framework.Test;
++import junit.framework.TestCase;
++import junit.framework.TestSuite;
++
++public class FSScreenVideoPacketTest extends TestCase
++{
++    /**
++     * The main method allows the tests to be run from the command line:
++     *
++     *  FSScreenVideoPacketTest &lt;source&gt; &lt;dest&gt;
++     *
++     *  where,
++     *
++     *   &lt;source&gt; the source directory where the image files may be found.
++     *   &lt;dest&gt;   the destination directory where files will be written to.
++     *
++     * @param args arguments passed to the class when executed.
++     */
++    public static void main(String[] args)
++    {
++        junit.textui.TestRunner.run(suite(args[0], args[1]));
++    }
++
++    public static Test suite(String source, String dest)
++    {
++        TestSuite suite= new TestSuite();
++
++        suite.addTest(new FSScreenVideoPacketTest(source, dest, &quot;testEncode&quot;));
++
++        return suite;
++    }
++
++    private File sourceDir = null;
++    private File destDir = null;
++    private String[] files = null;
++
++    public FSScreenVideoPacketTest()
++    {
++        sourceDir = new File(&quot;test/data/scv&quot;);
++        destDir = new File(&quot;test/results/FSVideoConstructor&quot;);
++    }
++
++    public FSScreenVideoPacketTest(String srcDir, String dstDir, String method)
++    {
++    	super(method);
++
++    	sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++    }
++
++    protected void setUp()
++    {
++        FilenameFilter filter = new FilenameFilter()
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.png&quot;);
++            }
++        };
++
++        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
++
++        files = sourceDir.list(filter);
++
++        if (destDir.exists() == false) {
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++        }
++    }
++
++    public void testEncode()
++    {
++		File dir = new File(destDir, &quot;encode&quot;);
++
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++        try
++        {
++            FSImageConstructor imageConstructor = new FSImageConstructor(new File(sourceDir, files[0]).getAbsolutePath());
++
++            int screenWidth = imageConstructor.getWidth();
++            int screenHeight = imageConstructor.getHeight();
++
++            int blockWidth = 64;
++            int blockHeight = 64;
++
++            int numberOfFrames = files.length;
++            int deblocking = 0;
++            boolean smoothing = false;
++            int codec = FSVideo.ScreenVideo;
++
++            File destFile = new File(dir, sourceDir.getName()+&quot;.swf&quot;);
++            
++            FSMovie movie = new FSMovie();
++            int identifier = movie.newIdentifier();
++            
++            movie.setFrameSize(new FSBounds(0,0,screenWidth*20,screenHeight*20));
++            movie.setFrameRate(4.0f);
++            movie.add(new FSSetBackgroundColor(FSColorTable.aliceblue()));
++                          
++            movie.add(new FSDefineVideo(identifier, numberOfFrames, screenWidth, screenHeight, deblocking, smoothing, codec));     
++            
++            ArrayList prev = imageConstructor.getImageAsBlocks(blockWidth, blockHeight);
++            ArrayList next;
++            ArrayList delta;
++            
++        	FSScreenVideoPacket packet = new FSScreenVideoPacket(true, codec, screenWidth, screenHeight, blockWidth, blockHeight, prev);
++            
++        	movie.add(new FSPlaceObject2(identifier, 1, 0,0));
++            movie.add(new FSVideoFrame(identifier, 0, packet.encode()));
++            movie.add(new FSShowFrame());
++  
++        	for (int i=1; i&lt;numberOfFrames; i++)
++	    	{
++                File srcFile = new File(sourceDir, files[i]);
++
++                imageConstructor.setImageFromFile(srcFile.getAbsolutePath());                                
++                next = imageConstructor.getImageAsBlocks(blockWidth, blockHeight);
++                
++        		delta = new ArrayList(prev.size());
++        		
++        		for (int j=0; j&lt;prev.size(); j++)
++        		{
++        			if (!prev.get(j).equals(next.get(j))) {
++        				delta.add(next.get(j));
++        			}
++        			else {
++        				delta.add(new FSImageBlock(0,0,null));
++        			}
++        		}
++                
++            	packet = new FSScreenVideoPacket(false, codec, screenWidth, screenHeight, blockWidth, blockHeight, delta);
++                
++            	movie.add(new FSPlaceObject2(1, i/65535.0f, 0,0));
++                movie.add(new FSVideoFrame(identifier, i, packet.encode()));
++                movie.add(new FSShowFrame());
++	    	}
++            
++            movie.encodeToFile(destFile.getAbsolutePath());
++        }
++        catch (Exception e)
++        {
++        	e.printStackTrace();
++            fail(e.toString());
++        }
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/test/FSVideoTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSVideoTest.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/test/FSVideoTest.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,173 @@
++/*
++ * FSVideoTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.io.*;
++
++import com.flagstone.transform.*;
++
++import junit.framework.Test;
++import junit.framework.TestCase;
++import junit.framework.TestSuite;
++
++public class FSVideoTest extends TestCase
++{
++    /**
++     * The main method allows the tests to be run from the command line:
++     *
++     *  FSVideoTest &lt;source&gt; &lt;dest&gt;
++     *
++     *  where,
++     *
++     *   &lt;source&gt; the source directory where the flash files may be found.
++     *   &lt;dest&gt;   the destination directory where files will be written to.
++     *
++     * @param args arguments passed to the class when executed.
++     */
++    public static void main(String[] args)
++    {
++        junit.textui.TestRunner.run(suite(args[0], args[1]));
++    }
++
++    public static Test suite(String source, String dest)
++    {
++        TestSuite suite= new TestSuite();
++
++        suite.addTest(new FSVideoTest(source, dest, &quot;testDecode&quot;));
++        suite.addTest(new FSVideoTest(source, dest, &quot;testEncode&quot;));
++        suite.addTest(new FSVideoTest(source, dest, &quot;testClone&quot;));
++
++        return suite;
++    }
++
++    private File sourceDir = null;
++    private File destDir = null;
++    private String[] files = null;
++
++    public FSVideoTest()
++    {
++        sourceDir = new File(&quot;test/data/flv&quot;);
++        destDir = new File(&quot;test/results/FSVideo&quot;);
++    }
++
++    public FSVideoTest(String srcDir, String dstDir, String method)
++    {
++    	super(method);
++
++    	sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++    }
++
++    protected void setUp()
++    {
++        FilenameFilter filter = new FilenameFilter()
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.flv&quot;);
++            }
++        };
++
++        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
++
++        files = sourceDir.list(filter);
++
++        if (destDir.exists() == false) {
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++        }
++    }
++
++    public void testDecode()
++    {
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                new FSVideo(new File(sourceDir, files[i]).getPath());
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testEncode()
++    {
++		File dir = new File(destDir, &quot;encode&quot;);
++
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++		for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSVideo video = new FSVideo(srcFile.getPath());
++
++                video.encodeToFile(destFile.getPath());
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testClone()
++    {
++		File dir = new File(destDir, &quot;clone&quot;);
++
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSVideo video = new FSVideo(srcFile.getPath());
++
++                FSVideo clone = (FSVideo)video.clone();
++                clone.encodeToFile(destFile.getPath());
++           }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/test/VideoTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/VideoTests.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/test/VideoTests.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -0,0 +1,15 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class VideoTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSVideoTest.class);
++        suite.addTestSuite(FSScreenVideoPacketTest.class);
++        return suite;
++    }
++}
+
+Modified: trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2008-03-28 08:56:54 UTC (rev 397)
++++ trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2008-03-31 14:56:31 UTC (rev 398)
+@@ -41,6 +41,7 @@
+ import com.flagstone.transform.FSDefineShape3;
+ 
+ import com.flagstone.transform.FSCoder;
++import com.flagstone.transform.FSImageBlock;
+ import com.flagstone.transform.FSShape;
+ import com.flagstone.transform.FSCoordTransform;
+ import com.flagstone.transform.FSBounds;
+@@ -551,7 +552,112 @@
+         }
+         return image;
+     }
++    
+     /**
++     * Return the image as an array of FSImageBlock objects that can be used
++     * when creating ScreenVideo streams.
++     * 
++     * The image is divided by tiling blocks of the specified width and height 
++     * across the image. For blocks at the right and bottom edges the size of 
++     * the block may be reduced so that it fits the image exactly. In other 
++     * words the blocks are not padded with extra pixel information.
++     * 
++     * @param blockWidth the width of a block in pixels.
++     * @param blockHeight the height of a block in pixels
++     * @return an array of FMImageBlock objects.
++     */   
++	public ArrayList getImageAsBlocks(int blockWidth, int blockHeight)
++	{
++        int row = 0;
++        int col = 0;
++        int index = 0;
++
++        byte[] formattedImage = new byte[width*height*3];
++        
++        switch (format)
++        {
++            case IDX8:
++            case IDXA: 
++                for (row=height-1; row&gt;=0; row--)
++                {
++                    for (col=0; col&lt;width; col++) 
++                    {                  	
++                        formattedImage[index++] = colourTable[indexedImage[row][col]][2];
++                        formattedImage[index++] = colourTable[indexedImage[row][col]][1];
++                        formattedImage[index++] = colourTable[indexedImage[row][col]][0];                    	
++                    }
++                }
++                break;
++            case RGB5: 
++            case RGB8: 
++            case RGBA: 
++                for (row=height-1; row&gt;=0; row--)
++                {
++                    for (col=0; col&lt;width; col++)
++                    {
++                        formattedImage[index++] = colorImage[row][col][2];
++                        formattedImage[index++] = colorImage[row][col][1];
++                        formattedImage[index++] = colorImage[row][col][0];
++                    }
++                }
++                break;
++        }
++
++		int columns = (width+blockWidth-1)/blockWidth;
++		int rows = (height+blockHeight-1)/blockHeight;
++		
++		ArrayList blocks = new ArrayList(rows*columns);
++		byte[] blockData = new byte[blockHeight*blockWidth*3];
++		
++		for (int i=0; i&lt;rows; i++)
++		{
++			for (int j=0; j&lt;columns; j++)
++			{
++				int xOffset = j*blockWidth;
++				int yOffset = i*blockHeight;
++				
++				int xSpan = (width-xOffset &gt; blockWidth) ? blockWidth : width-xOffset;
++				int ySpan = (height-yOffset &gt; blockHeight) ? blockHeight : height-yOffset;
++				int offset = 0;
++				
++				int idx;
++				
++				for (int k=0; k&lt;ySpan; k++) 
++				{
++					for (int l=0; l&lt;xSpan; l++, offset+=3) 
++					{
++						idx = (yOffset+k)*(width*3)+(xOffset+l)*3;
++						
++						blockData[offset] = formattedImage[idx];					
++						blockData[offset+1] = formattedImage[idx+1];					
++						blockData[offset+2] = formattedImage[idx+2];					
++					}
++				}
++				
++				blocks.add(new FSImageBlock(xSpan, ySpan, zip(blockData, offset)));
++			}
++		}
++		return blocks;
++	}
++	
++	private static byte[] zip(byte[] image, int length)
++	{
++		Deflater deflater = new Deflater();
++		deflater.setInput(image, 0, length);
++		deflater.finish();
++
++		byte[] compressedData = new byte[image.length];
++		int bytesCompressed = deflater.deflate(compressedData);
++
++		byte[] newData = new byte[bytesCompressed];
++
++		for (int i = 0; i &lt; bytesCompressed; i++)
++			newData[i] = compressedData[i];
++
++		return newData;
++	}
++    
++    /**
+      * Sets the image data for an indexed image.
+      * 
+      * @param encoding the format for the encoded image, either IDX8, or IDXA.
+
+Added: trunk/test/data/scv/frame_01.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_01.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_02.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_02.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_03.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_03.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_04.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_04.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_05.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_05.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_06.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_06.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_07.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_07.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_08.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_08.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_09.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_09.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_10.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_10.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_11.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_11.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_12.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_12.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_13.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_13.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_14.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_14.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_15.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_15.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_16.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_16.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/test/data/scv/frame_17.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/test/data/scv/frame_17.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000333.html">[Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+	<LI>Next message: <A HREF="000335.html">[Transform-svn] r399 - in trunk/test/data: . flv
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#334">[ date ]</a>
+              <a href="thread.html#334">[ thread ]</a>
+              <a href="subject.html#334">[ subject ]</a>
+              <a href="author.html#334">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

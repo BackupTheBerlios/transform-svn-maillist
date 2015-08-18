@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r437 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r437%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804041142.m34BgkiX016990%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000372.html">
+   <LINK REL="Next"  HREF="000374.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r437 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r437%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804041142.m34BgkiX016990%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r437 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Apr  4 13:42:46 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000372.html">[Transform-svn] r436 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000374.html">[Transform-svn] r438 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#373">[ date ]</a>
+              <a href="thread.html#373">[ thread ]</a>
+              <a href="subject.html#373">[ subject ]</a>
+              <a href="author.html#373">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-04 13:42:24 +0200 (Fri, 04 Apr 2008)
+New Revision: 437
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/Codeable.java
+   dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSBounds.java
+   dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java
+   dev/dev-3-0/src/com/flagstone/transform/FSButtonShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSCharacter.java
+   dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java
+   dev/dev-3-0/src/com/flagstone/transform/FSColor.java
+   dev/dev-3-0/src/com/flagstone/transform/FSColorTransform.java
+   dev/dev-3-0/src/com/flagstone/transform/FSCoordTransform.java
+   dev/dev-3-0/src/com/flagstone/transform/FSEnvelope.java
+   dev/dev-3-0/src/com/flagstone/transform/FSFillStyle.java
+   dev/dev-3-0/src/com/flagstone/transform/FSGradient.java
+   dev/dev-3-0/src/com/flagstone/transform/FSKerning.java
+   dev/dev-3-0/src/com/flagstone/transform/FSLineStyle.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMorphGradient.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMorphLineStyle.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSRegisterVariable.java
+   dev/dev-3-0/src/com/flagstone/transform/FSShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+   dev/dev-3-0/src/com/flagstone/transform/FSVideoObject.java
+Log:
+Changed Codeable interface to an abstract class.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/Codeable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/Codeable.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/Codeable.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -30,14 +30,16 @@
+ 
+ package com.flagstone.transform;
+ 
+-/**
+- * This interface is implemented by all the classes in the Transform framework
+- * that are able to encode and decode themselves as binary data.
++/** 
++ * The FSTransformObject object defines the basic set of method that an object must implement 
++ * if it can used to represent the data structures that make up the Flash File Format
++ * specification.
+  * 
+- * If you add a class to the framework it must implement this interface.
+- * 
++ * Sub-classes can be used to represent either one of the tagged data structures 
++ * such as PlaceObject and added directly to an FSMovie or one of the data-types
++ * that the objects contain e.g. a colour.
+  */
+-public interface Codeable
++public abstract class Codeable
+ {
+ 	/**
+ 	 * This method returns the length in bytes of an object when it is 
+@@ -53,7 +55,7 @@
+ 	 * 
+ 	 * @return the length in bytes of the object when it is encoded.
+ 	 */
+-	public int length(FSContext context);
++	public abstract int length(FSContext context);
+ 
+ 	/**
+ 	 * Encode an object to the binary form.
+@@ -66,7 +68,7 @@
+ 	 * 
+ 	 * @return the length in bytes of the object when it is encoded.
+ 	 */
+-	public void encode(FSCoder coder, FSContext context);
++	public abstract void encode(FSCoder coder, FSContext context);
+ 
+ 	/**
+ 	 * Decode an object from its binary form. 
+@@ -79,5 +81,5 @@
+ 	 * 
+ 	 * @return the length in bytes of the object when it is encoded.
+ 	 */
+-	public void decode(FSCoder coder, FSContext context);
+-}
++	public abstract void decode(FSCoder coder, FSContext context);
++}
+\ No newline at end of file
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -57,7 +57,7 @@
+  * The registerClass() method allows you to write your own decode for actions 
+  * not currently supported by the framework.
+  */
+-public abstract class FSActionObject implements Cloneable, Codeable
++public abstract class FSActionObject extends Codeable implements Cloneable
+ {
+ 	/** Type identifying the end of a sequence of actions. */
+ 	public static final int End = 0;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSBounds.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSBounds.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSBounds.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -125,7 +125,7 @@
+  * (SWF) File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSBounds implements Cloneable, Codeable
++public class FSBounds extends Codeable implements Cloneable
+ {
+ 	private int minX;
+ 	private int minY;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -234,7 +234,7 @@
+  * Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSButtonEvent implements Cloneable, Codeable
++public class FSButtonEvent extends Codeable implements Cloneable
+ {
+ 	/**
+ 	 * Defines the button event that occurs when the mouse cursor moves over the
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSButtonShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSButtonShape.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSButtonShape.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -130,7 +130,7 @@
+  * &lt;/p&gt;
+  * 
+  */
+-public class FSButtonShape implements Cloneable, Codeable
++public class FSButtonShape extends Codeable implements Cloneable
+ {
+ 	/** 
+ 	 * Code for the button in the up state. 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSCharacter.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSCharacter.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSCharacter.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -140,7 +140,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSCharacter implements Cloneable, Codeable
++public class FSCharacter extends Codeable implements Cloneable
+ {
+ 	private int glyphIndex;
+ 	private int advance;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -312,7 +312,7 @@
+  * Buttons respond to. In Flash 7 the Construct event was added.
+  * &lt;/p&gt;
+  */
+-public class FSClipEvent implements Cloneable, Codeable
++public class FSClipEvent extends Codeable implements Cloneable
+ {
+ 	/** Code for a load event. */
+ 	public static final int Load = 1;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSColor.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSColor.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSColor.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -130,7 +130,7 @@
+  * introduced in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSColor implements Cloneable, Codeable
++public class FSColor extends Codeable implements Cloneable
+ {
+ 	private int red;
+ 	private int green;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSColorTransform.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSColorTransform.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -212,7 +212,7 @@
+  * were introduced in Flash 1 and Flash 3 respectively.
+  * &lt;/P&gt;
+  */
+-public class FSColorTransform implements Cloneable, Codeable
++public class FSColorTransform extends Codeable implements Cloneable
+ {
+ 	private float mulRed;
+ 	private float mulGreen;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSCoordTransform.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSCoordTransform.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSCoordTransform.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -201,7 +201,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSCoordTransform implements Cloneable, Codeable
++public class FSCoordTransform extends Codeable implements Cloneable
+ {
+ 	private float[][] matrix = new float[][] {
+ 		{1.0f, 0.0f, 0.0f },
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSEnvelope.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSEnvelope.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSEnvelope.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -85,7 +85,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSEnvelope implements Cloneable, Codeable
++public class FSEnvelope extends Codeable implements Cloneable
+ {
+ 	private int mark;
+ 	private int left;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSFillStyle.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSFillStyle.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSFillStyle.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -36,7 +36,7 @@
+  * FSFillStyle is an abstract base class for the different types of fill style
+  * that can be applied to shapes.
+  */
+-public abstract class FSFillStyle implements Cloneable, Codeable
++public abstract class FSFillStyle extends Codeable implements Cloneable
+ {
+ 	/** Defines the type for a solid fill style. */
+ 	public static final int Solid = 0;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSGradient.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSGradient.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSGradient.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -82,7 +82,7 @@
+  * 1.
+  * &lt;/p&gt;
+  */
+-public class FSGradient implements Cloneable, Codeable
++public class FSGradient extends Codeable implements Cloneable
+ {
+ 	private int ratio;
+ 	private FSColor color;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSKerning.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSKerning.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSKerning.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -79,7 +79,7 @@
+  * File Format Specification. It was introduced in Flash 2.
+  * &lt;/p&gt;
+  */
+-public class FSKerning implements Cloneable, Codeable
++public class FSKerning extends Codeable implements Cloneable
+ {
+ 	private int leftIndex;
+ 	private int rightIndex;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSLineStyle.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSLineStyle.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSLineStyle.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -119,7 +119,7 @@
+  * for transparent colours was added in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSLineStyle implements Cloneable, Codeable
++public class FSLineStyle extends Codeable implements Cloneable
+ {
+ 	private int width;
+ 	private FSColor color;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMorphGradient.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMorphGradient.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMorphGradient.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -99,7 +99,7 @@
+  * introduced in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSMorphGradient implements Cloneable, Codeable
++public class FSMorphGradient extends Codeable implements Cloneable
+ {
+ 	private int startRatio;
+ 	private int endRatio;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMorphLineStyle.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMorphLineStyle.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMorphLineStyle.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -82,7 +82,7 @@
+  * introduced in Flash 3.
+  * &lt;/P&gt;
+  */
+-public class FSMorphLineStyle implements Cloneable, Codeable
++public class FSMorphLineStyle extends Codeable implements Cloneable
+ {
+ 	private int startWidth;
+ 	private int endWidth;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -51,7 +51,7 @@
+  * structure, improving performance.
+  */
+ 
+-public abstract class FSMovieObject implements Cloneable, Codeable
++public abstract class FSMovieObject extends Codeable implements Cloneable
+ {
+ 	/** Type used to identify ShowFrame objects. */
+ 	public static final int ShowFrame = 1;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSRegisterVariable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSRegisterVariable.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSRegisterVariable.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -40,7 +40,7 @@
+  * argument is defined as a local variable.
+  * &lt;/p&gt;
+  */
+-public class FSRegisterVariable implements Cloneable, Codeable
++public class FSRegisterVariable extends Codeable implements Cloneable
+ {
+ 	private int index;
+ 	private String name;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSShape.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSShape.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -66,7 +66,7 @@
+  * File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSShape implements Cloneable, Codeable
++public class FSShape extends Codeable implements Cloneable
+ {
+ 	private List&lt;FSShapeObject&gt; objects;
+ 	private byte[] encodedObjects;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSShapeObject.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -33,7 +33,7 @@
+ import java.util.List;
+ import java.util.ArrayList;
+ 
+-public abstract class FSShapeObject implements Cloneable, Codeable
++public abstract class FSShapeObject extends Codeable implements Cloneable
+ {
+ 	static List&lt;FSShapeObject&gt; decodeShape(byte[] bytes)
+ 	{
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -117,7 +117,7 @@
+  * structures defined in the specification that contain SoundInfo data.
+  * &lt;/p&gt;
+  */
+-public class FSSoundInfo implements Cloneable, Codeable
++public class FSSoundInfo extends Codeable implements Cloneable
+ {
+ 	/** 
+ 	 * Start playing the sound. 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -209,7 +209,7 @@
+  * introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSSpan implements Cloneable, Codeable
++public class FSSpan extends Codeable implements Cloneable
+ {
+ 	private int identifier;
+ 	private FSColor color;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSVideoObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSVideoObject.java	2008-04-03 07:25:36 UTC (rev 436)
++++ dev/dev-3-0/src/com/flagstone/transform/FSVideoObject.java	2008-04-04 11:42:24 UTC (rev 437)
+@@ -49,7 +49,7 @@
+  * structure, improving performance.
+  */
+ 
+-public abstract class FSVideoObject implements Cloneable, Codeable
++public abstract class FSVideoObject extends Codeable implements Cloneable
+ {
+ 	/** Type identifying objects containing sound */
+ 	public static final int AudioData = 8;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000372.html">[Transform-svn] r436 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000374.html">[Transform-svn] r438 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#373">[ date ]</a>
+              <a href="thread.html#373">[ thread ]</a>
+              <a href="subject.html#373">[ subject ]</a>
+              <a href="author.html#373">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

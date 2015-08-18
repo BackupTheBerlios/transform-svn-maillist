@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r237 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r237%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200612151151.kBFBpPic021499%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000174.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r237 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r237%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200612151151.kBFBpPic021499%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r237 - trunk/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Dec 15 12:51:25 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000174.html">[Transform-svn] r238 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#173">[ date ]</a>
+              <a href="thread.html#173">[ thread ]</a>
+              <a href="subject.html#173">[ subject ]</a>
+              <a href="author.html#173">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-12-15 12:51:22 +0100 (Fri, 15 Dec 2006)
+New Revision: 237
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+Log:
+Fixed bug in ellipse when drawing small shapes.
+
+Modified: trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2006-11-30 15:35:47 UTC (rev 236)
++++ trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2006-12-15 11:51:22 UTC (rev 237)
+@@ -880,6 +880,19 @@
+      */
+     public void ellipse(int x, int y, int rx, int ry)
+     {
++        boolean wasInPixels = false;
++
++        if (COORDINATES_ARE_PIXELS)
++        {
++            COORDINATES_ARE_PIXELS = false;
++            wasInPixels = true;
++            
++            x *= 20;
++            y *= 20;
++            rx *= 20;
++            ry *= 20;
++        }
++
+         int startX = (int) (0.707 * rx) + x;
+         int startY = (int) (0.707 * ry) + y;
+ 
+@@ -900,6 +913,11 @@
+         rcurve(ax, ay, 0, cy);
+         rcurve(0, cy, -ax, ay);
+         closePath();
++        
++        if (wasInPixels)
++        {
++            COORDINATES_ARE_PIXELS = true;
++        }
+     }
+ 
+     /**
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000174.html">[Transform-svn] r238 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#173">[ date ]</a>
+              <a href="thread.html#173">[ thread ]</a>
+              <a href="subject.html#173">[ subject ]</a>
+              <a href="author.html#173">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

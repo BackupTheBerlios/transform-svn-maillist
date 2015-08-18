@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r207 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-July/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r207%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200607070935.k679Z0vq022999%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000144.html">
+   <LINK REL="Next"  HREF="000146.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r207 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r207%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200607070935.k679Z0vq022999%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r207 - trunk/src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Fri Jul  7 11:35:00 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000144.html">[Transform-svn] r206 - trunk/doc/web
+</A></li>
+        <LI>Next message: <A HREF="000146.html">[Transform-svn] r208 - in trunk/doc: releases web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#145">[ date ]</a>
+              <a href="thread.html#145">[ thread ]</a>
+              <a href="subject.html#145">[ subject ]</a>
+              <a href="author.html#145">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-07-07 11:34:57 +0200 (Fri, 07 Jul 2006)
+New Revision: 207
+
+Modified:
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Fixed bug when setting the encoding table.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-07-03 08:40:20 UTC (rev 206)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-07-07 09:34:57 UTC (rev 207)
+@@ -181,7 +181,7 @@
+     public void setEncodingTable(byte[] bytes)
+     {
+         if (bytes == null) {
+-            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+         }
+         encodingTable = bytes;
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-07-03 08:40:20 UTC (rev 206)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-07-07 09:34:57 UTC (rev 207)
+@@ -195,7 +195,7 @@
+     public void setEncodingTable(byte[] bytes)
+     {
+         if (bytes == null) {
+-            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+         }
+         encodingTable = bytes;
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000144.html">[Transform-svn] r206 - trunk/doc/web
+</A></li>
+	<LI>Next message: <A HREF="000146.html">[Transform-svn] r208 - in trunk/doc: releases web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#145">[ date ]</a>
+              <a href="thread.html#145">[ thread ]</a>
+              <a href="subject.html#145">[ subject ]</a>
+              <a href="author.html#145">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

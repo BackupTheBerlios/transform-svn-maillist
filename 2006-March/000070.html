@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r130 - in trunk: . doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r130%20-%20in%20trunk%3A%20.%20doc/releases&In-Reply-To=%3C200603071850.k27IopLK013636%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000069.html">
+   <LINK REL="Next"  HREF="000071.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r130 - in trunk: . doc/releases</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r130%20-%20in%20trunk%3A%20.%20doc/releases&In-Reply-To=%3C200603071850.k27IopLK013636%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r130 - in trunk: . doc/releases">smackay at berlios.de
+       </A><BR>
+    <I>Tue Mar  7 19:50:51 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000069.html">[Transform-svn] r129 - trunk
+</A></li>
+        <LI>Next message: <A HREF="000071.html">[Transform-svn] r131 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-07 19:50:45 +0100 (Tue, 07 Mar 2006)
+New Revision: 130
+
+Modified:
+   trunk/developer.xml
+   trunk/doc/releases/index.html
+Log:
+Restored way datasheets were generated. The dist target now calls 
+doc rather than generating the datasheets independently.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2006-03-07 17:50:52 UTC (rev 129)
++++ trunk/developer.xml	2006-03-07 18:50:45 UTC (rev 130)
+@@ -53,7 +53,7 @@
+ &lt;!-- ***************************************
+        Package the files for distribution.
+      *************************************** --&gt; 
+-    &lt;target name=&quot;dist&quot; depends=&quot;build&quot; description=&quot;Create a full distribution&quot;&gt;
++    &lt;target name=&quot;dist&quot; depends=&quot;build,docs&quot; description=&quot;Create a full distribution&quot;&gt;
+         
+         &lt;delete dir=&quot;${dist.dir}&quot; failonerror=&quot;false&quot;/&gt;
+ 
+@@ -71,11 +71,9 @@
+             &lt;/fileset&gt;
+         &lt;/copy&gt;
+ 
+-        &lt;javadoc destdir=&quot;${dist.dir}/doc&quot; stylesheetfile=&quot;${doc.css.dir}/datasheet.css&quot;&gt;
+-            &lt;packageset dir=&quot;${src.dir}&quot; defaultexcludes=&quot;yes&quot;&gt;
+-                &lt;include name=&quot;${package.dir}&quot; /&gt;
+-            &lt;/packageset&gt;
+-        &lt;/javadoc&gt;
++        &lt;copy todir=&quot;${dist.dir}/doc&quot; overwrite=&quot;true&quot;&gt;
++            &lt;fileset dir=&quot;doc&quot;/&gt;
++        &lt;/copy&gt;
+ 
+         &lt;copy todir=&quot;${dist.dir}/test&quot; overwrite=&quot;true&quot;&gt;
+             &lt;fileset dir=&quot;test&quot;&gt;
+
+Modified: trunk/doc/releases/index.html
+===================================================================
+--- trunk/doc/releases/index.html	2006-03-07 17:50:52 UTC (rev 129)
++++ trunk/doc/releases/index.html	2006-03-07 18:50:45 UTC (rev 130)
+@@ -20,9 +20,21 @@
+ &lt;th class=&quot;description&quot;&gt;Details&lt;/th&gt;
+ &lt;/tr&gt;
+ 
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;7th March 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;
++Release now integrates Transform Utilities. Brought forward several improvements
++planned for version 3.0.
++&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;
++&lt;a href=&quot;transform-2.1.html&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
+ &lt;tr class=&quot;odd&quot;&gt;
+ &lt;td class=&quot;date&quot;&gt;20th February 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.4&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.5&lt;/td&gt;
+ &lt;td class=&quot;description&quot;&gt;
+ More bug fixes discovered using new test suites.
+ &lt;/td&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000069.html">[Transform-svn] r129 - trunk
+</A></li>
+	<LI>Next message: <A HREF="000071.html">[Transform-svn] r131 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

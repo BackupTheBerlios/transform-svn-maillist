@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r279 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r279%20-%20trunk/doc/releases&In-Reply-To=%3C200712311352.lBVDqUJe015534%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000214.html">
+   <LINK REL="Next"  HREF="000216.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r279 - trunk/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r279%20-%20trunk/doc/releases&In-Reply-To=%3C200712311352.lBVDqUJe015534%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r279 - trunk/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Mon Dec 31 14:52:30 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000214.html">[Transform-svn] r278 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000216.html">[Transform-svn] r280 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#215">[ date ]</a>
+              <a href="thread.html#215">[ thread ]</a>
+              <a href="subject.html#215">[ subject ]</a>
+              <a href="author.html#215">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-31 14:52:25 +0100 (Mon, 31 Dec 2007)
+New Revision: 279
+
+Modified:
+   trunk/doc/releases/transform-pre-2.1.6.txt
+Log:
+Updated with latest changes.
+
+Modified: trunk/doc/releases/transform-pre-2.1.6.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.6.txt	2007-12-23 07:21:53 UTC (rev 278)
++++ trunk/doc/releases/transform-pre-2.1.6.txt	2007-12-31 13:52:25 UTC (rev 279)
+@@ -7,6 +7,7 @@
+ using JUnit and way each release is packaged was simplified.
+ 
+ Bug Fixes
++    12776. NAME block in TrueType fonts is not decoded correctly.
+     12769. JPEG SOI and EOI markers are swapped on null encoding tables.
+     12768. Font name in FSDefineFont2, FSFontInfo[2] has trailing null.
+     12747. Leading in FSDefineTextField is decoded as unsigned.
+@@ -26,12 +27,17 @@
+     
+ Package Changes
+     Releases simplified.
+-	Tools package was removed.
++    Tools package was removed.
+   
+ -------------
+   Bug Fixes  
+ -------------
+ 
++12776. NAME block in TrueType fonts is not decoded correctly.
++
++The NAME block in TrueType font files which contains the name of the font, 
++copyright information and other font related strings is now decoded correctly.
++
+ 12769. JPEG SOI and EOI markers are swapped on null encoding tables.
+ 
+ The readJPEGStream methods in FSDefineJPEG2 and FSDefineJPEG3 was updated and 
+@@ -134,7 +140,7 @@
+ files used to debug and test the framework  are still available from the 
+ Subversion repository: <A HREF="https://svn.berlios.de/svnroot/repos/transform/trunk">https://svn.berlios.de/svnroot/repos/transform/trunk</A>
+ 
+-2. 	Tools package was removed.
++2. Tools package was removed.
+ 
+ With the simplification of the way the framework is tested the TextDump class
+ was no longer used and the package was removed from the release. If this causes
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000214.html">[Transform-svn] r278 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000216.html">[Transform-svn] r280 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#215">[ date ]</a>
+              <a href="thread.html#215">[ thread ]</a>
+              <a href="subject.html#215">[ subject ]</a>
+              <a href="author.html#215">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

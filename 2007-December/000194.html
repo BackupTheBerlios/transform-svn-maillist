@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r258 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r258%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712211616.lBLGG2PV025172%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000195.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r258 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r258%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712211616.lBLGG2PV025172%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r258 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Dec 21 17:16:02 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000195.html">[Transform-svn] r259 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#194">[ date ]</a>
+              <a href="thread.html#194">[ thread ]</a>
+              <a href="subject.html#194">[ subject ]</a>
+              <a href="author.html#194">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-21 17:15:59 +0100 (Fri, 21 Dec 2007)
+New Revision: 258
+
+Modified:
+   trunk/src/com/flagstone/transform/FSButton.java
+Log:
+Corrected errors in documentation.
+
+Modified: trunk/src/com/flagstone/transform/FSButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButton.java	2007-11-19 04:12:05 UTC (rev 257)
++++ trunk/src/com/flagstone/transform/FSButton.java	2007-12-21 16:15:59 UTC (rev 258)
+@@ -1,38 +1,38 @@
+ /*
+  * FSButton.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+ package com.flagstone.transform;
+ 
+ /**
+-FSButton identifies the shape that is drawn when a button is in a particular state. 
+- 
++FSButton identifies the shape that is drawn when a button is in a particular state.
++
+ &lt;p&gt;Shapes can be drawn for each of three button states, Over, Up and Down. Creating a button with more than one FSButton object each referencing a different shape allows the button to be animated as it is clicked.&lt;/p&gt;
+ 
+ &lt;p&gt;A shape is also used to define active area of the button. When defining the active area the outline of the shape defines the boundary of the area. The shape is not drawn when the button is displayed. The button will only respond to mouse events when the cursor is placed inside the active area.&lt;/p&gt;
+@@ -63,7 +63,7 @@
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSButton_3&quot;&gt;colorTransform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;an optional FSColorTransform object that can be used to change the shape's 
++&lt;td&gt;an optional FSColorTransform object that can be used to change the shape's
+ colour when it is drawn.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+@@ -84,7 +84,7 @@
+ 
+ &lt;p&gt;The FSButton class represents the ButtonRecord structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+ 
+- */  
++ */
+ public class FSButton extends FSTransformObject
+ {
+     /** Code for the button in the up state. */
+@@ -95,18 +95,18 @@
+     public static final int Down = 4;
+     /** Code for the active area of the button. */
+     public static final int Active = 8;
+-    
++
+     private int state = 0;
+     private int identifier = 0;
+     private int layer = 0;
+-    
++
+     private FSCoordTransform transform = null;
+     private FSColorTransform colorTransform = null;
+ 
+     /**
+      * Construct an FSButton object, initalizing it with values decoded from
+      * an encoded object.
+-     * 
++     *
+      * @param coder an FSCoder containing the binary data.
+      */
+     public FSButton(FSCoder coder)
+@@ -171,7 +171,7 @@
+         identifier = obj.identifier;
+         layer = obj.layer;
+         transform = new FSCoordTransform(obj.transform);
+-        
++
+         if (obj.colorTransform != null)
+             colorTransform = new FSColorTransform(obj.colorTransform);
+     }
+@@ -206,7 +206,7 @@
+         */
+     public boolean isUp() { return ((state &amp; Up) != 0) ? true : false; }
+ 
+-    /** Gets the identifier of the shape that this FSButton applies to. 
++    /** Gets the identifier of the shape that this FSButton applies to.
+ 
+         @return the identifier of the shape.
+         */
+@@ -232,11 +232,11 @@
+ 
+     /** Set the state(s) of the button when the shape is drawn. The shape may be drawn for more than one state. Multiple states can be defined by bitwise-OR'ing individual states together, e.g.  Up | Over.
+ 
+-        @return the state of the button when the shape is drawn.
++        @param aNumber the state of the button when the shape is drawn.
+         */
+     public void setState(int aNumber) { state = aNumber; }
+ 
+-    /** Sets the identifier of the  FSDefineShape, FSDefineShape2 or FSDefineShape3 object that defines the appearance of the button when it is in the specified state(s). 
++    /** Sets the identifier of the  FSDefineShape, FSDefineShape2 or FSDefineShape3 object that defines the appearance of the button when it is in the specified state(s).
+ 
+         @param anIdentifier the identifier of the shape object that defines the shape's appearance.
+         */
+@@ -275,7 +275,7 @@
+     public Object clone()
+     {
+         FSButton anObject = (FSButton)super.clone();
+-        
++
+         anObject = (FSButton)super.clone();
+         anObject.transform = (transform != null) ? (FSCoordTransform)transform.clone() : null;
+         anObject.colorTransform = (colorTransform != null) ? (FSColorTransform)colorTransform.clone() : null;
+@@ -283,9 +283,9 @@
+         return anObject;
+     }
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
++    /**
++     * Returns true if anObject is equal to this one. Objects are considered
++     * equal if they would generate identical binary data when they are encoded
+      * to a Flash file.
+      *
+      * @return true if this object would be identical to anObject when encoded.
+@@ -293,11 +293,11 @@
+     public boolean equals(Object anObject)
+     {
+         boolean result = false;
+-        
++
+         if (super.equals(anObject))
+         {
+             FSButton typedObject = (FSButton)anObject;
+-            
++
+             result = state == typedObject.state;
+             result = result &amp;&amp; identifier == typedObject.identifier;
+             result = result &amp;&amp; layer == typedObject.layer;
+@@ -334,7 +334,7 @@
+     public int length(FSCoder coder)
+     {
+         int length = 0;
+-    
++
+         length += 5;
+         length += transform.length(coder);
+ // Flash 3
+@@ -343,7 +343,7 @@
+ // End Flash 3
+         return length;
+     }
+-    
++
+     public void encode(FSCoder coder)
+     {
+         coder.writeBits(0, 4);
+@@ -356,11 +356,11 @@
+             colorTransform.encode(coder);
+ // End Flash 3
+     }
+-    
++
+     public void decode(FSCoder coder)
+     {
+         coder.readBits(4, false);
+-        
++
+         state = coder.readBits(4, false);
+         identifier = coder.readWord(2, false);
+         layer = coder.readWord(2, false);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000195.html">[Transform-svn] r259 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#194">[ date ]</a>
+              <a href="thread.html#194">[ thread ]</a>
+              <a href="subject.html#194">[ subject ]</a>
+              <a href="author.html#194">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

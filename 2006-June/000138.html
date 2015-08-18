@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r200 - in trunk/doc: . releases web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r200%20-%20in%20trunk/doc%3A%20.%20releases%20web&In-Reply-To=%3C200606301131.k5UBVrmZ006110%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000137.html">
+   <LINK REL="Next"  HREF="000139.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r200 - in trunk/doc: . releases web</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r200%20-%20in%20trunk/doc%3A%20.%20releases%20web&In-Reply-To=%3C200606301131.k5UBVrmZ006110%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r200 - in trunk/doc: . releases web">smackay at berlios.de
+       </A><BR>
+    <I>Fri Jun 30 13:31:53 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000137.html">[Transform-svn] r199 - in trunk/src/com/flagstone/transform: . util
+</A></li>
+        <LI>Next message: <A HREF="000139.html">[Transform-svn] r201 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#138">[ date ]</a>
+              <a href="thread.html#138">[ thread ]</a>
+              <a href="subject.html#138">[ subject ]</a>
+              <a href="author.html#138">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-30 13:31:39 +0200 (Fri, 30 Jun 2006)
+New Revision: 200
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/doc/releases/transform-2.1.3.txt
+   trunk/doc/web/issues.html
+   trunk/doc/web/whatsnew.html
+Log:
+Updated for release 2.1.3
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-06-30 11:27:55 UTC (rev 199)
++++ trunk/doc/CHANGES.txt	2006-06-30 11:31:39 UTC (rev 200)
+@@ -1,5 +1,11 @@
+ 2006-06-29 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
++    * added public byte[] getEncodedActions() method to allow access to actions
++      encoded as binary data in the following classes: FSButtonEvent, 
++      FSClipEvent, FSDefineButton, FSDoAction and FSInitialize.
++    
++2006-06-29 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
+     * Restructured the files used to test the classes. The Flash files now
+       contain a sample of the encoded data structures for a given class. This
+       limits the size of the files which still providing useful test coverage.
+
+Modified: trunk/doc/releases/transform-2.1.3.txt
+===================================================================
+--- trunk/doc/releases/transform-2.1.3.txt	2006-06-30 11:27:55 UTC (rev 199)
++++ trunk/doc/releases/transform-2.1.3.txt	2006-06-30 11:31:39 UTC (rev 200)
+@@ -14,6 +14,8 @@
+ 	
+ Class Changes:
+     FSCoder context variable, version is now public.
++    Encoded binary actions are now accessible.
++    Classes are no longer final.
+ 	
+ Testing Changes:
+     Added test classes for FSProtect, FSShowFrame and FSSetBackgroundColor.
+@@ -99,6 +101,20 @@
+ This variable has very little use outside of testing. Other context variables
+ will be made public as more test cases are developed.
+ 
++2. Encoded binary actions are now accessible.
++
++The method 
++
++    public byte[] getEncodedActions() 
++    
++was added to the following classes:  FSButtonEvent, FSClipEvent, FSDefineButton, 
++FSDoAction and FSInitialize to allow access to actions encoded as binary data.
++
++3. Classes are no longer final.
++
++The final keyowrd has been removed from all classes in the franework allowing
++them to be sub-classed.
++
+ -------------------
+   Testing Changes  
+ -------------------
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-06-30 11:27:55 UTC (rev 199)
++++ trunk/doc/web/issues.html	2006-06-30 11:31:39 UTC (rev 200)
+@@ -50,65 +50,65 @@
+ &lt;TD&gt;Open&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
++&lt;/TBODY&gt;
++&lt;/TABLE&gt;
++
++&lt;TABLE width=&quot;100%&quot;&gt;
++
++&lt;THEAD&gt;
+ &lt;TR&gt;
+-&lt;TD&gt;2. TextDump Tool does not decode NewFunction and NewFunction2 actions correctly.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
++&lt;TH&gt;Recently Fixed&lt;/TH&gt;
++&lt;TH&gt;Status&lt;/TH&gt;
++&lt;TH&gt;Release&lt;/TH&gt;
+ &lt;/TR&gt;
++&lt;/THEAD&gt;
+ 
++&lt;TBODY&gt;
++
+ &lt;TR&gt;
+-&lt;TD&gt;3. FSDefineJPEG2 and FSDefineJPEG3 do not allow null encoding tables.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;1. TextDump Tool does not decode NewFunction and NewFunction2 actions correctly.&lt;/TD&gt;
++&lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1.3&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;4. FSCoder throws exception when adding bytes longer than the current buffer size.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2. FSDefineJPEG2 and FSDefineJPEG3 do not allow null encoding tables.&lt;/TD&gt;
++&lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1.3&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;5. FSButtonSound RollOver and RollOut sounds are swapped.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;3. FSCoder throws exception when adding bytes longer than the current buffer size.&lt;/TD&gt;
++&lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1.3&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;6. The equals() method on FSPlaceObject2 objects with encoded clip event is not accurate.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;4. FSButtonSound RollOver and RollOut sounds are swapped.&lt;/TD&gt;
++&lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1.3&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;7. The copy constructor on FSProtect can cause a NullPointerException.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;5. The equals() method on FSPlaceObject2 objects with encoded clip event is not accurate.&lt;/TD&gt;
++&lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1.3&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
+-&lt;/TBODY&gt;
+-&lt;/TABLE&gt;
+-
+-&lt;TABLE width=&quot;100%&quot;&gt;
+-
+-&lt;THEAD&gt;
+ &lt;TR&gt;
+-&lt;TH&gt;Recently Fixed&lt;/TH&gt;
+-&lt;TH&gt;Status&lt;/TH&gt;
+-&lt;TH&gt;Release&lt;/TH&gt;
++&lt;TD&gt;6. The copy constructor on FSProtect can cause a NullPointerException.&lt;/TD&gt;
++&lt;TD&gt;Fixed&lt;/TD&gt;
++&lt;TD&gt;2.1.3&lt;/TD&gt;
+ &lt;/TR&gt;
+-&lt;/THEAD&gt;
+ 
+-&lt;TBODY&gt;
+-
+ &lt;TR&gt;
+-&lt;TD&gt;1. FSTextConstructor does not sort font codes.&lt;/TD&gt;
++&lt;TD&gt;7. FSTextConstructor does not sort font codes.&lt;/TD&gt;
+ &lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;2. FSSoundConstructor goes into infinite loop when decoding MP3 files.&lt;/TD&gt;
++&lt;TD&gt;8. FSSoundConstructor goes into infinite loop when decoding MP3 files.&lt;/TD&gt;
+ &lt;TD&gt;Fixed&lt;/TD&gt;
+ &lt;TD&gt;2.1.1&lt;/TD&gt;
+ &lt;/TR&gt;
+@@ -156,215 +156,80 @@
+ conversion between the way the font is encoded. This option is planned for 
+ release in the next version of Transform Utilities.&lt;/P&gt;
+ 
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++&lt;br/&gt;
+ 
+-&lt;H3&gt;2. TextDump Tool does not decode NewFunction and NewFunction2 actions correctly.&lt;/H3&gt;
++&lt;H2&gt;Recently Fixed&lt;/H2&gt;
+ 
++&lt;H3&gt;1. TextDump Tool decodes NewFunction and NewFunction2 actions correctly.&lt;/H3&gt;
++
+ &lt;P&gt;In Transform the actions NewFunction and NewFunction2 contain arrays of the 
+ actions that make up the function definition. This is different from the 
+ official definition from Macromedia where instead the NewFunction and 
+ NewFunction2 actions contain a field giving the number of bytes following that 
+ make up the function definition.&lt;/P&gt;
+ 
+-&lt;P&gt;The bug in TextDump decodes the actions as if they were part of the 
+-NewFunction[2] action but then jumps to the instruction immediately after and 
+-decodes the function body actions all over again. The result is that the 
+-function actions appear twice once as part of the NewFunction[2] action then 
+-again as a set of actions immediately following on from the NewFunction[2] 
+-action.&lt;/P&gt;
++&lt;P&gt;The actions are now reported as only being part of the NewFunction[2] data 
++structure, previously the actions were decoded twice, first as if they were part 
++of the NewFunction[2] action and then again as a series of actions following 
++the function definition.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The root cause is a logic error in the code. The offset to the actions 
+-following the body of the function is not calculated correctly.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;There is no current workaround.&lt;/P&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;The fix is already in the repository. It will be formally fixed when version 
+-2.1.3 is released at the end of June.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;3. FSDefineJPEG2 and FSDefineJPEG3 do not allow null encoding tables.&lt;/H3&gt;
++&lt;H3&gt;2. FSDefineJPEG2 and FSDefineJPEG3 allows null encoding tables.&lt;/H3&gt;
+ 
+ &lt;P&gt;The documentation for the FSDefineJPEG2 and FSDefineJPEG3 classes state that 
+ the encoding table may be set to null and the image will be displayed correctly. 
+ However any object with a null encoding table will throw a NullPointerException 
+ when it is encoded.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
++&lt;P&gt;The code now allows null arguments to be specified for encoding tables. If a 
++null reference is used then an empty encoding table is generated to ensure that
++the image will be encoded correctly.&lt;/P&gt;
+ 
+-&lt;P&gt;The root cause is that null passed to the setEncodingTable(byte[]) method is 
+-not checked for null arguments &ndash; the null should be replaced with an empty
+-encoding table: a 4 byte sequence containing a StartOfImage (SOI) and EndOfImage
+-(EOI) marker, FF, D8, FF, D9.&lt;/P&gt;
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
++&lt;H3&gt;3. FSCoder resize buffer correctly when writing binary data.&lt;/H3&gt;
+ 
+-&lt;P&gt;The workaround is to pass the empty table to the constructor or 
+-setEncodingTable() method:&lt;/P&gt;
++&lt;P&gt;The FSCoder now takes the size of the data being written when calculating 
++the extra capacity to add to its internal buffer. This avoids a potential
++overflow if data was being encoded that was larger than half the current 
++buffer size.&lt;/P&gt;
+ 
+-&lt;PRE&gt;
+-    movie.add(new FSDefineJPEGImage3(movie.newIdentifier(), bytes, 
+-        new byte[]{(byte)0xFF,(byte)0xD8,(byte)0xFF,(byte)0xD9}, 
+-        compressedAlpha));
+-&lt;/PRE&gt;
+-        
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;The fix is already in the repository. It will be formally fixed when version 
+-2.1.3 is released at the end of June.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;4. FSCoder throws exception when adding bytes longer than the current buffer size.&lt;/H3&gt;
++&lt;H3&gt;4. FSButtonSound RollOver and RollOut sounds now in the correct order.&lt;/H3&gt;
+ 
+-&lt;P&gt;When writing a string or binary data that is longer than half the current 
+-size of the internal buffer in the FSCoder object then an 
+-ArrayIndexOutOfBoundsException will be thrown.&lt;/P&gt;
++&lt;P&gt;The FSSound objects played when the mouse rolls over or out of the active 
++area of a button are now encoded in the correct order. Previously the order
++was swapped so if an FSSound object was created to play a sound when the mouse
++moved over a button then the sound was played only when the mouse moved outside
++of the button's active area and vice versa.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;When writing data to the internal buffer if the data would overflow then the 
+-buffer is resized. The size of the increase is half the current buffer size. 
+-This is incorrect the amount of capacity to add should actually be half the 
+-current buffer size + the size of the data being currently written. If the data
+-being written is greater than half the current buffer size the new buffer size 
+-is still not large enough to write all of the data and hence the exception is 
+-thrown.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;The workaround is to calculate in advance the correct size of the buffer so 
+-it does not need to be resized. Alternatively a call to the method addCapacity()
+-to increase the buffer by the required capacity before writing large mounts of 
+-data.&lt;/P&gt;
+-
+-&lt;PRE&gt;
+-    coder.addCapacity(data.length);
+-    coder.writeBytes(data);
+-&lt;/PRE&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;The fix is already in the repository. It will be formally fixed when version 
+-2.1.3 is released at the end of June.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;5. FSButtonSound RollOver and RollOut sounds are swapped.&lt;/H3&gt;
++&lt;H3&gt;5. The equals method on FSPlaceObject2 now compares encoded clip events.&lt;/H3&gt;
+ 
+-&lt;P&gt;The FSButtonSound class takes 4 FSSound objects which define the sounds
+-that will be played when the mouse movie a) Out of the button's active area,
+-b) into the button's active area, c) when the button is clicked and d) when the
+-button is released. The documentation for the class and the code are incorrect.
+-The order of the mouse moving out and over are reversed so if a button is 
+-created and a sound defined when the mouse moves over the button the sound is 
+-actually played when the mouse moves out of the button's active area.&lt;/P&gt;
++&lt;P&gt;Determining whether two objects, containing encoded clip events, now takes 
++account of all the attributes of the objects. Previously the result returned
++was only based on a comparison of the encoded clip events.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;Incompetence ;).&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;The workaround is to swap the events passed to the methods:&lt;/P&gt;
+-&lt;pre&gt;
+-    public FSSound getSoundForEvent(int eventCode)
+-    public FSSound setSoundForEvent(int eventCode, FSSound aSound)
+-&lt;/pre&gt;
+-
+-&lt;p&gt;Swap the event codes when assigning a sound for a particular button event. 
+-For example:&lt;/p&gt;
+-
+-&lt;PRE&gt;
+-    FSButtonSound buttonSound = new FSButtonSound(secondButton.getIdentifier(), 
+-            FSButtonEvent.RollOut, new FSSound(sound.getIdentifier(), 0));    
+-&lt;/PRE&gt;
+-
+-&lt;p&gt;when setting the sound that will be played when the mouse moves over the 
+-button. And:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-    FSButtonSound buttonSound1 = new FSButtonSound(firstButton.getIdentifier(), 
+-            FSButtonEvent.RollOver, new FSSound(sound.getIdentifier(), 0));    
+-&lt;/PRE&gt;
+-
+-&lt;p&gt;when setting the sound that will be played when the mouse moves out of the 
+-active area of the button.&lt;/p&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;The fix is already in the repository. It will be formally fixed when version 
+-2.1.3 is released at the end of June.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;6. The equals method on FSPlaceObject2 objects with encoded clip event is not accurate.&lt;/H3&gt;
++&lt;H3&gt;6. The copy constructor on FSProtect now works with null passwords.&lt;/H3&gt;
+ 
+-&lt;P&gt;When a comparison is performed on two FSPlaceObject2 objects with encoded 
+-clip events using the equals() method the result is only based on the 
+-comparison of the encoded clip event objects.&lt;/P&gt;
++&lt;P&gt;For Flash 4 and earlier Protect was used to prevent a file being loaded into
++Macromedia Flash. From Flash 5 a string attribute was added that contains an 
++MD5 hash of a password that could be used to provide access to the file. For 
++versions earlier than Flash 5 the password string would be set to null so it 
++was not included when the object was encoded.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
++&lt;p&gt;The copy constructor now correctly tests the password attribute to see if 
++it is null before creating a copy of the String.&lt;/p&gt;
+ 
+-&lt;P&gt;The comparison of the encoded clip events is performed last and the result 
+-from comparing the other attributes is not taken into account.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;There is no workaround.&lt;/P&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;The fix is already in the repository. It will be formally fixed when version 
+-2.1.3 is released at the end of June.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;7. The copy constructor on FSProtect can cause a NullPointerException.&lt;/H3&gt;
++&lt;H3&gt;7. TextConstructor now sorts font codes.&lt;/H3&gt;
+ 
+-&lt;P&gt;When the copy constructor, FSProtect(FSProtect obj) is used and the object 
+-being copied contains a null password (used for Flash 4 files) then a 
+-NullPointerException will be thrown.&lt;/P&gt;
+-
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The cause is a failure in the method to test the password attribute for null.
+-The code assumes the object contains a valid String.&lt;/P&gt;
+-
+-&lt;p&gt;Use of the FSProtect class is not recommended as it is trivial to remove from
+-a file and so offers no protection. As a result this bug should never be 
+-encounted.&lt;/p&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;The workaround is to test the password string on the object to be copied and
+-if null set it to the empty string. The object can safely be copied. The string
+-will not be included when the object is encoded.&lt;/P&gt;
+-
+-&lt;pre&gt;
+-	if (obj.getPassword() == null)
+-	   obj.setPassword(&quot;&quot;);
+-	   
+-	FSProtect copy = new FSProtect(obj);
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;The fix is already in the repository. It will be formally fixed when version 
+-2.1.3 is released at the end of June.&lt;/P&gt;
+-
+-&lt;br/&gt;
+-
+-&lt;H2&gt;Recently Fixed&lt;/H2&gt;
+-
+-&lt;H3&gt;1. TextConstructor now sorts font codes.&lt;/H3&gt;
+-
+ &lt;P&gt;With the release of Transform SWF 2.1 the FSTextConstructor class now 
+ generated characters codes sorted correctly in ascending order.&lt;/P&gt;
+ 
+@@ -384,7 +249,7 @@
+ 
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+-&lt;H3&gt;2. FSSoundConstructor goes into infinite loop when decoding MP3 files.&lt;/H3&gt;
++&lt;H3&gt;8. FSSoundConstructor goes into infinite loop when decoding MP3 files.&lt;/H3&gt;
+ 
+ &lt;P&gt;With the release of Transform 2.1.1 the infinite loop problem caused by meta 
+ data at the end of an MP3 being incorrectly interpreted is now fixed.&lt;/P&gt;
+
+Modified: trunk/doc/web/whatsnew.html
+===================================================================
+--- trunk/doc/web/whatsnew.html	2006-06-30 11:27:55 UTC (rev 199)
++++ trunk/doc/web/whatsnew.html	2006-06-30 11:31:39 UTC (rev 200)
+@@ -15,6 +15,15 @@
+ &lt;th class=&quot;release&quot;&gt;Details&lt;/th&gt;
+ &lt;/tr&gt;
+ 
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;30th June 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.3&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Bugs fixes, updates to the test suites. JAR files for 
++TestNG are also included.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.3.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
+ &lt;tr class=&quot;even&quot;&gt;
+ &lt;td class=&quot;date&quot;&gt;3rd April 2006&lt;/td&gt;
+ &lt;td class=&quot;version&quot;&gt;2.1.2&lt;/td&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000137.html">[Transform-svn] r199 - in trunk/src/com/flagstone/transform: . util
+</A></li>
+	<LI>Next message: <A HREF="000139.html">[Transform-svn] r201 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#138">[ date ]</a>
+              <a href="thread.html#138">[ thread ]</a>
+              <a href="subject.html#138">[ subject ]</a>
+              <a href="author.html#138">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

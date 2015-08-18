@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r421 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r421%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804012146.m31LkNPa005859%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000356.html">
+   <LINK REL="Next"  HREF="000358.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r421 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r421%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804012146.m31LkNPa005859%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r421 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 23:46:23 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000356.html">[Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util
+</A></li>
+        <LI>Next message: <A HREF="000358.html">[Transform-svn] r422 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#357">[ date ]</a>
+              <a href="thread.html#357">[ thread ]</a>
+              <a href="subject.html#357">[ subject ]</a>
+              <a href="author.html#357">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 23:46:18 +0200 (Tue, 01 Apr 2008)
+New Revision: 421
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+   dev/dev-3-0/src/com/flagstone/transform/Transform.java
+Log:
+Got rid of VALUE_NOT_SET
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-01 21:34:31 UTC (rev 420)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-01 21:46:18 UTC (rev 421)
+@@ -334,11 +334,11 @@
+ 	private int fontHeight = 0;
+ 	private FSColor color = null;
+ 	private int maxLength = 0;
+-	private int alignment = Transform.VALUE_NOT_SET;
+-	private int leftMargin = Transform.VALUE_NOT_SET;
+-	private int rightMargin = Transform.VALUE_NOT_SET;
+-	private int indent = Transform.VALUE_NOT_SET;
+-	private int leading = Transform.VALUE_NOT_SET;
++	private int alignment = 0;
++	private int leftMargin = 0;
++	private int rightMargin = 0;
++	private int indent = 0;
++	private int leading = 0;
+ 	private String variableName = &quot;&quot;;
+ 	private String initialText = &quot;&quot;;
+ 
+@@ -1220,11 +1220,11 @@
+ 		// TODO can value not set be replaced by zero.
+ 		if (containsLayoutInfo())
+ 		{
+-			coder.writeWord((alignment != Transform.VALUE_NOT_SET) ? alignment : 0, 1);
+-			coder.writeWord((leftMargin != Transform.VALUE_NOT_SET) ? leftMargin: 0, 2);
+-			coder.writeWord((rightMargin != Transform.VALUE_NOT_SET) ? rightMargin: 0, 2);
+-			coder.writeWord((indent != Transform.VALUE_NOT_SET) ? indent : 0, 2);
+-			coder.writeWord((leading != Transform.VALUE_NOT_SET) ? leading : 0, 2);
++			coder.writeWord((alignment != 0) ? alignment : 0, 1);
++			coder.writeWord((leftMargin != 0) ? leftMargin: 0, 2);
++			coder.writeWord((rightMargin != 0) ? rightMargin: 0, 2);
++			coder.writeWord((indent != 0) ? indent : 0, 2);
++			coder.writeWord((leading != 0) ? leading : 0, 2);
+ 		}
+ 
+ 		coder.writeString(variableName);
+@@ -1317,11 +1317,11 @@
+ 	{
+ 		boolean layout = false;
+ 
+-		layout = alignment != Transform.VALUE_NOT_SET;
+-		layout = layout || leftMargin != Transform.VALUE_NOT_SET;
+-		layout = layout || rightMargin != Transform.VALUE_NOT_SET;
+-		layout = layout || indent != Transform.VALUE_NOT_SET;
+-		layout = layout || leading != Transform.VALUE_NOT_SET;
++		layout = alignment != 0;
++		layout = layout || leftMargin != 0;
++		layout = layout || rightMargin != 0;
++		layout = layout || indent != 0;
++		layout = layout || leading != 0;
+ 
+ 		return layout;
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java	2008-04-01 21:34:31 UTC (rev 420)
++++ dev/dev-3-0/src/com/flagstone/transform/FSShapeStyle.java	2008-04-01 21:46:18 UTC (rev 421)
+@@ -643,7 +643,7 @@
+ 	 */
+ 	public void setMoveY(int p)
+ 	{
+-		if (p != Transform.VALUE_NOT_SET &amp;&amp; (p &lt; -65535 || p &gt; 65535)) {
++		if (p &lt; -65535 || p &gt; 65535) {
+ 			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
+ 		}
+ 		moveY = p;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-01 21:34:31 UTC (rev 420)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-01 21:46:18 UTC (rev 421)
+@@ -603,8 +603,8 @@
+ 	{
+ 		boolean _containsFont = containsFont();
+ 		boolean _containsColor = containsColor();
+-		boolean _containsOffsetX = containsOffsetX();
+-		boolean _containsOffsetY = containsOffsetY();
++		boolean _containsOffsetX = offsetX != 0;
++		boolean _containsOffsetY = offsetY != 0;
+ 
+ 		int length = 1;
+ 
+@@ -638,8 +638,8 @@
+ 	{
+ 		boolean _containsFont = containsFont();
+ 		boolean _containsColor = containsColor();
+-		boolean _containsOffsetY = containsOffsetY();
+-		boolean _containsOffsetX = containsOffsetX();
++		boolean _containsOffsetY = offsetY != 0;
++		boolean _containsOffsetX = offsetX != 0;
+ 
+ 		coder.writeBits(1, 1);
+ 		coder.writeBits(0, 3);
+@@ -717,20 +717,10 @@
+ 		return color != null;
+ 	}
+ 
+-	private boolean containsOffsetX()
+-	{
+-		return offsetX != Transform.VALUE_NOT_SET;
+-	}
+-
+-	private boolean containsOffsetY()
+-	{
+-		return offsetY != Transform.VALUE_NOT_SET;
+-	}
+-
+ 	boolean containsStyle()
+ 	{
+-		return containsFont() || containsColor() || containsOffsetX()
+-						|| containsOffsetY();
++		return containsFont() || containsColor() || offsetX != 0
++						|| offsetY != 0;
+ 	}
+ 
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/Transform.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/Transform.java	2008-04-01 21:34:31 UTC (rev 420)
++++ dev/dev-3-0/src/com/flagstone/transform/Transform.java	2008-04-01 21:46:18 UTC (rev 421)
+@@ -73,7 +73,7 @@
+ 	 * no confusion will result.
+ 	 */
+ 	// TODO get rid of this.
+-	public static final int VALUE_NOT_SET = Integer.MIN_VALUE;
++	//public static final int VALUE_NOT_SET = Integer.MIN_VALUE;
+ 
+ 	/**
+ 	 * The main method reports basic information about the package. The method
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000356.html">[Transform-svn] r420 - in dev/dev-3-0/src/com/flagstone/transform:	test util
+</A></li>
+	<LI>Next message: <A HREF="000358.html">[Transform-svn] r422 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#357">[ date ]</a>
+              <a href="thread.html#357">[ thread ]</a>
+              <a href="subject.html#357">[ subject ]</a>
+              <a href="author.html#357">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r190 - trunk/doc
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r190%20-%20trunk/doc&In-Reply-To=%3C200606291052.k5TAq9QC009566%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000128.html">
+   <LINK REL="Next"  HREF="000130.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r190 - trunk/doc</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r190%20-%20trunk/doc&In-Reply-To=%3C200606291052.k5TAq9QC009566%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r190 - trunk/doc">smackay at berlios.de
+       </A><BR>
+    <I>Thu Jun 29 12:52:09 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000128.html">[Transform-svn] r189 - trunk
+</A></li>
+        <LI>Next message: <A HREF="000130.html">[Transform-svn] r191 - trunk/test/data
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#129">[ date ]</a>
+              <a href="thread.html#129">[ thread ]</a>
+              <a href="subject.html#129">[ subject ]</a>
+              <a href="author.html#129">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-29 12:51:53 +0200 (Thu, 29 Jun 2006)
+New Revision: 190
+
+Modified:
+   trunk/doc/README.txt
+Log:
+Updated to include reference to separate test data package.
+
+Modified: trunk/doc/README.txt
+===================================================================
+--- trunk/doc/README.txt	2006-06-29 09:37:20 UTC (rev 189)
++++ trunk/doc/README.txt	2006-06-29 10:51:53 UTC (rev 190)
+@@ -90,36 +90,22 @@
+ test while the report generated while testing the entire framework is written
+ to the directory, Transform.
+ 
+----------------------------------
+-  Using Flash Files For Testing
+----------------------------------
+-The directory test/data/movies is designed to hold sets of movies from each 
+-version of Flash which are used when testing the classes in the Transform 
+-framework, particularly the FSMovie class.
++---------------------------
++  Using Files For Testing
++---------------------------
++The directory test/data is designed to hold sets of files that can be used to
++test the classes in the framework, particularly the FSMovie class.
+ 
+ The files augment the unit test data to ensure that real-world files, 
+ particularly those generatd by third-party applications, can be decoded and 
+ encoded correctly.
+ 
+-Separate directories are used for each version of Flash as the file format 
+-changes and the tests are designed to verify that a specific version of Flash is
+-supported rather than simply the latest version from Macromedia.
++In order to limit the size of the package the test files are available as a 
++separate download from Flagstone's web site. Downloading the test data is 
++optional as an increasing number of a test classes and suites are being added 
++to the framework that contain limited sets of binary data as test patterns for 
++unit testing.
+ 
+--------------
+-  IMPORTANT
+--------------
+-The directories list here are distributed empty to avoid any copyright or other 
+-licencing issues. Place any sample Flash (.swf) files that you want to use to 
+-run the tests in the respective directories - the 4th byte of the encoded Flash 
+-file contains the version number.
+-
+-For more information on the tests see:
+-
+-    src/com/flagstone/transform/test/FSMovieTest.java
+-    test/suites/FSMovie.xml
+-
+-to see how the Flash files are used in testing.
+-
+ -----------------------
+   Using the Framework
+ -----------------------
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000128.html">[Transform-svn] r189 - trunk
+</A></li>
+	<LI>Next message: <A HREF="000130.html">[Transform-svn] r191 - trunk/test/data
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#129">[ date ]</a>
+              <a href="thread.html#129">[ thread ]</a>
+              <a href="subject.html#129">[ subject ]</a>
+              <a href="author.html#129">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r302 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r302%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801311135.m0VBZCTs007514%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000237.html">
+   <LINK REL="Next"  HREF="000239.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r302 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r302%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801311135.m0VBZCTs007514%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r302 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Jan 31 12:35:12 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000237.html">[Transform-svn] r301 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000239.html">[Transform-svn] r303 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#238">[ date ]</a>
+              <a href="thread.html#238">[ thread ]</a>
+              <a href="subject.html#238">[ subject ]</a>
+              <a href="author.html#238">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-31 12:35:07 +0100 (Thu, 31 Jan 2008)
+New Revision: 302
+
+Modified:
+   trunk/src/com/flagstone/transform/FSLayer.java
+Log:
+Now using correct constructor when creating colour transforms with only additive terms.
+
+Modified: trunk/src/com/flagstone/transform/FSLayer.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLayer.java	2008-01-31 11:34:18 UTC (rev 301)
++++ trunk/src/com/flagstone/transform/FSLayer.java	2008-01-31 11:35:07 UTC (rev 302)
+@@ -327,11 +327,11 @@
+     public void color(int r, int g, int b, int a)
+     {
+     	if (place == null) {
+-    		place = new FSPlaceObject2(layer, new FSColorTransform(0.0f, 0.0f, 0.0f, 0.0f, r, g, b, a));
++    		place = new FSPlaceObject2(layer, new FSColorTransform(r, g, b, a));
+     		displayList.add(place);
+     	}
+     	else {
+-        	place.setColorTransform(new FSColorTransform(0.0f, 0.0f, 0.0f, 0.0f, r, g, b, a));
++        	place.setColorTransform(new FSColorTransform(r, g, b, a));
+     	}
+     }
+     
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000237.html">[Transform-svn] r301 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000239.html">[Transform-svn] r303 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#238">[ date ]</a>
+              <a href="thread.html#238">[ thread ]</a>
+              <a href="subject.html#238">[ subject ]</a>
+              <a href="author.html#238">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

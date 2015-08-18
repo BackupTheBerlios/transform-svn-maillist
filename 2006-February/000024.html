@@ -1,0 +1,2260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r83 - in trunk: doc src/com/flagstone/transform/tools
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r83%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/tools&In-Reply-To=%3C200602251836.k1PIaPPI002434%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000022.html">
+   <LINK REL="Next"  HREF="000025.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r83 - in trunk: doc src/com/flagstone/transform/tools</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r83%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/tools&In-Reply-To=%3C200602251836.k1PIaPPI002434%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r83 - in trunk: doc src/com/flagstone/transform/tools">smackay at berlios.de
+       </A><BR>
+    <I>Sat Feb 25 19:36:25 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000022.html">[Transform-svn] r82 - in trunk: doc src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000025.html">[Transform-svn] r84 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#24">[ date ]</a>
+              <a href="thread.html#24">[ thread ]</a>
+              <a href="subject.html#24">[ subject ]</a>
+              <a href="author.html#24">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-25 19:34:57 +0100 (Sat, 25 Feb 2006)
+New Revision: 83
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/tools/TextDump.java
+Log:
+Optimised the text dump tool
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-02-23 12:32:43 UTC (rev 82)
++++ trunk/doc/CHANGES.txt	2006-02-25 18:34:57 UTC (rev 83)
+@@ -1,3 +1,7 @@
++2006-02-25 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Optimized the TextDump tool.
++
+ 2006-02-23 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Added a new exception class, FSCoderException to report when underflow or
+
+Modified: trunk/src/com/flagstone/transform/tools/TextDump.java
+===================================================================
+--- trunk/src/com/flagstone/transform/tools/TextDump.java	2006-02-23 12:32:43 UTC (rev 82)
++++ trunk/src/com/flagstone/transform/tools/TextDump.java	2006-02-25 18:34:57 UTC (rev 83)
+@@ -36,6 +36,7 @@
+ import java.io.FileInputStream;
+ import java.io.FileOutputStream;
+ import java.io.IOException;
++import java.io.PrintWriter;
+ 
+ import javax.swing.tree.DefaultMutableTreeNode;
+ /**
+@@ -58,12 +59,11 @@
+  */
+ public class TextDump extends Tool
+ {
+-    private static String newline = System.getProperty(&quot;line.separator&quot;);
+-    
+     private static final int Begin = 0;
+-    private static final int End = 1;
+-    private static final int Error  = 2;
+-    private static final int Value = 3;
++    private static final int BeginArray = 1;
++    private static final int End = 2;
++    private static final int Error  = 3;
++    private static final int Value = 4;
+ 
+     private class SWF
+     {
+@@ -324,12 +324,12 @@
+         
+                 coder.context[SWFDecoder.Version] = version;
+         
+-                coder.beginObject(&quot;objects&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;objects&quot;);
+             
+                 while (decodeObject(coder));
+                     
+-                coder.endObject(&quot;Array&quot;);        
+-                coder.endObject(&quot;Movie&quot;);
++                coder.endObject();        
++                coder.endObject();
+             }
+             catch (DataFormatException e)
+             {
+@@ -590,7 +590,7 @@
+             coder.beginObject(name, &quot;Bounds&quot;);
+             coder.alignToByte();
+             
+-            int fieldSize = coder.readBits(&quot;fieldSize&quot;, 5, false);
++            int fieldSize = coder.readBits(&quot;size&quot;, 5, false);
+             
+             coder.readBits(&quot;minX&quot;, fieldSize, true);
+             coder.readBits(&quot;maxX&quot;, fieldSize, true);
+@@ -599,7 +599,7 @@
+             
+             coder.alignToByte();
+ 
+-            coder.endObject(&quot;Bounds&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeColor(String name, SWFDecoder coder)
+@@ -613,7 +613,7 @@
+             if (coder.context[SWFDecoder.TransparentColors] != 0)
+                 coder.readWord(&quot;alpha&quot;, 1, false);
+ 
+-            coder.endObject(&quot;Color&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeColorTransform(String name, SWFDecoder coder)
+@@ -621,9 +621,9 @@
+             coder.beginObject(name, &quot;ColorTransform&quot;);
+             coder.alignToByte();
+ 
+-            boolean containsAddTerms = coder.readBool(&quot;containsAddTerms&quot;);
+-            boolean containsMultiplyTerms = coder.readBool(&quot;containsMultiplyTerms&quot;);
+-            int fieldSize = coder.readBits(&quot;fieldSize&quot;, 4, false);
++            boolean containsAddTerms = coder.readBool(&quot;hasAddTerms&quot;);
++            boolean containsMultiplyTerms = coder.readBool(&quot;hasMultiplyTerms&quot;);
++            int fieldSize = coder.readBits(&quot;size&quot;, 4, false);
+             
+             if (containsMultiplyTerms)
+             {
+@@ -645,7 +645,7 @@
+                     coder.readBits(&quot;addAlpha&quot;, fieldSize, true);
+             }
+             coder.alignToByte();
+-            coder.endObject(&quot;ColorTransform&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeCoordTransform(String name, SWFDecoder coder)
+@@ -653,14 +653,14 @@
+             coder.beginObject(name, &quot;CoordTransform&quot;);
+             coder.alignToByte();
+ 
+-            if (coder.readBool(&quot;containsScaling&quot;))
++            if (coder.readBool(&quot;hasScaling&quot;))
+             {
+                 int scaleFieldSize = coder.readBits(&quot;scalingFieldSize&quot;, 5, false);
+                 coder.readFixed(&quot;scale0&quot;, scaleFieldSize);
+                 coder.readFixed(&quot;scale1&quot;, scaleFieldSize);
+             }
+         
+-            if (coder.readBool(&quot;containsRotation&quot;))
++            if (coder.readBool(&quot;hasRotation&quot;))
+             {
+                 int rotateFieldSize = coder.readBits(&quot;rotationFieldSize&quot;, 5, false);
+                 coder.readFixed(&quot;rotate0&quot;, rotateFieldSize);
+@@ -672,7 +672,7 @@
+             coder.readBits(&quot;translateY&quot;, translateFieldSize, true);
+             
+             coder.alignToByte();
+-            coder.endObject(&quot;CoordTransform&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeSound(SWFDecoder coder)
+@@ -682,10 +682,10 @@
+             coder.readWord(&quot;identifier&quot;, 2, false);
+             coder.readBits(&quot;mode&quot;, 4, false);
+             
+-            boolean _containsEnvelopes = coder.readBool(&quot;containsEnvelopes&quot;);
+-            boolean _containsLoopCount = coder.readBool(&quot;containsLoopCount&quot;);
+-            boolean _containsOutPoint = coder.readBool(&quot;containsOutPoint&quot;);
+-            boolean _containsInPoint = coder.readBool(&quot;containsInPoint&quot;);
++            boolean _containsEnvelopes = coder.readBool(&quot;hasEnvelopes&quot;);
++            boolean _containsLoopCount = coder.readBool(&quot;hasLoopCount&quot;);
++            boolean _containsOutPoint = coder.readBool(&quot;hasOutPoint&quot;);
++            boolean _containsInPoint = coder.readBool(&quot;hasInPoint&quot;);
+         
+             if (_containsInPoint)
+                 coder.readWord(&quot;inPoint&quot;, 4, false);
+@@ -700,14 +700,14 @@
+             {
+                 int envelopeCount = coder.readWord(&quot;envelopeCount&quot;, 1, false);
+ 
+-                coder.beginObject(&quot;envelopes&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;envelopes&quot;);
+                     
+                 for (int i=0; i&lt;envelopeCount; i++)
+                     decodeEnvelope(coder);
+                 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+-            coder.endObject(&quot;Sound&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeEnvelope(SWFDecoder coder)
+@@ -716,43 +716,41 @@
+             coder.readWord(&quot;mark&quot;, 4, false);
+             coder.readWord(&quot;leftSoundLevel&quot;, 2, false);
+             coder.readWord(&quot;rightSoundLevel&quot;, 2, false);
+-            coder.endObject(&quot;Envelope&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeCurve(SWFDecoder coder)
+         {
+             coder.beginObject(&quot;curve&quot;, &quot;Curve&quot;);
+ 
+-            coder.readBits(&quot;shapeType&quot;, 1, false);
+-            coder.readBits(&quot;edgeType&quot;, 1, false); 
++            coder.readBits(&quot;type&quot;, 2, false);
+             
+-            int fieldSize = coder.readBits(&quot;fieldSize&quot;, 4, false) + 2;
++            int fieldSize = coder.readBits(&quot;size&quot;, 4, false) + 2;
+             
+-            coder.readBits(&quot;controlX&quot;, fieldSize, true);
+-            coder.readBits(&quot;controlY&quot;, fieldSize, true);
+-            coder.readBits(&quot;anchorX&quot;, fieldSize, true);
+-            coder.readBits(&quot;anchorY&quot;, fieldSize, true);
++            coder.readBits(&quot;cx&quot;, fieldSize, true);
++            coder.readBits(&quot;cy&quot;, fieldSize, true);
++            coder.readBits(&quot;ax&quot;, fieldSize, true);
++            coder.readBits(&quot;ay&quot;, fieldSize, true);
+ 
+-            coder.endObject(&quot;Curve&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeLine(SWFDecoder coder)
+         {
+             coder.beginObject(&quot;line&quot;, &quot;Line&quot;);
+ 
+-            coder.readBits(&quot;shapeType&quot;, 1, false);
+-            coder.readBits(&quot;edgeType&quot;, 1, false);
++            coder.readBits(&quot;type&quot;, 2, false);
+             
+-            int fieldSize = coder.readBits(&quot;fieldSize&quot;, 4, false)+2;
++            int fieldSize = coder.readBits(&quot;size&quot;, 4, false)+2;
+ 
+-            if (coder.readBool(&quot;isGeneral&quot;))
++            if (coder.readBool(&quot;hasXY&quot;))
+             {
+                 coder.readBits(&quot;x&quot;, fieldSize, true);
+                 coder.readBits(&quot;y&quot;, fieldSize, true);
+             }
+             else
+             {
+-                if (coder.readBool(&quot;isVertical&quot;))
++                if (coder.readBool(&quot;hasY&quot;))
+                 {
+                     coder.readBits(&quot;y&quot;, fieldSize, true);
+                 }
+@@ -761,7 +759,7 @@
+                     coder.readBits(&quot;x&quot;, fieldSize, true);
+                 }
+             }
+-            coder.endObject(&quot;Line&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeShapeStyle(SWFDecoder coder)
+@@ -771,16 +769,16 @@
+ 
+             coder.beginObject(&quot;shapeStyle&quot;, &quot;ShapeStyle&quot;);
+ 
+-            coder.readBits(&quot;shapeType&quot;, 1, false);
+-            boolean containsStyles = coder.readBool(&quot;containsStyles&quot;);
+-            boolean containsLineStyle = coder.readBool(&quot;containsLineStyle&quot;);
+-            boolean containsAltFillStyle = coder.readBool(&quot;containsAltFillStyle&quot;);
+-            boolean containsFillStyle = coder.readBool(&quot;containsFillStyle&quot;);
+-            boolean containsMove = coder.readBool(&quot;containsMove&quot;);
++            coder.readBits(&quot;type&quot;, 1, false);
++            boolean containsStyles = coder.readBool(&quot;hasStyles&quot;);
++            boolean containsLineStyle = coder.readBool(&quot;hasLineStyle&quot;);
++            boolean containsAltFillStyle = coder.readBool(&quot;hasAltFillStyle&quot;);
++            boolean containsFillStyle = coder.readBool(&quot;hasFillStyle&quot;);
++            boolean containsMove = coder.readBool(&quot;hasMove&quot;);
+             
+             if (containsMove)
+             {
+-                int moveFieldSize = coder.readBits(&quot;fieldSize&quot;, 5, false);
++                int moveFieldSize = coder.readBits(&quot;size&quot;, 5, false);
+                 coder.readBits(&quot;x&quot;, moveFieldSize, true);
+                 coder.readBits(&quot;y&quot;, moveFieldSize, true);
+             }
+@@ -803,7 +801,7 @@
+                 if (coder.context[SWFDecoder.ArrayCountExtended] != 0 &amp;&amp; fillStyleCount == 0xFF)
+                     fillStyleCount = coder.readWord(&quot;fillStyleCountExtended&quot;, 2, false);
+ 
+-                coder.beginObject(&quot;fillStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;fillStyles&quot;);
+         
+                 for (int i=0; i&lt;fillStyleCount; i++)
+                 {
+@@ -825,19 +823,19 @@
+                     }        
+                 }
+                 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+         
+                 int lineStyleCount = coder.readWord(&quot;lineStyleCount&quot;, 1, false);
+ 
+                 if (coder.context[SWFDecoder.ArrayCountExtended] != 0 &amp;&amp; lineStyleCount == 0xFF)
+                     lineStyleCount = coder.readWord(&quot;lineStyleCountExtended&quot;, 2, false);
+ 
+-                coder.beginObject(&quot;lineStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;lineStyles&quot;);
+         
+                 for (int i=0; i&lt;lineStyleCount; i++)
+                     decodeSolidLine(coder);
+                 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+         
+                 numberOfFillBits = coder.readBits(&quot;numberOfFillBits&quot;, 4, false);
+                 numberOfLineBits = coder.readBits(&quot;numberOfLineBits&quot;, 4, false);
+@@ -845,7 +843,7 @@
+                 coder.context[SWFDecoder.NumberOfFillBits] = numberOfFillBits;
+                 coder.context[SWFDecoder.NumberOfLineBits] = numberOfLineBits;
+             }
+-            coder.endObject(&quot;ShapeStyle&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeSolidLine(SWFDecoder coder)
+@@ -853,7 +851,7 @@
+             coder.beginObject(&quot;solidLine&quot;, &quot;SolidLine&quot;);
+             coder.readWord(&quot;width&quot;, 2, false);
+             decodeColor(&quot;color&quot;, coder);
+-            coder.endObject(&quot;SolidLine&quot;);
++            coder.endObject();
+         }
+       
+         void decodeSolidFill(SWFDecoder coder)
+@@ -861,7 +859,7 @@
+             coder.beginObject(&quot;solidFill&quot;, &quot;SolidFill&quot;);
+             coder.readWord(&quot;type&quot;, 1, false);
+             decodeColor(&quot;color&quot;, coder);
+-            coder.endObject(&quot;SolidFill&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeGradientFill(SWFDecoder coder)
+@@ -871,13 +869,13 @@
+             decodeCoordTransform(&quot;coordTransform&quot;, coder);
+             int count = coder.readWord(&quot;gradientCount&quot;, 1, false);
+ 
+-            coder.beginObject(&quot;gradients&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;gradients&quot;);
+ 
+             for (int i=0; i&lt;count; i++)
+                 decodeGradient(coder);
+ 
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;GradientFill&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodeGradient(SWFDecoder coder)
+@@ -885,7 +883,7 @@
+             coder.beginObject(&quot;gradient&quot;, &quot;Gradient&quot;);
+             coder.readWord(&quot;ratio&quot;, 1, false);
+             decodeColor(&quot;color&quot;, coder);
+-            coder.endObject(&quot;Gradient&quot;);
++            coder.endObject();
+         }
+         
+         void decodeBitmapFill(SWFDecoder coder)
+@@ -894,7 +892,7 @@
+             coder.readWord(&quot;type&quot;, 1, false);
+             coder.readWord(&quot;identifier&quot;, 2, false);
+             decodeCoordTransform(&quot;coordTransform&quot;, coder);
+-            coder.endObject(&quot;BitmapFill&quot;);
++            coder.endObject();
+         }
+         
+         void decodeShape(SWFDecoder coder)
+@@ -904,7 +902,7 @@
+             coder.context[SWFDecoder.NumberOfFillBits] = coder.readBits(&quot;numberOfFillBits&quot;, 4, false);
+             coder.context[SWFDecoder.NumberOfLineBits] = coder.readBits(&quot;numberOfLineBits&quot;, 4, false);
+ 
+-            coder.beginObject(&quot;path&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;path&quot;);
+ 
+             while (coder.scanBits(6, false) &gt; 0)
+             {
+@@ -922,8 +920,8 @@
+             }
+             coder.readBits(&quot;endOfShape&quot;, 6, false);
+             coder.alignToByte();
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;Shape&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         int decodeMovieObject(SWFDecoder coder)
+@@ -962,14 +960,14 @@
+                 length = coder.readWord(&quot;lengthExtended&quot;, 4, false);
+             
+             decodeColor(&quot;color&quot;, coder);
+-            coder.endObject(&quot;SetBackgroundColor&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeShowFrame(SWFDecoder coder)
+         {
+             coder.beginObject(&quot;showFrame&quot;, &quot;ShowFrame&quot;);
+             decodeMovieObject(coder);
+-            coder.endObject(&quot;ShowFrame&quot;);
++            coder.endObject();
+         }   
+ 
+         void decodeDoAction(SWFDecoder coder)
+@@ -977,12 +975,12 @@
+             coder.beginObject(&quot;doAction&quot;, &quot;DoAction&quot;);
+             decodeMovieObject(coder);
+             
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+             
+             while (decodeAction(coder) != 0);
+             
+-           coder.endObject(&quot;Array&quot;);
+-           coder.endObject(&quot;DoAction&quot;);
++           coder.endObject();
++           coder.endObject();
+         }
+ 
+         void decodeFontInfo(SWFDecoder coder)
+@@ -999,19 +997,19 @@
+             coder.readBool(&quot;isANSI&quot;);
+             coder.readBool(&quot;isItalic&quot;);
+             coder.readBool(&quot;isBold&quot;);
+-            boolean containsWideCodes = coder.readBool(&quot;containsWideCodes&quot;); 
++            boolean containsWideCodes = coder.readBool(&quot;hasWideCodes&quot;); 
+ 
+             int bytesRead = 3 + nameLength + 1;
+ 
+-            coder.beginObject(&quot;codes&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;codes&quot;);
+ 
+             while (bytesRead &lt; length)
+             {
+                 coder.readWord(&quot;code&quot;, containsWideCodes ? 2 : 1, false);
+                 bytesRead += (containsWideCodes) ? 2 : 1;
+             }
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;FontInfo&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodeJPEGEncodingTable(SWFDecoder coder)
+@@ -1019,7 +1017,7 @@
+             coder.beginObject(&quot;JPEGEncodingTable&quot;, &quot;JPEGEncodingTable&quot;);
+             int length = decodeMovieObject(coder);
+             coder.readBytes(&quot;encodingTable&quot;, length);
+-            coder.endObject(&quot;JPEGEncodingTable&quot;);
++            coder.endObject();
+         }
+ 
+         void decodePlaceObject(SWFDecoder coder)
+@@ -1037,7 +1035,7 @@
+             if (length &gt; lengthRead)
+                 decodeColorTransform(&quot;colorTransform&quot;, coder);
+ 
+-            coder.endObject(&quot;PlaceObject&quot;);
++            coder.endObject();
+         }
+         
+         void decodeRemoveObject(SWFDecoder coder)
+@@ -1046,7 +1044,7 @@
+             decodeMovieObject(coder);
+             coder.readWord(&quot;identifier&quot;, 2, false);
+             coder.readWord(&quot;layer&quot;, 2, false);
+-            coder.endObject(&quot;RemoveObject&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeSoundStreamBlock(SWFDecoder coder)
+@@ -1054,7 +1052,7 @@
+             coder.beginObject(&quot;soundStreamBlock&quot;, &quot;SoundStreamBlock&quot;);
+             int length = decodeMovieObject(coder);
+             coder.readBytes(&quot;soundData&quot;, length); // 
+-            coder.endObject(&quot;SoundStreamBlock&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeSoundStreamHead(SWFDecoder coder)
+@@ -1074,7 +1072,7 @@
+             if (format == 2) // MP3
+                 coder.readWord(&quot;latency&quot;, 2, true); 
+ 
+-            coder.endObject(&quot;SoundStreamHead&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeStartSound(SWFDecoder coder)
+@@ -1082,7 +1080,7 @@
+             coder.beginObject(&quot;startSound&quot;, &quot;StartSound&quot;);
+             decodeMovieObject(coder);
+             decodeSound(coder);
+-            coder.endObject(&quot;StartSound&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeUnknownObject(SWFDecoder coder)
+@@ -1090,7 +1088,7 @@
+             coder.beginObject(&quot;unknownObject&quot;, &quot;UnknownObject&quot;);
+             int length = decodeMovieObject(coder);
+             coder.readBytes(&quot;data&quot;, length); 
+-            coder.endObject(&quot;UnknownObject&quot;);
++            coder.endObject();
+         }
+ 
+         int decodeActionObject(SWFDecoder coder)
+@@ -1109,7 +1107,7 @@
+             decodeActionObject(coder);
+             coder.readString(&quot;url&quot;);
+             coder.readString(&quot;target&quot;);
+-            coder.endObject(&quot;GetUrl&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeGotoFrame(SWFDecoder coder)
+@@ -1117,7 +1115,7 @@
+             coder.beginObject(&quot;gotoFrame&quot;, &quot;GotoFrame&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;frameNumber&quot;, 2, false);
+-            coder.endObject(&quot;GotoFrame&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeUnknownAction(SWFDecoder coder)
+@@ -1128,7 +1126,7 @@
+             if (length &gt; 0)
+                 coder.readBytes(&quot;data&quot;, length);
+ 
+-            coder.endObject(&quot;UnknownAction&quot;);
++            coder.endObject();
+         }
+         
+         void decodeTextRecord(SWFDecoder coder)
+@@ -1138,10 +1136,10 @@
+             coder.readBits(&quot;type&quot;, 1, false); // 
+             coder.readBits(&quot;reserved&quot;, 3, false); // 
+             
+-            boolean _containsFont = coder.readBool(&quot;containsFont&quot;);
+-            boolean _containsColor = coder.readBool(&quot;containsColor&quot;);
+-            boolean _containsBaseline = coder.readBool(&quot;containsBaseline&quot;);
+-            boolean _containsIndent = coder.readBool(&quot;containsIndent&quot;);
++            boolean _containsFont = coder.readBool(&quot;hasFont&quot;);
++            boolean _containsColor = coder.readBool(&quot;hasColor&quot;);
++            boolean _containsBaseline = coder.readBool(&quot;hasBaseline&quot;);
++            boolean _containsIndent = coder.readBool(&quot;hasIndent&quot;);
+ 
+             if (_containsFont)
+                 coder.readWord(&quot;identifier&quot;, 2, false);
+@@ -1158,15 +1156,15 @@
+ 
+             int charCount = coder.readWord(&quot;characterCount&quot;, 1, false);
+             
+-            coder.beginObject(&quot;characters&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;characters&quot;);
+                 
+             for (int i=0; i&lt;charCount; i++)
+                 decodeCharacter(coder);
+             
+             coder.alignToByte();
+             
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;Text&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+         
+         void decodeCharacter(SWFDecoder coder)
+@@ -1174,7 +1172,7 @@
+             coder.beginObject(&quot;character&quot;, &quot;Character&quot;);
+             coder.readBits(&quot;glyphIndex&quot;, coder.context[SWFDecoder.NumberOfGlyphBits], false);
+             coder.readBits(&quot;advance&quot;, coder.context[SWFDecoder.NumberOfAdvanceBits], true);
+-            coder.endObject(&quot;Character&quot;);
++            coder.endObject();
+         }
+ 
+         int decodeDefineObject(SWFDecoder coder)
+@@ -1202,7 +1200,7 @@
+             if (coder.context[SWFDecoder.Type] == DefineButton2)
+                 decodeColorTransform(&quot;colorTransform&quot;, coder);
+ 
+-            coder.endObject(&quot;Button&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineButton(SWFDecoder coder)
+@@ -1210,21 +1208,21 @@
+             coder.beginObject(&quot;defineButton&quot;, &quot;DefineButton&quot;);
+             decodeDefineObject(coder);
+             
+-            coder.beginObject(&quot;buttonRecords&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;buttonRecords&quot;);
+             
+             while (coder.scanWord(1, false) != 0)
+                 decodeButtonRecord(coder);
+                 
+             coder.readWord(&quot;endOfRecords&quot;, 1, false);
+ 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+             
+             while (decodeAction(coder) != 0);
+             
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;DefineButton&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodeDefineFont(SWFDecoder coder)
+@@ -1234,19 +1232,19 @@
+             
+             int shapeCount = coder.scanWord(2, false) / 2;
+ 
+-            coder.beginObject(&quot;offsetTable&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;offsetTable&quot;);
+ 
+             for (int i=0; i&lt;shapeCount; i++)
+                 coder.readWord(&quot;offset&quot;, 2, false);
+                 
+-            coder.endObject(&quot;Array&quot;);
+-            coder.beginObject(&quot;glyphs&quot;, &quot;Array&quot;);
++            coder.endObject();
++            coder.beginArray(&quot;glyphs&quot;);
+ 
+             for (int i=0; i&lt;shapeCount; i++)
+                 decodeShape(coder);
+ 
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;DefineFont&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodeDefineJPEGImage(SWFDecoder coder)
+@@ -1254,7 +1252,7 @@
+             coder.beginObject(&quot;defineJPEGImage&quot;, &quot;DefineJPEGImage&quot;);
+             int length = decodeDefineObject(coder);
+             coder.readBytes(&quot;image&quot;, length-2);
+-            coder.endObject(&quot;DefineJPEGImage&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineShape(SWFDecoder coder)
+@@ -1268,7 +1266,7 @@
+ 
+             if (fillStyleCount &gt; 0)
+             {
+-                coder.beginObject(&quot;fillStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;fillStyles&quot;);
+                 
+                 for (int i=0; i&lt;fillStyleCount; i++)
+                 {
+@@ -1293,23 +1291,23 @@
+                             break;
+                     }        
+                 }           
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+ 
+             int lineStyleCount = coder.readWord(&quot;lineStyleCount&quot;, 1, false);
+ 
+             if (lineStyleCount &gt; 0)
+             {
+-                coder.beginObject(&quot;lineStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;lineStyles&quot;);
+         
+                 for (int i=0; i&lt;lineStyleCount; i++)
+                     decodeSolidLine(coder);
+         
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+             decodeShape(coder);
+ 
+-            coder.endObject(&quot;DefineShape&quot;);
++            coder.endObject();
+         }
+         
+         void decodeDefineSound(SWFDecoder coder)
+@@ -1323,7 +1321,7 @@
+             coder.readBits(&quot;playbackChannels&quot;, 1, false);
+             coder.readWord(&quot;sampleCount&quot;, 4, false);
+             coder.readBytes(&quot;sound data&quot;, length-7);
+-            coder.endObject(&quot;DefineSound&quot;);
++            coder.endObject();
+         }
+         
+         void decodeDefineText(SWFDecoder coder)
+@@ -1365,17 +1363,17 @@
+             coder.context[SWFDecoder.NumberOfGlyphBits] = coder.readWord(&quot;numberOfGlyphBits&quot;, 1, false);
+             coder.context[SWFDecoder.NumberOfAdvanceBits] = coder.readWord(&quot;numberOfAdvanceBits&quot;, 1, false);
+             
+-            coder.beginObject(&quot;textRecords&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;textRecords&quot;);
+ 
+             while (coder.scanBits(8, false) != 0)
+                 decodeTextRecord(coder);
+ 
+             coder.readBits(&quot;endOfText&quot;, 8, false);
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             coder.context[SWFDecoder.NumberOfGlyphBits] = 0;
+             coder.context[SWFDecoder.NumberOfAdvanceBits] = 0;
+-            coder.endObject(&quot;DefineText&quot;);
++            coder.endObject();
+         }
+         
+         int decodeAction(SWFDecoder coder)
+@@ -1643,12 +1641,12 @@
+             if (keyPress)
+                 coder.readWord(&quot;keyCode&quot;, 1, false);
+             
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+ 
+             while (decodeAction(coder) != 0);
+ 
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;ClipEvent&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+         
+         void decodeMorphSolidLine(SWFDecoder coder)
+@@ -1658,7 +1656,7 @@
+             coder.readWord(&quot;endWidth&quot;, 2, false);
+             decodeColor(&quot;startColor&quot;, coder);
+             decodeColor(&quot;endColor&quot;, coder);
+-            coder.endObject(&quot;MorphSolidLine&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeMorphSolidFill(SWFDecoder coder)
+@@ -1667,7 +1665,7 @@
+             coder.readWord(&quot;type&quot;, 1, false);
+             decodeColor(&quot;startColor&quot;, coder);
+             decodeColor(&quot;endColor&quot;, coder);
+-            coder.endObject(&quot;MorphSolidFill&quot;);
++            coder.endObject();
+         }
+         
+         void decodeMorphGradientFill(SWFDecoder coder)
+@@ -1679,13 +1677,13 @@
+             
+             int count = coder.readWord(&quot;gradientCount&quot;, 1, false);
+                                 
+-            coder.beginObject(&quot;gradients&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;gradients&quot;);
+                 
+             for (int i=0; i&lt;count; i++)
+                 decodeMorphGradient(coder);
+             
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;MorphGradientFill&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodeMorphGradient(SWFDecoder coder)
+@@ -1695,7 +1693,7 @@
+             decodeColor(&quot;startColor&quot;, coder);
+             coder.readWord(&quot;endRatio&quot;, 1, false);
+             decodeColor(&quot;endColor&quot;, coder);
+-            coder.endObject(&quot;MorphGradient&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeMorphBitmapFill(SWFDecoder coder)
+@@ -1705,7 +1703,7 @@
+             coder.readWord(&quot;identifier&quot;, 2, false); // 
+             decodeCoordTransform(&quot;startTransform&quot;, coder);
+             decodeCoordTransform(&quot;endTransform&quot;, coder);
+-            coder.endObject(&quot;MorphBitmapFill&quot;);
++            coder.endObject();
+         }
+         
+         void decodeButtonColorTransform(SWFDecoder coder)
+@@ -1714,7 +1712,7 @@
+             decodeMovieObject(coder);
+             coder.readWord(&quot;identifier&quot;, 2, false);
+             decodeColorTransform(&quot;colorTransform&quot;, coder);
+-            coder.endObject(&quot;ButtonColorTransform&quot;);
++            coder.endObject();
+         }
+         
+         void decodeButtonSound(SWFDecoder coder)
+@@ -1730,7 +1728,7 @@
+                 else
+                     coder.readWord(&quot;none&quot;, 2, false);
+             }
+-            coder.endObject(&quot;ButtonSound&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeEnableDebugger(SWFDecoder coder)
+@@ -1738,7 +1736,7 @@
+             coder.beginObject(&quot;enableDebugger&quot;, &quot;EnableDebugger&quot;);
+             decodeMovieObject(coder);
+             coder.readString(&quot;password&quot;);
+-            coder.endObject(&quot;EnableDebugger&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeEnableDebugger2(SWFDecoder coder)
+@@ -1747,7 +1745,7 @@
+             decodeMovieObject(coder);
+             coder.readWord(&quot;reserved&quot;, 2, false);
+             coder.readString(&quot;password&quot;);
+-            coder.endObject(&quot;EnableDebugger2&quot;);
++            coder.endObject();
+         }
+         
+         void decodeExport(SWFDecoder coder)
+@@ -1757,16 +1755,16 @@
+             
+             int count = coder.readWord(&quot;count&quot;, 2, false);
+ 
+-            coder.beginObject(&quot;objects&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;objects&quot;);
+             for (int i=0; i&lt;count; i++)
+             {
+                 coder.beginObject(&quot;exports&quot;, &quot;Object&quot;);
+                 coder.readWord(&quot;identifier&quot;, 2, false);
+                 coder.readString(&quot;name&quot;);
+-                coder.endObject(&quot;Object&quot;);
++                coder.endObject();
+             }
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;Export&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+         
+         void decodeFontInfo2(SWFDecoder coder)
+@@ -1782,20 +1780,20 @@
+             coder.readBits(&quot;encoding&quot;, 2, false);
+             coder.readBool(&quot;isItalic&quot;);
+             coder.readBool(&quot;isBold&quot;); 
+-            coder.readBool(&quot;containsWideCodes&quot;);
++            coder.readBool(&quot;hasWideCodes&quot;);
+             coder.readWord(&quot;language&quot;, 1, false);
+ 
+             int bytesRead = 4 + nameLength + 1;
+             
+-            coder.beginObject(&quot;codes&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;codes&quot;);
+ 
+             while (bytesRead &lt; length)
+             {
+                 coder.readWord(&quot;code&quot;, 2, false);
+                 bytesRead += 2;
+             }
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;FontInfo2&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+         
+         void decodeFrameLabel(SWFDecoder coder)
+@@ -1815,7 +1813,7 @@
+             if (coder.context[SWFDecoder.Version] &gt; 5 &amp;&amp; strlen &lt; length)
+                 coder.readWord(&quot;anchor&quot;, 1, false);
+ 
+-            coder.endObject(&quot;FrameLabel&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeFree(SWFDecoder coder)
+@@ -1823,7 +1821,7 @@
+             coder.beginObject(&quot;free&quot;, &quot;Free&quot;);
+             decodeMovieObject(coder);
+             coder.readWord(&quot;identifier&quot;, 2, false);
+-            coder.endObject(&quot;Free&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeImport(SWFDecoder coder)
+@@ -1834,16 +1832,16 @@
+             
+             int count = coder.readWord(&quot;count&quot;, 2, false);
+ 
+-            coder.beginObject(&quot;objects&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;objects&quot;);
+             for (int i=0; i&lt;count; i++)
+             {
+                 coder.beginObject(&quot;object&quot;, &quot;Object&quot;);
+                 coder.readWord(&quot;identifier&quot;, 2, false);
+                 coder.readString(&quot;name&quot;);
+-                coder.endObject(&quot;Object&quot;);
++                coder.endObject();
+             }
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;Import&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodeInitialize(SWFDecoder coder)
+@@ -1852,19 +1850,19 @@
+             decodeMovieObject(coder);
+             coder.readWord(&quot;identifier&quot;, 2, false);
+             
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+             
+             while (decodeAction(coder) != 0);
+             
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;Initialize&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         void decodePathsArePostscript(SWFDecoder coder)
+         {
+             coder.beginObject(&quot;pathsArePostscript&quot;, &quot;PathsArePostscript&quot;);
+             decodeMovieObject(coder);
+-            coder.endObject(&quot;PathsArePostscript&quot;);
++            coder.endObject();
+         }
+         
+         void decodePlaceObject2(SWFDecoder coder)
+@@ -1875,12 +1873,12 @@
+             
+             decodeMovieObject(coder);
+             
+-            boolean containsClipEvents = coder.readBool(&quot;containsClipEvents&quot;);
+-            boolean containsClippingDepth = coder.readBool(&quot;containsClippingDepth&quot;);
+-            boolean containsName = coder.readBool(&quot;containsName&quot;);
+-            boolean containsRatio = coder.readBool(&quot;containsRatio&quot;);
+-            boolean containsColorTransform = coder.readBool(&quot;containsColorTransform&quot;);
+-            boolean containsTransform = coder.readBool(&quot;containsCoordTransform&quot;);
++            boolean containsClipEvents = coder.readBool(&quot;hasClipEvents&quot;);
++            boolean containsClippingDepth = coder.readBool(&quot;hasClippingDepth&quot;);
++            boolean containsName = coder.readBool(&quot;hasName&quot;);
++            boolean containsRatio = coder.readBool(&quot;hasRatio&quot;);
++            boolean containsColorTransform = coder.readBool(&quot;hasColorTransform&quot;);
++            boolean containsTransform = coder.readBool(&quot;hasCoordTransform&quot;);
+             
+             int place = coder.readBits(&quot;placeType&quot;, 2, false);
+             
+@@ -1911,15 +1909,15 @@
+                 coder.readWord(&quot;reserved&quot;, 2, false);
+                 coder.readWord(&quot;eventMask&quot;, eventSize, false);
+ 
+-                coder.beginObject(&quot;clipEvents&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;clipEvents&quot;);
+         
+                 while (coder.scanWord(eventSize, false) != 0)
+                     decodeClipEvent(coder);
+      
+                 coder.readWord(&quot;eventEnd&quot;, eventSize, false);
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+-            coder.endObject(&quot;PlaceObject2&quot;);
++            coder.endObject();
+             coder.context[SWFDecoder.TransparentColors] = 0;
+         }
+ 
+@@ -1928,7 +1926,7 @@
+             coder.beginObject(&quot;pointer&quot;, &quot;Pointer&quot;);
+             decodeMovieObject(coder);
+             coder.readWord(&quot;pointer&quot;, 4, false);
+-            coder.endObject(&quot;Pointer&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeProtect(SWFDecoder coder)
+@@ -1939,7 +1937,7 @@
+             if ((coder.context[SWFDecoder.Version] &gt; 4) &amp;&amp; (length &gt; 0))
+                 coder.readString(&quot;password&quot;, length); 
+ 
+-            coder.endObject(&quot;Protect&quot;);
++            coder.endObject();
+         }
+         
+         void decodeQuicktimeMovie(SWFDecoder coder)
+@@ -1947,7 +1945,7 @@
+             coder.beginObject(&quot;quicktimeMovie&quot;, &quot;QuicktimeMovie&quot;);
+             decodeMovieObject(coder);
+             coder.readString(&quot;name&quot;);
+-            coder.endObject(&quot;QuicktimeMovie&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeRemoveObject2(SWFDecoder coder)
+@@ -1955,7 +1953,7 @@
+             coder.beginObject(&quot;removeObject2&quot;, &quot;RemoveObject2&quot;);
+             decodeMovieObject(coder);
+             coder.readWord(&quot;layer&quot;, 2, false);
+-            coder.endObject(&quot;RemoveObject2&quot;);
++            coder.endObject();
+         }
+         
+         void decodeSerialNumber(SWFDecoder coder)
+@@ -1963,7 +1961,7 @@
+             coder.beginObject(&quot;serialNumber&quot;, &quot;SerialNumber&quot;);
+             decodeMovieObject(coder);
+             coder.readString(&quot;serialNumber&quot;);
+-            coder.endObject(&quot;SerialNumber&quot;);
++            coder.endObject();
+         }
+         
+         void decodeSoundStreamHead2(SWFDecoder coder)
+@@ -1983,7 +1981,7 @@
+             if (format == 2) // MP3
+                 coder.readWord(&quot;latency&quot;, 2, true);
+ 
+-            coder.endObject(&quot;SoundStreamHead2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeTabOrder(SWFDecoder coder)
+@@ -1992,7 +1990,7 @@
+             decodeMovieObject(coder);
+             coder.readWord(&quot;layer&quot;, 2, false);
+             coder.readWord(&quot;index&quot;, 2, false);
+-            coder.endObject(&quot;TabOrder&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeLimitScript(SWFDecoder coder)
+@@ -2001,7 +1999,7 @@
+             decodeMovieObject(coder);
+             coder.readWord(&quot;depth&quot;, 2, false);
+             coder.readWord(&quot;timeout&quot;, 2, false);
+-            coder.endObject(&quot;LimitScript&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeVideoFrame(SWFDecoder coder)
+@@ -2012,16 +2010,14 @@
+             coder.readWord(&quot;identifier&quot;, 2, false);
+             coder.readWord(&quot;frameNumber&quot;, 2, false);
+             coder.readBytes(&quot;video data&quot;, length-4);
+-            coder.endObject(&quot;VideoFrame&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeActionCode(SWFDecoder coder)
+         {
+             String name = null;
+             
+-            coder.beginObject(&quot;action&quot;, &quot;Action&quot;);
+-            
+-            switch (coder.readWord(&quot;type&quot;, 1, false))
++            switch (coder.scanWord(1, false))
+             {
+                 case NextFrame:
+                     name = &quot;NextFrame&quot;;
+@@ -2269,14 +2265,16 @@
+                     name = &quot;Action&quot;;
+                     break;
+             }
+-            coder.endObject(name);
++            coder.beginObject(&quot;action&quot;, name);
++            coder.readWord(&quot;type&quot;, 1, false);
++            coder.endObject();
+         }
+ 
+         void decodeCall(SWFDecoder coder)
+         {
+             coder.beginObject(&quot;call&quot;, &quot;Call&quot;);
+             decodeActionObject(coder);
+-            coder.endObject(&quot;Call&quot;);
++            coder.endObject();
+         }
+         
+         void decodeExceptionHandler(SWFDecoder coder)
+@@ -2285,9 +2283,9 @@
+             decodeActionObject(coder);
+             
+             coder.readBits(&quot;reserved&quot;, 5, false);
+-            boolean containsVariable = coder.readBool(&quot;containsVariable&quot;);
+-            boolean containsCatch = coder.readBool(&quot;containsCatch&quot;);
+-            boolean containsFinal = coder.readBool(&quot;containsFinal&quot;);
++            boolean containsVariable = coder.readBool(&quot;hasVariable&quot;);
++            boolean containsCatch = coder.readBool(&quot;hasCatch&quot;);
++            boolean containsFinal = coder.readBool(&quot;hasFinal&quot;);
+ 
+             int tryLength = coder.readWord(&quot;tryLength&quot;, 2, false);
+             int catchLength = coder.readWord(&quot;catchLength&quot;, 2, false);
+@@ -2300,32 +2298,32 @@
+                 coder.readWord(&quot;register&quot;, 1, false);
+             }
+ 
+-            coder.beginObject(&quot;tryActions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;tryActions&quot;);
+ 
+             while (tryLength &gt; 0)
+                 tryLength -= decodeAction(coder);
+                 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             if (containsCatch)
+             {
+-                coder.beginObject(&quot;catchActions&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;catchActions&quot;);
+ 
+                 while (catchLength &gt; 0)
+                     catchLength -= decodeAction(coder);
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+ 
+             if (containsFinal)
+             {
+-                coder.beginObject(&quot;finalActions&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;finalActions&quot;);
+                 
+                 while (finalLength &gt; 0)
+                     finalLength -= decodeAction(coder);
+ 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+-            coder.endObject(&quot;ExceptionHandler&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeGetUrl2(SWFDecoder coder)
+@@ -2333,7 +2331,7 @@
+             coder.beginObject(&quot;getUrl2&quot;, &quot;GetUrl2&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;requestType&quot;, 1, false);
+-            coder.endObject(&quot;GetUrl2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeGotoFrame2(SWFDecoder coder)
+@@ -2341,13 +2339,13 @@
+             coder.beginObject(&quot;gotoFrame2&quot;, &quot;GotoFrame2&quot;);
+             decodeActionObject(coder);
+             coder.readBits(&quot;unused&quot;, 6, false);
+-            boolean containsOffset = coder.readBool(&quot;containsFrameOffset&quot;);
++            boolean containsOffset = coder.readBool(&quot;hasFrameOffset&quot;);
+             coder.readBool(&quot;playFrame&quot;);
+ 
+             if (containsOffset)
+                 coder.readWord(&quot;frameOffset&quot;, 2, false);
+ 
+-            coder.endObject(&quot;GotoFrame2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeGotoLabel(SWFDecoder coder)
+@@ -2355,7 +2353,7 @@
+             coder.beginObject(&quot;gotoLabel&quot;, &quot;GotoLabel&quot;);
+             decodeActionObject(coder);
+             coder.readString(&quot;label&quot;);
+-            coder.endObject(&quot;GotoLabel&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeIf(SWFDecoder coder)
+@@ -2363,7 +2361,7 @@
+             coder.beginObject(&quot;if&quot;, &quot;If&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;offset&quot;, 2, true);
+-            coder.endObject(&quot;If&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeJump(SWFDecoder coder)
+@@ -2371,7 +2369,7 @@
+             coder.beginObject(&quot;jump&quot;, &quot;Jump&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;offset&quot;, 2, true);
+-            coder.endObject(&quot;Jump&quot;);
++            coder.endObject();
+         }
+ 
+         int decodeNewFunction(SWFDecoder coder)
+@@ -2384,23 +2382,23 @@
+             
+             if (argumentCount &gt; 0)
+             {
+-                coder.beginObject(&quot;arguments&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;arguments&quot;);
+ 
+                 for (int i=argumentCount; i&gt;0; i--)
+                     coder.readString(&quot;arg&quot;);
+ 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+                 
+             int actionsLength = coder.readWord(&quot;actionsLength&quot;, 2, false);
+             
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+ 
+             while (actionsLength &gt; 0)
+                 actionsLength -= decodeAction(coder);
+ 
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;NewFunction&quot;);
++            coder.endObject();
++            coder.endObject();
+             
+             return length + actionsLength;
+         }
+@@ -2415,22 +2413,22 @@
+             coder.readWord(&quot;registerCount&quot;, 1, false);
+             coder.readBits(&quot;optimizations&quot;, 16, false);
+             
+-            coder.beginObject(&quot;registerVariables&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;registerVariables&quot;);
+ 
+             for (int i=0; i&lt;argumentCount; i++)
+                 decodeRegisterVariable(coder);
+ 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+                 
+             int actionsLength = coder.readWord(&quot;actionsLength&quot;, 2, false);
+             
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+ 
+             while (actionsLength &gt; 0)
+                 actionsLength -= decodeAction(coder);
+                 
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;NewFunction2&quot;);
++            coder.endObject();
++            coder.endObject();
+             
+             return length + actionsLength;
+         }
+@@ -2440,7 +2438,7 @@
+             coder.beginObject(&quot;push&quot;, &quot;Push&quot;);
+             int length = decodeActionObject(coder);
+             
+-            coder.beginObject(&quot;values&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;values&quot;);
+ 
+             while (length &gt; 0)
+             {
+@@ -2480,8 +2478,8 @@
+                         break;
+                 }
+             }
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;Push&quot;);
++            coder.endObject();
++            coder.endObject();
+         }
+ 
+         int decodeString(SWFDecoder coder)
+@@ -2489,7 +2487,7 @@
+             coder.beginObject(&quot;string&quot;, &quot;String&quot;);
+             coder.readWord(&quot;type&quot;, 1, false);
+             int length = 2 + coder.readString(&quot;value&quot;);
+-            coder.endObject(&quot;String&quot;);
++            coder.endObject();
+             
+             return length;
+         }
+@@ -2499,7 +2497,7 @@
+             coder.beginObject(&quot;property&quot;, &quot;Property&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+             coder.readWord(&quot;value&quot;, 4, false); // property
+-            coder.endObject(&quot;Property&quot;);
++            coder.endObject();
+             
+             return 5;
+         }
+@@ -2508,7 +2506,7 @@
+         {
+             coder.beginObject(&quot;null&quot;, &quot;Null&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+-            coder.endObject(&quot;Null&quot;);
++            coder.endObject();
+             
+             return 1;
+         }
+@@ -2517,7 +2515,7 @@
+         {
+             coder.beginObject(&quot;void&quot;, &quot;Void&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+-            coder.endObject(&quot;Void&quot;);
++            coder.endObject();
+             
+             return 1;
+         }
+@@ -2527,7 +2525,7 @@
+             coder.beginObject(&quot;registerIndex&quot;, &quot;RegisterIndex&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+             coder.readWord(&quot;value&quot;, 1, false); // index
+-            coder.endObject(&quot;RegisterIndex&quot;);
++            coder.endObject();
+             
+             return 2;
+         }
+@@ -2537,7 +2535,7 @@
+             coder.beginObject(&quot;boolean&quot;, &quot;Boolean&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+             coder.readWord(&quot;value&quot;, 1, false); // value
+-            coder.endObject(&quot;Boolean&quot;);
++            coder.endObject();
+             
+             return 2;
+         }
+@@ -2547,7 +2545,7 @@
+             coder.beginObject(&quot;double&quot;, &quot;Double&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+             coder.readDouble(&quot;value&quot;); // value
+-            coder.endObject(&quot;Double&quot;);
++            coder.endObject();
+             
+             return 9;
+         }
+@@ -2557,7 +2555,7 @@
+             coder.beginObject(&quot;integer&quot;, &quot;Integer&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+             coder.readWord(&quot;value&quot;, 4, true); // value
+-            coder.endObject(&quot;Integer&quot;);
++            coder.endObject();
+             
+             return 5;
+         }
+@@ -2567,7 +2565,7 @@
+             coder.beginObject(&quot;tableIndex&quot;, &quot;TableIndex&quot;);
+             coder.readWord(&quot;type&quot;, 1, false); // type
+             coder.readWord(&quot;value&quot;, 1, true); // value
+-            coder.endObject(&quot;TableIndex&quot;);
++            coder.endObject();
+             
+             return 2;
+         }
+@@ -2577,7 +2575,7 @@
+             coder.beginObject(&quot;tableIndex&quot;, &quot;TableIndex&quot;);
+             coder.readWord(&quot;type&quot;, 1, false);
+             coder.readWord(&quot;value&quot;, 2, true);
+-            coder.endObject(&quot;TableIndex&quot;);
++            coder.endObject();
+             
+             return 3;
+         }
+@@ -2587,7 +2585,7 @@
+             coder.beginObject(&quot;registerVariable&quot;, &quot;RegisterVariable&quot;);
+             coder.readWord(&quot;register&quot;, 1, false);
+             coder.readString(&quot;name&quot;);
+-            coder.endObject(&quot;RegisterVariable&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeRegisterCopy(SWFDecoder coder)
+@@ -2595,7 +2593,7 @@
+             coder.beginObject(&quot;registerCopy&quot;, &quot;RegisterCopy&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;register&quot;, 1, false);
+-            coder.endObject(&quot;RegisterCopy&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeSetTarget(SWFDecoder coder)
+@@ -2603,7 +2601,7 @@
+             coder.beginObject(&quot;setTarget&quot;, &quot;SetTarget&quot;);
+             decodeActionObject(coder);
+             coder.readString(&quot;target&quot;);
+-            coder.endObject(&quot;SetTarget&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeTable(SWFDecoder coder)
+@@ -2615,14 +2613,14 @@
+             
+             if (attributeCount &gt; 0)
+             {
+-                coder.beginObject(&quot;strings&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;strings&quot;);
+         
+                 for (int i=0; i&lt;attributeCount; i++)
+                     coder.readString(&quot;value&quot;);
+         
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+-            coder.endObject(&quot;Table&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeWaitForFrame(SWFDecoder coder)
+@@ -2631,7 +2629,7 @@
+             decodeActionObject(coder);
+             coder.readWord(&quot;frameNumber&quot;, 2, false); 
+             coder.readWord(&quot;actionCount&quot;, 1, false);
+-            coder.endObject(&quot;WaitForFrame&quot;);
++            coder.endObject();
+         }
+         
+         void decodeWaitForFrame2(SWFDecoder coder)
+@@ -2639,7 +2637,7 @@
+             coder.beginObject(&quot;waitForFrame2&quot;, &quot;WaitForFrame2&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;actionCount&quot;, 1, false);
+-            coder.endObject(&quot;WaitForFrame2&quot;);
++            coder.endObject();
+         }
+         
+         void decodeWith(SWFDecoder coder)
+@@ -2647,7 +2645,7 @@
+             coder.beginObject(&quot;with&quot;, &quot;With&quot;);
+             decodeActionObject(coder);
+             coder.readWord(&quot;actionsLength&quot;, 1, false);
+-            coder.endObject(&quot;With&quot;);
++            coder.endObject();
+         }
+ 
+         int decodeButtonEvent(SWFDecoder coder)
+@@ -2667,12 +2665,12 @@
+             coder.readBits(&quot;keyCode&quot;, 7, false);
+             coder.readBool(&quot;menuDragOut&quot;);
+             
+-            coder.beginObject(&quot;actions&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;actions&quot;);
+             
+             while (decodeAction(coder) != 0);
+             
+-            coder.endObject(&quot;Array&quot;);
+-            coder.endObject(&quot;ButtonEvent&quot;);
++            coder.endObject();
++            coder.endObject();
+             
+             return offsetToEnd;
+         }
+@@ -2687,26 +2685,26 @@
+             coder.readWord(&quot;buttonType&quot;, 1, false);
+             int actionsOffset = coder.readWord(&quot;actionsOffset&quot;, 2, false);
+ 
+-            coder.beginObject(&quot;buttonRecords&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;buttonRecords&quot;);
+             
+             while (coder.scanWord(1, false) != 0)
+                 decodeButtonRecord(coder);
+                 
+             coder.readWord(&quot;endOfRecords&quot;, 1, false);
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             if (actionsOffset != 0)
+             {
+-                coder.beginObject(&quot;buttonEvents&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;buttonEvents&quot;);
+                     
+                 do {
+                     actionsOffset = decodeButtonEvent(coder);
+                 } while (actionsOffset != 0);
+ 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+             coder.context[SWFDecoder.TransparentColors] = 0;
+-            coder.endObject(&quot;DefineButton2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineFont2(SWFDecoder coder)
+@@ -2715,14 +2713,14 @@
+             int length = decodeDefineObject(coder);        
+             int start = coder.getPointer() - 16;
+ 
+-            boolean containsLayout = coder.readBool(&quot;containsLayout&quot;);
++            boolean containsLayout = coder.readBool(&quot;hasLayout&quot;);
+             
+             coder.readBool(&quot;isShiftJIS&quot;);
+             coder.readBool(&quot;isSmall&quot;);
+             coder.readBool(&quot;isANSI&quot;);
+             
+-            boolean containsWideOffsets = coder.readBool(&quot;containsWideOffsets&quot;);
+-            boolean containsWideCodes = coder.readBool(&quot;containsWideCodes&quot;);
++            boolean containsWideOffsets = coder.readBool(&quot;hasWideOffsets&quot;);
++            boolean containsWideCodes = coder.readBool(&quot;hasWideCodes&quot;);
+ 
+             coder.context[SWFDecoder.WideCodes] = containsWideCodes ? 1 : 0;
+ 
+@@ -2733,28 +2731,28 @@
+             coder.readString(&quot;name&quot;, nameLength);
+             int glyphCount = coder.readWord(&quot;glyphCount&quot;, 2, false);
+ 
+-            coder.beginObject(&quot;offsets&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;offsets&quot;);
+ 
+             for (int i=0; i&lt;glyphCount; i++)
+                 coder.readWord(&quot;offset&quot;, containsWideOffsets ? 4 : 2, false);
+ 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             coder.readWord(&quot;codeOffset&quot;, (containsWideOffsets) ? 4 : 2, false); // codeOffset
+ 
+-            coder.beginObject(&quot;glyphs&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;glyphs&quot;);
+ 
+             for (int i=0; i&lt;glyphCount; i++)
+                 decodeShape(coder);
+                 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+-            coder.beginObject(&quot;codes&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;codes&quot;);
+ 
+             for (int i=0; i&lt;glyphCount; i++)
+                 coder.readWord(&quot;code&quot;, containsWideCodes ? 2 : 1, false);
+ 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             if (containsLayout)
+             {
+@@ -2762,36 +2760,36 @@
+                 coder.readWord(&quot;descent&quot;, 2, true);
+                 coder.readWord(&quot;leading&quot;, 2, true);
+                 
+-                coder.beginObject(&quot;advances&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;advances&quot;);
+         
+                 for (int i=0; i&lt;glyphCount; i++)
+                     coder.readWord(&quot;advance&quot;, 2, true);
+ 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+                 
+                 
+                 if (((coder.getPointer() - start) &gt;&gt; 3) &lt; length)     
+                 {
+-                    coder.beginObject(&quot;bounds&quot;, &quot;Array&quot;);
++                    coder.beginArray(&quot;bounds&quot;);
+         
+                     for (int i=0; i&lt;glyphCount; i++)
+                         decodeBounds(&quot;bounds&quot;, coder);
+         
+-                    coder.endObject(&quot;Array&quot;);
++                    coder.endObject();
+             
+                     int kerningCount = coder.readWord(&quot;kerningCount&quot;, 2, false);
+         
+-                    coder.beginObject(&quot;kernings&quot;, &quot;Array&quot;);
++                    coder.beginArray(&quot;kernings&quot;);
+             
+                     for (int i=0; i&lt;kerningCount; i++)
+                         decodeKerning(coder);
+         
+-                    coder.endObject(&quot;Array&quot;);
++                    coder.endObject();
+                 }
+             }
+ 
+             coder.context[SWFDecoder.WideCodes] = 0;
+-            coder.endObject(&quot;DefineFont2&quot;);
++            coder.endObject();
+         }
+         
+         void decodeKerning(SWFDecoder coder)
+@@ -2802,7 +2800,7 @@
+             coder.readWord(&quot;leftGlyphIndex&quot;, numberOfBytes, false);
+             coder.readWord(&quot;rightGlyphIndex&quot;, numberOfBytes, false);
+             coder.readWord(&quot;adjustment&quot;, 2, true);
+-            coder.endObject(&quot;Kerning&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineImage(SWFDecoder coder)
+@@ -2823,7 +2821,7 @@
+             {
+                 coder.readBytes(&quot;compressedData&quot;, length-7);
+             }
+-            coder.endObject(&quot;DefineImage&quot;);
++            coder.endObject();
+         }
+         
+         void decodeDefineImage2(SWFDecoder coder)
+@@ -2844,7 +2842,7 @@
+             {
+                 coder.readBytes(&quot;compressedData&quot;, length-7);
+             }
+-            coder.endObject(&quot;DefineImage2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineJPEGImage2(SWFDecoder coder)
+@@ -2853,7 +2851,7 @@
+             int length = decodeDefineObject(coder);
+             int tableLength = readJPEGStream(coder); // encodingTable
+             coder.readBytes(&quot;image&quot;, length-tableLength-2);
+-            coder.endObject(&quot;DefineJPEGImage2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineJPEGImage3(SWFDecoder coder)
+@@ -2864,7 +2862,7 @@
+             int tableLength = readJPEGStream(coder); // encodingTable
+             coder.readBytes(&quot;image&quot;, offset-tableLength);
+             coder.readBytes(&quot;alpha&quot;, length-offset-6);        
+-            coder.endObject(&quot;DefineJPEGImage3&quot;);
++            coder.endObject();
+         }
+         
+         int readJPEGStream(SWFDecoder coder)
+@@ -2908,7 +2906,7 @@
+             if (coder.context[SWFDecoder.ArrayCountExtended] != 0 &amp;&amp; fillStyleCount == 0xFF)
+                 fillStyleCount = coder.readWord(&quot;fillStyleCountExtended&quot;, 2, false);
+                 
+-            coder.beginObject(&quot;fillStyles&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;fillStyles&quot;);
+                 
+             for (int i=0; i&lt;fillStyleCount; i++)
+             {
+@@ -2933,19 +2931,19 @@
+                         break;
+                 }
+             }
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             int lineStyleCount = coder.readWord(&quot;lineStyleCount&quot;, 1, false);
+ 
+             if (coder.context[SWFDecoder.ArrayCountExtended] != 0 &amp;&amp; lineStyleCount == 0xFF)
+                 lineStyleCount = coder.readWord(&quot;lineStyleCountExtended&quot;, 2, false);
+ 
+-            coder.beginObject(&quot;lineStyles&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;lineStyles&quot;);
+ 
+             for (int i=0; i&lt;lineStyleCount; i++)
+                 decodeMorphSolidLine(coder);
+ 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             decodeShape(coder); // startShape
+             decodeShape(coder); // endShape
+@@ -2953,7 +2951,7 @@
+             coder.context[SWFDecoder.TransparentColors] = 0;
+             coder.context[SWFDecoder.ArrayCountExtended] = 0;
+             
+-            coder.endObject(&quot;DefineMorphShape&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineMovieClip(SWFDecoder coder)
+@@ -2963,13 +2961,13 @@
+ 
+             coder.readWord(&quot;frameCount&quot;, 2, false);
+ 
+-            coder.beginObject(&quot;objects&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;objects&quot;);
+ 
+             while (decodeObject(coder));
+ 
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+             
+-            coder.endObject(&quot;DefineMovieClip&quot;);
++            coder.endObject();
+         }
+         
+         void decodeDefineShape2(SWFDecoder coder)
+@@ -2986,7 +2984,7 @@
+                 if (fillStyleCount == 0xFF)
+                     fillStyleCount = coder.readWord(&quot;fillStyleCountExtended&quot;, 2, false);
+                     
+-                coder.beginObject(&quot;fillStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;fillStyles&quot;);
+                 
+                 for (int i=0; i&lt;fillStyleCount; i++)
+                 {
+@@ -3012,7 +3010,7 @@
+                     }        
+                 }
+                 
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+             
+             int lineStyleCount = coder.readWord(&quot;lineStyleCount&quot;, 1, false);
+@@ -3022,17 +3020,17 @@
+                 if (lineStyleCount == 0xFF)
+                     lineStyleCount = coder.readWord(&quot;lineStyleCountExtended&quot;, 2, false);
+         
+-                coder.beginObject(&quot;lineStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;lineStyles&quot;);
+         
+                 for (int i=0; i&lt;lineStyleCount; i++)
+                     decodeSolidLine(coder);
+         
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+             coder.context[SWFDecoder.ArrayCountExtended] = 1;
+             decodeShape(coder);
+             coder.context[SWFDecoder.ArrayCountExtended] = 0;
+-            coder.endObject(&quot;DefineShape2&quot;);
++            coder.endObject();
+         }
+         
+         void decodeDefineShape3(SWFDecoder coder)
+@@ -3051,7 +3049,7 @@
+                 if (fillStyleCount == 0xFF)
+                     fillStyleCount = coder.readWord(&quot;fillStyleCountExtended&quot;, 2, false);
+                     
+-                coder.beginObject(&quot;fillStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;fillStyles&quot;);
+                 
+                 for (int i=0; i&lt;fillStyleCount; i++)
+                 {
+@@ -3076,7 +3074,7 @@
+                             break;
+                     }        
+                 }
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+ 
+             int lineStyleCount = coder.readWord(&quot;lineStyleCount&quot;, 1, false);
+@@ -3086,12 +3084,12 @@
+                 if (lineStyleCount == 0xFF)
+                     lineStyleCount = coder.readWord(&quot;lineStyleCountExtended&quot;, 2, false);
+         
+-                coder.beginObject(&quot;lineStyles&quot;, &quot;Array&quot;);
++                coder.beginArray(&quot;lineStyles&quot;);
+         
+                 for (int i=0; i&lt;lineStyleCount; i++)
+                     decodeSolidLine(coder);
+         
+-                coder.endObject(&quot;Array&quot;);
++                coder.endObject();
+             }
+             coder.context[SWFDecoder.ArrayCountExtended] = 1;
+ 
+@@ -3099,7 +3097,7 @@
+ 
+             coder.context[SWFDecoder.ArrayCountExtended] = 0;
+             coder.context[SWFDecoder.TransparentColors] = 0;
+-            coder.endObject(&quot;DefineShape3&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineText2(SWFDecoder coder)
+@@ -3143,18 +3141,18 @@
+             coder.context[SWFDecoder.NumberOfGlyphBits] = coder.readWord(&quot;numberOfGlyphBits&quot;, 1, false);
+             coder.context[SWFDecoder.NumberOfAdvanceBits] = coder.readWord(&quot;numberOfAdvanceBits&quot;, 1, false);
+             
+-            coder.beginObject(&quot;textRecords&quot;, &quot;Array&quot;);
++            coder.beginArray(&quot;textRecords&quot;);
+ 
+             while (coder.scanBits(8, false) != 0)
+                 decodeTextRecord(coder);
+ 
+             coder.readBits(&quot;endOfText&quot;, 8, false);
+-            coder.endObject(&quot;Array&quot;);
++            coder.endObject();
+ 
+             coder.context[SWFDecoder.NumberOfGlyphBits] = 0;
+             coder.context[SWFDecoder.NumberOfAdvanceBits] = 0;
+             coder.context[SWFDecoder.TransparentColors] = 0;
+-            coder.endObject(&quot;DefineText2&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineTextField(SWFDecoder coder)
+@@ -3166,17 +3164,17 @@
+ 
+             decodeBounds(&quot;bounds&quot;, coder);
+ 
+-            boolean _containsText = coder.readBool(&quot;containsText&quot;);
++            boolean _containsText = coder.readBool(&quot;hasText&quot;);
+             coder.readBool(&quot;isWordWrapped&quot;);
+             coder.readBool(&quot;isMultiline&quot;);
+             coder.readBool(&quot;isPassword&quot;);
+             coder.readBool(&quot;isReadOnly&quot;);
+-            boolean _containsColor = coder.readBool(&quot;containsColor&quot;);
+-            boolean _containsMaxLength = coder.readBool(&quot;containsMaxLength&quot;);
+-            boolean _containsFont = coder.readBool(&quot;containsFont&quot;);
++            boolean _containsColor = coder.readBool(&quot;hasColor&quot;);
++            boolean _containsMaxLength = coder.readBool(&quot;hasMaxLength&quot;);
++            boolean _containsFont = coder.readBool(&quot;hasFont&quot;);
+             coder.readBits(&quot;reserved1&quot;, 1, false);
+             coder.readBool(&quot;isAutoSize&quot;);
+-            boolean _containsLayout = coder.readBool(&quot;containsLayout&quot;);
++            boolean _containsLayout = coder.readBool(&quot;hasLayout&quot;);
+             coder.readBool(&quot;isSelectable&quot;);
+             coder.readBool(&quot;isBordered&quot;);
+             coder.readBool(&quot;reserved2&quot;);
+@@ -3209,7 +3207,7 @@
+                 coder.readString(&quot;initialText&quot;);
+ 
+             coder.context[SWFDecoder.TransparentColors] = 0;
+-            coder.endObject(&quot;DefineTextField&quot;);
++            coder.endObject();
+         }
+ 
+         void decodeDefineVideo(SWFDecoder coder)
+@@ -3224,7 +3222,7 @@
+             coder.readBits(&quot;deblocking&quot;, 2, false);
+             coder.readBool(&quot;smoothing&quot;);
+             coder.readWord(&quot;codec&quot;, 1, false);
+-            coder.endObject(&quot;DefineVideo&quot;);
++            coder.endObject();
+         }
+     }
+     private class SWFDecoder 
+@@ -3267,32 +3265,11 @@
+         }
+         public void setPointer(int location)
+         {
+-            if (location &lt; 0)
+-            {
+-                logError(&quot;PointerOutOfRange&quot;, location, 0);
+-                location = 0;
+-            }
+-            else if (location &gt; end)
+-            {
+-                logError(&quot;PointerOutOfRange&quot;, location, 0);            
+-                location = end;
+-            }
+             ptr = location;
+         }
+         public void adjustPointer(int offset)
+         {
+             ptr += offset;
+-            
+-            if (ptr &lt; 0)
+-            {
+-                logError(&quot;PointerOutOfRange&quot;, ptr, 0);
+-                ptr = 0;
+-            }
+-            else if (ptr &gt;= end)
+-            {
+-                logError(&quot;PointerOutOfRange&quot;, ptr, 0);                    
+-                ptr = end;
+-            }
+         }
+         public void alignToByte()
+         {
+@@ -3300,32 +3277,29 @@
+         }
+         public void beginObject(String name, String type)
+         {
+-            if (listener != null)
+-                listener.recordMovieEvent(TextDump.Begin, name, ptr, 0, type);
++            listener.recordMovieEvent(TextDump.Begin, name, ptr, 0, type);
+         }
+-        public void endObject(String name)
++        public void beginArray(String name)
+         {
+-            if (listener != null)
+-                listener.recordMovieEvent(TextDump.End, null, ptr, 0, name);
++            listener.recordMovieEvent(TextDump.BeginArray, name, ptr, 0, &quot;Array&quot;);
+         }
++        public void endObject()
++        {
++            listener.recordMovieEvent(TextDump.End, null, ptr, 0, null);
++        }
+         public void logValue(String name, Object anObject, int location, int numberOfBits)
+         {
+-            if (listener != null)
+-                listener.recordMovieEvent(TextDump.Value, name, location, numberOfBits, anObject);
++            listener.recordMovieEvent(TextDump.Value, name, location, numberOfBits, anObject);
+         }
+         public void logError(String errorKey, int location, int length)
+         {
+-            if (listener != null)
+-                listener.recordMovieEvent(TextDump.Error, null, location, length, errorKey);
++            listener.recordMovieEvent(TextDump.Error, null, location, length, errorKey);
+         }
+         public int scanBits(int numberOfBits, boolean signed)
+         {
+             int value = 0;
+             int start = ptr;
+ 
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-               logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        
+             value = _readBits(numberOfBits, signed);
+             ptr = start;
+             
+@@ -3336,9 +3310,6 @@
+             int value = 0;
+             int start = ptr;
+ 
+-            if (numberOfBytes &lt; 0 || numberOfBytes &gt; 4)
+-                logError(&quot;ByteRangeError&quot;, ptr, numberOfBytes);
+-        
+             value = _readWord(numberOfBytes*8, signed);
+             ptr = start;
+             
+@@ -3397,9 +3368,6 @@
+         {
+             float value = 0;
+         
+-            if (numberOfBits &lt; 0 || numberOfBits &gt; 32)
+-                logError(&quot;BitRangeError&quot;, ptr, numberOfBits);
+-        
+             value = ((float)_readBits(numberOfBits, true)) / 65536.0f;
+ 
+ 
+@@ -3532,9 +3500,6 @@
+             if (ptr &gt;= end)
+                 return 0;
+                 
+-            if (ptr % 8 &gt; 0)
+-                logError(&quot;NotByteAligned&quot;, ptr, 0);
+-        
+             try 
+             {
+                 int index = ptr &gt;&gt; 3;
+@@ -3565,9 +3530,6 @@
+             if (ptr &gt;= end)
+                 return bytesRead;
+                 
+-            if (ptr % 8 &gt; 0)
+-                logError(&quot;NotByteAligned&quot;, ptr, 0);
+-
+             try 
+             {
+                 int index = ptr &gt;&gt;&gt; 3;
+@@ -3587,30 +3549,35 @@
+     {
+         private static final long serialVersionUID = 0;
+ 
+-        private String name = null;
+-        private int reference = 0;
+-        private int location = 0;
+-        private int length = 0;
++        private String name;
++        private int index;
++        private int location;
++        private int length;
++        private boolean isArray;
+ 
+-        MovieNode(MovieNode parent, String name, int location, int length, Object value)
++        MovieNode(MovieNode parent, boolean isArray, int index, String name, int location, int length, Object value)
+         {
+             super(parent);
+                    
+-            if (parent != null)
+-                setReference(parent.getChildCount());
++            this.name = name;
++            this.isArray = isArray;
++            this.location = location;
++            this.length = length;
++            this.index = index;
+ 
+-            setName(name);
+-            setLocation(location);
+-            setLength(length);
+             setUserObject(value);
+         }   
+-        int getReference()
++        boolean isArray()
+         {
+-            return reference;
++            return isArray;
++        }
++        int getIndex()
++        {
++            return index;
+         }    
+-        void setReference(int aValue)
++        void setIndex(int aValue)
+         {
+-            reference = aValue;
++            index = aValue;
+         }
+         int getLocation()
+         {
+@@ -3638,19 +3605,19 @@
+         }
+         String displayName()
+         {
+-            if (parent == null)
+-                return &quot;movie&quot;;
++            String str;
+             
+-            String parentName = ((MovieNode)parent).getUserObject().toString();
+-            String str = null;
+-            
+-            if (parentName.equals(&quot;Array&quot;))
+-                str = &quot;[&quot; + reference + &quot;] : &quot; + getUserObject().toString();
++            if (index != -1)
++                str = &quot;[&quot; + index + &quot;] : &quot; + getUserObject().toString();
+             else
+                 str = name;
+                 
+             return str;
+         }
++        public String toString()
++        {
++            return displayName();
++        }
+     }
+ 
+     public static void main(String[] args)
+@@ -3658,6 +3625,9 @@
+         new TextDump(args);
+     }
+     
++    File fileIn = null;
++    File fileOut = null;
++
+     private MovieNode nodes = null;
+     private MovieNode currentNode = null;
+ 
+@@ -3665,24 +3635,39 @@
+     {
+         super(args);
+         
+-        if (options.containsKey(&quot;fileIn&quot;) &amp;&amp; options.containsKey(&quot;fileOut&quot;))
++        try
+         {
+-            StringBuffer buffer = new StringBuffer();
++            if (options.containsKey(&quot;fileIn&quot;) &amp;&amp; options.containsKey(&quot;fileOut&quot;))
++            {
++                fileIn = new File(options.get(&quot;fileIn&quot;).toString());
++                fileOut = new File(options.get(&quot;fileOut&quot;).toString());
++                
++                byte[] fileData = new byte[(int)fileIn.length()];
++    
++                nodes = new MovieNode(null, false, -1, &quot;Movie&quot;, 0, 0, &quot;FSMovie&quot;);
++                currentNode = nodes;
++                
++                readFromFile(fileIn, fileData);
++                
++                new SWF().decodeMovie(fileData, this);
+ 
+-            File fileIn = new File(options.get(&quot;fileIn&quot;).toString());
+-            File fileOut = new File(options.get(&quot;fileOut&quot;).toString());
+-            byte[] fileData = new byte[(int)fileIn.length()];
+-
+-            nodes = new MovieNode(null, null, 0, 0, &quot;FSMovie&quot;);
+-            currentNode = nodes;
+-            
+-            readFromFile(fileIn, fileData);
+-            
+-            new SWF().decodeMovie(fileData, this);
+-
+-            describeNode(nodes, buffer, 0);
+-            writeToFile(fileOut, buffer);
++                FileOutputStream stream = new FileOutputStream(fileOut);
++                PrintWriter pw = new PrintWriter(stream);
++                
++                describeNode(nodes, pw, 0);
++                
++                pw.close();
++                stream.close();                    
++            }
+         }
++        catch (Exception e)
++        {         
++            System.err.println(e.toString());
++        }
++        catch (Error e)
++        {
++            System.err.println(e.toString());
++        }
+     }
+     private void readFromFile(File file, byte[] bytes)
+     {
+@@ -3702,77 +3687,54 @@
+             
+         }
+     }
+-    private void writeToFile(File file, StringBuffer buffer)
++    private void describeNode(MovieNode node, PrintWriter pw, int level)
+     {
+-        try
+-        {
+-            FileOutputStream stream = new FileOutputStream(file);
+-            byte[] bytes = buffer.toString().getBytes();
+-            
+-            stream.write(bytes);
+-            stream.close();
+-        }
+-        catch (IOException e)
+-        {
+-            
+-        }
+-    }
+-    private void describeNode(MovieNode node, StringBuffer buffer, int level)
+-    {
+         for (int i=0; i&lt;level; i++)
+-            buffer.append('\t');
++            pw.print('\t');
+         
+-        if (node.getParent() == null)
+-        {
+-            buffer.append(&quot;Movie&quot;);   
+-        }
++        if (node.getIndex() != -1)
++            pw.print(&quot;[&quot; + node.getIndex() + &quot;]&quot;);
+         else
+-        {
+-            String parentName = ((MovieNode)node.getParent()).getUserObject().toString();
+-            
+-            if (parentName.equals(&quot;Array&quot;))
+-                buffer.append(&quot;[&quot; + node.getReference() + &quot;]&quot;);
+-            else
+-                buffer.append(node.displayName());
+-            
+-        }
++            pw.print(node.displayName());
+         
++        
+         if (node.getChildCount() &gt; 0)
+         {
+-            buffer.append(&quot; = &quot;);
+-            buffer.append(node.getUserObject().toString());
+-            buffer.append(&quot;: {&quot;);
+-            buffer.append(newline);
++            pw.print(&quot; = &quot;);
++            pw.print(node.getUserObject().toString());
++            pw.println(&quot; {&quot;);
+             
+             for (Enumeration e = node.children() ; e.hasMoreElements() ;) 
+-                describeNode((MovieNode)e.nextElement(), buffer, level+1);
++                describeNode((MovieNode)e.nextElement(), pw, level+1);
+     
+             for (int i=0; i&lt;level; i++)
+-                buffer.append('\t');
++                pw.print('\t');
+     
+-            buffer.append(&quot;};&quot;).append(newline);
++            pw.println(&quot;};&quot;);
+         }
+         else
+         {
+-            buffer.append(&quot; = &quot;);
++            pw.print(&quot; = &quot;);
+             
+             if (node.isLeaf() == false)
+             {
+-                if (node.getUserObject().toString().equals(&quot;Array&quot;))
+-                    buffer.append(&quot;{}&quot;);
++                if (node.isArray())
++                    pw.print(&quot;{}&quot;);
+             }
+             else
+             {
+                 if (node.getUserObject() instanceof String)
+-                    buffer.append(&quot;\&quot;&quot; + node.getUserObject() + &quot;\&quot;&quot;);
++                    pw.print(&quot;\&quot;&quot; + node.getUserObject() + &quot;\&quot;&quot;);
+                 else
+-                    buffer.append(node.getUserObject().toString());
++                    pw.print(node.getUserObject().toString());
+             }
+-            buffer.append(&quot;;&quot;).append(newline);
++            pw.println(&quot;;&quot;);
+         }
+     }
+     private void recordMovieEvent(int event, String name, int location, int length, Object value)
+     {
++        int index = currentNode.isArray() ? currentNode.getChildCount() : -1;
++        
+         switch (event)
+         {
+             case Begin:
+@@ -3784,14 +3746,27 @@
+                 }
+                 else
+                 {
+-                    MovieNode node = new MovieNode(currentNode, name, location, length, value);
++                    MovieNode node = new MovieNode(currentNode, false, index, name, location, length, value);
+                     currentNode.add(node);
+                     currentNode = node;
+                 }
+                 break;
++            case BeginArray:
++                if (nodes.getChildCount() == 0)
++                {
++                    nodes.setLocation(location);
++                    nodes.setLength(length);
++                    nodes.setUserObject(value);
++                }
++                else
++                {
++                    MovieNode node = new MovieNode(currentNode, true, index, name, location, length, value);
++                    currentNode.add(node);
++                    currentNode = node;
++                }
++                break;
+             case End:
+                 currentNode.setLength(location - currentNode.getLocation());
+-                currentNode.setUserObject(value);
+                 
+                 if (currentNode.getParent() != null)
+                     currentNode = (MovieNode)currentNode.getParent();
+@@ -3799,7 +3774,7 @@
+                     currentNode = nodes;
+                 break;
+             case Value:
+-                currentNode.add(new MovieNode(currentNode, name, location, length, value));
++                currentNode.add(new MovieNode(currentNode, false, index ,name, location, length, value));
+                 break;
+             default:
+                 break;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000022.html">[Transform-svn] r82 - in trunk: doc src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000025.html">[Transform-svn] r84 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#24">[ date ]</a>
+              <a href="thread.html#24">[ thread ]</a>
+              <a href="subject.html#24">[ subject ]</a>
+              <a href="author.html#24">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

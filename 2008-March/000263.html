@@ -1,0 +1,412 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r327 - dev/dev-2-3/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r327%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803141337.m2EDbEH4007118%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000262.html">
+   <LINK REL="Next"  HREF="000264.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r327 - dev/dev-2-3/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r327%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803141337.m2EDbEH4007118%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r327 - dev/dev-2-3/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 14 14:37:14 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000262.html">[Transform-svn] r326 - in dev/dev-2-3/src: . com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000264.html">[Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#263">[ date ]</a>
+              <a href="thread.html#263">[ thread ]</a>
+              <a href="subject.html#263">[ subject ]</a>
+              <a href="author.html#263">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-14 14:37:11 +0100 (Fri, 14 Mar 2008)
+New Revision: 327
+
+Modified:
+   dev/dev-2-3/src/com/flagstone/transform/FSAudioData.java
+Log:
+Tidied up format of documentation.
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/FSAudioData.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSAudioData.java	2008-03-08 14:51:07 UTC (rev 326)
++++ dev/dev-2-3/src/com/flagstone/transform/FSAudioData.java	2008-03-14 13:37:11 UTC (rev 327)
+@@ -32,77 +32,76 @@
+ /** 
+  * FSAudioData is used to define sounds for a Flash Video (flv) file. It is 
+  * similar in function to the FSDefineSound class.
+-
+-&lt;table class=&quot;datasheet&quot;&gt;
+-
+-&lt;tr&gt;
+-&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSAudioData_0&quot;&gt;timestamp&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The time in milliseconds at which the sound will be played. The timestamp 
+-is used exclusively for determining when sound or video will be played. Any 
+-internal timing information in the audio or video data is ignored.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSAudioData_1&quot;&gt;format&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The format of the sound data - PCM, ADPCM,  MP3, NATIVE_PCM or NELLYMOSER.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSAudioData_2&quot;&gt;playbackRate&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The rate the sound will be played in Hertz: 5512, 11025, 22050 or 44100. 
+-Note: sounds encoded using the Nellymoser have a fixed playback rate of 8KHz.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSAudioData_3&quot;&gt;playbackChannels&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The number of channels in the sound, typically 1 (mono) or 2 (stereo).&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSAudioData_4&quot;&gt;playbackSampleSize&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The number of bytes in a sample: 1 or 2.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSAudioData_5&quot;&gt;sound&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The sampled sound data.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;/table&gt;
+-
+-&lt;p&gt;Five encoded formats for the sound data are supported:&lt;/p&gt;
+-
+-&lt;ul&gt;
+-
+-&lt;li&gt;NATIVE_PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 
+-bytes. For two-byte samples the byte order is dependent on the platform on which 
+-the Flash Player is hosted. Sounds created on a platform which supports big-endian 
+-byte order will not be played correctly when listened to on a platform which 
+-supports little-endian byte order.&lt;/li&gt;
+-
+-&lt;li&gt;PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 bytes 
+-with the latter presented in Little-Endian byte order. This ensures that sounds 
+-can be played across different platforms.&lt;/li&gt;
+-
+-&lt;li&gt;ADPCM - compressed ADaptive Pulse Code Modulated: samples are encoded and 
+-compressed by comparing the difference between successive sound sample which 
+-dramatically reduces the size of the encoded sound when compared to the 
+-uncompressed PCM formats. Use this format whenever possible.&lt;/li&gt;
+-
+-&lt;li&gt;MP3 - compressed MPEG Audio Layer-3.&lt;/li&gt;
+-
+-&lt;li&gt;NELLYMOSER - compressed Nellymoser Asao format supporting low bit-rate sound 
+-for improving synchronisation between the sound and frame rate of movies.&lt;/li&gt;
+-&lt;/ul&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSAudioData class represents the FLV Tag with the Audio Data section from 
+-Macromedia's Flash (SWF) File Format Specification. It was added in Flash 6.&lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;&lt;a name=&quot;FSAudioData_0&quot;&gt;timestamp&lt;/a&gt;&lt;/td&gt;
++ * &lt;td&gt;The time in milliseconds at which the sound will be played. The timestamp 
++ * is used exclusively for determining when sound or video will be played. Any 
++ * internal timing information in the audio or video data is ignored.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;format&lt;/td&gt;
++ * &lt;td&gt;The format of the sound data - PCM, ADPCM,  MP3, NATIVE_PCM or NELLYMOSER.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;playbackRate&lt;/td&gt;
++ * &lt;td&gt;The rate the sound will be played in Hertz: 5512, 11025, 22050 or 44100. 
++ * Note: sounds encoded using the Nellymoser have a fixed playback rate of 8KHz.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;playbackChannels&lt;/td&gt;
++ * &lt;td&gt;The number of channels in the sound, typically 1 (mono) or 2 (stereo).&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;playbackSampleSize&lt;/td&gt;
++ * &lt;td&gt;The number of bytes in a sample: 1 or 2.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;&lt;a name=&quot;FSAudioData_5&quot;&gt;sound&lt;/a&gt;&lt;/td&gt;
++ * &lt;td&gt;The sampled sound data.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * Five encoded formats for the sound data are supported:
++ * 
++ * &lt;ul&gt;
++ * &lt;li&gt;NATIVE_PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 
++ * bytes. For two-byte samples the byte order is dependent on the platform on which 
++ * the Flash Player is hosted. Sounds created on a platform which supports big-endian 
++ * byte order will not be played correctly when listened to on a platform which 
++ * supports little-endian byte order.&lt;/li&gt;
++ * 
++ * &lt;li&gt;PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 bytes 
++ * with the latter presented in Little-Endian byte order. This ensures that sounds 
++ * can be played across different platforms.&lt;/li&gt;
++ * 
++ * &lt;li&gt;ADPCM - compressed ADaptive Pulse Code Modulated: samples are encoded and 
++ * compressed by comparing the difference between successive sound sample which 
++ * dramatically reduces the size of the encoded sound when compared to the 
++ * uncompressed PCM formats. Use this format whenever possible.&lt;/li&gt;
++ * 
++ * &lt;li&gt;MP3 - compressed MPEG Audio Layer-3.&lt;/li&gt;
++ * 
++ * &lt;li&gt;NELLYMOSER - compressed Nellymoser Asao format supporting low bit-rate sound 
++ * for improving synchronisation between the sound and frame rate of movies.&lt;/li&gt;
++ * &lt;/ul&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&lt;
++ * 
++ * &lt;p&gt;The FSAudioData class represents the FLV Tag with the Audio Data section 
++ * from Macromedia's Flash (SWF) File Format Specification. It was added in 
++ * Flash Video 1.&lt;/p&gt;
+  */  
+ public final class FSAudioData extends FSVideoObject
+ {
+@@ -118,15 +117,22 @@
+ 		decode(coder);
+ 	}
+ 
+-    /** Constructs an FSAudioData object specifying the parameters required to describe the sound.
+-
+-        @param timestamp time in milliseconds from the start of the file that the sound will be played..
+-        @param aFormat the encoding format for the sound, either FSSound.NATIVE_PCM, FSSound.PCM, FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
+-        @param rate the number of samples per second that the sound is played at, either 5512, 11025, 22050 or 44100.
+-        @param channels the number of channels in the sound, either 1 (Mono) or 2 (Stereo).
+-        @param sampleSize the size of an uncompressed sound sample in bits, either 8 or 16.
+-        @param bytes the sound data.
+-        */
++    /** 
++     * Constructs an FSAudioData object specifying the parameters required to 
++     * describe the sound.
++     * 
++     * @param timestamp time in milliseconds from the start of the file that the 
++     * sound will be played..
++     * @param aFormat the encoding format for the sound, either FSSound.NATIVE_PCM, 
++     * FSSound.PCM, FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
++     * @param rate the number of samples per second that the sound is played at, 
++     * either 5512, 11025, 22050 or 44100.
++     * @param channels the number of channels in the sound, either 1 (Mono) or 
++     * 2 (Stereo).
++     * @param sampleSize the size of an uncompressed sound sample in bits, 
++     * either 8 or 16.
++     * @param bytes the sound data.
++     */
+ 	public FSAudioData(int timestamp, int aFormat, int rate, int channels, int sampleSize, byte[] bytes)
+ 	{
+ 		super(FSVideoObject.AudioData, timestamp);
+@@ -137,94 +143,107 @@
+ 		setSoundData(bytes);
+ 	}
+ 
+-    /**	Gets the compression format used, either FSSound.NATIVE_PCM, FSSound.PCM, FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
+-
+-        @return a constant defining the type of compression.
+-        */
++    /**	
++     * Gets the compression format used, either FSSound.NATIVE_PCM, FSSound.PCM, 
++     * FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
++     * 
++     * @return a constant defining the type of compression.
++     */
+     public int getFormat() 
+     {
+         return format;
+     }
+ 
+-    /** Sets the encoding format used, either FSSound.NATIVE_PCM, FSSound.PCM, FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
+-
+-        @param encoding the format for the sound.
+-        */
++    /** 
++     * Sets the encoding format used, either FSSound.NATIVE_PCM, FSSound.PCM, 
++     * FSSound.ADPCM, FSSound.MP3 or FSSound.NELLYMOSER.
++     * 
++     * @param encoding the format for the sound.
++     */
+     public void setFormat(int encoding)
+ 	{
+ 		format = encoding;
+ 	}
+ 
+     /** 
+-     * Gets the rate at which the sound will be played, in Hertz: 5512, 11025, 22050 or 44100. 
+-     * Note that the playback rate for Nellymoser encoded audio is fixed at 8Khz so the playback
+-     * rate attribute has no effect.
+-
+-     @return the rate at which the sound was sampled.
++     * Gets the rate at which the sound will be played, in Hertz: 5512, 11025, 
++     * 22050 or 44100. Note that the playback rate for Nellymoser encoded audio 
++     * is fixed at 8Khz so the playback rate attribute has no effect.
++     * 
++     * @return the rate at which the sound was sampled.
+      */
+     public int getPlaybackRate()
+     {
+         return playbackRate;
+     }
+ 
+-    /** Sets the sampling rate in Hertz. Must be one of: 5512, 11025, 22050 or 44100.
+-
+-        @param rate the rate at which the sounds is played in Hz.
+-        */
++    /** 
++     * Sets the sampling rate in Hertz. Must be one of: 5512, 11025, 22050 or 
++     * 44100.
++     * 
++     * @param rate the rate at which the sounds is played in Hz.
++     */
+     public void setPlaybackRate(int rate)
+ 	{
+ 		playbackRate = rate;
+ 	}
+ 
+-    /** Gets the number of sound channels, 1 (Mono) or 2 (Stereo).
+-
+-     @return the number of channels.
++    /** 
++     * Gets the number of sound channels, 1 (Mono) or 2 (Stereo).
++     * 
++     * @return the number of channels.
+      */
+     public int getPlaybackChannels()
+     {
+         return playbackChannels;
+     }
+ 
+-    /** Sets the number of channels defined in the sound.
+-
+-        @param channels the number of channels in the sound, either 1 (Mono) or 2 (Stereo).
+-        */
++    /** 
++     * Sets the number of channels defined in the sound.
++     * 
++     * @param channels the number of channels in the sound, either 1 (Mono) or 
++     * 2 (Stereo).
++     */
+     public void setPlaybackChannels(int channels)
+     {
+         playbackChannels = channels;
+     }
+ 
+-    /** Gets the size of an uncompressed sample in bytes.
+-
+-        @return the number of bytes per sample when the sound is uncompressed.
+-        */
++    /** 
++     * Gets the size of an uncompressed sample in bytes.
++     * 
++     * @return the number of bytes per sample when the sound is uncompressed.
++     */
+     public int getPlaybackSampleSize() 
+     {
+         return playbackSampleSize;
+     }
+ 
+-    /** Sets the sample size in bytes. Must be either 1 or 2.
+-
+-        @param sampleSize the size of sound samples in bytes.
+-        */
++    /** 
++     * Sets the sample size in bytes. Must be either 1 or 2.
++     * 
++     * @param sampleSize the size of sound samples in bytes.
++     */
+     public void setPlaybackSampleSize(int sampleSize)
+ 	{
+ 		playbackSampleSize = sampleSize;
+ 	}
+ 
+-    /** Gets the sound data.
+-
+-     @return an array of bytes containing the sampled sound.
++    /** 
++     * Gets the sound data.
++     * 
++     * @return an array of bytes containing the sampled sound.
+      */
+     public byte[] getSoundData()
+     {
+         return soundData;
+     }
+ 
+-    /** Sets the sound data.
+-
+-        @param bytes the sound data.
+-        */
++    /** 
++     * Sets the sound data.
++     * 
++     * @param bytes the sound data.
++     */
+     public void setSoundData(byte[] bytes)
+ 	{
+ 		soundData = bytes;
+@@ -334,7 +353,7 @@
+ 
+         playbackSampleSize = coder.readBits(1, false)+1;
+ 		playbackChannels = coder.readBits(1, false)+1;	
+-		soundData = new byte[length-4];
++		soundData = new byte[length-1];
+ 		coder.readBytes(soundData);
+ 	}
+ }
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000262.html">[Transform-svn] r326 - in dev/dev-2-3/src: . com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000264.html">[Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#263">[ date ]</a>
+              <a href="thread.html#263">[ thread ]</a>
+              <a href="subject.html#263">[ subject ]</a>
+              <a href="author.html#263">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

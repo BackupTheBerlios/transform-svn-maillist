@@ -1,0 +1,651 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r380 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r380%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182220.m2IMKv28011095%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000315.html">
+   <LINK REL="Next"  HREF="000317.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r380 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r380%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182220.m2IMKv28011095%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r380 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 23:20:57 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000315.html">[Transform-svn] r379 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000317.html">[Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#316">[ date ]</a>
+              <a href="thread.html#316">[ thread ]</a>
+              <a href="subject.html#316">[ subject ]</a>
+              <a href="author.html#316">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 23:20:54 +0100 (Tue, 18 Mar 2008)
+New Revision: 380
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSHeader.java
+Log:
+Formatted comments.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSHeader.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSHeader.java	2008-03-18 22:18:46 UTC (rev 379)
++++ dev/dev-2-4/src/com/flagstone/transform/FSHeader.java	2008-03-18 22:20:54 UTC (rev 380)
+@@ -1,4 +1,5 @@
+ package com.flagstone.transform;
++
+ /*
+  * FSHeader.java
+  * 
+@@ -32,288 +33,310 @@
+ import java.io.*;
+ 
+ /**
+- * The FSHeader class can be used to quickly decode the header information in
+- * a flash file to get information about the number of frames, screen size
+- * etc. Only the first few bytes are decoded so this avoid the cost of using 
+- * the FSMovie class which decodes all the data structures. However if a file
+- * is compressed then the entire contents will have to be unzipped first in
+- * order to decode the header information.
++ * The FSHeader class can be used to quickly decode the header information in a
++ * flash file to get information about the number of frames, screen size etc.
++ * Only the first few bytes are decoded so this avoid the cost of using the
++ * FSMovie class which decodes all the data structures. However if a file is
++ * compressed then the entire contents will have to be unzipped first in order
++ * to decode the header information.
+  * 
+- * Note: The coordinate system used for the screen extends from the TOP LEFT 
++ * Note: The coordinate system used for the screen extends from the TOP LEFT
+  * corner with the positive x-axis extending to the left and the positive y-axis
+  * extending DOWN, unlike &quot;traditional&quot; Cartesian systems. The (minX, minY) and
+- * (maxX, maxY) coordinates specify the range of values used for the x and y 
+- * axes. (minX, minY) is often (0,0) but may contain any positive or negative 
++ * (maxX, maxY) coordinates specify the range of values used for the x and y
++ * axes. (minX, minY) is often (0,0) but may contain any positive or negative
+  * values.
+  */
+ public final class FSHeader
+ {
+-    private String signature = null;
+-    private int version = 0;
+-    private int minX = 0;
+-    private int minY = 0;
+-    private int maxX = 0;
+-    private int maxY = 0;
+-    private int length = 0;
+-    private float frameRate = 0.0f;
+-    private int frameCount = 0;
+-    
+-    /**
+-     * Create a new FSHeader object and initialize it with the information
+-     * decoded from the Flash file.
+-     * 
+-     * @param filename the path to a file.
+-     * 
+-     * @throws FileNotFoundException if the file referenced by the path does 
+-     * not exist or refers to a directory.
+-     * 
+-     * @throws IOException if there is an error reading the file.
+-     * 
+-     * @throws DataFormatException if the file is not a flash file or there is
+-     * an error unzipping a compressed flash file.
+-     */
+-    public FSHeader(String filename) throws IOException, DataFormatException
+-    {
+-        decodeFromFile(filename);
+-    }
+-    
+-    /**
+-     * Create a new FSHeader object and initialize it with the information
+-     * decoded from the Flash file.
+-     * 
+-     * @param file a File containing the abstract path to a file.
+-     * 
+-     * @throws FileNotFoundException if the file referenced by the path does 
+-     * not exist or refers to a directory.
+-     * 
+-     * @throws IOException if there is an error reading the file.
+-     * 
+-     * @throws DataFormatException if the file is not a flash file or there is
+-     * an error unzipping a compressed flash file.
+-     */
+-    public FSHeader(File file) throws IOException, DataFormatException
+-    {
+-        decodeFromFile(file);
+-    }
++	private String signature = null;
++	private int version = 0;
++	private int minX = 0;
++	private int minY = 0;
++	private int maxX = 0;
++	private int maxY = 0;
++	private int length = 0;
++	private float frameRate = 0.0f;
++	private int frameCount = 0;
+ 
+-    /**
+-     * Create a new FSHeader object and initialize it with the information
+-     * decoded from the binary data.
+-     *
+-     * @param bytes the encoded binary data from a Flash file.
+-     * 
+-     * @throws DataFormatException if the data is not in the flash format or 
+-     * there is an error unzipping the data if it is compressed.
+-     */
+-    public FSHeader(byte[] bytes) throws IOException, DataFormatException
+-    {
+-        decodeFromData(bytes);
+-    }
++	/**
++	 * Create a new FSHeader object and initialise it with the information
++	 * decoded from the Flash file.
++	 * 
++	 * @param filename
++	 *            the path to a file.
++	 * 
++	 * @throws FileNotFoundException
++	 *             if the file referenced by the path does not exist or refers
++	 *             to a directory.
++	 * 
++	 * @throws IOException
++	 *             if there is an error reading the file.
++	 * 
++	 * @throws DataFormatException
++	 *             if the file is not a flash file or there is an error
++	 *             unzipping a compressed flash file.
++	 */
++	public FSHeader(String filename) throws IOException, DataFormatException
++	{
++		decodeFromFile(filename);
++	}
+ 
+-    /**
+-     * Return the signature used to identify the file type: &quot;FWS&quot; (&quot;SWF&quot; in 
+-     * reverse) for regular Flash files or &quot;CWS&quot; for compressed (zipped) Flash
+-     * files.
+-     * 
+-     * @return the signature used to identify the file as a Flash file.
+-     */
+-    public String getSignature()
+-    {
+-        return signature;
+-    }
++	/**
++	 * Create a new FSHeader object and initialize it with the information
++	 * decoded from the Flash file.
++	 * 
++	 * @param file
++	 *            a File containing the abstract path to a file.
++	 * 
++	 * @throws FileNotFoundException
++	 *             if the file referenced by the path does not exist or refers
++	 *             to a directory.
++	 * 
++	 * @throws IOException
++	 *             if there is an error reading the file.
++	 * 
++	 * @throws DataFormatException
++	 *             if the file is not a flash file or there is an error
++	 *             unzipping a compressed flash file.
++	 */
++	public FSHeader(File file) throws IOException, DataFormatException
++	{
++		decodeFromFile(file);
++	}
+ 
+-    /**
+-     * Return the version number of Flash format used n the file.
+-     * 
+-     * @return the Flash version number
+-     */
+-    public int getVersion()
+-    {
+-        return version;
+-    }
++	/**
++	 * Create a new FSHeader object and initialize it with the information
++	 * decoded from the binary data.
++	 * 
++	 * @param bytes
++	 *            the encoded binary data from a Flash file.
++	 * 
++	 * @throws DataFormatException
++	 *             if the data is not in the flash format or there is an error
++	 *             unzipping the data if it is compressed.
++	 */
++	public FSHeader(byte[] bytes) throws IOException, DataFormatException
++	{
++		decodeFromData(bytes);
++	}
+ 
+-    /**
+-     * Return the length in bytes of the file when uncompressed.
+-     * 
+-     * @return the length of the (uncompressed) file in bytes.
+-     */
+-    public int getLength()
+-    {
+-        return length;
+-    }
++	/**
++	 * Return the signature used to identify the file type: &quot;FWS&quot; (&quot;SWF&quot; in
++	 * reverse) for regular Flash files or &quot;CWS&quot; for compressed (zipped) Flash
++	 * files.
++	 * 
++	 * @return the signature used to identify the file as a Flash file.
++	 */
++	public String getSignature()
++	{
++		return signature;
++	}
+ 
+-    /**
+-     * Return the x-coordinate of the top left corner of the screen.
+-     * 
+-     * @return the x-coordinate of the top left corner
+-     */
+-    public int getMinX() 
+-    {
+-        return minX;
+-    }
++	/**
++	 * Return the version number of Flash format used n the file.
++	 * 
++	 * @return the Flash version number
++	 */
++	public int getVersion()
++	{
++		return version;
++	}
+ 
+-    /**
+-     * Return the x-coordinate of the bottom right corner of the screen.
+-     * 
+-     * @return the x-coordinate of the bottom right corner
+-     */
+-    public int getMaxX() 
+-    {
+-        return maxX;
+-    }
++	/**
++	 * Return the length in bytes of the file when uncompressed.
++	 * 
++	 * @return the length of the (uncompressed) file in bytes.
++	 */
++	public int getLength()
++	{
++		return length;
++	}
+ 
+-    /**
+-     * The y-coordinate of the top left corner of the screen.
+-     * 
+-     * @return the y-coordinate of the top left corner
+-     */
+-    public int getMinY() 
+-    {
+-        return minY;
+-    }
++	/**
++	 * Return the x-coordinate of the top left corner of the screen.
++	 * 
++	 * @return the x-coordinate of the top left corner
++	 */
++	public int getMinX()
++	{
++		return minX;
++	}
+ 
+-    /**
+-     * The y-coordinate of the bottom right corner of the screen.
+-     * 
+-     * @return the y-coordinate of the bottom right corner
+-     */
+-    public int getMaxY()
+-    {
+-        return maxY;
+-    }
++	/**
++	 * Return the x-coordinate of the bottom right corner of the screen.
++	 * 
++	 * @return the x-coordinate of the bottom right corner
++	 */
++	public int getMaxX()
++	{
++		return maxX;
++	}
+ 
+-    /**
+-     * Return the number of frames per second at which the Flash Player will 
+-     * attempt to display the file.
+-     * 
+-     * @return the frame rate in frames per second.
+-     */
+-    public float getFrameRate()
+-    {
+-        return frameRate;
+-    }
++	/**
++	 * The y-coordinate of the top left corner of the screen.
++	 * 
++	 * @return the y-coordinate of the top left corner
++	 */
++	public int getMinY()
++	{
++		return minY;
++	}
+ 
+-    /**
+-     * Return the number of frames in the movie.
+-     * 
+-     * @return the number of frames in the movie
+-     */
+-    public int getNumberOfFrames()
+-    {
+-        return frameCount;
+-    }
++	/**
++	 * The y-coordinate of the bottom right corner of the screen.
++	 * 
++	 * @return the y-coordinate of the bottom right corner
++	 */
++	public int getMaxY()
++	{
++		return maxY;
++	}
+ 
+-    /**
+-     * Initialize the FSHeader object with the specified flash file.
+-     * 
+-     * @param fileName the path to a file.
+-     * 
+-     * @throws FileNotFoundException if the file referenced by the path does 
+-     * not exist or refers to a directory.
+-     * 
+-     * @throws IOException if there is an error reading the file.
+-     * 
+-     * @throws DataFormatException if the file is not a flash file or there is
+-     * an error unzipping a compressed flash file.
+-     */
+-    public void decodeFromFile(String fileName) throws IOException, DataFormatException
+-    {
+-        decodeFromFile(new File(fileName));
+-    }
+-    
+-    /**
+-     * Initialize the FSHeader object with the specified flash file.
+-     * 
+-     * @param file a File containing the abstract path to a file.
+-     * 
+-     * @throws FileNotFoundException if the file referenced by the path does 
+-     * not exist or refers to a directory.
+-     * 
+-     * @throws IOException if there is an error reading the file.
+-     * 
+-     * @throws DataFormatException if the file is not a flash file or there is
+-     * an error unzipping a compressed flash file.
+-     */
+-    public void decodeFromFile(File file) throws IOException, DataFormatException
+-    {
+-        FileInputStream fileContents = new FileInputStream(file);
+-        
+-        int fileLength = (int)file.length();
+-        byte[] contents = new byte[fileLength];
+-        
+-        fileContents.read(contents);
+-        fileContents.close();
+-        
+-        decodeFromData(contents);
+-    }
++	/**
++	 * Return the number of frames per second at which the Flash Player will
++	 * attempt to display the file.
++	 * 
++	 * @return the frame rate in frames per second.
++	 */
++	public float getFrameRate()
++	{
++		return frameRate;
++	}
+ 
+-    /**
+-     * Initialize the FSHeader object with binary flash data.
+-     * 
+-     * @param bytes the encoded binary data from a Flash file.
+-     * 
+-     * @throws DataFormatException if the data is not in the flash format or 
+-     * there is an error unzipping the data if it is compressed.
+-     */
+-    public void decodeFromData(byte[] bytes) throws DataFormatException
+-    {
+-        FSCoder coder = null;
++	/**
++	 * Return the number of frames in the movie.
++	 * 
++	 * @return the number of frames in the movie
++	 */
++	public int getNumberOfFrames()
++	{
++		return frameCount;
++	}
+ 
+-        isFlash(bytes);
++	/**
++	 * Initialize the FSHeader object with the specified flash file.
++	 * 
++	 * @param fileName
++	 *            the path to a file.
++	 * 
++	 * @throws FileNotFoundException
++	 *             if the file referenced by the path does not exist or refers
++	 *             to a directory.
++	 * 
++	 * @throws IOException
++	 *             if there is an error reading the file.
++	 * 
++	 * @throws DataFormatException
++	 *             if the file is not a flash file or there is an error
++	 *             unzipping a compressed flash file.
++	 */
++	public void decodeFromFile(String fileName) throws IOException, DataFormatException
++	{
++		decodeFromFile(new File(fileName));
++	}
+ 
+-        if (bytes[0] == 0x43)
+-            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
+-        else
+-            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+-        
+-        signature = coder.readString(3, &quot;UTF8&quot;);
+-        version = coder.readWord(1, false);
+-        length = coder.readWord(4, false);
++	/**
++	 * Initialize the FSHeader object with the specified flash file.
++	 * 
++	 * @param file
++	 *            a File containing the abstract path to a file.
++	 * 
++	 * @throws FileNotFoundException
++	 *             if the file referenced by the path does not exist or refers
++	 *             to a directory.
++	 * 
++	 * @throws IOException
++	 *             if there is an error reading the file.
++	 * 
++	 * @throws DataFormatException
++	 *             if the file is not a flash file or there is an error
++	 *             unzipping a compressed flash file.
++	 */
++	public void decodeFromFile(File file) throws IOException, DataFormatException
++	{
++		FileInputStream fileContents = new FileInputStream(file);
+ 
+-        coder.alignToByte();
+-        
+-        int fieldSize = coder.readBits(5, false);
+-        
+-        minX = coder.readBits(fieldSize, true);
+-        maxX = coder.readBits(fieldSize, true);
+-        minY = coder.readBits(fieldSize, true);
+-        maxY = coder.readBits(fieldSize, true);
+-        
+-        coder.alignToByte();
++		int fileLength = (int) file.length();
++		byte[] contents = new byte[fileLength];
+ 
+-        frameRate = coder.readFixedWord(1, 1);
+-        frameCount = coder.readWord(2, false);
+-    }
+-    
+-    private void isFlash(byte[] bytes) throws DataFormatException
+-    {
+-        if (bytes == null || bytes.length &lt; 8)
+-            throw new DataFormatException(&quot;Flash data is null or empty.&quot;);
+-            
+-        boolean isFlash = (bytes[0] == 0x43 || bytes[0] == 0x46) &amp;&amp; bytes[1] == 0x57 &amp;&amp; bytes[2] == 0x53;
+-                
+-        if (isFlash == false)
+-            throw new DataFormatException(&quot;Data does not start with a valid Flash signature.&quot;);
+-    }
+-    
+-    private byte[] unzip(byte[] bytes) throws DataFormatException
+-    {
+-        int movieLength = 0;
++		fileContents.read(contents);
++		fileContents.close();
+ 
+-        for (int i=0; i&lt;4; i++)
+-            movieLength += (bytes[i+4] &amp; 0x000000FF) &lt;&lt; (i*8);
+-            
+-        byte[] data = new byte[movieLength];
+-        
+-        // copy the uncompressed signature, version and length
+-        
+-        for (int i=0; i&lt;8; i++)
+-            data[i] = bytes[i];            
+-        
+-        Inflater inflater = new Inflater();
+-        inflater.setInput(bytes, 8, bytes.length-8);
+-        inflater.inflate(data, 8, movieLength-8);
++		decodeFromData(contents);
++	}
+ 
+-        return data;
+-    }
++	/**
++	 * Initialize the FSHeader object with binary flash data.
++	 * 
++	 * @param bytes
++	 *            the encoded binary data from a Flash file.
++	 * 
++	 * @throws DataFormatException
++	 *             if the data is not in the flash format or there is an error
++	 *             unzipping the data if it is compressed.
++	 */
++	public void decodeFromData(byte[] bytes) throws DataFormatException
++	{
++		FSCoder coder = null;
++
++		isFlash(bytes);
++
++		if (bytes[0] == 0x43)
++			coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
++		else
++			coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++
++		signature = coder.readString(3, &quot;UTF8&quot;);
++		version = coder.readByte();
++		length = coder.readWord(4, false);
++
++		coder.alignToByte();
++
++		int fieldSize = coder.readBits(5, false);
++
++		minX = coder.readBits(fieldSize, true);
++		maxX = coder.readBits(fieldSize, true);
++		minY = coder.readBits(fieldSize, true);
++		maxY = coder.readBits(fieldSize, true);
++
++		coder.alignToByte();
++
++		frameRate = coder.readFixedWord(1, 1);
++		frameCount = coder.readWord(2, false);
++	}
++
++	private void isFlash(byte[] bytes) throws DataFormatException
++	{
++		if (bytes == null || bytes.length &lt; 8)
++			throw new DataFormatException(&quot;Flash data is null or empty.&quot;);
++
++		boolean isFlash = (bytes[0] == 0x43 || bytes[0] == 0x46)
++						&amp;&amp; bytes[1] == 0x57 &amp;&amp; bytes[2] == 0x53;
++
++		if (isFlash == false)
++			throw new DataFormatException(
++							&quot;Data does not start with a valid Flash signature.&quot;);
++	}
++
++	private byte[] unzip(byte[] bytes) throws DataFormatException
++	{
++		int movieLength = 0;
++
++		for (int i = 0; i &lt; 4; i++)
++			movieLength += (bytes[i + 4] &amp; 0x000000FF) &lt;&lt; (i * 8);
++
++		byte[] data = new byte[movieLength];
++
++		// copy the uncompressed signature, version and length
++
++		for (int i = 0; i &lt; 8; i++)
++			data[i] = bytes[i];
++
++		Inflater inflater = new Inflater();
++		inflater.setInput(bytes, 8, bytes.length - 8);
++		inflater.inflate(data, 8, movieLength - 8);
++
++		return data;
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000315.html">[Transform-svn] r379 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000317.html">[Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#316">[ date ]</a>
+              <a href="thread.html#316">[ thread ]</a>
+              <a href="subject.html#316">[ subject ]</a>
+              <a href="author.html#316">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

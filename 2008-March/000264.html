@@ -1,0 +1,512 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r328%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803141351.m2EDpw7q008960%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000263.html">
+   <LINK REL="Next"  HREF="000265.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r328%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803141351.m2EDpw7q008960%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 14 14:51:58 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000263.html">[Transform-svn] r327 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000265.html">[Transform-svn] r329 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#264">[ date ]</a>
+              <a href="thread.html#264">[ thread ]</a>
+              <a href="subject.html#264">[ subject ]</a>
+              <a href="author.html#264">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-14 14:51:54 +0100 (Fri, 14 Mar 2008)
+New Revision: 328
+
+Added:
+   dev/dev-2-3/src/com/flagstone/transform/FSImageBlock.java
+   dev/dev-2-3/src/com/flagstone/transform/FSScreenVideoPacket.java
+Log:
+Added support for ScreenVideo.
+
+Added: dev/dev-2-3/src/com/flagstone/transform/FSImageBlock.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSImageBlock.java	2008-03-14 13:37:11 UTC (rev 327)
++++ dev/dev-2-3/src/com/flagstone/transform/FSImageBlock.java	2008-03-14 13:51:54 UTC (rev 328)
+@@ -0,0 +1,146 @@
++package com.flagstone.transform;
++
++import java.util.zip.DataFormatException;
++import java.util.zip.Inflater;
++
++/**
++ * When an image is sent in a ScreenVideo stream only pixel information for the 
++ * portions of the image that change are sent. FSImageBlock is used to sub-divide
++ * an image into a set of blocks. The blocks from successive frames can then 
++ * be compared to determine which blocks are encoded in the stream.
++ * 
++ * An image is divided by tiling the blocks across the image from top-left to
++ * bottom right. If the image is not covered an integer number of blocks then
++ * the size of the blocks along the right and bottom edges of the image are 
++ * reduced in size.
++ * 
++ * The FSImageBlock is a contains class for the image data and is used in 
++ * conjunction with the FsStreamVideoPacket class.
++ */
++public class FSImageBlock implements Cloneable
++{
++	private int width;
++	private int height;
++	private byte[] block;
++
++	/**
++	 * Create a new image block with the specified width and height and image
++	 * data. The image is compressed using the zip format.
++	 * 
++	 * @param width the width of the block in pixels.
++	 * @param height the height of the block in pixels
++	 * @param data the pixels covered by the block, compressed using the zip 
++	 * format.
++	 */
++    public FSImageBlock(int width, int height, byte[] data)
++	{
++    	this.width = width;
++    	this.height = height;
++    	block = data;
++	}
++	
++    /**
++     * Return the width of the block. although the block size is specified in 
++     * parent FSScreenVideoPacket object the actual block size used may vary
++     * if the tiled array of blocks overlaps the edge of the image.
++     * 
++     * @return the width of the block in pixels.
++     */
++    public int getWidth() 
++    {
++        return width;
++    }
++
++    /**
++     * Return the height of the block. although the block size is specified in 
++     * parent FSScreenVideoPacket object the actual block size used may vary
++     * if the tiled array of blocks overlaps the edge of the image.
++     * 
++     * @return the height of the block in pixels.
++     */
++    public int getHeight() 
++    {
++        return height;
++    }
++
++    /**
++     * Returns the zipped image data for the block.
++     * 
++     * @return an array of bytes containing the portion of the image in the 
++     * block.
++     */
++    public byte[] getData() 
++    {
++        return block;
++    }
++    
++    /**
++     * When a ScreenVideo stream is created only the image blocks that change
++     * are included. The blocks that do not change are encoded as empty blocks
++     * which have width and height of zero and do not contain any image data.
++     * This convenience method is used to determine when an image block contains
++     * any valid image data.
++     * 
++     * @return true if the block covers an area of the image that changed or 
++     * false if no image data is included.
++     */
++    public boolean isEmpty()
++    {
++    	return width == 0 || height == 0 || block == null || block.length == 0;
++    }
++
++    public Object clone()
++    {
++    	return new FSImageBlock(width, height, block);
++    }
++    
++    public boolean equals(Object anObject)
++    {
++        if (anObject == null) {
++        	return false;
++        }
++        
++        if (this == anObject) {
++        	return true;
++        }
++        
++        boolean result = false;
++        
++        if (anObject instanceof FSImageBlock)
++        {
++            FSImageBlock typedObject = (FSImageBlock)anObject;
++            
++            try
++            {
++                result = width == typedObject.width;
++                result = result &amp;&amp; height == typedObject.height;
++                
++            	byte[] a = unzip(block);
++            	byte[] b = unzip(typedObject.block);
++            	
++                result = result &amp;&amp; Transform.equals(a, b);
++            }
++            catch (DataFormatException e)
++            {
++            	result = false;
++            }
++        }
++        return result;
++    }
++
++    private byte[] unzip(byte[] bytes) throws DataFormatException
++    {
++        byte[] data = new byte[width*height*3];
++        int count = 0;
++        
++        Inflater inflater = new Inflater();
++        inflater.setInput(bytes);
++        count = inflater.inflate(data);
++        
++        byte[] uncompressedData = new byte[count];
++        
++        System.arraycopy(data, 0, uncompressedData, 0, count);
++
++        return uncompressedData;
++    }
++}
+
+Added: dev/dev-2-3/src/com/flagstone/transform/FSScreenVideoPacket.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-03-14 13:37:11 UTC (rev 327)
++++ dev/dev-2-3/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-03-14 13:51:54 UTC (rev 328)
+@@ -0,0 +1,283 @@
++/*
++ * FSScreenVideoPacket.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++import java.util.ArrayList;
++import java.util.Iterator;
++
++/**
++ * The FSScreenVideoPacket class is used to encode or decode a frame of video data using 
++ * Macromedia's ScreenVideo format.
++ * 
++ */
++public final class FSScreenVideoPacket implements Cloneable
++{
++    private boolean keyFrame;
++    private int codec;
++    
++    private int blockWidth;
++    private int blockHeight;
++
++    private int imageWidth;
++    private int imageHeight;
++    
++    private ArrayList imageBlocks;
++
++	public FSScreenVideoPacket(byte[] data)
++	{
++		decode(data);
++	}
++
++    public FSScreenVideoPacket(boolean key, int codec, int imageWidth, int imageHeight, int blockWidth, int blockHeight, ArrayList blocks)
++	{
++    	setKeyFrame(key);
++    	setCodec(codec);
++        setImageWidth(imageWidth);
++        setImageHeight(imageHeight);
++        setBlockWidth(blockWidth);
++        setBlockHeight(blockHeight);
++        setImageBlocks(blocks);
++	}
++    
++    public void add(FSImageBlock block)
++    {
++        imageBlocks.add(block);
++    }
++
++	public boolean getKeyFrame() 
++    {
++        return keyFrame; 
++    }
++
++	public void setKeyFrame(boolean key) 
++    {
++        keyFrame = key; 
++    }
++
++	public int getCodec() 
++    {
++        return codec; 
++    }
++
++	public void setCodec(int codec) 
++    {
++        this.codec = codec; 
++    }
++
++	public int getImageWidth() 
++    {
++        return imageWidth; 
++    }
++
++	public void setImageWidth(int width) 
++    {
++        imageWidth = width; 
++    }
++
++    public int getImageHeight() 
++    { 
++        return imageHeight; 
++    }
++
++	public void setImageHeight(int height) 
++    {
++        imageHeight = height; 
++    }
++
++	public int getBlockWidth() 
++    {
++        return blockWidth; 
++    }
++
++	public void setBlockWidth(int width) 
++    {
++        blockWidth = width; 
++    }
++
++    public int getBlockHeight() 
++    { 
++        return blockHeight; 
++    }
++
++	public void setBlockHeight(int height) 
++    {
++        blockHeight = height; 
++    }
++
++    public ArrayList getImageBlocks() 
++    { 
++        return imageBlocks; 
++    }
++
++	public void setImageBlocks(ArrayList blocks) 
++    {
++        imageBlocks = new ArrayList(blocks); 
++    }
++
++    public Object clone()
++	{
++        FSScreenVideoPacket anObject = null;
++        
++        try
++        {
++            anObject = (FSScreenVideoPacket)super.clone();
++        
++            anObject.imageBlocks = new ArrayList();
++			
++            for (Iterator i = imageBlocks.iterator(); i.hasNext();)
++                anObject.imageBlocks.add(((FSImageBlock)i.next()).clone());
++	    }
++	    catch (CloneNotSupportedException e)
++	    {
++            throw new InternalError();
++	    }
++		return anObject;
++	}
++
++    public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++		{
++			FSScreenVideoPacket typedObject = (FSScreenVideoPacket)anObject;
++			
++            result = keyFrame == typedObject.keyFrame;
++            result = result &amp;&amp; codec == typedObject.codec;
++            result = result &amp;&amp; imageWidth == typedObject.imageWidth;
++            result = result &amp;&amp; imageHeight == typedObject.imageHeight;
++            result = result &amp;&amp; blockHeight == typedObject.blockHeight;
++            result = result &amp;&amp; blockWidth == typedObject.blockWidth;
++            result = result &amp;&amp; imageBlocks.equals(typedObject.imageBlocks);	
++        }
++		return result;
++    }
++
++    private int length()
++	{
++		int length = 5;
++        
++        FSImageBlock block;
++        
++		for (Iterator i = imageBlocks.iterator(); i.hasNext();) 
++		{
++			block = (FSImageBlock)i.next();
++			
++			length += 2;
++
++			if (!block.isEmpty()) {
++				length += block.getData().length;
++			}
++        }
++		return length;
++	}
++
++	public byte[] encode()
++	{
++        byte[] data = new byte[length()];
++        
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, data);
++    
++        coder.writeBits(keyFrame ? FSVideo.KeyFrame : FSVideo.Frame, 4);
++        coder.writeBits(codec, 4);
++        
++        coder.writeBits((blockWidth/16)-1, 4);
++        coder.writeBits(imageWidth, 12);
++        coder.writeBits((blockHeight/16)-1, 4);
++        coder.writeBits(imageHeight, 12);
++        
++        FSImageBlock block;
++        byte[] blockData;
++
++        for (Iterator i=imageBlocks.iterator(); i.hasNext();) 
++		{
++			block = (FSImageBlock)i.next();
++			
++			if (block.isEmpty()) {
++		        coder.writeWord(0, 2);
++			}
++			else {
++				blockData = block.getData();
++		        coder.writeBits(blockData.length, 16);
++		        coder.writeBytes(blockData);				
++			}
++        }
++		
++        return coder.getData();
++	}
++	
++	public void decode(byte[] data)
++	{        
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, data);
++        
++        keyFrame = coder.readBits(4, false) == 1 ? true : false;
++        codec = coder.readBits(4, false);
++        
++        blockWidth = (coder.readBits(4, false) + 1) * 16;
++        imageWidth = coder.readBits(12, false);
++        blockHeight = (coder.readBits(4, false) + 1) * 16;
++        imageHeight = coder.readBits(12, false);
++
++        int columns = imageWidth / blockWidth + ((imageWidth % blockWidth &gt; 0) ? 1 : 0);
++        int rows = imageHeight / blockHeight + ((imageHeight % blockHeight &gt; 0) ? 1 : 0);
++        
++        int height = imageHeight;
++        int width = imageWidth;
++        
++        imageBlocks = new ArrayList(rows*columns);
++        FSImageBlock block;
++
++        for (int i=0; i&lt;rows; i++, height -= blockHeight)
++        {
++            for (int j=0; j&lt;columns; j++, width -= blockWidth)
++            {
++                int length = coder.readBits(16, false);
++                
++                if (length != 0)
++                {
++                    byte[] blockData = new byte[length];
++                    
++                    coder.readBytes(blockData);
++                    
++                    int dataHeight = (height &lt; blockHeight) ? height : blockHeight;
++                    int dataWidth = (width &lt; blockWidth) ? width : blockWidth;
++            
++                    block = new FSImageBlock(dataHeight, dataWidth, blockData);
++                }
++                else 
++                {
++                	block = new FSImageBlock(0, 0, null);
++                }
++        
++                imageBlocks.add(block);
++            }
++        }
++	}
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000263.html">[Transform-svn] r327 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000265.html">[Transform-svn] r329 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#264">[ date ]</a>
+              <a href="thread.html#264">[ thread ]</a>
+              <a href="subject.html#264">[ subject ]</a>
+              <a href="author.html#264">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

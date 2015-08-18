@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r362 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r362%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181615.m2IGFkNJ006510%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000297.html">
+   <LINK REL="Next"  HREF="000299.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r362 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r362%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181615.m2IGFkNJ006510%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r362 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:15:46 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000297.html">[Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000299.html">[Transform-svn] r363 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#298">[ date ]</a>
+              <a href="thread.html#298">[ thread ]</a>
+              <a href="subject.html#298">[ subject ]</a>
+              <a href="author.html#298">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:15:43 +0100 (Tue, 18 Mar 2008)
+New Revision: 362
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java
+Log:
+updated equals method.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java	2008-03-18 16:15:01 UTC (rev 361)
++++ dev/dev-2-4/src/com/flagstone/transform/FSLineStyle.java	2008-03-18 16:15:43 UTC (rev 362)
+@@ -231,17 +231,27 @@
+ 		return anObject;
+ 	}
+ 
+-	public boolean equals(Object anObject)
++	public boolean equals(Object obj)
+ 	{
+ 		boolean result = false;
+ 
+-		if (super.equals(anObject))
++		if (obj == null)
+ 		{
+-			FSLineStyle typedObject = (FSLineStyle) anObject;
++			return false;
++		}
+ 
+-			result = width == typedObject.width;
+-			result = result &amp;&amp; color.equals(typedObject.color);
++		if (obj == this)
++		{
++			return true;
+ 		}
++
++		if (obj instanceof FSLineStyle)
++		{
++			FSLineStyle style = (FSLineStyle) obj;
++
++			result = width == style.width;
++			result = result &amp;&amp; color.equals(style.color);
++		}
+ 		return result;
+ 	}
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000297.html">[Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000299.html">[Transform-svn] r363 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#298">[ date ]</a>
+              <a href="thread.html#298">[ thread ]</a>
+              <a href="subject.html#298">[ subject ]</a>
+              <a href="author.html#298">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

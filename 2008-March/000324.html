@@ -1,0 +1,1479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r390 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r390%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803261755.m2QHtLQP016140%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000323.html">
+   <LINK REL="Next"  HREF="000325.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r390 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r390%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803261755.m2QHtLQP016140%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r390 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar 26 18:55:21 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000323.html">[Transform-svn] r389 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000325.html">[Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#324">[ date ]</a>
+              <a href="thread.html#324">[ thread ]</a>
+              <a href="subject.html#324">[ subject ]</a>
+              <a href="author.html#324">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-26 18:55:16 +0100 (Wed, 26 Mar 2008)
+New Revision: 390
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/FSButtonShape.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/FSButton.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java
+   dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java
+Log:
+Renamed FSButton to FSButtonShape
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/FSButton.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSButton.java	2008-03-26 17:54:05 UTC (rev 389)
++++ dev/dev-2-4/src/com/flagstone/transform/FSButton.java	2008-03-26 17:55:16 UTC (rev 390)
+@@ -1,580 +0,0 @@
+-/*
+- * FSButton.java
+- * Transform
+- *
+- * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification,
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice,
+- *    this list of conditions and the following disclaimer in the documentation
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
+- *    may be used to endorse or promote products derived from this software
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-
+-package com.flagstone.transform;
+-
+-/**
+- * FSButton identifies the shape that is drawn when a button is in a particular
+- * state.
+- * 
+- * &lt;p&gt;
+- * Shapes can be drawn for each of three button states, Over, Up and Down.
+- * Creating a button with more than one FSButton object each referencing a
+- * different shape allows the button to be animated as it is clicked.
+- * &lt;/p&gt;
+- * 
+- * &lt;p&gt;
+- * A shape is also used to define active area of the button. When defining the
+- * active area the outline of the shape defines the boundary of the area. The
+- * shape is not drawn when the button is displayed. The button will only respond
+- * to mouse events when the cursor is placed inside the active area.
+- * &lt;/p&gt;
+- * 
+- * &lt;table class=&quot;datasheet&quot;&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;state&lt;/td&gt;
+- * &lt;td&gt;the state(s) the button is in when the shape will be drawn, either Up,
+- * Over or Down. Active is used to denote when a shape defined the active area
+- * of a button.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;identifier&lt;a/&gt;&lt;/td&gt;
+- * &lt;td&gt;The identifier, in the range 1..65535, of the object that contains the
+- * definition of the shape that is drawn.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;layer&lt;/td&gt;
+- * &lt;td&gt;The layer number defines the order in which shapes are displayed. Shapes
+- * with a higher layer number are displayed in front of those on a lower layer.
+- * Complex buttons can be created by displaying more than one shape for a given
+- * button state. The layer number may be in the range 1..65535 - the range is
+- * determined by the size of the field when the value is encoded to a Flash file -
+- * however the vast majority of buttons will typically only use layer numbers
+- * less than 10.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;transform&lt;/td&gt;
+- * &lt;td&gt;an FSCoordTransform object that defines a coordinate transform that will
+- * be applied to the shape when it is displayed. The transform is most commonly
+- * used to offset shapes to create a 3-D appearance. The size may also be
+- * changed allowing a single shape definition to be used to display buttons in a
+- * range of sizes while still maintaining the same look and feel.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * &lt;tr&gt;
+- * &lt;td&gt;colorTransform&lt;/td&gt;
+- * &lt;td&gt;an optional FSColorTransform object that can be used to change the
+- * shape's colour when it is drawn.&lt;/td&gt;
+- * &lt;/tr&gt;
+- * 
+- * 
+- * &lt;/table&gt;
+- * 
+- * &lt;p&gt;
+- * An FSButton can define the appearance of the button for more than one state.
+- * Multiple states can be defined by bitwise Or-ing individual state codes
+- * together:
+- * &lt;/p&gt;
+- * 
+- * &lt;pre&gt;
+- * int buttonState = FSButton.Up | FSButton.Over;
+- * &lt;/pre&gt;
+- * 
+- * &lt;p&gt;
+- * The purpose of the layer attribute is to define the order in which shapes are
+- * displayed for a given button state. This is analogous to the layer number in
+- * the Flash Player's display list - specified using objects such as
+- * FSPlaceObject. When a button is displayed it is placed on a single layer in
+- * the display list and the layer numbers assigned to shapes in a FSButton
+- * object do not interfere with shapes assigned to the same layer in the display
+- * list.
+- * &lt;/p&gt;
+- * 
+- * &lt;p&gt;
+- * The coordinate transform is used to change the appearance of the button
+- * without changing the original shape definitions. If it is omitted then a
+- * unity transform will be encoded which does not change the way the shape is
+- * drawn.
+- * &lt;/p&gt;
+- * 
+- * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+- * 
+- * &lt;p&gt;
+- * The FSButton class represents the ButtonRecord structure from the Macromedia
+- * Flash (SWF) File Format Specification. It was introduced in Flash 1.
+- * &lt;/p&gt;
+- * 
+- */
+-public class FSButton implements Cloneable, Codeable
+-{
+-	/** 
+-	 * Code for the button in the up state. 
+-	 */
+-	public static final int Up = 1;
+-
+-	/** 
+-	 * Code for the state of the button when the mouse is over the active area. 
+-	 */
+-	public static final int Over = 2;
+-
+-	/**
+-	 * Code for the state of the button when the mouse is clicked the active
+-	 * area.
+-	 */
+-	public static final int Down = 4;
+-
+-	/** 
+-	 * Code for the active area of the button. 
+-	 */
+-	public static final int Active = 8;
+-
+-	private int state;
+-	private int identifier;
+-	private int layer;
+-	private FSCoordTransform transform;
+-	private FSColorTransform colorTransform;
+-
+-	/**
+-	 * Construct an FSButton object, initialising it with values decoded from an
+-	 * encoded object.
+-	 * 
+-	 * @param coder
+-	 *            an FSCoder containing the binary data.
+-	 */
+-	public FSButton(FSCoder coder, FSContext context)
+-	{
+-		decode(coder, context);
+-	}
+-
+-	/**
+-	 * Constructs an FSButton object without a coordinate or colour transform
+-	 * that will be applied to the shape drawn for the button states. The
+-	 * transforms default to unity transforms which do not change the location
+-	 * of colour of the shape for the button.
+-	 * 
+-	 * @param aState
+-	 *            the state of the button when the shape is drawn.
+-	 * @param anIdentifier
+-	 *            the identifier of an FSDefineShape, FSDefineShape2 or
+-	 *            FSDefineShape3 object.
+-	 * @param aLayer
+-	 *            the layer in the display list on which the shape is drawn.
+-	 * 
+-	 * @throws IllegalArgumentException if the code for the button state is not 
+-	 * in the range 1..15.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 *            
+-	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
+-	 */
+-	public FSButton(int aState, int anIdentifier, int aLayer)
+-	{
+-		setState(aState);
+-		setIdentifier(anIdentifier);
+-		setLayer(aLayer);
+-		setTransform(new FSCoordTransform(0, 0));
+-		setColorTransform(new FSColorTransform());
+-	}
+-
+-	/**
+-	 * Constructs an FSButton object with a coordinate transform that will be
+-	 * applied to the shape drawn for the button states.
+-	 * 
+-	 * @param aState
+-	 *            the state of the button when the shape is drawn.
+-	 * @param anIdentifier
+-	 *            the identifier of an FSDefineShape, FSDefineShape2 or
+-	 *            FSDefineShape3 object.
+-	 * @param aLayer
+-	 *            the layer in the display list on which the shape is drawn.
+-	 * @param aTransform
+-	 *            an FSCoordTransform object that changes the appearance of the
+-	 *            shape when it is drawn.
+-	 * 
+-	 * @throws IllegalArgumentException if the code for the button state is not 
+-	 * in the range 1..15.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 *            
+-	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
+-	 *            
+-	 * @throws NullPointerException if the transform is null.
+-	 */
+-	public FSButton(int aState, int anIdentifier, int aLayer, FSCoordTransform aTransform)
+-	{
+-		setState(aState);
+-		setIdentifier(anIdentifier);
+-		setLayer(aLayer);
+-		setTransform(aTransform);
+-		setColorTransform(new FSColorTransform());
+-	}
+-
+-	/**
+-	 * Constructs an FSButton object with a coordinate and colour transform that
+-	 * will be applied to the shape drawn for the button states.
+-	 * 
+-	 * @param aState
+-	 *            the state of the button when the shape is drawn.
+-	 * @param anIdentifier
+-	 *            the identifier of an FSDefineShape, FSDefineShape2 or
+-	 *            FSDefineShape3 object.
+-	 * @param aLayer
+-	 *            the layer in the display list on which the shape is drawn.
+-	 * @param aTransform
+-	 *            an FSCoordTransform object that changes the appearance of the
+-	 *            shape when it is drawn.
+-	 * @param aColorTransform
+-	 *            an FSColorTransform object that changes the colour of the
+-	 *            shape when it is drawn.
+-	 * 
+-	 * @throws IllegalArgumentException if the code for the button state is not 
+-	 * in the range 1..15.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 *            
+-	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
+-	 *            
+-	 * @throws NullPointerException if the coordinate transform is null.
+-	 *            
+-	 * @throws NullPointerException if the colour transform is null.
+-	 */
+-	public FSButton(int aState, int anIdentifier, int aLayer, FSCoordTransform aTransform, FSColorTransform aColorTransform)
+-	{
+-		setState(aState);
+-		setIdentifier(anIdentifier);
+-		setLayer(aLayer);
+-		setTransform(aTransform);
+-		setColorTransform(aColorTransform);
+-	}
+-
+-	/**
+-	 * Constructs an FSButton object by copying values from an existing object.
+-	 * 
+-	 * @param obj
+-	 *            an FSButton object.
+-	 */
+-	public FSButton(FSButton obj)
+-	{
+-		state = obj.state;
+-		identifier = obj.identifier;
+-		layer = obj.layer;
+-		transform = new FSCoordTransform(obj.transform);
+-
+-		if (obj.colorTransform != null)
+-			colorTransform = new FSColorTransform(obj.colorTransform);
+-	}
+-
+-	/**
+-	 * Get the state(s) of the button when the shape is drawn.
+-	 * 
+-	 * @return the state of the button when the shape is drawn.
+-	 */
+-	public int getState()
+-	{
+-		return state;
+-	}
+-
+-	/**
+-	 * Does the Button Record defines a shape for the button's active area.
+-	 * 
+-	 * @return a boolean flag indicating whether the button record defines the
+-	 *         button's active area.
+-	 */
+-	public boolean isActive()
+-	{
+-		return ((state &amp; Active) != 0) ? true : false;
+-	}
+-
+-	/**
+-	 * Does the Button Record define a shape for the button's 'down' state.
+-	 * 
+-	 * @return a boolean flag indicating whether the button record defines the
+-	 *         shape for the button's 'down' state.
+-	 */
+-	public boolean isDown()
+-	{
+-		return ((state &amp; Down) != 0) ? true : false;
+-	}
+-
+-	/**
+-	 * Does the Button Record define a shape for the button's 'over' state.
+-	 * 
+-	 * @return a boolean flag indicating whether the button record defines the
+-	 *         shape for the button's 'over' state.
+-	 */
+-	public boolean isOver()
+-	{
+-		return ((state &amp; Over) != 0) ? true : false;
+-	}
+-
+-	/**
+-	 * Does the Button Record define a shape for the button's 'up' state.
+-	 * 
+-	 * @return a boolean flag indicating whether the button record defines the
+-	 *         shape for the button's 'up' state.
+-	 */
+-	public boolean isUp()
+-	{
+-		return ((state &amp; Up) != 0) ? true : false;
+-	}
+-
+-	/**
+-	 * Gets the identifier of the shape that this FSButton applies to.
+-	 * 
+-	 * @return the identifier of the shape.
+-	 */
+-	public int getIdentifier()
+-	{
+-		return identifier;
+-	}
+-
+-	/**
+-	 * Gets the layer that the button will be displayed on.
+-	 * 
+-	 * @return the layer on which the shape is displayed.
+-	 */
+-	public int getLayer()
+-	{
+-		return layer;
+-	}
+-
+-	/**
+-	 * Gets the coordinate transform that will be applied to the button.
+-	 * 
+-	 * @return the coordinate transform that is applied to the shape.
+-	 */
+-	public FSCoordTransform getTransform()
+-	{
+-		return transform;
+-	}
+-
+-	/**
+-	 * Gets the colour transform that will be applied to the button.
+-	 * 
+-	 * @return the colour transform that is applied to the shape.
+-	 */
+-	public FSColorTransform getColorTransform()
+-	{
+-		return colorTransform;
+-	}
+-
+-	/**
+-	 * Set the state(s) of the button when the shape is drawn. The shape may be
+-	 * drawn for more than one state. Multiple states can be defined by
+-	 * bitwise-OR'ing individual states together, e.g. Up | Over.
+-	 * 
+-	 * @param aNumber
+-	 *            the state of the button when the shape is drawn.
+-	 * 
+-	 * @throws IllegalArgumentException if the code for the button state is not 
+-	 * in the range 1..15.
+-	 */
+-	public void setState(int aNumber)
+-	{
+-		if (aNumber &lt; 1 || aNumber &gt; 15) {
+-			throw new IllegalArgumentException(&quot;The code for the button state must be in the range 1..15.&quot;);
+-		}
+-		state = aNumber;
+-	}
+-
+-	/**
+-	 * Sets the identifier of the FSDefineShape, FSDefineShape2 or
+-	 * FSDefineShape3 object that defines the appearance of the button when it
+-	 * is in the specified state(s).
+-	 * 
+-	 * @param anIdentifier
+-	 *            the identifier of the shape object that defines the shape's
+-	 *            appearance.
+-	 *            
+-	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+-	 */
+-	public void setIdentifier(int anIdentifier)
+-	{
+-		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
+-		}
+-		identifier = anIdentifier;
+-	}
+-
+-	/**
+-	 * Sets the layer in the display list that the shape will be displayed on.
+-	 * 
+-	 * @param aNumber
+-	 *            the number of the layer in the display list where the shape is
+-	 *            drawn.
+-	 *            
+-	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
+-	 */
+-	public void setLayer(int aNumber)
+-	{
+-		if (aNumber &lt; 0 || aNumber &gt; 65535) {
+-			throw new IllegalArgumentException(&quot;Layer number must be in the range 0..65535.&quot;);
+-		}
+-		layer = aNumber;
+-	}
+-
+-	/**
+-	 * Sets the coordinate transform that will be applied to the shape to change
+-	 * it's appearance.
+-	 * 
+-	 * @param aTransform
+-	 *            an FSCoordTransform object that will be applied to the shape.
+-	 *            
+-	 * @throws NullPointerException if the transform is null.
+-	 */
+-	public void setTransform(FSCoordTransform aTransform)
+-	{
+-		if (aTransform == null) {
+-			throw new NullPointerException(&quot;Coordinate transform for button cannot be null.&quot;);
+-		}
+-		transform = aTransform;
+-	}
+-
+-	/**
+-	 * Sets the colour transform that will be applied to the shape to change
+-	 * it's colour.
+-	 * 
+-	 * IMPORTANT: The colour transform is only used in FSDefineButton2 objects.
+-	 * 
+-	 * @param aTransform
+-	 *            an FSColorTransform object that will be applied to the shape.
+-	 *            
+-	 * @throws NullPointerException if the transform is null. This check is 
+-	 * performed even though this object may be used in an FSDefineButton object
+-	 * where the colour transform is not used.
+-	 */
+-	public void setColorTransform(FSColorTransform aTransform)
+-	{
+-		if (aTransform == null) {
+-			throw new NullPointerException(&quot;Colour transform for button cannot be null.&quot;);
+-		}
+-		colorTransform = aTransform;
+-	}
+-
+-	public Object clone()
+-	{
+-		FSButton anObject = null;
+-
+-		try {
+-			anObject = (FSButton)super.clone();
+-			anObject.transform = (FSCoordTransform)transform.clone();
+-			
+-			if (colorTransform != null) {
+-				anObject.colorTransform = (FSColorTransform)colorTransform.clone();
+-			}
+-		} 
+-		catch (CloneNotSupportedException e) {
+-			throw new InternalError();
+-		}
+-		return anObject;
+-	}
+-
+-	/**
+-	 * Returns true if anObject is equal to this one. Objects are considered
+-	 * equal if they would generate identical binary data when they are encoded
+-	 * to a Flash file.
+-	 * 
+-	 * @return true if this object would be identical to anObject when encoded.
+-	 */
+-	public boolean equals(Object anObject)
+-	{
+-		boolean result = false;
+-
+-		if (super.equals(anObject))
+-		{
+-			FSButton cx = (FSButton) anObject;
+-
+-			result = state == cx.state;
+-			result = result &amp;&amp; identifier == cx.identifier;
+-			result = result &amp;&amp; layer == cx.layer;
+-			result = result &amp;&amp; transform.equals(cx.transform);
+-
+-			if (colorTransform != null)
+-				result = result &amp;&amp; colorTransform.equals(cx.colorTransform);
+-			else
+-				result = result &amp;&amp; colorTransform == cx.colorTransform;
+-		}
+-		return result;
+-	}
+-
+-	public String toString()
+-	{
+-		StringBuffer buffer = new StringBuffer();
+-
+-		buffer.append(&quot;FSButton: { &quot;);
+-		buffer.append(&quot;state = &quot;).append(state).append(&quot;; &quot;);
+-		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
+-		buffer.append(&quot;layer = &quot;).append(layer).append(&quot;; &quot;);
+-		buffer.append(&quot;transform = &quot;).append(transform.toString()).append(&quot;; &quot;);
+-		
+-		if (colorTransform != null)
+-			buffer.append(&quot;colorTransform = &quot;).append(colorTransform.toString()).append(&quot;; &quot;);
+-		
+-		buffer.append(&quot;}&quot;);
+-
+-		return buffer.toString();
+-	}
+-
+-	public int length(FSContext context)
+-	{
+-		int length = 5 + transform.length(context);
+-
+-		if (context.type == FSMovieObject.DefineButton2)
+-			length += colorTransform.length(context);
+-
+-		return length;
+-	}
+-
+-	public void encode(FSCoder coder, FSContext context)
+-	{
+-		coder.writeBits(0, 4);
+-		coder.writeBits(state, 4);
+-		coder.writeWord(identifier, 2);
+-		coder.writeWord(layer, 2);
+-		transform.encode(coder, context);
+-
+-		if (context.type == FSMovieObject.DefineButton2)
+-			colorTransform.encode(coder, context);
+-
+-	}
+-
+-	public void decode(FSCoder coder, FSContext context)
+-	{
+-		coder.readBits(4, false);
+-
+-		state = coder.readBits(4, false);
+-		identifier = coder.readWord(2, false);
+-		layer = coder.readWord(2, false);
+-
+-		transform = new FSCoordTransform(coder, context);
+-
+-		if (context.type == FSMovieObject.DefineButton2)
+-			colorTransform = new FSColorTransform(coder, context);
+-
+-	}
+-}
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/FSButtonShape.java (from rev 385, dev/dev-2-4/src/com/flagstone/transform/FSButton.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSButton.java	2008-03-26 15:26:42 UTC (rev 385)
++++ dev/dev-2-4/src/com/flagstone/transform/FSButtonShape.java	2008-03-26 17:55:16 UTC (rev 390)
+@@ -0,0 +1,580 @@
++/*
++ * FSButton.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++/**
++ * FSButton identifies the shape that is drawn when a button is in a particular
++ * state.
++ * 
++ * &lt;p&gt;
++ * Shapes can be drawn for each of three button states, Over, Up and Down.
++ * Creating a button with more than one FSButton object each referencing a
++ * different shape allows the button to be animated as it is clicked.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * A shape is also used to define active area of the button. When defining the
++ * active area the outline of the shape defines the boundary of the area. The
++ * shape is not drawn when the button is displayed. The button will only respond
++ * to mouse events when the cursor is placed inside the active area.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;state&lt;/td&gt;
++ * &lt;td&gt;the state(s) the button is in when the shape will be drawn, either Up,
++ * Over or Down. Active is used to denote when a shape defined the active area
++ * of a button.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;identifier&lt;a/&gt;&lt;/td&gt;
++ * &lt;td&gt;The identifier, in the range 1..65535, of the object that contains the
++ * definition of the shape that is drawn.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;layer&lt;/td&gt;
++ * &lt;td&gt;The layer number defines the order in which shapes are displayed. Shapes
++ * with a higher layer number are displayed in front of those on a lower layer.
++ * Complex buttons can be created by displaying more than one shape for a given
++ * button state. The layer number may be in the range 1..65535 - the range is
++ * determined by the size of the field when the value is encoded to a Flash file -
++ * however the vast majority of buttons will typically only use layer numbers
++ * less than 10.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;transform&lt;/td&gt;
++ * &lt;td&gt;an FSCoordTransform object that defines a coordinate transform that will
++ * be applied to the shape when it is displayed. The transform is most commonly
++ * used to offset shapes to create a 3-D appearance. The size may also be
++ * changed allowing a single shape definition to be used to display buttons in a
++ * range of sizes while still maintaining the same look and feel.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;colorTransform&lt;/td&gt;
++ * &lt;td&gt;an optional FSColorTransform object that can be used to change the
++ * shape's colour when it is drawn.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * An FSButton can define the appearance of the button for more than one state.
++ * Multiple states can be defined by bitwise Or-ing individual state codes
++ * together:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * int buttonState = FSButton.Up | FSButton.Over;
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The purpose of the layer attribute is to define the order in which shapes are
++ * displayed for a given button state. This is analogous to the layer number in
++ * the Flash Player's display list - specified using objects such as
++ * FSPlaceObject. When a button is displayed it is placed on a single layer in
++ * the display list and the layer numbers assigned to shapes in a FSButton
++ * object do not interfere with shapes assigned to the same layer in the display
++ * list.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The coordinate transform is used to change the appearance of the button
++ * without changing the original shape definitions. If it is omitted then a
++ * unity transform will be encoded which does not change the way the shape is
++ * drawn.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSButton class represents the ButtonRecord structure from the Macromedia
++ * Flash (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ * 
++ */
++public class FSButtonShape implements Cloneable, Codeable
++{
++	/** 
++	 * Code for the button in the up state. 
++	 */
++	public static final int Up = 1;
++
++	/** 
++	 * Code for the state of the button when the mouse is over the active area. 
++	 */
++	public static final int Over = 2;
++
++	/**
++	 * Code for the state of the button when the mouse is clicked the active
++	 * area.
++	 */
++	public static final int Down = 4;
++
++	/** 
++	 * Code for the active area of the button. 
++	 */
++	public static final int Active = 8;
++
++	private int state;
++	private int identifier;
++	private int layer;
++	private FSCoordTransform transform;
++	private FSColorTransform colorTransform;
++
++	/**
++	 * Construct an FSButton object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSButtonShape(FSCoder coder, FSContext context)
++	{
++		decode(coder, context);
++	}
++
++	/**
++	 * Constructs an FSButton object without a coordinate or colour transform
++	 * that will be applied to the shape drawn for the button states. The
++	 * transforms default to unity transforms which do not change the location
++	 * of colour of the shape for the button.
++	 * 
++	 * @param aState
++	 *            the state of the button when the shape is drawn.
++	 * @param anIdentifier
++	 *            the identifier of an FSDefineShape, FSDefineShape2 or
++	 *            FSDefineShape3 object.
++	 * @param aLayer
++	 *            the layer in the display list on which the shape is drawn.
++	 * 
++	 * @throws IllegalArgumentException if the code for the button state is not 
++	 * in the range 1..15.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 *            
++	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
++	 */
++	public FSButtonShape(int aState, int anIdentifier, int aLayer)
++	{
++		setState(aState);
++		setIdentifier(anIdentifier);
++		setLayer(aLayer);
++		setTransform(new FSCoordTransform(0, 0));
++		setColorTransform(new FSColorTransform());
++	}
++
++	/**
++	 * Constructs an FSButton object with a coordinate transform that will be
++	 * applied to the shape drawn for the button states.
++	 * 
++	 * @param aState
++	 *            the state of the button when the shape is drawn.
++	 * @param anIdentifier
++	 *            the identifier of an FSDefineShape, FSDefineShape2 or
++	 *            FSDefineShape3 object.
++	 * @param aLayer
++	 *            the layer in the display list on which the shape is drawn.
++	 * @param aTransform
++	 *            an FSCoordTransform object that changes the appearance of the
++	 *            shape when it is drawn.
++	 * 
++	 * @throws IllegalArgumentException if the code for the button state is not 
++	 * in the range 1..15.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 *            
++	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
++	 *            
++	 * @throws NullPointerException if the transform is null.
++	 */
++	public FSButtonShape(int aState, int anIdentifier, int aLayer, FSCoordTransform aTransform)
++	{
++		setState(aState);
++		setIdentifier(anIdentifier);
++		setLayer(aLayer);
++		setTransform(aTransform);
++		setColorTransform(new FSColorTransform());
++	}
++
++	/**
++	 * Constructs an FSButton object with a coordinate and colour transform that
++	 * will be applied to the shape drawn for the button states.
++	 * 
++	 * @param aState
++	 *            the state of the button when the shape is drawn.
++	 * @param anIdentifier
++	 *            the identifier of an FSDefineShape, FSDefineShape2 or
++	 *            FSDefineShape3 object.
++	 * @param aLayer
++	 *            the layer in the display list on which the shape is drawn.
++	 * @param aTransform
++	 *            an FSCoordTransform object that changes the appearance of the
++	 *            shape when it is drawn.
++	 * @param aColorTransform
++	 *            an FSColorTransform object that changes the colour of the
++	 *            shape when it is drawn.
++	 * 
++	 * @throws IllegalArgumentException if the code for the button state is not 
++	 * in the range 1..15.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 *            
++	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
++	 *            
++	 * @throws NullPointerException if the coordinate transform is null.
++	 *            
++	 * @throws NullPointerException if the colour transform is null.
++	 */
++	public FSButtonShape(int aState, int anIdentifier, int aLayer, FSCoordTransform aTransform, FSColorTransform aColorTransform)
++	{
++		setState(aState);
++		setIdentifier(anIdentifier);
++		setLayer(aLayer);
++		setTransform(aTransform);
++		setColorTransform(aColorTransform);
++	}
++
++	/**
++	 * Constructs an FSButton object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSButton object.
++	 */
++	public FSButtonShape(FSButtonShape obj)
++	{
++		state = obj.state;
++		identifier = obj.identifier;
++		layer = obj.layer;
++		transform = new FSCoordTransform(obj.transform);
++
++		if (obj.colorTransform != null)
++			colorTransform = new FSColorTransform(obj.colorTransform);
++	}
++
++	/**
++	 * Get the state(s) of the button when the shape is drawn.
++	 * 
++	 * @return the state of the button when the shape is drawn.
++	 */
++	public int getState()
++	{
++		return state;
++	}
++
++	/**
++	 * Does the Button Record defines a shape for the button's active area.
++	 * 
++	 * @return a boolean flag indicating whether the button record defines the
++	 *         button's active area.
++	 */
++	public boolean isActive()
++	{
++		return ((state &amp; Active) != 0) ? true : false;
++	}
++
++	/**
++	 * Does the Button Record define a shape for the button's 'down' state.
++	 * 
++	 * @return a boolean flag indicating whether the button record defines the
++	 *         shape for the button's 'down' state.
++	 */
++	public boolean isDown()
++	{
++		return ((state &amp; Down) != 0) ? true : false;
++	}
++
++	/**
++	 * Does the Button Record define a shape for the button's 'over' state.
++	 * 
++	 * @return a boolean flag indicating whether the button record defines the
++	 *         shape for the button's 'over' state.
++	 */
++	public boolean isOver()
++	{
++		return ((state &amp; Over) != 0) ? true : false;
++	}
++
++	/**
++	 * Does the Button Record define a shape for the button's 'up' state.
++	 * 
++	 * @return a boolean flag indicating whether the button record defines the
++	 *         shape for the button's 'up' state.
++	 */
++	public boolean isUp()
++	{
++		return ((state &amp; Up) != 0) ? true : false;
++	}
++
++	/**
++	 * Gets the identifier of the shape that this FSButton applies to.
++	 * 
++	 * @return the identifier of the shape.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
++
++	/**
++	 * Gets the layer that the button will be displayed on.
++	 * 
++	 * @return the layer on which the shape is displayed.
++	 */
++	public int getLayer()
++	{
++		return layer;
++	}
++
++	/**
++	 * Gets the coordinate transform that will be applied to the button.
++	 * 
++	 * @return the coordinate transform that is applied to the shape.
++	 */
++	public FSCoordTransform getTransform()
++	{
++		return transform;
++	}
++
++	/**
++	 * Gets the colour transform that will be applied to the button.
++	 * 
++	 * @return the colour transform that is applied to the shape.
++	 */
++	public FSColorTransform getColorTransform()
++	{
++		return colorTransform;
++	}
++
++	/**
++	 * Set the state(s) of the button when the shape is drawn. The shape may be
++	 * drawn for more than one state. Multiple states can be defined by
++	 * bitwise-OR'ing individual states together, e.g. Up | Over.
++	 * 
++	 * @param aNumber
++	 *            the state of the button when the shape is drawn.
++	 * 
++	 * @throws IllegalArgumentException if the code for the button state is not 
++	 * in the range 1..15.
++	 */
++	public void setState(int aNumber)
++	{
++		if (aNumber &lt; 1 || aNumber &gt; 15) {
++			throw new IllegalArgumentException(&quot;The code for the button state must be in the range 1..15.&quot;);
++		}
++		state = aNumber;
++	}
++
++	/**
++	 * Sets the identifier of the FSDefineShape, FSDefineShape2 or
++	 * FSDefineShape3 object that defines the appearance of the button when it
++	 * is in the specified state(s).
++	 * 
++	 * @param anIdentifier
++	 *            the identifier of the shape object that defines the shape's
++	 *            appearance.
++	 *            
++	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
++	 */
++	public void setIdentifier(int anIdentifier)
++	{
++		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
++		}
++		identifier = anIdentifier;
++	}
++
++	/**
++	 * Sets the layer in the display list that the shape will be displayed on.
++	 * 
++	 * @param aNumber
++	 *            the number of the layer in the display list where the shape is
++	 *            drawn.
++	 *            
++	 * @throws IllegalArgumentException if the layer number is not in the range 0..65535.
++	 */
++	public void setLayer(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Layer number must be in the range 0..65535.&quot;);
++		}
++		layer = aNumber;
++	}
++
++	/**
++	 * Sets the coordinate transform that will be applied to the shape to change
++	 * it's appearance.
++	 * 
++	 * @param aTransform
++	 *            an FSCoordTransform object that will be applied to the shape.
++	 *            
++	 * @throws NullPointerException if the transform is null.
++	 */
++	public void setTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform for button cannot be null.&quot;);
++		}
++		transform = aTransform;
++	}
++
++	/**
++	 * Sets the colour transform that will be applied to the shape to change
++	 * it's colour.
++	 * 
++	 * IMPORTANT: The colour transform is only used in FSDefineButton2 objects.
++	 * 
++	 * @param aTransform
++	 *            an FSColorTransform object that will be applied to the shape.
++	 *            
++	 * @throws NullPointerException if the transform is null. This check is 
++	 * performed even though this object may be used in an FSDefineButton object
++	 * where the colour transform is not used.
++	 */
++	public void setColorTransform(FSColorTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Colour transform for button cannot be null.&quot;);
++		}
++		colorTransform = aTransform;
++	}
++
++	public Object clone()
++	{
++		FSButtonShape anObject = null;
++
++		try {
++			anObject = (FSButtonShape)super.clone();
++			anObject.transform = (FSCoordTransform)transform.clone();
++			
++			if (colorTransform != null) {
++				anObject.colorTransform = (FSColorTransform)colorTransform.clone();
++			}
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
++
++		if (super.equals(anObject))
++		{
++			FSButtonShape cx = (FSButtonShape) anObject;
++
++			result = state == cx.state;
++			result = result &amp;&amp; identifier == cx.identifier;
++			result = result &amp;&amp; layer == cx.layer;
++			result = result &amp;&amp; transform.equals(cx.transform);
++
++			if (colorTransform != null)
++				result = result &amp;&amp; colorTransform.equals(cx.colorTransform);
++			else
++				result = result &amp;&amp; colorTransform == cx.colorTransform;
++		}
++		return result;
++	}
++
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSButton: { &quot;);
++		buffer.append(&quot;state = &quot;).append(state).append(&quot;; &quot;);
++		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
++		buffer.append(&quot;layer = &quot;).append(layer).append(&quot;; &quot;);
++		buffer.append(&quot;transform = &quot;).append(transform.toString()).append(&quot;; &quot;);
++		
++		if (colorTransform != null)
++			buffer.append(&quot;colorTransform = &quot;).append(colorTransform.toString()).append(&quot;; &quot;);
++		
++		buffer.append(&quot;}&quot;);
++
++		return buffer.toString();
++	}
++
++	public int length(FSContext context)
++	{
++		int length = 5 + transform.length(context);
++
++		if (context.type == FSMovieObject.DefineButton2)
++			length += colorTransform.length(context);
++
++		return length;
++	}
++
++	public void encode(FSCoder coder, FSContext context)
++	{
++		coder.writeBits(0, 4);
++		coder.writeBits(state, 4);
++		coder.writeWord(identifier, 2);
++		coder.writeWord(layer, 2);
++		transform.encode(coder, context);
++
++		if (context.type == FSMovieObject.DefineButton2)
++			colorTransform.encode(coder, context);
++
++	}
++
++	public void decode(FSCoder coder, FSContext context)
++	{
++		coder.readBits(4, false);
++
++		state = coder.readBits(4, false);
++		identifier = coder.readWord(2, false);
++		layer = coder.readWord(2, false);
++
++		transform = new FSCoordTransform(coder, context);
++
++		if (context.type == FSMovieObject.DefineButton2)
++			colorTransform = new FSColorTransform(coder, context);
++
++	}
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java	2008-03-26 17:54:05 UTC (rev 389)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineButton.java	2008-03-26 17:55:16 UTC (rev 390)
+@@ -183,7 +183,7 @@
+  */
+ public class FSDefineButton extends FSDefineObject
+ {
+-	private ArrayList&lt;FSButton&gt; buttonRecords;
++	private ArrayList&lt;FSButtonShape&gt; buttonRecords;
+ 	private ArrayList&lt;FSActionObject&gt; actions;
+ 	private byte[] encodedActions;
+ 
+@@ -215,7 +215,7 @@
+ 	 * @throws NullPointerException if the array of FSButton objects is null.
+ 	 * @throws NullPointerException if the array of actions is null.
+ 	 */
+-	public FSDefineButton(int anIdentifier, ArrayList&lt;FSButton&gt; buttons, ArrayList&lt;FSActionObject&gt; actions)
++	public FSDefineButton(int anIdentifier, ArrayList&lt;FSButtonShape&gt; buttons, ArrayList&lt;FSActionObject&gt; actions)
+ 	{
+ 		super(DefineButton, anIdentifier);
+ 		setButtonRecords(buttons);
+@@ -233,10 +233,10 @@
+ 	{
+ 		super(obj);
+ 
+-		buttonRecords = new ArrayList&lt;FSButton&gt;();
++		buttonRecords = new ArrayList&lt;FSButtonShape&gt;();
+ 
+-		for (Iterator&lt;FSButton&gt; i = obj.buttonRecords.iterator(); i.hasNext();)
+-			buttonRecords.add((FSButton) i.next().clone());
++		for (Iterator&lt;FSButtonShape&gt; i = obj.buttonRecords.iterator(); i.hasNext();)
++			buttonRecords.add((FSButtonShape) i.next().clone());
+ 
+ 		if (actions != null)
+ 		{
+@@ -263,7 +263,7 @@
+ 	 * @throws NullPointerException if the array of FSButton objects is null.
+ 	 * @throws NullPointerException if the encoded actions is null.
+ 	 */
+-	public FSDefineButton(int anIdentifier, ArrayList&lt;FSButton&gt; buttons, byte[] bytes)
++	public FSDefineButton(int anIdentifier, ArrayList&lt;FSButtonShape&gt; buttons, byte[] bytes)
+ 	{
+ 		super(DefineButton, anIdentifier);
+ 		setButtonRecords(buttons);
+@@ -276,7 +276,7 @@
+ 	 * @param aButtonRecord
+ 	 *            an FSButton object.
+ 	 */
+-	public void add(FSButton aButtonRecord)
++	public void add(FSButtonShape aButtonRecord)
+ 	{
+ 		buttonRecords.add(aButtonRecord);
+ 	}
+@@ -302,7 +302,7 @@
+ 	 * 
+ 	 * @return the array of FSButton objects defined for this button.
+ 	 */
+-	public ArrayList&lt;FSButton&gt; getButtonRecords()
++	public ArrayList&lt;FSButtonShape&gt; getButtonRecords()
+ 	{
+ 		return buttonRecords;
+ 	}
+@@ -331,7 +331,7 @@
+ 	 *           
+ 	 * @throws NullPointerException if the array of button records is null.
+ 	 */
+-	public void setButtonRecords(ArrayList&lt;FSButton&gt; anArray)
++	public void setButtonRecords(ArrayList&lt;FSButtonShape&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of button records cannot be null.&quot;);
+@@ -393,10 +393,10 @@
+ 	{
+ 		FSDefineButton obj = (FSDefineButton) super.clone();
+ 
+-		obj.buttonRecords = new ArrayList&lt;FSButton&gt;();
++		obj.buttonRecords = new ArrayList&lt;FSButtonShape&gt;();
+ 
+-		for (Iterator&lt;FSButton&gt; i = buttonRecords.iterator(); i.hasNext();)
+-			obj.buttonRecords.add((FSButton) i.next().clone());
++		for (Iterator&lt;FSButtonShape&gt; i = buttonRecords.iterator(); i.hasNext();)
++			obj.buttonRecords.add((FSButtonShape) i.next().clone());
+ 
+ 		if (actions != null) {
+ 			actions = FSActionObject.copy(obj.actions);
+@@ -448,7 +448,7 @@
+ 	{
+ 		super.length(context);
+ 
+-		for (Iterator&lt;FSButton&gt; i = buttonRecords.iterator(); i.hasNext();)
++		for (Iterator&lt;FSButtonShape&gt; i = buttonRecords.iterator(); i.hasNext();)
+ 			length += i.next().length(context);
+ 
+ 		length += 1;
+@@ -473,7 +473,7 @@
+ 	{
+ 		super.encode(coder, context);
+ 
+-		for (Iterator&lt;FSButton&gt; i = buttonRecords.iterator(); i.hasNext();)
++		for (Iterator&lt;FSButtonShape&gt; i = buttonRecords.iterator(); i.hasNext();)
+ 			i.next().encode(coder, context);
+ 
+ 		coder.writeWord(0, 1);
+@@ -499,10 +499,10 @@
+ 
+ 		int start = coder.getPointer() - 16;
+ 
+-		buttonRecords = new ArrayList&lt;FSButton&gt;();
++		buttonRecords = new ArrayList&lt;FSButtonShape&gt;();
+ 
+ 		while (coder.scanWord(1, false) != 0)
+-			buttonRecords.add(new FSButton(coder, context));
++			buttonRecords.add(new FSButtonShape(coder, context));
+ 
+ 		coder.readByte(); // character end
+ 
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java	2008-03-26 17:54:05 UTC (rev 389)
++++ dev/dev-2-4/src/com/flagstone/transform/FSDefineButton2.java	2008-03-26 17:55:16 UTC (rev 390)
+@@ -161,7 +161,7 @@
+ 	public static final int Menu = 1;
+ 
+ 	private int buttonType = Push;
+-	private ArrayList&lt;FSButton&gt; buttonRecords = null;
++	private ArrayList&lt;FSButtonShape&gt; buttonRecords = null;
+ 	private ArrayList&lt;FSButtonEvent&gt; buttonEvents = null;
+ 
+ 	/**
+@@ -197,7 +197,7 @@
+ 	 * @throws NullPointerException if the array of FSButtonEvents is null.
+ 	 */
+ 	public FSDefineButton2(int anIdentifier, int buttonType,
+-							ArrayList&lt;FSButton&gt; buttonRecordArray,
++							ArrayList&lt;FSButtonShape&gt; buttonRecordArray,
+ 							ArrayList&lt;FSButtonEvent&gt; buttonEventArray)
+ 	{
+ 		super(DefineButton2, anIdentifier);
+@@ -218,10 +218,10 @@
+ 		super(obj);
+ 		buttonType = obj.buttonType;
+ 
+-		buttonRecords = new ArrayList&lt;FSButton&gt;();
++		buttonRecords = new ArrayList&lt;FSButtonShape&gt;();
+ 
+-		for (Iterator&lt;FSButton&gt; i = obj.buttonRecords.iterator(); i.hasNext();)
+-			buttonRecords.add((FSButton) i.next().clone());
++		for (Iterator&lt;FSButtonShape&gt; i = obj.buttonRecords.iterator(); i.hasNext();)
++			buttonRecords.add((FSButtonShape) i.next().clone());
+ 
+ 		buttonEvents = new ArrayList&lt;FSButtonEvent&gt;();
+ 
+@@ -235,7 +235,7 @@
+ 	 * @param aButton
+ 	 *            a button record.
+ 	 */
+-	public void add(FSButton aButton)
++	public void add(FSButtonShape aButton)
+ 	{
+ 		buttonRecords.add(aButton);
+ 	}
+@@ -266,7 +266,7 @@
+ 	 * 
+ 	 * @return the array of button records.
+ 	 */
+-	public ArrayList&lt;FSButton&gt; getButtonRecords()
++	public ArrayList&lt;FSButtonShape&gt; getButtonRecords()
+ 	{
+ 		return buttonRecords;
+ 	}
+@@ -300,7 +300,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array of FSButton objects is null.
+ 	 */
+-	public void setButtonRecords(ArrayList&lt;FSButton&gt; anArray)
++	public void setButtonRecords(ArrayList&lt;FSButtonShape&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of button records cannot be null.&quot;);
+@@ -329,10 +329,10 @@
+ 	{
+ 		FSDefineButton2 anObject = (FSDefineButton2) super.clone();
+ 
+-		anObject.buttonRecords = new ArrayList&lt;FSButton&gt;();
++		anObject.buttonRecords = new ArrayList&lt;FSButtonShape&gt;();
+ 
+-		for (Iterator&lt;FSButton&gt; i = buttonRecords.iterator(); i.hasNext();)
+-			anObject.buttonRecords.add((FSButton) i.next().clone());
++		for (Iterator&lt;FSButtonShape&gt; i = buttonRecords.iterator(); i.hasNext();)
++			anObject.buttonRecords.add((FSButtonShape) i.next().clone());
+ 
+ 		anObject.buttonEvents = new ArrayList&lt;FSButtonEvent&gt;();
+ 
+@@ -378,7 +378,7 @@
+ 
+ 		length += 3;
+ 
+-		for (Iterator&lt;FSButton&gt; buttonIterator = buttonRecords.iterator(); buttonIterator.hasNext();)
++		for (Iterator&lt;FSButtonShape&gt; buttonIterator = buttonRecords.iterator(); buttonIterator.hasNext();)
+ 			length += buttonIterator.next().length(context);
+ 
+ 		length += 1;
+@@ -405,7 +405,7 @@
+ 		int offsetStart = coder.getPointer();
+ 		coder.writeWord(0, 2);
+ 
+-		for (Iterator&lt;FSButton&gt; i = buttonRecords.iterator(); i.hasNext();)
++		for (Iterator&lt;FSButtonShape&gt; i = buttonRecords.iterator(); i.hasNext();)
+ 			i.next().encode(coder, context);
+ 
+ 		coder.writeWord(0, 1);
+@@ -443,7 +443,7 @@
+ 		int offsetToNext = 0;
+ 
+ 		buttonEvents = new ArrayList&lt;FSButtonEvent&gt;();
+-		buttonRecords = new ArrayList&lt;FSButton&gt;();
++		buttonRecords = new ArrayList&lt;FSButtonShape&gt;();
+ 
+ 		super.decode(coder, context);
+ 
+@@ -455,7 +455,7 @@
+ 		offsetToNext = coder.readWord(2, false);
+ 
+ 		while (coder.scanWord(1, false) != 0)
+-			buttonRecords.add(new FSButton(coder, context));
++			buttonRecords.add(new FSButtonShape(coder, context));
+ 
+ 		coder.readByte();
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000323.html">[Transform-svn] r389 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000325.html">[Transform-svn] r391 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#324">[ date ]</a>
+              <a href="thread.html#324">[ thread ]</a>
+              <a href="subject.html#324">[ subject ]</a>
+              <a href="author.html#324">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

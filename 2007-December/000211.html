@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r275 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r275%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221611.lBMGBAvC010817%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000210.html">
+   <LINK REL="Next"  HREF="000212.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r275 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r275%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221611.lBMGBAvC010817%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r275 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 22 17:11:10 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000210.html">[Transform-svn] r274 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000212.html">[Transform-svn] r276 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#211">[ date ]</a>
+              <a href="thread.html#211">[ thread ]</a>
+              <a href="subject.html#211">[ subject ]</a>
+              <a href="author.html#211">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-22 17:11:04 +0100 (Sat, 22 Dec 2007)
+New Revision: 275
+
+Modified:
+   trunk/src/com/flagstone/transform/FSProtect.java
+Log:
+Fixed bug 12729. Flash 4 files containing a Protect data structure with an MD5 encoded password are now decoded correctly.
+
+Fixed bug 12728. FSProtect with a string that contains null will be decoded correctly.
+
+Modified: trunk/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProtect.java	2007-12-22 16:07:30 UTC (rev 274)
++++ trunk/src/com/flagstone/transform/FSProtect.java	2007-12-22 16:11:04 UTC (rev 275)
+@@ -147,7 +147,7 @@
+     {
+         super.length(coder);
+         
+-        if ((coder.context[FSCoder.Version] &gt;= 5) &amp;&amp; (password != null) &amp;&amp; (password.length() &gt; 0))
++        if ((password != null) &amp;&amp; (password.length() &gt; 0))
+             length += 2 + coder.strlen(password, true);
+ 
+         return length;
+@@ -157,7 +157,7 @@
+     {
+         super.encode(coder);
+         
+-        if ((coder.context[FSCoder.Version] &gt;= 5) &amp;&amp; (password != null) &amp;&amp; (password.length() &gt; 0))
++        if ((password != null) &amp;&amp; (password.length() &gt; 0))
+         {
+             coder.writeWord(0, 2);
+             coder.writeString(password);
+@@ -175,10 +175,10 @@
+          * Force a read of the entire password field, including any 
+          * zero bytes that are encountered.
+          */
+-        if ((coder.context[FSCoder.Version] &gt;= 5) &amp;&amp; (length &gt; 0))
++        if (length &gt; 0)
+         {
+             coder.readWord(2, false);
+-            password = coder.readString();
++            password = coder.readString(length-2);
+         }        
+         coder.endObject(name());
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000210.html">[Transform-svn] r274 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000212.html">[Transform-svn] r276 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#211">[ date ]</a>
+              <a href="thread.html#211">[ thread ]</a>
+              <a href="subject.html#211">[ subject ]</a>
+              <a href="author.html#211">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

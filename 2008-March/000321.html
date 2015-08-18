@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r386 - dev/dev-2-4/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r386%20-%20dev/dev-2-4/src/com/flagstone/transform/util&In-Reply-To=%3C200803261532.m2QFW86F029402%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000329.html">
+   <LINK REL="Next"  HREF="000322.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r386 - dev/dev-2-4/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r386%20-%20dev/dev-2-4/src/com/flagstone/transform/util&In-Reply-To=%3C200803261532.m2QFW86F029402%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r386 - dev/dev-2-4/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar 26 16:32:08 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000329.html">[Transform-svn] r385 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+        <LI>Next message: <A HREF="000322.html">[Transform-svn] r387 - in dev/dev-2-4/src/com/flagstone/transform:	. util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#321">[ date ]</a>
+              <a href="thread.html#321">[ thread ]</a>
+              <a href="subject.html#321">[ subject ]</a>
+              <a href="author.html#321">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-26 16:32:05 +0100 (Wed, 26 Mar 2008)
+New Revision: 386
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Updated
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java	2008-03-26 15:26:42 UTC (rev 385)
++++ dev/dev-2-4/src/com/flagstone/transform/util/FSTextConstructor.java	2008-03-26 15:32:05 UTC (rev 386)
+@@ -687,7 +687,7 @@
+     
+             for (Iterator j = array.iterator(); j.hasNext();)
+             {
+-                FSTransformObject currentObject = (FSTransformObject) j.next();
++                FSShapeObject currentObject = (FSShapeObject) j.next();
+ 
+                 if (currentObject instanceof FSShapeStyle)
+                 {
+@@ -1110,7 +1110,7 @@
+ 
+             for (Iterator j = array.iterator(); j.hasNext();)
+             {
+-                FSTransformObject currentObject = (FSTransformObject) j.next();
++                FSShapeObject currentObject = (FSShapeObject) j.next();
+ 
+                 if (currentObject instanceof FSShapeStyle)
+                 {
+@@ -1312,18 +1312,18 @@
+         
+         int bytesRead = 0;
+ 
+-        if (maxpOffset != 0) { coder.setPointer(maxpOffset); decodeMAXP(coder, context); bytesRead = (coder.getPointer() - maxpOffset) &gt;&gt; 3; }
+-        if (os_2Offset != 0) { coder.setPointer(os_2Offset); decodeOS_2(coder, context); bytesRead = (coder.getPointer() - os_2Offset) &gt;&gt; 3; }
+-        if (headOffset != 0) { coder.setPointer(headOffset); decodeHEAD(coder, context); bytesRead = (coder.getPointer() - headOffset) &gt;&gt; 3; }
+-        if (hheaOffset != 0) { coder.setPointer(hheaOffset); decodeHHEA(coder, context); bytesRead = (coder.getPointer() - hheaOffset) &gt;&gt; 3; }
+-        if (nameOffset != 0) { coder.setPointer(nameOffset); decodeNAME(coder, context); bytesRead = (coder.getPointer() - nameOffset) &gt;&gt; 3; }
++        if (maxpOffset != 0) { coder.setPointer(maxpOffset); decodeMAXP(coder); bytesRead = (coder.getPointer() - maxpOffset) &gt;&gt; 3; }
++        if (os_2Offset != 0) { coder.setPointer(os_2Offset); decodeOS_2(coder); bytesRead = (coder.getPointer() - os_2Offset) &gt;&gt; 3; }
++        if (headOffset != 0) { coder.setPointer(headOffset); decodeHEAD(coder); bytesRead = (coder.getPointer() - headOffset) &gt;&gt; 3; }
++        if (hheaOffset != 0) { coder.setPointer(hheaOffset); decodeHHEA(coder); bytesRead = (coder.getPointer() - hheaOffset) &gt;&gt; 3; }
++        if (nameOffset != 0) { coder.setPointer(nameOffset); decodeNAME(coder); bytesRead = (coder.getPointer() - nameOffset) &gt;&gt; 3; }
+         
+         glyphTable = new FSGlyph[numberOfGlyphs];
+         
+         // Decode glyphs first so objects will be created.
+         if (locaOffset != 0) { coder.setPointer(locaOffset); decodeGlyphs(coder, glyfOffset); bytesRead = (coder.getPointer() - locaOffset) &gt;&gt; 3; }
+-        if (hmtxOffset != 0) { coder.setPointer(hmtxOffset); decodeHMTX(coder, context); bytesRead = (coder.getPointer() - hmtxOffset) &gt;&gt; 3; }
+-        if (cmapOffset != 0) { coder.setPointer(cmapOffset); decodeCMAP(coder, context); bytesRead = (coder.getPointer() - cmapOffset) &gt;&gt; 3; }
++        if (hmtxOffset != 0) { coder.setPointer(hmtxOffset); decodeHMTX(coder); bytesRead = (coder.getPointer() - hmtxOffset) &gt;&gt; 3; }
++        if (cmapOffset != 0) { coder.setPointer(cmapOffset); decodeCMAP(coder); bytesRead = (coder.getPointer() - cmapOffset) &gt;&gt; 3; }
+ 
+         orderTable[0] = characterTable[(short)' '];
+         
+@@ -1340,7 +1340,8 @@
+         glyphTable[spaceIndex].shape = new FSShape();
+         glyphTable[spaceIndex].advance = 250;
+     }
+-    private void decodeHEAD(FSCoder coder, FSContext context)
++    
++    private void decodeHEAD(FSCoder coder)
+     {
+         byte[] date = new byte[8];
+     
+@@ -1380,7 +1381,8 @@
+         attributes[GLYPH_OFFSET_SIZE] = coder.readWord(2, true); 
+         coder.readWord(2, true); // glyph data format
+     }
+-    private void decodeHHEA(FSCoder coder, FSContext context)
++    
++    private void decodeHHEA(FSCoder coder)
+     {
+         coder.readFixedBits(32, 16); // table version
+     
+@@ -1405,7 +1407,8 @@
+         
+         attributes[NUMBER_OF_METRICS] = coder.readWord(2, false);    
+     }
+-    private void decodeOS_2(FSCoder coder, FSContext context)
++    
++    private void decodeOS_2(FSCoder coder)
+     {
+         byte[] panose = new byte[10];
+         int[] unicodeRange = new int[4];
+@@ -1472,7 +1475,8 @@
+             }
+         }
+     }
+-    private void decodeNAME(FSCoder coder, FSContext context)
++    
++    private void decodeNAME(FSCoder coder)
+     {
+     	int stringTableBase = coder.getPointer() &gt;&gt;&gt; 3;
+     	
+@@ -1529,7 +1533,8 @@
+             coder.setPointer(current);
+         }
+     }
+-    private void decodeMAXP(FSCoder coder, FSContext context)
++    
++    private void decodeMAXP(FSCoder coder)
+     {
+         float version = coder.readFixedBits(32, 16);
+         numberOfGlyphs = coder.readWord(2, false);
+@@ -1551,7 +1556,7 @@
+             coder.readWord(2, false); // maximum level of recursion
+         }
+     }
+-    private void decodeHMTX(FSCoder coder, FSContext context)
++    private void decodeHMTX(FSCoder coder)
+     {
+         int i = 0;
+         
+@@ -1569,7 +1574,8 @@
+         for (; i&lt;numberOfGlyphs; i++)
+             coder.readWord(2, true);
+     }
+-    private void decodeCMAP(FSCoder coder, FSContext context)
++    
++    private void decodeCMAP(FSCoder coder)
+     {
+         int tableStart = coder.getPointer();
+         
+@@ -1925,6 +1931,7 @@
+         glyphTable[glyphIndex].onCurve = onCurve;
+         glyphTable[glyphIndex].endPoints = endPtsOfContours;
+     }
++    
+     private void decodeCompositeGlyph(FSCoder coder, int glyphIndex)
+     {
+         FSShape shape = new FSShape();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000329.html">[Transform-svn] r385 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+	<LI>Next message: <A HREF="000322.html">[Transform-svn] r387 - in dev/dev-2-4/src/com/flagstone/transform:	. util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#321">[ date ]</a>
+              <a href="thread.html#321">[ thread ]</a>
+              <a href="subject.html#321">[ subject ]</a>
+              <a href="author.html#321">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

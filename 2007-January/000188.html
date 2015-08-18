@@ -1,0 +1,1378 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r252 - in dev/dev-2-2/src/com/flagstone/transform:	. util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r252%20-%20in%20dev/dev-2-2/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200701031539.l03Fd1PZ002659%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000187.html">
+   <LINK REL="Next"  HREF="000189.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r252 - in dev/dev-2-2/src/com/flagstone/transform:	. util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r252%20-%20in%20dev/dev-2-2/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200701031539.l03Fd1PZ002659%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r252 - in dev/dev-2-2/src/com/flagstone/transform:	. util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Jan  3 16:39:01 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000187.html">[Transform-svn] r251 - tags
+</A></li>
+        <LI>Next message: <A HREF="000189.html">[Transform-svn] r253 - dev/dev-2-2/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-01-03 16:38:51 +0100 (Wed, 03 Jan 2007)
+New Revision: 252
+
+Modified:
+   dev/dev-2-2/src/com/flagstone/transform/FSAction.java
+   dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java
+   dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java
+   dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java
+   dev/dev-2-2/src/com/flagstone/transform/FSCoder.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMovie.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java
+   dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java
+Log:
+Merged in changes from latest round of bug fixing.
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSAction.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSAction.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSAction.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -551,6 +551,8 @@
+ */  
+ public class FSAction extends FSActionObject
+ {
++    /** Type identifying the end of a sequence of actions. */
++    public static final int End              = 0;
+     /** Type identifying a NextFrame stack-based action. */
+     public static final int NextFrame        = 4;
+     /** Type identifying a PrevFrame stack-based action. */
+@@ -719,10 +721,10 @@
+     public static final int Extends    = 105;
+     
+     static String[] names = {
++        &quot;End&quot;,              // 0
+         &quot;&quot;,
+         &quot;&quot;,
+         &quot;&quot;,
+-        &quot;&quot;,
+         &quot;NextFrame&quot;,        // 4;
+         &quot;PrevFrame&quot;,        // 5;
+         &quot;Play&quot;,             // 6;
+@@ -850,10 +852,10 @@
+     };
+ 
+     private static final FSAction[] actions = {
+-        null,
+-        null,
+-        null,
+-        null,
++        new FSAction(FSAction.End),              // 0;
++        new FSAction(1),
++        new FSAction(2),
++        new FSAction(3),
+         new FSAction(FSAction.NextFrame),        // 4;
+         new FSAction(FSAction.PrevFrame),        // 5;
+         new FSAction(FSAction.Play),             // 6;
+@@ -872,16 +874,16 @@
+         new FSAction(FSAction.StringEquals),     // 19;
+         new FSAction(FSAction.StringLength),     // 20;
+         new FSAction(FSAction.StringExtract),    // 21;
+-        null, 
++        new FSAction(22), 
+         new FSAction(FSAction.Pop),              // 23;
+         new FSAction(FSAction.ToInteger),        // 24;
+-        null,
+-        null, 
+-        null,
++        new FSAction(25),
++        new FSAction(26), 
++        new FSAction(27),
+         new FSAction(FSAction.GetVariable),      // 28;
+         new FSAction(FSAction.SetVariable),      // 29;
+-        null,
+-        null,
++        new FSAction(30),
++        new FSAction(31),
+         new FSAction(FSAction.SetTarget2),       // 32;
+         new FSAction(FSAction.StringAdd),        // 33;
+         new FSAction(FSAction.GetProperty),      // 34;
+@@ -895,9 +897,9 @@
+         new FSAction(FSAction.Throw),            // 42;
+         new FSAction(FSAction.Cast),             // 43;
+         new FSAction(FSAction.Implements),       // 44;
+-        null,
+-        null,
+-        null,
++        new FSAction(45),
++        new FSAction(46),
++        new FSAction(47),
+         new FSAction(FSAction.RandomNumber),     // 48;
+         new FSAction(FSAction.MBStringLength),   // 49;
+         new FSAction(FSAction.CharToAscii),      // 50;
+@@ -906,10 +908,10 @@
+         new FSAction(FSAction.MBStringExtract),  // 53;
+         new FSAction(FSAction.MBCharToAscii),    // 54;
+         new FSAction(FSAction.MBAsciiToChar),    // 55;
+-        null,
+-        null,
++        new FSAction(56),
++        new FSAction(57),
+         new FSAction(FSAction.DeleteVariable),   // 58;
+-        new FSAction(FSAction.Delete),            // 59;
++        new FSAction(FSAction.Delete),           // 59;
+         new FSAction(FSAction.InitVariable),     // 60;
+         new FSAction(FSAction.ExecuteFunction),  // 61;
+         new FSAction(FSAction.Return),           // 62;
+@@ -936,16 +938,16 @@
+         new FSAction(FSAction.NewMethod),        // 83;
+         new FSAction(FSAction.InstanceOf),       // 84;
+         new FSAction(FSAction.EnumerateObject),  // 85;
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
++        new FSAction(86),
++        new FSAction(87),
++        new FSAction(88),
++        new FSAction(89),
++        new FSAction(90),
++        new FSAction(91),
++        new FSAction(92),
++        new FSAction(93),
++        new FSAction(94),
++        new FSAction(95),
+         new FSAction(FSAction.BitwiseAnd),           // 96;
+         new FSAction(FSAction.BitwiseOr),            // 97;
+         new FSAction(FSAction.BitwiseXOr),           // 98;
+@@ -956,32 +958,34 @@
+         new FSAction(FSAction.Greater),              // 103;
+         new FSAction(FSAction.StringGreater),        // 104;
+         new FSAction(FSAction.Extends),              // 105;
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,  // 127
++        new FSAction(106),
++        new FSAction(107),
++        new FSAction(108),
++        new FSAction(109),
++        new FSAction(110),
++        new FSAction(111),
++        new FSAction(112),
++        new FSAction(113),
++        new FSAction(114),
++        new FSAction(115),
++        new FSAction(116),
++        new FSAction(117),
++        new FSAction(118),
++        new FSAction(119),
++        new FSAction(120),
++        new FSAction(121),
++        new FSAction(122),
++        new FSAction(123),
++        new FSAction(124),
++        new FSAction(125),
++        new FSAction(126),
++        new FSAction(127),  // 127
+     };
+ 
+     static FSAction getInstance(int type) { return actions[type]; }
+ 
++    /** Factory method for generating an FSAction object representing the end of a sequence of actions. */
++    public static FSAction End() { return actions[FSAction.End]; }
+     /** Factory method for generating an FSAction object representing a NextFrame action. */
+     public static FSAction NextFrame() { return actions[FSAction.NextFrame]; }
+     /** Factory method for generating an FSAction object representing a PrevFrame action. */
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -180,16 +180,19 @@
+     }
+ 
+     private int event = 0;
++    private int length = 0;
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+    
+     /*
+      * This constructor is used only then lazily decoding actions.
+      */
+-    FSButtonEvent(FSCoder coder, int length)
++    FSButtonEvent(FSCoder coder, int len)
+     {
++        length = len-2;
++        
+         if (coder.context[FSCoder.DecodeActions] == 0)
+-            encodedActions = new byte[length-3];
++            encodedActions = new byte[len-3];
+         
+         decode(coder);
+     }
+@@ -390,7 +393,7 @@
+     
+     public int length(FSCoder coder)
+     {
+-        int length = 2;
++        length = 2;
+     
+         if (actions != null)
+         {
+@@ -454,7 +457,17 @@
+         
+         if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions = FSMovie.decodeActions(coder);
++            actions = new ArrayList();
++
++            int start;
++            
++            while (length &gt; 1) 
++            {
++                start = coder.getPointer();
++                
++                actions.add(FSMovie.decodeAction(coder));
++                length -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
++            }
+         }
+         else
+         {
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -260,7 +260,7 @@
+         super.length(coder);
+     
+         length += 2;
+-
++        
+         for (int i=0; i&lt;4; i++)
+         {
+             if (sound[i] != null &amp;&amp; sound[i].getIdentifier() != 0)
+@@ -291,6 +291,8 @@
+     public void decode(FSCoder coder)
+     {
+         super.decode(coder);
++        
++        int start = coder.getPointer();
+ 
+         identifier = coder.readWord(2, false);
+ 
+@@ -300,6 +302,9 @@
+                 sound[i] = new FSSound(coder);
+             else
+                 coder.readWord(2, false);
++            
++            if (((coder.getPointer() - start) &gt;&gt;&gt; 3) == length)
++                break;
+         }
+         coder.endObject(name());
+     }
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -581,7 +581,17 @@
+     
+         if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions = FSMovie.decodeActions(coder);
++            actions = new ArrayList();
++            
++            int start;
++            
++            while (length &gt; 1) 
++            {
++                start = coder.getPointer();
++                
++                actions.add(FSMovie.decodeAction(coder));
++                length -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
++            }
+         }
+         else
+         {
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSCoder.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSCoder.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -423,7 +423,7 @@
+     }
+     
+     /*
+-     * Methods for adjusting the locaion from where data is read or written
++     * Methods for adjusting the location from where data is read or written
+      */
+     /**
+      * Returns the offset, in bits, from the start of the buffer where the next 
+@@ -820,7 +820,6 @@
+      * 
+      * @return the value.
+      */
+-
+     public double readDouble()
+     {
+         int upperInt = readWord(4, false);
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -445,13 +445,25 @@
+             
+         coder.readWord(1, false); // character end
+         
++        int actionsLength = (coder.getPointer()-start) &gt;&gt;&gt; 3;
++        
+         if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions = FSMovie.decodeActions(coder);
++            actions = new ArrayList();
++            
++            int len = actionsLength;
++            
++            while (len &gt; 1) 
++            {
++                start = coder.getPointer();
++                
++                actions.add(FSMovie.decodeAction(coder));
++                len -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
++            }
+         }
+         else
+         {
+-            encodedActions = new byte[((coder.getPointer()-start) &gt;&gt;&gt; 3)-1];
++            encodedActions = new byte[actionsLength-1];
+             coder.readBytes(encodedActions);
+         }
+         coder.readWord(1, false);
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -434,7 +434,7 @@
+     
+     public void decode(FSCoder coder)
+     {
+-        int actionsOffset = 0;
++        int offsetToNext = 0;
+         
+         buttonEvents = new ArrayList();
+ 
+@@ -445,7 +445,7 @@
+         coder.context[FSCoder.TransparentColors] = 1;
+ 
+         buttonType = coder.readWord(1, false);
+-        actionsOffset = coder.readWord(2, false);
++        offsetToNext = coder.readWord(2, false);
+ 
+         buttonRecords = new ArrayList();
+         
+@@ -454,22 +454,22 @@
+             
+         coder.readWord(1, false);
+ 
+-        if (actionsOffset != 0)
++        if (offsetToNext != 0)
+         {
+             buttonEvents = new ArrayList();
+                 
+             do {
+-                actionsOffset = coder.readWord(2, false);
++                offsetToNext = coder.readWord(2, false);
+                 
+-                if (actionsOffset != 0)
++                if (offsetToNext != 0)
+                 {
+-                    buttonEvents.add(new FSButtonEvent(coder, actionsOffset-2));
++                    buttonEvents.add(new FSButtonEvent(coder, offsetToNext-2));
+                 }
+                 else
+                 {
+                     buttonEvents.add(new FSButtonEvent(coder, length - ((coder.getPointer()-start) &gt;&gt;&gt; 3)));
+                 }
+-            } while (actionsOffset != 0);
++            } while (offsetToNext != 0);
+ 
+         }
+         coder.context[FSCoder.TransparentColors] = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -33,7 +33,10 @@
+ /**
+ FSDefineJPEGImage2 is used to define a JPEG encoded image with an integrated encoding table. 
+   
+-&lt;p&gt;It extends the FSDefineJPEGImage class by including a separate encoding table, rather than using an FSJPEGEncodingTable object to store the encoding table. This allows multiple JPEG images with different amounts of compression to be included within a Flash file.&lt;/p&gt;
++&lt;p&gt;It extends the FSDefineJPEGImage class by including an encoding table, rather 
++than using an FSJPEGEncodingTable object to store the encoding table. This allows 
++multiple JPEG images with different amounts of compression to be included within 
++a Flash file.&lt;/p&gt;
+ 
+ &lt;table class=&quot;datasheet&quot;&gt;
+ 
+@@ -45,7 +48,8 @@
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage2_1&quot;&gt;identifier&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the image from other objects.&lt;/td&gt;
++&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the 
++image from other objects.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+@@ -53,17 +57,12 @@
+ &lt;td&gt;An array of bytes containing the JPEG compressed image.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage2_3&quot;&gt;encodingTable&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing the encoding table. May be set to null.&lt;/td&gt;
+-&lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Although the encoding table defines how the image is compressed it is not essential. If an FSDefineJPEGImage2 object is created with an empty encoding table then the Flash Player will still display the JPEG image correctly. The empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD9, 0xFF, 0xD8. Note however that this is reversed from StartOfImage (SOI, 0xFFD8) and EndOfImage (EOI, 0xFFD9) tags defined in the JPEG file format specification. This appears to be a bug in Flash. However the order is preserved to ensure compatibility although code has been tested with the normal order for the tags and the images were displayed correctly.&lt;/p&gt;
+-
+ &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
+ 
+-&lt;p&gt;The simplest way to use the FSDefineJPEGImage2 class is to use the constructor that specifies the JPEG file to initialise the object:&lt;/p&gt;
++&lt;p&gt;The simplest way to use the FSDefineJPEGImage2 class is to use the constructor 
++that specifies the JPEG file to initialise the object:&lt;/p&gt;
+ 
+ &lt;pre&gt;
+ File aFile = new File(filename);
+@@ -84,18 +83,22 @@
+ movie.add(new FSDefineJPEGImage2(movie.newIdentifier(), bytes));
+ &lt;/pre&gt;
+ 
+-&lt;p&gt;This generates an object with an empty encoding table, however the image will still be displayed correctly.&lt;/p&gt;
+-
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+-&lt;p&gt;The FSDefineJPEGImage2 class represents the DefineBitsJPEG2 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
++&lt;p&gt;The FSDefineJPEGImage2 class represents the DefineBitsJPEG2 tag from the 
++Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;p&gt;
++
++&lt;p&gt;In Transform SWF 2.1.x and earlier the encoding table was included as a separate
++array of bytes. From Flash 8 onwards occasionally images would contain  more than
++one Start Of Image (SOI, 0xFFD8) marker which prevented the encoding table from
++being decoded correctly. As a result from Transform SWF 2,2 onwards the image 
++data was treated as a single block.&lt;/p&gt; 
+  */
+ public class FSDefineJPEGImage2 extends FSDefineObject
+ {
+     private int width;
+     private int height;
+     private byte[] image = null;
+-    private byte[] encodingTable = null;
+ 
+     /**
+      * Construct an FSDefineJPEGImage2 object, initalizing it with values decoded 
+@@ -108,23 +111,11 @@
+         super(DefineJPEGImage2, 0);
+         decode(coder);
+     }
+-    /** Constructs an FSDefineJPEGImage2 object with the identifier, JPEG image data and JPEG encoding table data.
++    /** Constructs an FSDefineJPEGImage2 object with the identifier, JPEG image data.
+ 
+-        @param anIdentifier    the unique identifier for this object
++        @param anIdentifier the unique identifier for this object
+         @param imageBytes the JPEG encoded image data.
+-        @param encodingBytes the JPEG encoded encoding table.
+         */
+-    public FSDefineJPEGImage2(int anIdentifier, byte[] imageBytes, byte[] encodingBytes)
+-    {
+-        super(DefineJPEGImage2, anIdentifier);
+-        setImage(imageBytes);
+-        setEncodingTable(encodingBytes);
+-    }
+-    /** Constructs an FSDefineJPEGImage2 object with the identifier, JPEG image data and JPEG encoding table data.
+-
+-        @param anIdentifier    the unique identifier for this object
+-        @param imageBytes the JPEG encoded image data.
+-        */
+     public FSDefineJPEGImage2(int anIdentifier, byte[] imageBytes)
+     {
+         super(DefineJPEGImage2, anIdentifier);
+@@ -142,7 +133,6 @@
+         image = Transform.clone(obj.image);
+         width = obj.width;
+         height = obj.height;
+-        encodingTable = Transform.clone(obj.encodingTable);
+     }
+ 
+     /** 
+@@ -169,12 +159,6 @@
+         */
+     public byte[] getImage() { return image; }
+ 
+-    /** Gets the encoding table.
+-
+-        @return the array of bytes containing the encoding table.
+-        */
+-    public byte[] getEncodingTable()  { return encodingTable; }
+-
+     /** Sets the image data.
+ 
+         @param bytes an array of bytes containing the image data.
+@@ -185,24 +169,11 @@
+         decodeInfo();
+     }
+ 
+-    /** Sets the encoding table.
+-
+-        @param bytes an array of bytes containing the encoding table.
+-        */
+-    public void setEncodingTable(byte[] bytes)
+-    {
+-        if (bytes == null) {
+-            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+-        }
+-        encodingTable = bytes;
+-    }
+-
+     public Object clone()
+     {
+         FSDefineJPEGImage2 anObject = (FSDefineJPEGImage2)super.clone();
+         
+         anObject.image = Transform.clone(image);
+-        anObject.encodingTable = Transform.clone(encodingTable);
+         
+         return anObject;
+     }
+@@ -216,7 +187,6 @@
+             FSDefineJPEGImage2 typedObject = (FSDefineJPEGImage2)anObject;
+             
+             result = Transform.equals(image, typedObject.image);
+-            result = result &amp;&amp; Transform.equals(encodingTable, typedObject.encodingTable);
+         }
+         return result;
+     }
+@@ -228,7 +198,6 @@
+         if (depth &gt; 0)
+         {
+             buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;encodingTable&quot;, &quot;&lt;data&gt;&quot;);
+             Transform.append(buffer, &quot;image&quot;, &quot;&lt;data&gt;&quot;);
+             buffer.append(&quot;}&quot;);
+         }
+@@ -238,7 +207,6 @@
+     {
+         super.length(coder);
+         
+-        length += encodingTable.length;
+         length += image.length;
+ 
+         return length;
+@@ -247,7 +215,6 @@
+     public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+-        coder.writeBytes(encodingTable);
+         coder.writeBytes(image);
+         coder.endObject(name());
+     }
+@@ -255,49 +222,12 @@
+     public void decode(FSCoder coder)
+     {        
+         super.decode(coder);
+-        setEncodingTable(readJPEGStream(coder));
+-        byte[] data = new byte[length-encodingTable.length-2];
++        byte[] data = new byte[length-2];
+         coder.readBytes(data);
+         setImage(data);
+         coder.endObject(name());
+     }
+     
+-    private byte[] readJPEGStream(FSCoder coder)
+-    {
+-        byte bytes[] = null;
+-
+-        int soi = 0xFFD8;
+-        int eoi = 0xFFD9;
+-        
+-        int start = coder.getPointer();
+-        int end = start + ((length-2) &lt;&lt; 3);
+-        
+-        int word = 0;
+- 
+-        do {
+-            word = coder.scanBits(16, false);
+-            
+-            if (word == soi) 
+-            {
+-                start = coder.getPointer();
+-            }
+-            else if (word == eoi) 
+-            {
+-                end = coder.getPointer()+16;
+-                break;
+-            }
+-            coder.adjustPointer(8);
+-        } 
+-        while (coder.getPointer() &lt; end);
+-            
+-        int len = (end-start) &gt;&gt;&gt; 3; 
+-        
+-        coder.setPointer(start);
+-        bytes = new byte[len];
+-        coder.readBytes(bytes);
+-
+-        return bytes;
+-    }
+     private boolean decodeInfo()
+     {
+         FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, image);
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -33,19 +33,24 @@
+ /**
+ FSDefineJPEGImage3 is used to define a transparent JPEG encoded image. 
+ 
+-&lt;p&gt;It extends the FSDefineJPEGImage3 class by including a separate zlib compressed table of alpha channel values. This allows the transparency of existing JPEG encoded images to be changed without re-encoding the original image.&lt;/p&gt;
++&lt;p&gt;It extends the FSDefineJPEGImage3 class by including a separate zlib compressed 
++table of alpha channel values. This allows the transparency of existing JPEG 
++encoded images to be changed without re-encoding the original image.&lt;/p&gt;
+ 
+ &lt;table class=&quot;datasheet&quot;&gt;
+ 
+ &lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
+ 
+ &lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage3_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. The type attribute is read-only and may be used when iterating through the objects in an FSMovie object to identify the object class without using run-time type checking.&lt;/td&gt;
++&lt;td&gt;Identifies the data structure when it is encoded. The type attribute is 
++read-only and may be used when iterating through the objects in an FSMovie 
++object to identify the object class without using run-time type checking.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage3_1&quot;&gt;identifier&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the image from other objects.&lt;/td&gt;
++&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the 
++image from other objects.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+@@ -54,20 +59,15 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage3_3&quot;&gt;encodingTable&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing the encoding table.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage3_3&quot;&gt;alpha&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing the zlib encoded alpha channel data for each pixel in the image.&lt;/td&gt;
++&lt;td&gt;An array of bytes containing the zlib encoded alpha channel data for each 
++pixel in the image.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Although the encoding table defines how the image is compressed it is not essential. If an FSDefineJPEGImage3 object is created with an empty encoding table then the Flash Player will still display the JPEG image correctly. The empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD9, 0xFF, 0xD8. Note however that this is reversed from StartOfImage (SOI, 0xFFD8) and EndOfImage (EOI, 0xFFD9) tags defined in the JPEG file format specification. This appears to be a bug in Flash. However the order is preserved to ensure compatibility although code has been tested with the normal order for the tags and the images were displayed correctly.&lt;/p&gt;
++&lt;p&gt;The simplest way to use the FSDefineJPEGImage3 class is to use the constructor 
++that specifies the JPEG file to initialise the object:&lt;/p&gt;
+ 
+-&lt;p&gt;The simplest way to use the FSDefineJPEGImage3 class is to use the constructor that specifies the JPEG file to initialise the object:&lt;/p&gt;
+-
+ &lt;pre&gt;
+ File aFile = new File(filename);
+ byte[] bytes = new byte[(int)aFile.length()];
+@@ -105,21 +105,27 @@
+     throw new IOException(filename);
+ }
+ 
+-movie.add(new FSDefineJPEGImage3(movie.newIdentifier(), bytes, null, compressedAlpha));
++movie.add(new FSDefineJPEGImage3(movie.newIdentifier(), bytes, compressedAlpha));
+ &lt;/pre&gt;
+ 
+-&lt;p&gt;This generates an object with an empty encoding table, however the image will still be displayed correctly. The empty encoding table is not a null object. The alpha channel data is set so the image is completely opaque.&lt;/P&gt;
++&lt;p&gt;The alpha channel data is set so the image is completely opaque.&lt;/P&gt;
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+-&lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
++&lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the 
++Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
++
++&lt;p&gt;In Transform SWF 2.1.x and earlier the encoding table was included as a separate
++array of bytes. From Flash 8 onwards occasionally images would contain  more than
++one Start Of Image (SOI, 0xFFD8) marker which prevented the encoding table from
++being decoded correctly. As a result from Transform SWF 2,2 onwards the image 
++data was treated as a single block.&lt;/p&gt; 
+  */  
+ public class FSDefineJPEGImage3 extends FSDefineObject
+ {
+     private int width;
+     private int height;
+     private byte[] image = null;
+-    private byte[] encodingTable = null;
+     private byte[] alpha = null;
+ 
+     /**
+@@ -133,19 +139,17 @@
+         super(DefineJPEGImage3, 0);
+         decode(coder);
+     }
+-    /** Constructs an FSDefineJPEGImage3 object with the specified image data, encoding table and
+-        alpha channel data.
++    /** Constructs an FSDefineJPEGImage3 object with the specified image data, 
++        and alpha channel data.
+ 
+-        @param anIdentifier    the unique identifier for this object
++        @param anIdentifier the unique identifier for this object
+         @param imageBytes byte array containing the image data
+-        @param encodingBytes byte array containing the encoding table
+         @param alphaBytes byte array containing the zlib compressed alpha channel data
+         */
+-    public FSDefineJPEGImage3(int anIdentifier, byte[] imageBytes, byte[] encodingBytes, byte[] alphaBytes)
++    public FSDefineJPEGImage3(int anIdentifier, byte[] imageBytes, byte[] alphaBytes)
+     {
+         super(DefineJPEGImage3, anIdentifier);
+         setImage(imageBytes);
+-        setEncodingTable(encodingBytes);
+         setCompressedAlpha(alphaBytes);
+     }
+     /**
+@@ -160,7 +164,6 @@
+         image = Transform.clone(obj.image);
+         width = obj.width;
+         height = obj.height;
+-        encodingTable = Transform.clone(obj.encodingTable);
+         alpha = Transform.clone(obj.alpha);
+     }
+ 
+@@ -182,12 +185,6 @@
+     {
+         return height;
+     }
+-    /** Gets the encoding table.
+-
+-        @return the array of bytes containing the encoding table.
+-        */
+-    public byte[] getEncodingTable()  { return encodingTable; }
+-
+     /** Gets the image data.
+ 
+         @return the array of bytes containing the image data.
+@@ -200,18 +197,6 @@
+         */
+     public byte[] getCompressedAlpha()  { return alpha; }
+ 
+-    /** Sets the encoding table.
+-
+-        @param bytes byte array containing the encoding table.
+-        */
+-    public void setEncodingTable(byte[] bytes)
+-    {
+-        if (bytes == null) {
+-            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+-        }
+-        encodingTable = bytes;
+-    }
+-
+     /** Sets the image data.
+ 
+         @param bytes an array of bytes containing the image table.
+@@ -236,7 +221,6 @@
+         FSDefineJPEGImage3 anObject = (FSDefineJPEGImage3)super.clone();
+         
+         anObject.image = Transform.clone(image);
+-        anObject.encodingTable = Transform.clone(encodingTable);
+         anObject.alpha = Transform.clone(alpha);
+         
+         return anObject;
+@@ -251,7 +235,6 @@
+             FSDefineJPEGImage3 typedObject = (FSDefineJPEGImage3)anObject;
+             
+             result = Transform.equals(image, typedObject.image);
+-            result = result &amp;&amp; Transform.equals(encodingTable, typedObject.encodingTable);
+             result = result &amp;&amp; Transform.equals(alpha, typedObject.alpha);
+         }
+         return result;
+@@ -276,7 +259,6 @@
+         super.length(coder);
+     
+         length += 4;
+-        length += encodingTable.length;
+         length += image.length;
+ 
+         length += (alpha == null) ? 0 : alpha.length;
+@@ -288,8 +270,7 @@
+     {
+         super.encode(coder);
+         
+-        coder.writeWord(encodingTable.length+image.length, 4);
+-        coder.writeBytes(encodingTable);
++        coder.writeWord(image.length, 4);
+         coder.writeBytes(image);
+ 
+         if (alpha != null)
+@@ -304,53 +285,16 @@
+         
+         int offset = coder.readWord(4, false);
+         
+-        setEncodingTable(readJPEGStream(coder));
+-        byte[] imageIn = new byte[offset-encodingTable.length];
++        byte[] imageIn = new byte[offset];
+         coder.readBytes(imageIn);
+         setImage(imageIn);
+         byte[] alphaIn = new byte[length-offset-6];
+         coder.readBytes(alphaIn);
+-         setCompressedAlpha(alphaIn);
++        setCompressedAlpha(alphaIn);
+         
+         coder.endObject(name());
+     }
+ 
+-    private byte[] readJPEGStream(FSCoder coder)
+-    {
+-        byte bytes[] = null;
+-
+-        int soi = 0xFFD8;
+-        int eoi = 0xFFD9;
+-        
+-        int start = coder.getPointer();
+-        int end = start + ((length-2) &lt;&lt; 3);
+-        
+-        int word = 0;
+- 
+-        do {
+-            word = coder.scanBits(16, false);
+-            
+-            if (word == soi) 
+-            {
+-                start = coder.getPointer();
+-            }
+-            else if (word == eoi) 
+-            {
+-                end = coder.getPointer()+16;
+-                break;
+-            }
+-            coder.adjustPointer(8);
+-        } 
+-        while (coder.getPointer() &lt; end);
+-            
+-        int len = (end-start) &gt;&gt;&gt; 3; 
+-        
+-        coder.setPointer(start);
+-        bytes = new byte[len];
+-        coder.readBytes(bytes);
+-
+-        return bytes;
+-    }
+     private boolean decodeInfo()
+     {
+         FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, image);
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -45,18 +45,29 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSDoAction_1&quot;&gt;actions&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of FSActionObjects which are executed by the Flash Player when the current frame is displayed. The actions are executed in the order they appear in the array.&lt;/td&gt;
++&lt;td&gt;An array of FSActionObjects which are executed by the Flash Player when the 
++current frame is displayed. The actions are executed in the order they appear in 
++the array.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSDoAction_2&quot;&gt;encodedActions&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing encoded actions can also be set. The encoded actions are typically generated by the parser in the Translate framework. The actions array and encodedActions cannot both be valid at the same time. Accessor methods used to set either of the attributes will set the other to null.&lt;/td&gt;
++&lt;td&gt;An array of bytes containing encoded actions can also be set. The encoded 
++actions are typically generated by the parser in the Translate framework. The 
++actions array and encodedActions cannot both be valid at the same time. Accessor 
++methods used to set either of the attributes will set the other to null.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;/table&gt;
+ 
+-&lt;p&gt;To define the actions for a given frame the FSDoAction object should be added to a movie after the previous frame is displayed but before the FSShowFrame object that displays the 'current' frame and triggers the actions to be executed.&lt;/p&gt;
++&lt;p&gt;To define the actions for a given frame the FSDoAction object should be added 
++to a movie after the previous frame is displayed but before the FSShowFrame 
++object that displays the 'current' frame and triggers the actions to be executed.&lt;/p&gt;
+ 
+-&lt;p&gt;Only one FSDoAction object can be used to specify the actions for a given frame. If more than one FSDoAction object is added in a single frame only the actions contained in the last FSDoAction object (before the FSShowFrame object) will be executed when the frame is displayed. The other FSDoAction objects will be ignored.&lt;/p&gt;
++&lt;p&gt;Only one FSDoAction object can be used to specify the actions for a given 
++frame. If more than one FSDoAction object is added in a single frame only the 
++actions contained in the last FSDoAction object (before the FSShowFrame object) 
++will be executed when the frame is displayed. The other FSDoAction objects will 
++be ignored.&lt;/p&gt;
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
+ 
+@@ -76,7 +87,8 @@
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+-&lt;p&gt;The FSDoAction class represents the DoAction tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
++&lt;p&gt;The FSDoAction class represents the DoAction tag from the Macromedia Flash 
++(SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+ public class FSDoAction extends FSMovieObject
+ {
+@@ -322,7 +334,18 @@
+         
+         if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions = FSMovie.decodeActions(coder);
++            actions = new ArrayList();
++            
++            int len = length;
++            int start;
++            
++            while (len &gt; 1) 
++            {
++                start = coder.getPointer();
++                
++                actions.add(FSMovie.decodeAction(coder));
++                len -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
++            }
+         }
+         else
+         {
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -282,8 +282,18 @@
+         super.decode(coder);
+ 
+         transform = new FSCoordTransform(coder);
+-        count = coder.readWord(1, false);
+         
++        /* 
++         * A maximum of 8 gradients can be defined. A mask is applied to the 
++         * upper 4 bits as they are set in some files. The count is also limited
++         * to 8 just in case there is an attempt at obfuscation.
++         */
++         
++        count = coder.readWord(1, false) &amp; 0x0F;
++        
++        if (count &gt; 8)
++            count -= 8;
++        
+         gradients = new ArrayList(count);
+ 
+         for (int i=0; i&lt;count; i++)
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -361,7 +361,18 @@
+ 
+         if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+-            actions = FSMovie.decodeActions(coder);
++            actions = new ArrayList();
++            
++            int len = length-2;
++            int start;
++            
++            while (len &gt; 1) 
++            {
++                start = coder.getPointer();
++                
++                actions.add(FSMovie.decodeAction(coder));
++                len -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
++            }
+         }
+         else
+         {
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMovie.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMovie.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -426,11 +426,6 @@
+         int start = coder.getPointer() + 8;
+         int next = start;
+     
+-        if (type == 0)
+-        {
+-            return anAction;
+-        }
+-        
+         if (type &gt; 128)
+         {
+             coder.adjustPointer(8);
+@@ -442,6 +437,7 @@
+ 
+         switch (type)
+         {
++            case FSAction.End:
+             case FSAction.NextFrame:
+             case FSAction.PrevFrame:
+             case FSAction.Play:
+@@ -600,6 +596,7 @@
+                 break;
+             case FSActionObject.ExceptionHandler:
+                 anAction = new FSExceptionHandler(coder);
++                break;
+             case FSActionObject.NewFunction2:
+                 anAction = new FSNewFunction2(coder);
+                 length = anAction.getLength();
+@@ -629,22 +626,21 @@
+     static ArrayList decodeActions(byte[] encodedActions)
+     {
+         FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, encodedActions);
++        int length = encodedActions.length;
++        int start;
+         
+-        return decodeActions(coder);
+-    }
+-    
+-    static ArrayList decodeActions(FSCoder coder)
+-    {
+-        FSActionObject action = null;
+-        
+         ArrayList array = new ArrayList();
+     
+-        while ((action = FSMovie.decodeAction(coder)) != null) {
+-            array.add(action);
++        while (length &gt; 0)
++        {
++            start = coder.getPointer();
++            
++            array.add(FSMovie.decodeAction(coder));
++            length -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
+         }
+         return array;
+     }
+-
++    
+     static ArrayList decodeShape(byte[] bytes)
+     {
+         FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+@@ -1241,9 +1237,9 @@
+      *
+      * @param fileName the path to the Flash file that the movie will be encoded to.
+      *
+-     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws FileNotFoundException - if an error occurs while opening the file.
+      * @throws FSCoderException - if an error occurs while encoding the file.
+-     * @throws IOException - if an I/O error occurs while reading the file.
++     * @throws IOException - if an I/O error occurs while writing the file.
+      */
+     public void encodeToFile(String fileName) throws FileNotFoundException, IOException
+     {
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -87,9 +87,15 @@
+ &lt;td&gt;The average number of samples in each FSSoundStreamBlock object.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
++&lt;tr&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_9&quot;&gt;latency&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;Latency defines the number of samples to skip only when playing sounds encoded 
++with the MP3 format.&lt;/td&gt;
++&lt;/tr&gt;
++
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Three encoded formats for the sound data are supported:&lt;/p&gt;
++&lt;p&gt;Four encoded formats for the sound data are supported:&lt;/p&gt;
+ 
+ &lt;ul&gt;
+ &lt;li&gt;NATIVE_PCM - uncompressed Pulse Code Modulated: samples are either 1 or 2 bytes. For two-byte samples the byte order is dependent on the platform on which the Flash Player is hosted. Sounds created on a platform which supports big-endian byte order will not be played correctly when listened to on a platform which supports little-endian byte order.&lt;/li&gt;
+@@ -99,6 +105,7 @@
+ by comparing the difference between successive sound sample which dramatically reduces
+ the size of the encoded sound when compared to the uncompressed PCM formats. Use this 
+ format whenever possible.&lt;/li&gt;
++&lt;li&gt;MP3 - MPEG Layer 3 encoded sound.&lt;/li&gt;
+ &lt;/ul&gt;
+ 
+ &lt;p&gt;Constants representing the different formats are defined in the FSSound class.&lt;/p&gt;
+@@ -379,7 +386,7 @@
+     
+         length += 4;
+         
+-        if (format == FSSound.MP3)
++        if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
+             length += 2;
+         
+         return length;
+@@ -430,7 +437,7 @@
+         coder.writeBits(streamChannels-1, 1);
+         coder.writeWord(streamSampleCount, 2);
+ 
+-        if (format == FSSound.MP3)
++        if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
+             coder.writeWord(latency, 2);
+ 
+         coder.endObject(name());
+@@ -480,7 +487,7 @@
+         streamChannels = coder.readBits(1, false)+1;
+         streamSampleCount = coder.readWord(2, false);
+         
+-        if (format == FSSound.MP3)
++        if (length == 6 &amp;&amp; format == FSSound.MP3)
+             latency = coder.readWord(2, true);
+ 
+         coder.endObject(name());
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -54,7 +54,7 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_1&quot;&gt;format&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_1&quot;&gt;format&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The format of the encoded sound data - FSSound.PCM (Little-Endian byte order), 
+ FSSound.ADPCM, FSSound.NATIVE_PCM (Big-Endian or Little-Endian byte order 
+ depending on the platform where the sound was created), FSSound.MP3 or 
+@@ -62,42 +62,42 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_2&quot;&gt;playbackRate&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_2&quot;&gt;playbackRate&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The recommended playback rate in Hertz - 5512, 11025, 22050 or 44100.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_3&quot;&gt;playbackSampleSize&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_3&quot;&gt;playbackSampleSize&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The number of bytes in an uncompressed sample when the sound is played, either 1 or 2.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_4&quot;&gt;playbackChannels&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_4&quot;&gt;playbackChannels&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The recommended number of playback channels: 1 = mono or 2 = stereo.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_5&quot;&gt;streamRate&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_5&quot;&gt;streamRate&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The stream sampling rate - 5512, 11025, 22050 or 44100 Hz&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_6&quot;&gt;streamSampleSize&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_6&quot;&gt;streamSampleSize&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The size of an uncompressed sample in the streaming sound in bytes, either 1 or 2.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_7&quot;&gt;streamChannels&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_7&quot;&gt;streamChannels&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The number of channels: 1 = mono or 2 = stereo in the streaming sound&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_8&quot;&gt;streamSampleCount&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_8&quot;&gt;streamSampleCount&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;The average number of samples in each sound stream block.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead_9&quot;&gt;latency&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSSoundStreamHead2_9&quot;&gt;latency&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;Latency defines the number of samples to skip only when playing sounds encoded 
+ with the MP3 format.&lt;/td&gt;
+ &lt;/tr&gt;
+@@ -392,7 +392,7 @@
+     
+          length += 4;
+         
+-         if (format == FSSound.MP3)
++         if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
+              length += 2;
+         
+          return length;
+@@ -443,7 +443,7 @@
+          coder.writeBits(streamChannels-1, 1);
+          coder.writeWord(streamSampleCount, 2);
+ 
+-         if (format == FSSound.MP3)
++         if (format == FSSound.MP3 &amp;&amp; latency &gt; 0)
+              coder.writeWord(latency, 2);
+ 
+          coder.endObject(name());
+@@ -493,7 +493,7 @@
+          streamChannels = coder.readBits(1, false)+1;
+          streamSampleCount = coder.readWord(2, false);
+         
+-         if (format == FSSound.MP3)
++         if (length == 6 &amp;&amp; format == FSSound.MP3)
+              latency = coder.readWord(2, true);
+ 
+          coder.endObject(name());
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java	2007-01-03 15:38:02 UTC (rev 251)
++++ dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java	2007-01-03 15:38:51 UTC (rev 252)
+@@ -880,6 +880,19 @@
+      */
+     public void ellipse(int x, int y, int rx, int ry)
+     {
++        boolean wasInPixels = false;
++
++        if (COORDINATES_ARE_PIXELS)
++        {
++            COORDINATES_ARE_PIXELS = false;
++            wasInPixels = true;
++            
++            x *= 20;
++            y *= 20;
++            rx *= 20;
++            ry *= 20;
++        }
++
+         int startX = (int) (0.707 * rx) + x;
+         int startY = (int) (0.707 * ry) + y;
+ 
+@@ -900,6 +913,11 @@
+         rcurve(ax, ay, 0, cy);
+         rcurve(0, cy, -ax, ay);
+         closePath();
++        
++        if (wasInPixels)
++        {
++            COORDINATES_ARE_PIXELS = true;
++        }
+     }
+ 
+     /**
+@@ -966,7 +984,7 @@
+      * @param points and array of coordinate pairs. The first pair of points defines the coordinates
+      * of a move operation, successive pairs define the coordinates for relative lines.
+      */
+-    public void polygon(int[] points)
++    public void rpolygon(int[] points)
+     {
+         int i;
+         int length = points.length;
+@@ -981,7 +999,35 @@
+             
+         closePath();
+     }
++    /**
++     * Create a closed shape with vertices defines by pairs of coordinates from the array argument.
++     * The first pair of points in the array specifies a move. Line segments a drawn using 
++     * abolute coordinates. The current point which is updated after each segment is drawn.
++     * 
++     * If the number of points is an odd number then the last point will be ignored.
++     * 
++     * If the COORDINATES_ARE_PIXELS attribute is true then the coordinates are specified in pixels,
++     * otherwise the coordinates are specified in twips.
++     * 
++     * @param points and array of coordinate pairs. The first pair of points defines the coordinates
++     * of a move operation, successive pairs define the coordinates of the lines.
++     */
++    public void polygon(int[] points)
++    {
++        int i;
++        int length = points.length;
++        
++        if (length % 2 == 1)
++            length -= 1;
++        
++        move(points[0], points[1]);
+ 
++        for (i=2; i&lt;length; i+=2)
++            line(points[i], points[i+1]);
++            
++        closePath();
++    }
++
+     private void setInitial(int x, int y)
+     {
+         initialX = x;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000187.html">[Transform-svn] r251 - tags
+</A></li>
+	<LI>Next message: <A HREF="000189.html">[Transform-svn] r253 - dev/dev-2-2/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

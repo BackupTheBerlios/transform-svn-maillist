@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r220 - in trunk/doc: . releases web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r220%20-%20in%20trunk/doc%3A%20.%20releases%20web&In-Reply-To=%3C200609121838.k8CIcxXV026199%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000157.html">
+   <LINK REL="Next"  HREF="000159.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r220 - in trunk/doc: . releases web</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r220%20-%20in%20trunk/doc%3A%20.%20releases%20web&In-Reply-To=%3C200609121838.k8CIcxXV026199%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r220 - in trunk/doc: . releases web">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Sep 12 20:38:59 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000157.html">[Transform-svn] r219 - in trunk: doc	src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000159.html">[Transform-svn] r221 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#158">[ date ]</a>
+              <a href="thread.html#158">[ thread ]</a>
+              <a href="subject.html#158">[ subject ]</a>
+              <a href="author.html#158">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-12 20:38:56 +0200 (Tue, 12 Sep 2006)
+New Revision: 220
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/doc/releases/transform-pre-2.1.4.txt
+   trunk/doc/web/issues.html
+Log:
+Updated issues and release notes.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-09-12 18:17:42 UTC (rev 219)
++++ trunk/doc/CHANGES.txt	2006-09-12 18:38:56 UTC (rev 220)
+@@ -3,6 +3,8 @@
+     * Transparent colours in indexed PNG images are now displayed correctly.
+       The colour channels must be set to zero otherwise the colour will be 
+       displayed opaque.
++      
++    * updated docs on latest bugs and next release.  
+ 
+ 2006-09-10 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+
+Modified: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-12 18:17:42 UTC (rev 219)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-12 18:38:56 UTC (rev 220)
+@@ -59,6 +59,14 @@
+ enclose the text preventing it from being redrawn completely if the text was 
+ animated or placed close to or in front of another obect. This is now fixed.
+ 
++8776. Indexed PNG images lose alpha.
++
++When the FSImageConstructor is used to define a flash object for an indexed PNG
++image any colours which are completely transparent are now set to black to
++prevent the the alpha channel information from being ignored and an opaque 
++colour displayed instead.
++
++
+ -----------------
+   Class Changes  
+ -----------------
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-09-12 18:17:42 UTC (rev 219)
++++ trunk/doc/web/issues.html	2006-09-12 18:38:56 UTC (rev 220)
+@@ -30,7 +30,7 @@
+ &lt;div class=&quot;content&quot;&gt;
+ 
+ &lt;H1&gt;Transform SWF: Known Issues &amp; Bugs&lt;/H1&gt;
+-&lt;P&gt;Version: 2.1.3&lt;BR/&gt;Updated: 10th September 2006&lt;/P&gt;
++&lt;P&gt;Version: 2.1.3&lt;BR/&gt;Updated: 12th September 2006&lt;/P&gt;
+ 
+ &lt;TABLE width=&quot;100%&quot;&gt;
+ 
+@@ -46,6 +46,13 @@
+ &lt;TBODY&gt;
+ 
+ &lt;TR&gt;
++&lt;TD&gt;8776&lt;/TD&gt;
++&lt;TD&gt;Indexed PNG images lose alpha.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;/TR&gt;
++
++&lt;TR&gt;
+ &lt;TD&gt;8751&lt;/TD&gt;
+ &lt;TD&gt;defineTextBlock() bounding box is incorrect.&lt;/TD&gt;
+ &lt;TD&gt;Open&lt;/TD&gt;
+@@ -157,6 +164,49 @@
+ 
+ &lt;h2&gt;Current Issues&lt;/h2&gt;
+ 
++&lt;H3&gt;8751. Indexed PNG images lose alpha.&lt;/H3&gt;
++
++&lt;P&gt;If an indexed PNG image is loaded into the FSImageConstructor class then any 
++alpha channel information is not used by the Flash Player and an opaque colour
++is displayed.&lt;/P&gt;
++
++&lt;H4&gt;Root Cause&lt;/H4&gt;
++
++&lt;P&gt;The problem is that any fully transparent colour must have the red, green and
++blue set to zero (transparent black) otherwise the Flash Player will ignore the 
++alpha channel information.&lt;/P&gt;
++
++&lt;H4&gt;Workaround?&lt;/H4&gt;
++
++&lt;P&gt;In the file, FSImageConstructor.java replace lines 1292-1294:&lt;/P&gt;
++
++&lt;pre&gt;
++     for (int i=0; i&lt;length; i++) {
++         colourTable[i][3] = (byte)coder.readWord(1, false);
++     }
++&lt;/pre&gt;
++
++&lt;p&gt;with:&lt;/p&gt;
++ 
++&lt;pre&gt;
++     for (int i=0; i&lt;length; i++) 
++     {
++         colourTable[i][3] = (byte)coder.readWord(1, false);
++
++         if (colourTable[i][3] == 0) {
++             colourTable[i][0] = 0;
++             colourTable[i][1] = 0;
++             colourTable[i][2] = 0;
++         }
++     }
++&lt;/pre&gt;
++
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
++
++&lt;P&gt;This patch will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
++
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
+ &lt;H3&gt;8751. defineTextBlock() bounding box is incorrect.&lt;/H3&gt;
+ 
+ &lt;P&gt;The size of the bounding box that encloses the block of text created using 
+@@ -355,9 +405,9 @@
+ 
+ &lt;H4&gt;Workaround?&lt;/H4&gt;
+ 
+-This issue is only affecting one user of the framework and so a workaround will
++&lt;p&gt;This issue is only affecting one user of the framework and so a workaround will
+ not be posted, particularly since the next release will formally address the 
+-problem.
++problem.&lt;/p&gt;
+ 
+ &lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000157.html">[Transform-svn] r219 - in trunk: doc	src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000159.html">[Transform-svn] r221 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#158">[ date ]</a>
+              <a href="thread.html#158">[ thread ]</a>
+              <a href="subject.html#158">[ subject ]</a>
+              <a href="author.html#158">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

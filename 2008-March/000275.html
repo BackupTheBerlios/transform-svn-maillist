@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r339 - dev/dev-2-3/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r339%20-%20dev/dev-2-3/doc/releases&In-Reply-To=%3C200803151450.m2FEo7If022007%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000274.html">
+   <LINK REL="Next"  HREF="000276.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r339 - dev/dev-2-3/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r339%20-%20dev/dev-2-3/doc/releases&In-Reply-To=%3C200803151450.m2FEo7If022007%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r339 - dev/dev-2-3/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Mar 15 15:50:07 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000274.html">[Transform-svn] r338 - dev/dev-2-3
+</A></li>
+        <LI>Next message: <A HREF="000276.html">[Transform-svn] r340 - dev/dev-2-3/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#275">[ date ]</a>
+              <a href="thread.html#275">[ thread ]</a>
+              <a href="subject.html#275">[ subject ]</a>
+              <a href="author.html#275">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-15 15:50:05 +0100 (Sat, 15 Mar 2008)
+New Revision: 339
+
+Modified:
+   dev/dev-2-3/doc/releases/transform-2.3.0.txt
+Log:
+Updated release notes with latest changes.
+
+Modified: dev/dev-2-3/doc/releases/transform-2.3.0.txt
+===================================================================
+--- dev/dev-2-3/doc/releases/transform-2.3.0.txt	2008-03-15 14:38:56 UTC (rev 338)
++++ dev/dev-2-3/doc/releases/transform-2.3.0.txt	2008-03-15 14:50:05 UTC (rev 339)
+@@ -3,16 +3,19 @@
+ ----------------------------------------------------------
+ 
+ The release adds new classes to decode and encode Flash Video (.flv) files and 
+-adds support for ScreenVideo in .swf files.
++adds support for ScreenVideo in .swf files. Also new plug-in methods allow you
++to add custom classes to handle Flash data structures not supported by Transform.
+ 
+ 
+ Bug Fixes
+-    None scheduled
++    FSSerialNUmber now encodes length correctly. 
+ 
+ Class Changes
+     New classes for handling Flash Video.
+     New classes for handling ScreenVideo.
+     FSImageConstructor updated to support ScreenVideo.
++    New plug-in methods to extend framework.
++    FSShapeStyle now encodes empty style arrays. 
+      
+ Documentation Changes
+     None scheduled
+@@ -30,8 +33,11 @@
+   Bug Fixes  
+ -------------
+ 
+-None
++1. FSSerialNUmber now encodes length correctly.
+ 
++The null byte that terminates the serial number string was counted twice when
++calculating the length of the object when encoded. This is now fixed.
++
+ -----------------
+   Class Changes  
+ -----------------
+@@ -70,7 +76,44 @@
+ 
+ was added to FSImageConstructor to return an image as an array of FSImageBlocks.
+ 
++4.  New plug-in methods to extend framework.
+ 
++Two new methods were added to allow user-defined classes to be used to decode
++movie objects and actions not supported by the framework.
++
++    public static void registerClassForObject(int type, Class aClass)
++    public static void registerClassForAction(int type, Class aClass)
++    
++When decoding a movie or decoding a set of actions if a type is encountered that
++the framework does not currently support then the table of registered classes
++is searched. If an entry is found then an object is instantiated and it is used
++to decode the data structure and is then added to the movie.
++
++Classes are created by subclassing either FSMovieObject or FSActionObject and 
++implementing the following methods:
++
++  public int length(FSCoder coder)
++  public void encode(FSCoder coder)
++  public void decode(FSCoder coder)
++
++These methods are the interface which the FSMovie object calls to decode and 
++encode all data structures and any object that implments these methods can be
++used.
++  
++You must also implement the nullary or default constructor to ensure that an 
++instance of the class can be created. 
++
++5. FSShapeStyle now encodes empty style arrays.
++
++The line and fill style arrays in an FSShapeStyle object are optional. If the 
++attributes were null then they we not included when the object was encoded. They
++were also not encoded if they were empty - though this was not well documented.
++From examining existing flash files empty style arrays are valid and so the class
++has been updated to encode empty style arrays. This only increases the size of 
++the encoded object by three bytes however it greatly simplifies regression 
++testing when comparing the original flash file with one that was decoded then
++re-encoded.
++
+ -------------------------
+   Documentation Changes  
+ -------------------------
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000274.html">[Transform-svn] r338 - dev/dev-2-3
+</A></li>
+	<LI>Next message: <A HREF="000276.html">[Transform-svn] r340 - dev/dev-2-3/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#275">[ date ]</a>
+              <a href="thread.html#275">[ thread ]</a>
+              <a href="subject.html#275">[ subject ]</a>
+              <a href="author.html#275">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

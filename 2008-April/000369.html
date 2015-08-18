@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r433%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804022209.m32M9SnW010805%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000368.html">
+   <LINK REL="Next"  HREF="000371.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r433%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804022209.m32M9SnW010805%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Apr  3 00:09:28 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000368.html">[Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000371.html">[Transform-svn] r434 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#369">[ date ]</a>
+              <a href="thread.html#369">[ thread ]</a>
+              <a href="subject.html#369">[ subject ]</a>
+              <a href="author.html#369">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-03 00:09:17 +0200 (Thu, 03 Apr 2008)
+New Revision: 433
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Header.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+Log:
+Added complementary methods to define objects using either String path or File arguments.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-02 22:00:21 UTC (rev 432)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-02 22:09:17 UTC (rev 433)
+@@ -256,9 +256,19 @@
+        }
+     }
+     
+-    public Font(File file) throws FileNotFoundException, IOException, DataFormatException
++    public Font(String path) throws IOException, DataFormatException
+     {
+-        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, dataFromFile(file));
++    	decode(dataFromFile(new File(path)));
++    }
++    
++    public Font(File file) throws IOException, DataFormatException
++    {
++    	decode(dataFromFile(file));
++    }
++    
++    private void decode(byte[] bytes)
++    {
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, bytes);
+         
+         float version = coder.readFixedBits(32, 16);
+ 
+@@ -334,7 +344,7 @@
+         if (locaOffset != 0) { coder.setPointer(locaOffset); decodeGlyphs(coder, glyfOffset); bytesRead = (coder.getPointer() - locaOffset) &gt;&gt; 3; }
+         if (hmtxOffset != 0) { coder.setPointer(hmtxOffset); decodeHMTX(coder); bytesRead = (coder.getPointer() - hmtxOffset) &gt;&gt; 3; }
+         if (cmapOffset != 0) { coder.setPointer(cmapOffset); decodeCMAP(coder); bytesRead = (coder.getPointer() - cmapOffset) &gt;&gt; 3; }
+-   }
++    }
+ 
+     public String getFace() 
+     {
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Header.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Header.java	2008-04-02 22:00:21 UTC (rev 432)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Header.java	2008-04-02 22:09:17 UTC (rev 433)
+@@ -65,7 +65,7 @@
+ 	 * Create a new FSHeader object and initialise it with the information
+ 	 * decoded from the Flash file.
+ 	 * 
+-	 * @param filename
++	 * @param path
+ 	 *            the path to a file.
+ 	 * 
+ 	 * @throws NullPointerException
+@@ -82,9 +82,9 @@
+ 	 *             if the file is not a flash file or there is an error
+ 	 *             unzipping a compressed flash file.
+ 	 */
+-	public Header(String filename) throws IOException, DataFormatException
++	public Header(String path) throws IOException, DataFormatException
+ 	{
+-		decodeFromFile(filename);
++		decodeFromFile(path);
+ 	}
+ 
+ 	/**
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-02 22:00:21 UTC (rev 432)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-02 22:09:17 UTC (rev 433)
+@@ -219,6 +219,11 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+     
++    public static Definition defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
++    {
++    	return defineImage(identifier, new File(path));
++    }
++    
+     public static Definition defineImage(int identifier, File file) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	Definition object = null;
+@@ -346,6 +351,23 @@
+      * @param blockHeight the height of a block in pixels
+      * @return an array of FMImageBlock objects.
+      */   
++	public static List&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, String path) throws FileNotFoundException, IOException, DataFormatException
++	{
++		return getImageAsBlocks(blockWidth, blockHeight, new File(path));
++	}
++	/**
++     * Return the image as an array of FSImageBlock objects that can be used
++     * when creating ScreenVideo streams.
++     * 
++     * The image is divided by tiling blocks of the specified width and height 
++     * across the image. For blocks at the right and bottom edges the size of 
++     * the block may be reduced so that it fits the image exactly. In other 
++     * words the blocks are not padded with extra pixel information.
++     * 
++     * @param blockWidth the width of a block in pixels.
++     * @param blockHeight the height of a block in pixels
++     * @return an array of FMImageBlock objects.
++     */   
+ 	public static List&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, File file) throws FileNotFoundException, IOException, DataFormatException
+ 	{
+ 		ArrayList&lt;FSImageBlock&gt; blocks = new ArrayList&lt;FSImageBlock&gt;();
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-02 22:00:21 UTC (rev 432)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-02 22:09:17 UTC (rev 433)
+@@ -153,6 +153,11 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+ 
++    public static FSDefineSound defineSound(String path, int identifier) throws FileNotFoundException, IOException, DataFormatException
++    {
++    	return defineSound(new File(path), identifier);
++    }
++    
+     public static FSDefineSound defineSound(File file, int identifier) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	FSDefineSound object = null;
+@@ -216,6 +221,29 @@
+      * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
+      * sound.
+      */
++    public static List&lt;FSMovieObject&gt; streamSound(String path, int frameRate) throws FileNotFoundException, IOException, DataFormatException
++    {
++    	return streamSound(new File(path), frameRate);
++    }
++    
++    /** 
++     * Generates all the objects required to stream a sound. 
++     * 
++     * The object containing a block sound data. This method is 
++     * used to divide the encoded sound into a sequence of blocks to allow a sound to be 
++     * streamed to the Flash Player.
++     *
++     * If the number of samples in the last block to stream is less than the samplesPerBlock,
++     * the size of the FSSoundStreamBlock object is reduced accordingly. It is not padded 
++     * to maintain the specified length.
++     * 
++     * @param blockNumber the nth block of samples.
++     * 
++     * @param samplesPerBlock the number of samples to stream.
++     * 
++     * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
++     * sound.
++     */
+     public static List&lt;FSMovieObject&gt; streamSound(File file, int frameRate) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	String extension = null;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000368.html">[Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000371.html">[Transform-svn] r434 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#369">[ date ]</a>
+              <a href="thread.html#369">[ thread ]</a>
+              <a href="subject.html#369">[ subject ]</a>
+              <a href="author.html#369">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

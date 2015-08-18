@@ -1,0 +1,979 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r368%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181639.m2IGdX8L009058%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000303.html">
+   <LINK REL="Next"  HREF="000305.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r368%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181639.m2IGdX8L009058%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:39:33 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000303.html">[Transform-svn] r367 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000305.html">[Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#304">[ date ]</a>
+              <a href="thread.html#304">[ thread ]</a>
+              <a href="subject.html#304">[ subject ]</a>
+              <a href="author.html#304">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:39:29 +0100 (Tue, 18 Mar 2008)
+New Revision: 368
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger.java
+   dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger2.java
+   dev/dev-2-4/src/com/flagstone/transform/FSProtect.java
+Log:
+Updated accessor methods so password cannot be set to null.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger.java	2008-03-18 16:27:43 UTC (rev 367)
++++ dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger.java	2008-03-18 16:39:29 UTC (rev 368)
+@@ -30,142 +30,156 @@
+ 
+ package com.flagstone.transform;
+ 
+-import java.util.ArrayList;
+-import java.util.Iterator;
+-
+ /**
+-Enables a movie to be debugged when played using the Flash authoring tool, allowing the 
+-variables defined in the arrays of actions specified in object to be inspected.
+- 
+-&lt;table class=&quot;datasheet&quot;&gt;
++ * Enables a movie to be debugged when played using the Flash authoring tool,
++ * allowing the variables defined in the arrays of actions specified in object
++ * to be inspected.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;password&lt;/td&gt;
++ * &lt;td&gt;An MD5 encrypted password.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * In order to use the debugger a password must be supplied. When encrypted
++ * using the MD5 algorithm it must match the value stored in the password
++ * attribute.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSEnableDebugger class represents the EnableDebugger data structure of
++ * the Macromedia Flash (SWF) File Format Specification. It was introduced in
++ * Flash 5.
++ * &lt;/p&gt;
++ */
++public class FSEnableDebugger extends FSMovieObject
++{
++	private String password;
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Construct an FSEnableDebugger object, initialising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSEnableDebugger(FSCoder coder)
++	{
++		super(EnableDebugger);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnableDebugger_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
++	 * 
++	 * @param password
++	 *            the string defining the password.
++	 */
++	public FSEnableDebugger(String password)
++	{
++		super(EnableDebugger);
++		setPassword(password);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnableDebugger_1&quot;&gt;password&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An MD5 encrypted password.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSEnableDebugger object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSEnableDebugger object.
++	 */
++	public FSEnableDebugger(FSEnableDebugger obj)
++	{
++		super(obj);
++		password = new String(obj.password);
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Gets the MD5 encrypted password.
++	 * 
++	 * @return the string defining the password.
++	 */
++	public String getPassword()
++	{
++		return password;
++	}
+ 
+-&lt;p&gt;In order to use the debugger a password must be supplied. When encrypted using the MD5 algorithm it must match the value stored in the password attribute.&lt;/p&gt;
++	/**
++	 * Sets the MD5 encrypted password.
++	 * 
++	 * @param aString
++	 *            the string defining the password.
++	 *            
++	 * @throws NullPointerException if argument is null. 
++	 */
++	public void setPassword(String aString)
++	{
++		if (aString == null) {
++			throw new NullPointerException(&quot;Password string cannot be null.&quot;);
++		}
++		password = aString;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;p&gt;The FSEnableDebugger class represents the EnableDebugger data structure of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+- */  
+-public class FSEnableDebugger extends FSMovieObject
+-{
+-    private String password = null;
+-        
+-    /**
+-     * Construct an FSEnableDebugger object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSEnableDebugger(FSCoder coder)
+-    {
+-        super(EnableDebugger);
+-        decode(coder);
+-    }
+-    /** 
+-     * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
+-     *
+-     * @param password the string defining the password.
+-     */
+-    public FSEnableDebugger(String password)
+-    {
+-        super(EnableDebugger);
+-        setPassword(password);
+-    }
+-    /**
+-     * Constructs an FSEnableDebugger object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSEnableDebugger object.
+-     */
+-    public FSEnableDebugger(FSEnableDebugger obj)
+-    {
+-        super(obj);
+-        password = new String(obj.password);
+-    }    
++		if (super.equals(anObject))
++		{
++			result = password.equals(((FSEnableDebugger)anObject).password);
++		}
++		return result;
++	}
+ 
+-    /** Gets the MD5 encrypted password.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @return the string defining the password.
+-        */
+-    public String getPassword() { return password; }
++		buffer.append(&quot;FSEnableDebugger: { &quot;);
++		buffer.append(&quot;password = &quot;).append(password).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Sets the MD5 encrypted password.
++		return buffer.toString();
++	}
+ 
+-        @param aString the string defining the password.
+-        */
+-    public void setPassword(String aString)
+-    {
+-        password = aString;
+-    }
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSEnableDebugger typedObject = (FSEnableDebugger)anObject;
+-            
+-            if (password != null)
+-                result = password.equals(typedObject.password);
+-            else
+-                result = typedObject.password == null;
+-        }
+-        return result;
+-    }
++		length += 2 + FSCoder.strlen(password, true);
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;password&quot;, password);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		return length;
++	}
+ 
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
+ 
+-        length += 2 + coder.strlen(password, true);
+-            
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        
+-        coder.writeWord(0, 2);
+-         coder.writeString(password);
+-        coder.writeWord(0, 1);
+-        
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
++		coder.writeWord(0, 2);
++		coder.writeString(password);
++		coder.writeWord(0, 1);
++	}
+ 
+-        coder.readWord(2, false);
+-        password = coder.readString();
+-        
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++
++		coder.readWord(2, false);
++		password = coder.readString();
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger2.java	2008-03-18 16:27:43 UTC (rev 367)
++++ dev/dev-2-4/src/com/flagstone/transform/FSEnableDebugger2.java	2008-03-18 16:39:29 UTC (rev 368)
+@@ -31,138 +31,156 @@
+ package com.flagstone.transform;
+ 
+ /**
+-Enables a movie to be debugged when played using the Flash authoring tool, allowing the 
+-variables defined in the arrays of actions specified in object to be inspected.
++ * Enables a movie to be debugged when played using the Flash authoring tool,
++ * allowing the variables defined in the arrays of actions specified in object
++ * to be inspected.
+  * 
+-&lt;table class=&quot;datasheet&quot;&gt;
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;password&lt;/td&gt;
++ * &lt;td&gt;An MD5 encrypted password.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * In order to use the debugger a password must be supplied. When encrypted
++ * using the MD5 algorithm it must match the value stored in the password
++ * attribute.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSEnableDebugger2 class represents the EnableDebugger2 data structure
++ * introduced in Flash 6. It replaced EnableDebugger in Flash 5 with a different
++ * format to support internal changes in the Flash Player. The functionality was
++ * not changed.
++ * &lt;/p&gt;
++ */
++public class FSEnableDebugger2 extends FSMovieObject
++{
++	private String password;
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Construct an FSEnableDebugger2 object, initialising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSEnableDebugger2(FSCoder coder)
++	{
++		super(EnableDebugger2);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnableDebugger2_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
++	 * 
++	 * @param password
++	 *            the string defining the password.
++	 */
++	public FSEnableDebugger2(String password)
++	{
++		super(EnableDebugger2);
++		setPassword(password);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSEnableDebugger2_1&quot;&gt;password&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An MD5 encrypted password.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSEnableDebugger2 object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSEnableDebugger2 object.
++	 */
++	public FSEnableDebugger2(FSEnableDebugger2 obj)
++	{
++		super(obj);
++		password = new String(obj.password);
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Gets the MD5 encrypted password.
++	 * 
++	 * @return the string defining the password.
++	 */
++	public String getPassword()
++	{
++		return password;
++	}
+ 
+-&lt;p&gt;In order to use the debugger a password must be supplied. When encrypted using the MD5 algorithm it must match the value stored in the password attribute.&lt;/p&gt;
++	/**
++	 * Sets the MD5 encrypted password.
++	 * 
++	 * @param aString
++	 *            the string defining the password.
++	 *            
++	 * @throws NullPointerException if argument is null. 
++	 */
++	public void setPassword(String aString)
++	{
++		if (aString == null) {
++			throw new NullPointerException(&quot;Password string cannot be null.&quot;);
++		}
++		password = aString;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;p&gt;The FSEnableDebugger2 class represents the EnableDebugger2 data structure introduced in Flash 6. It replaced EnableDebugger in Flash 5 with a different format to support internal changes in the Flash Player. The functionality was not changed.&lt;/p&gt;
+- */  
+-public class FSEnableDebugger2 extends FSMovieObject
+-{
+-    private String password = null;
+-        
+-    /**
+-     * Construct an FSEnableDebugger2 object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSEnableDebugger2(FSCoder coder)
+-    {
+-        super(EnableDebugger2);
+-        decode(coder);
+-    }
+-    /** 
+-     * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
+-     *
+-     * @param password the string defining the password.
+-     */
+-    public FSEnableDebugger2(String password)
+-    {
+-        super(EnableDebugger2);
+-        setPassword(password);
+-    }
+-    /**
+-     * Constructs an FSEnableDebugger2 object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSEnableDebugger2 object.
+-     */
+-    public FSEnableDebugger2(FSEnableDebugger2 obj)
+-    {
+-        super(obj);
+-        password = new String(obj.password);
+-    }    
++		if (super.equals(anObject))
++		{
++			result = password.equals(((FSEnableDebugger2)anObject).password);
++		}
++		return result;
++	}
+ 
+-    /** Gets the MD5 encrypted password.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @return the string defining the password.
+-        */
+-    public String getPassword() { return password; }
++		buffer.append(&quot;FSEnableDebugger2: { &quot;);
++		buffer.append(&quot;password = &quot;).append(password).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Sets the MD5 encrypted password.
++		return buffer.toString();
++	}
+ 
+-        @param aString the string defining the password.
+-        */
+-    public void setPassword(String aString)
+-    {
+-        password = aString;
+-    }
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSEnableDebugger2 typedObject = (FSEnableDebugger2)anObject;
+-            
+-            if (password != null)
+-                result = password.equals(typedObject.password);
+-            else
+-                result = typedObject.password == null;
+-        }
+-        return result;
+-    }
++		length += 2 + FSCoder.strlen(password, true);
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;password&quot;, password);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		return length;
++	}
+ 
+-     public int length(FSCoder coder)
+-    {
+-        super.length(coder);
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
+ 
+-        length += 2 + coder.strlen(password, true);
+-            
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        
+-        coder.writeWord(0, 2);
+-        coder.writeString(password);
+-        coder.writeWord(0, 1);
+-        
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
++		coder.writeWord(0, 2);
++		coder.writeString(password);
++		coder.writeWord(0, 1);
++	}
+ 
+-        coder.readWord(2, false);
+-        password = coder.readString();
+-        
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++
++		coder.readWord(2, false);
++		password = coder.readString();
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSProtect.java	2008-03-18 16:27:43 UTC (rev 367)
++++ dev/dev-2-4/src/com/flagstone/transform/FSProtect.java	2008-03-18 16:39:29 UTC (rev 368)
+@@ -31,159 +31,204 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSProtect marks a file as not-readable, preventing the file from being loaded into an editor.
++ * FSProtect marks a file as not-readable, preventing the file from being loaded
++ * into an editor.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;password&lt;/td&gt;
++ * &lt;td&gt;An MD5 encrypted password.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * In order to use the debugger a password must be supplied. When encrypted
++ * using the MD5 algorithm it must match the value stored in the password
++ * attribute.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * IMPORTANT: this form of protection only works with Macromedia's Flash
++ * Authoring tool. Any application that parses Flash files can choose to ignore
++ * or delete this data structure therefore it is not safe to use this to protect
++ * the contents of a Flash file.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Transform will parse all Flash files containing the Protect data structure.
++ * Since the encoded data is can be removed by trivial scripts the level of
++ * copy-protection offered is minimal. Indeed the use of the Protect mechanism
++ * in Flash movies may lead to a false sense of security, putting proprietary
++ * information at risk. Sensitive information should not be included in Flash
++ * movies.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSProtect class represents the Protect tag from the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 2. The password
++ * attribute was added in Flash 4.
++ * &lt;/p&gt;
++ */
++public class FSProtect extends FSMovieObject
++{
++	private String password;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSProtect object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSProtect(FSCoder coder)
++	{
++		super(Protect);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/** 
++	 * Constructs an Protect object - use for files with Flash version 2 and 
++	 * above. 
++	 */
++	public FSProtect()
++	{
++		super(Protect);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSProtect_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/** 
++	 * Constructs an Protect object with the specified password - uses for file
++	 * with Flash version 4 and above. 
++	 */
++	public FSProtect(String password)
++	{
++		super(Protect);
++		setPassword(password);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSProtect_1&quot;&gt;password&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An MD5 encrypted password.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSProtect object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSProtect object.
++	 */
++	public FSProtect(FSProtect obj)
++	{
++		super(obj);
+ 
+-&lt;/table&gt;
++		if (obj.password != null)
++			password = new String(obj.password);
++		else
++			password = obj.password;
++	}
+ 
+-&lt;p&gt;In order to use the debugger a password must be supplied. When encrypted using the MD5 algorithm it must match the value stored in the password attribute.&lt;/p&gt;
++	/**
++	 * Gets the MD5 encrypted password. This may be null if the object was 
++	 * decoded from a file containing Flash version 2 or 3.
++	 * 
++	 * @return the string defining the password.
++	 */
++	public String getPassword()
++	{
++		return password;
++	}
+ 
+-&lt;p&gt;IMPORTANT: this form of protection only works with Macromedia's Flash Authoring tool. Any application that parses Flash files can choose to ignore or delete this data structure therefore it is not safe to use this to protect the contents of a Flash file.&lt;/p&gt;
++	/**
++	 * Sets the MD5 encrypted password.
++	 * 
++	 * @param aString
++	 *            the string defining the password.
++	 *            
++	 * @throws NullPointerException if argument is null. 
++	 */
++	public void setPassword(String aString)
++	{
++		if (aString == null) {
++			throw new NullPointerException(&quot;Password string cannot be null.&quot;);
++		}
++		password = aString;
++	}
+ 
+-&lt;p&gt;Transform will parse all Flash files containing the Protect data structure. Since the encoded data is can be removed by trivial scripts the level of copy-protection offered is minimal. Indeed the use of the Protect mechanism in Flash movies may lead to a false sense of security, putting proprietary information at risk. Sensitive information should not be included in Flash movies.&lt;/p&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		if (super.equals(anObject))
++		{
++			if (password != null) {
++				result = password.equals(((FSProtect)anObject).password);
++			}
++			else {
++				result = password == ((FSProtect)anObject).password;
++			}
++			
++				
++		}
++		return result;
++	}
+ 
+-&lt;p&gt;The FSProtect class represents the Protect tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2. The password attribute was added in Flash 5.&lt;/p&gt;
+- */
+-public class FSProtect extends FSMovieObject
+-{
+-    private String password = null;
+-        
+-    /**
+-     * Construct an FSProtect object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSProtect(FSCoder coder)
+-    {
+-        super(Protect);
+-        decode(coder);
+-    }
+-    /** Constructs an Protect object. */
+-    public FSProtect()
+-    {
+-        super(Protect);
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Constructs an Protect object. */
+-    public FSProtect(String password)
+-    {
+-        super(Protect);
+-        setPassword(password);
+-    }
+-    /**
+-     * Constructs an FSProtect object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSProtect object.
+-     */
+-    public FSProtect(FSProtect obj)
+-    {
+-        super(obj);
+-        
+-        if (obj.password != null)
+-            password = new String(obj.password);
+-        else
+-            password = obj.password;
+-    }    
++		buffer.append(&quot;FSProtect: { &quot;);
++		buffer.append(&quot;password = &quot;).append(password).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Gets the MD5 encrypted password.
++		return buffer.toString();
++	}
+ 
+-        @return the string defining the password.
+-        */
+-    public String getPassword() { return password; }
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-    /** Sets the MD5 encrypted password.
++		if ((password != null) &amp;&amp; (password.length() &gt; 0))
++			length += 2 + FSCoder.strlen(password, true);
+ 
+-        @param aString the string defining the password.
+-        */
+-    public void setPassword(String aString)
+-    {
+-        password = aString;
+-    }
++		return length;
++	}
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            if (password != null)
+-                result = password.equals(((FSProtect)anObject).getPassword());
+-            else
+-                result = ((FSProtect)anObject).getPassword() == null;
+-        }
+-        return result;
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;password&quot;, password);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		if ((password != null) &amp;&amp; (password.length() &gt; 0))
++		{
++			coder.writeWord(0, 2);
++			coder.writeString(password);
++			coder.writeWord(0, 1);
++		}
++	}
+ 
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        if ((password != null) &amp;&amp; (password.length() &gt; 0))
+-            length += 2 + coder.strlen(password, true);
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
+ 
+-        return length;
+-    }    
++		/*
++		 * Force a read of the entire password field, including any zero bytes
++		 * that are encountered.
++		 */
++		if (length &gt; 0)
++		{
++			coder.readWord(2, false);
++			password = coder.readString(length - 2);
+ 
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        
+-        if ((password != null) &amp;&amp; (password.length() &gt; 0))
+-        {
+-            coder.writeWord(0, 2);
+-            coder.writeString(password);
+-            coder.writeWord(0, 1);
+-        }
+- 
+-         coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        
+-        /*
+-         * Force a read of the entire password field, including any 
+-         * zero bytes that are encountered.
+-         */
+-        if (length &gt; 0)
+-        {
+-            coder.readWord(2, false);
+-            password = coder.readString(length-2);
+-            
+-            while (password.charAt(password.length()-1) == 0) {
+-            	password = password.substring(0, password.length()-1);
+-            }
+-        }        
+-        coder.endObject(name());
+-    }
++			while (password.charAt(password.length() - 1) == 0)
++			{
++				password = password.substring(0, password.length() - 1);
++			}
++		}
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000303.html">[Transform-svn] r367 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000305.html">[Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#304">[ date ]</a>
+              <a href="thread.html#304">[ thread ]</a>
+              <a href="subject.html#304">[ subject ]</a>
+              <a href="author.html#304">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

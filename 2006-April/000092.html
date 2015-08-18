@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r152 - in trunk/doc: . releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r152%20-%20in%20trunk/doc%3A%20.%20releases&In-Reply-To=%3C200604031733.k33HXv0u007330%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000091.html">
+   <LINK REL="Next"  HREF="000093.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r152 - in trunk/doc: . releases</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r152%20-%20in%20trunk/doc%3A%20.%20releases&In-Reply-To=%3C200604031733.k33HXv0u007330%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r152 - in trunk/doc: . releases">smackay at berlios.de
+       </A><BR>
+    <I>Mon Apr  3 19:33:57 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000091.html">[Transform-svn] r151 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000093.html">[Transform-svn] r153 - in trunk: doc src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#92">[ date ]</a>
+              <a href="thread.html#92">[ thread ]</a>
+              <a href="subject.html#92">[ subject ]</a>
+              <a href="author.html#92">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-04-03 19:33:51 +0200 (Mon, 03 Apr 2006)
+New Revision: 152
+
+Added:
+   trunk/doc/releases/transform-2.1.2.html
+Modified:
+   trunk/doc/CHANGES.txt
+Log:
+Updated for release
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-04-03 17:33:22 UTC (rev 151)
++++ trunk/doc/CHANGES.txt	2006-04-03 17:33:51 UTC (rev 152)
+@@ -1,3 +1,7 @@
++2006-04-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Released 2.1.2.
++
+ 2006-04-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Fixed a bug in FSTextConstructor.defineFont() where the character code was
+
+Added: trunk/doc/releases/transform-2.1.2.html
+===================================================================
+--- trunk/doc/releases/transform-2.1.2.html	2006-04-03 17:33:22 UTC (rev 151)
++++ trunk/doc/releases/transform-2.1.2.html	2006-04-03 17:33:51 UTC (rev 152)
+@@ -0,0 +1,169 @@
++&lt;html&gt;
++&lt;head&gt;
++&lt;title&gt;Release Notes for Transform SWF for Java, Version 2.1.2&lt;/title&gt;
++&lt;style type=&quot;text/CSS&quot;&gt;
++&lt;!--
++a:link { text-decoration: none; }
++a:visited { color: darkred; text-decoration: none; }
++a:active { text-decoration: none; }
++a:hover { color: #000066; text-decoration: none; }
++
++h1 { font-size: 140%; background-color: darkgray; padding: 3px 10px; }
++h2 { font-size: 120%; background-color: darkgray; padding: 3px 10px; }
++h3 { font-size: 110%; margin-bottom: 0px; }
++
++div.section { margin-left: 10px; margin-right: 10px; }
++
++p { margin-top: 0px; }
++pre { font-size: 90%; }
++ul { margin-left: 10px; }
++ul ol { margin-left: 10px; }
++table { margin-left: 10px;}
++--&gt;
++&lt;/style&gt;
++&lt;/head&gt;
++&lt;body&gt;
++
++&lt;h1&gt;Release Notes for Transform SWF for Java, Version 2.1.2.&lt;/h1&gt;
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;P&gt;This a minor release fixing bugs.&lt;/P&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;ul&gt;
++&lt;li&gt;Bug Fixes     
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#fix1&quot;&gt;FSImageConstructor: transparent, indexed, png files are now displayed correctly.&lt;/a&gt;&lt;/li&gt;     
++&lt;li&gt;&lt;a href=&quot;#fix2&quot;&gt;FSTextConstructor: Fixed bug in calculating the bounds of a block of text.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#fix3&quot;&gt;FSTextConstructor: Fixed bug when creating font definitions on Macintoshes.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#fix4&quot;&gt;FSTextConstructor: Character codes in font definitions are now set correctly.&lt;/a&gt;&lt;/li&gt;
++&lt;li&gt;&lt;a href=&quot;#fix5&quot;&gt;FSCoder: Fixed bug when expanding size of buffer on writes.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;Class Changes    
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#class1&quot;&gt;Fixed Javadoc errors in documentation for FSTextConstructor and FSCharacterTable.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;Testing Changes    
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#test1&quot;&gt;FSTextConstructorTest now displays bounding boxes around glyphs.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;Documentation Changes    
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#doc1&quot;&gt;Fixed Javadoc errors in documentation for FSTextConstructor and FSCharacterTable.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;li&gt;Package Changes     
++&lt;ol&gt;     
++&lt;li&gt;&lt;a href=&quot;#pack1&quot;&gt;Fixed bug in docs target of build.xml so utilities datasheets are generated.&lt;/a&gt;&lt;/li&gt;     
++&lt;/ol&gt; 
++&lt;/li&gt; 
++&lt;/ul&gt;  
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Bug Fixes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;fix1&quot;&gt;1. FSImageConstructor: transparent, indexed, png files are now displayed correctly.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;Transparent PNG files which were indexed rather than true colour would be 
++displayed with an opaque background. The root cause was that the image format 
++was not being updated to indicate alpha channel information was included when
++the transparency block defined in the image was decoded. Now fixed.&lt;/P&gt; 
++
++&lt;h3&gt;&lt;a name=&quot;fix2&quot;&gt;2. FSTextConstructor: Fixed bug in calculating the bounds of a block of text.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;The bounding box for blocks of text was not taking into account the ascent of 
++the first line and the descent of the last line. Only the line spacing time the 
++number of lines was used. While this was accurate it did not cover part of the 
++last line of the text and so for text that was animated or placed close together
++the last line would not be redrawn correctly. Now Fixed.&lt;/P&gt;
++
++&lt;h3&gt;&lt;a name=&quot;fix3&quot;&gt;3. FSTextConstructor: Fixed bug when creating font definitions on Macintoshes.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;When an AWT Font object was decoded the font coordinates were being translated
++so the glyph would fit within the EM Square. For Java code running on Windows or
++linux this would work (though the translation was actually being ignored). 
++However on Mac OS X the translation was being implemented. As a result glyphs 
++were drawn outside of the bounding box and were not displayed correctly. Now
++Fixed.&lt;/p&gt; 
++
++&lt;h3&gt;&lt;a name=&quot;fix4&quot;&gt;4. FSTextConstructor: Character codes in font definitions are now set correctly.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;The character codes in a font definition were being set to the index of the 
++glyph on the definition rather than the actual code for the character that the 
++glyph represented. For static text this did not represent much of a problem
++however text fields that used the font definition would not display correctly.
++Now Fixed.&lt;/p&gt; 
++
++&lt;h3&gt;&lt;a name=&quot;fix5&quot;&gt;5. FSCoder: Fixed bug when expanding size of buffer on writes.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;When writing a bit field within 32 bits of the end of the internal buffer 
++used by the FSCoder object an ArrayIndexOutOfBoundsException would be thrown.
++The buffer would not be resized to accomodate the overflow. Now Fixed.&lt;/p&gt; 
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Class Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;doc1&quot;&gt;1. FSTextConstructor: added advanceForChar(char, int).&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;Added advanceForChar(char c, int fontSize) method to FSTextConstrutor so 
++individual characters can be laid out in a sequence rather than as a string. 
++While it has some practical use it is currently used to lay out individual 
++characters when testing the alignment of the bounding box with respect to the 
++glyph outline.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Testing Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;test1&quot;&gt;1. FSTextConstructorTest now displays bounding boxes around glyphs.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;A blue bounding box is now drawn around text generated when testing the 
++FSTextConstructor class. This is used to check the alignment of the glyph 
++outlines with the bounding box defined for the FSDefineText2 object that contains
++the text.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Documentation Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;doc1&quot;&gt;1. Fixed Javadoc errors in documentation for FSTextConstructor and FSCharacterTable.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;Corrected errors in the method documentation for FSTextConstructor and 
++FSCharacterTable.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++&lt;h2&gt;Package Changes&lt;/H2&gt;  
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;h3&gt;&lt;a name=&quot;pack1&quot;&gt;1. Fixed bug in docs target of build.xml so utilities datasheets are generated.&lt;/a&gt;&lt;/h3&gt;  
++
++&lt;P&gt;The 'docs' target in the Ant build file now generates Javadoc datasheets 
++for all the classes in the package com.flagstone.transform.util.&lt;/p&gt;
++
++&lt;/div&gt;&lt;!-- section --&gt;
++
++
++&lt;h2&gt;Additional Information&lt;/h2&gt;
++
++&lt;div class=&quot;section&quot;&gt;
++&lt;p&gt;For Further Information please contact:&lt;/p&gt;
++
++&lt;p&gt;Stuart MacKay&lt;br/&gt;
++Flagstone Software Ltd.&lt;br/&gt;
++92 High Street&lt;br/&gt;
++Wick, Caithness KW1 4LY&lt;br/&gt;
++Scotland&lt;br/&gt;&lt;br/&gt;
++www.flagstonesoftware.com
++&lt;/div&gt;&lt;!-- section --&gt;
++&lt;/body&gt;
++&lt;/html&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000091.html">[Transform-svn] r151 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000093.html">[Transform-svn] r153 - in trunk: doc src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#92">[ date ]</a>
+              <a href="thread.html#92">[ thread ]</a>
+              <a href="subject.html#92">[ subject ]</a>
+              <a href="author.html#92">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

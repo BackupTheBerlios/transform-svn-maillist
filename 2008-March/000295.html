@@ -1,0 +1,1191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r359%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181602.m2IG2l6t005110%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000294.html">
+   <LINK REL="Next"  HREF="000296.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r359%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181602.m2IG2l6t005110%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r359 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:02:47 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000294.html">[Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000296.html">[Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#295">[ date ]</a>
+              <a href="thread.html#295">[ thread ]</a>
+              <a href="subject.html#295">[ subject ]</a>
+              <a href="author.html#295">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:02:44 +0100 (Tue, 18 Mar 2008)
+New Revision: 359
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSCurve.java
+   dev/dev-2-4/src/com/flagstone/transform/FSLine.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSCurve.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSCurve.java	2008-03-18 16:02:06 UTC (rev 358)
++++ dev/dev-2-4/src/com/flagstone/transform/FSCurve.java	2008-03-18 16:02:44 UTC (rev 359)
+@@ -31,289 +31,398 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSCurve is used to define a curve. Curved lines are constructed using a Quadratic Bezier curve.
++ * FSCurve is used to define a curve. Curved lines are constructed using a
++ * Quadratic Bezier curve.
++ * 
++ * &lt;p&gt;
++ * The curve is specified using two points relative to the current drawing
++ * position, an off-curve control point and an on-curve anchor point which
++ * defines the end-point of the curve.
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;doc-files/quadratic.gif&quot;&gt;
++ * 
++ * &lt;p&gt;
++ * To define a curve the points are defined as pairs of relative coordinates.
++ * The control point is specified relative to the current drawing point and the
++ * anchor point is specified relative to the control point. Once the line is
++ * drawn, the anchor point becomes the current drawing point.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;controlX&lt;/td&gt;
++ * &lt;td&gt;The x-coordinate of the control point relative to the current drawing
++ * point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;controlY&lt;/td&gt;
++ * &lt;td&gt;The y-coordinate of the control point relative to the current drawing
++ * point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;anchorX&lt;/td&gt;
++ * &lt;td&gt;The x-coordinate of the anchor point relative to the control point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;anchorY&lt;/td&gt;
++ * &lt;td&gt;The y-coordinate of the anchor point relative to the control point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The relative coordinates are specified in twips (where 20 twips = 1 pixel)
++ * and must be in the range -65536..65535.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Flash does not directly support Cubic Bezier curves. Converting a Cubic
++ * Bezier curve to a Quadratic curve is a non trivial process, however the
++ * FSShapeConstructor class in the Transform Utilities framework contains an
++ * algorithm to perform the conversion simplifying the create of Shape outlines
++ * in Flash from other graphics formats.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSCurve class represents the CurvedEdge record from the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSCurve extends FSShapeObject implements Cloneable, Codeable
++{
++	private int controlX = 0;
+ 
+-&lt;p&gt;The curve is specified using two points relative to the current drawing position, an off-curve control point and an on-curve anchor point which defines the end-point of the curve.&lt;/p&gt;
++	private int controlY = 0;
+ 
+-&lt;img src=&quot;doc-files/quadratic.gif&quot;&gt;
++	private int anchorX = 0;
+ 
+-&lt;p&gt;To define a curve the points are defined as pairs of relative coordinates. The control point is specified relative to the current drawing point and the anchor point is specified relative to the control point. Once the line is drawn, the anchor point becomes the current drawing point.&lt;/p&gt;
++	private int anchorY = 0;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSCurve object, initalizing it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSCurve(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSCurve object specifying the anchor and control point
++	 * coordinates - specified in twips.
++	 * 
++	 * @param cx
++	 *            the x-coordinate of the control point, specified relative to
++	 *            the current drawing point.
++	 * @param cy
++	 *            the y-coordinate of the control point, specified relative to
++	 *            the current drawing point.
++	 * @param ax
++	 *            the x-coordinate of the anchor point, specified relative to
++	 *            the control point.
++	 * @param ay
++	 *            the y-coordinate of the anchor point, specified relative to
++	 *            the control point.
++	 */
++	public FSCurve(int cx, int cy, int ax, int ay)
++	{
++		setControlX(cx);
++		setControlY(cy);
++		setAnchorX(ax);
++		setAnchorY(ay);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSCurve_0&quot;&gt;controlX&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The x-coordinate of the control point relative to the current drawing point.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSCurve object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSCurve object.
++	 */
++	public FSCurve(FSCurve obj)
++	{
++		controlX = obj.controlX;
++		controlY = obj.controlY;
++		anchorX = obj.anchorX;
++		anchorY = obj.anchorY;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSCurve_1&quot;&gt;controlY&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The y-coordinate of the control point relative to the current drawing point.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the x-coordinate of the control point relative to the current
++	 * drawing point.
++	 * 
++	 * @return the x-coordinate of the control point.
++	 */
++	public int getControlX()
++	{
++		return controlX;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSCurve_2&quot;&gt;anchorX&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The x-coordinate of the anchor point relative to the control point.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the y-coordinate of the control point relative to the current
++	 * drawing point.
++	 * 
++	 * @return the y-coordinate of the control point.
++	 */
++	public int getControlY()
++	{
++		return controlY;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSCurve_3&quot;&gt;anchorY&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The y-coordinate of the anchor point relative to the control point.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the x-coordinate of the anchor point relative to the control point.
++	 * 
++	 * @return the x-coordinate of the anchor point.
++	 */
++	public int getAnchorX()
++	{
++		return anchorX;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Gets the y-coordinate of the anchor point relative to the control point.
++	 * 
++	 * @return the y-coordinate of the anchor point.
++	 */
++	public int getAnchorY()
++	{
++		return anchorY;
++	}
+ 
+-&lt;p&gt;The relative coordinates are specified in twips (where 20 twips = 1 pixel) and must be in the range -65536..65535.&lt;/p&gt;
++	/**
++	 * Sets the x-coordinate of the control point relative to the current
++	 * drawing point.
++	 * 
++	 * @param p
++	 *            the x-coordinate of the control point.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setControlX(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		controlX = p;
++	}
+ 
+-&lt;p&gt;Flash does not directly support Cubic Bezier curves. Converting a Cubic Bezier curve to a Quadratic curve is a non trivial process, however the FSShapeConstructor class in the Transform Utilities framework contains an algorithm to perform the conversion simplifying the create of Shape outlines in Flash from other graphics formats.&lt;/p&gt;
++	/**
++	 * Sets the y-coordinate of the control point relative to the current
++	 * drawing point.
++	 * 
++	 * @param p
++	 *            the y-coordinate of the control point.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setControlY(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		controlY = p;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Sets the x-coordinate of the anchor point relative to the control point.
++	 * 
++	 * @param p
++	 *            the x-coordinate of the anchor point.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setAnchorX(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		anchorX = p;
++	}
+ 
+-&lt;p&gt;The FSCurve class represents the CurvedEdge record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
++	/**
++	 * Sets the y-coordinate of the anchor point relative to the control point.
++	 * 
++	 * @param p
++	 *            the y-coordinate of the anchor point.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setAnchorY(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		anchorY = p;
++	}
+ 
+- */
+-public class FSCurve extends FSTransformObject
+-{
+-    private int controlX = 0;
+-    private int controlY = 0;
+-    private int anchorX = 0;
+-    private int anchorY = 0;
++	/**
++	 * Sets the x and y coordinates of control point, relative to the current
++	 * drawing point.
++	 * 
++	 * @param cx
++	 *            the x-coordinate of the control point.
++	 * @param cy
++	 *            the y-coordinate of the control point.
++	 */
++	public void setControl(int cx, int cy)
++	{
++		setControlX(cx);
++		setControlY(cy);
++	}
+ 
+-    /**
+-     * Construct an FSCurve object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSCurve(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** 
+-     * Constructs an FSCurve object specifying the anchor and control point 
+-     * coordinates - specified in twips. 
+-    
+-        @param cx the x-coordinate of the control point, specified relative to the current drawing point.
+-        @param cy the y-coordinate of the control point, specified relative to the current drawing point.
+-        @param ax the x-coordinate of the anchor point, specified relative to the control point.
+-        @param ay the y-coordinate of the anchor point, specified relative to the control point.
+-        */
+-    public FSCurve(int cx, int cy, int ax, int ay)
+-    {
+-        setControlX(cx);
+-        setControlY(cy);
+-        setAnchorX(ax);
+-        setAnchorY(ay);
+-    }
+-    /**
+-     * Constructs an FSCurve object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSCurve object.
+-     */
+-    public FSCurve(FSCurve obj)
+-    {
+-        controlX = obj.controlX;
+-        controlY = obj.controlY;
+-        anchorX = obj.anchorX;
+-        anchorY = obj.anchorY;
+-    }    
++	/**
++	 * Sets the x and y coordinates of anchor point relative to the control
++	 * point.
++	 * 
++	 * @param ax
++	 *            the x-coordinate of the anchor point.
++	 * @param ay
++	 *            the y-coordinate of the anchor point.
++	 */
++	public void setAnchor(int ax, int ay)
++	{
++		setAnchorX(ax);
++		setAnchorY(ay);
++	}
+ 
+-    /** Gets the x-coordinate of the control point relative to the current 
+-     * drawing point.  
++	/**
++	 * Sets the x and y coordinates of the control and anchor points.
++	 * 
++	 * @param cx
++	 *            the x-coordinate of the control point.
++	 * @param cy
++	 *            the y-coordinate of the control point.
++	 * @param ax
++	 *            the x-coordinate of the anchor point.
++	 * @param ay
++	 *            the y-coordinate of the anchor point.
++	 */
++	public void setPoints(int cx, int cy, int ax, int ay)
++	{
++		setControlX(cx);
++		setControlY(cy);
++		setAnchorX(ax);
++		setAnchorY(ay);
++	}
+ 
+-        @return the x-coordinate of the control point.
+-        */
+-    public int getControlX() 
+-    { 
+-        return controlX;
+-    }
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-    /** Gets the y-coordinate of the control point relative to the current 
+-     * drawing point. 
++		if (obj == null)
++		{
++			return false;
++		}
+ 
+-        @return the y-coordinate of the control point.
+-        */
+-    public int getControlY()
+-    {
+-        return controlY;
+-    }
++		if (obj == this)
++		{
++			return true;
++		}
+ 
+-    /** Gets the x-coordinate of the anchor point relative to the control 
+-     * point.
++		if (obj instanceof FSCurve)
++		{
++			FSCurve curve = (FSCurve) obj;
+ 
+-        @return the x-coordinate of the anchor point.
+-        */
+-    public int getAnchorX() 
+-    {
+-        return anchorX;
+-    }
++			result = controlX == curve.controlX;
++			result = result &amp;&amp; controlY == curve.controlY;
++			result = result &amp;&amp; anchorX == curve.anchorX;
++			result = result &amp;&amp; anchorY == curve.anchorY;
++		}
++		return result;
++	}
+ 
+-    /** Gets the y-coordinate of the anchor point relative to the control 
+-     * point.
++	/**
++	 * Creates a deep copy of the entire object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
+ 
+-        @return the y-coordinate of the anchor point.
+-        */
+-    public int getAnchorY()
+-    {
+-        return anchorY;
+-    }
++		try {
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
+ 
+-    /** Sets the x-coordinate of the control point relative to the current 
+-     * drawing point.
+-    
+-        @param cx the x-coordinate of the control point.
+-      */
+-    public void setControlX(int cx)
+-    {
+-        controlX = cx;
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Sets the y-coordinate of the control point relative to the current 
+-     * drawing point.
+-    
+-        @param cy the y-coordinate of the control point.
+-        */
+-    public void setControlY(int cy)
+-    {
+-        controlY = cy;
+-    }
++		buffer.append(&quot;FSCurve : {&quot;);
++		buffer.append(&quot;control = (&quot;).append(controlX).append(&quot;,&quot;).append(
++						controlY).append(&quot;); &quot;);
++		buffer.append(&quot;anchor = (&quot;).append(anchorX).append(&quot;,&quot;).append(anchorY)
++						.append(&quot;); &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Sets the x-coordinate of the anchor point relative to the control 
+-     * point.
+-    
+-        @param ax the x-coordinate of the anchor point.
+-       */
+-    public void setAnchorX(int ax)
+-    {
+-        anchorX = ax;
+-    }
++		return buffer.toString();
++	}
+ 
+-    /** Sets the y-coordinate of the anchor point relative to the control 
+-     * point.
+-    
+-        @param ay the y-coordinate of the anchor point.
+-        */
+-    public void setAnchorY(int ay)
+-    {
+-        anchorY = ay;
+-    }
++	public int length(FSCoder coder)
++	{
++		int numberOfBits = 6;
+ 
+-    /** Sets the x and y coordinates of control point, relative to the current
+-     * drawing point.
+-    
+-        @param cx the x-coordinate of the control point.
+-        @param cy the y-coordinate of the control point.
+-        */
+-    public void setControl(int cx, int cy)
+-    {
+-        setControlX(cx);
+-        setControlY(cy);
+-    }
++		int _fieldSize = FSCoder.size(new int[]
++		{
++			controlX, controlY, anchorX, anchorY, 1 }, true);
+ 
+-    /** Sets the x and y coordinates of anchor point relative to the control
+-     * point.
+- 
+-        @param ax the x-coordinate of the anchor point.
+-        @param ay the y-coordinate of the anchor point.
+-       */
+-    public void setAnchor(int ax, int ay)
+-    {
+-        setAnchorX(ax);
+-        setAnchorY(ay);
+-    }
++		numberOfBits += _fieldSize * 4;
+ 
+-    /** Sets the x and y coordinates of the control and anchor points.
+-        
+-        @param cx the x-coordinate of the control point.
+-        @param cy the y-coordinate of the control point.
+-        @param ax the x-coordinate of the anchor point.
+-        @param ay the y-coordinate of the anchor point.
+-        */
+-    public void setPoints(int cx, int cy, int ax, int ay)
+-    {
+-        setControlX(cx);
+-        setControlY(cy);
+-        setAnchorX(ax);
+-        setAnchorY(ay);
+-    }
++		coder.context[FSCoder.NumberOfShapeBits] += numberOfBits;
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSCurve typedObject = (FSCurve)anObject;
+-            
+-            result = controlX == typedObject.controlX;
+-            result = result &amp;&amp; controlY == typedObject.controlY;
+-            result = result &amp;&amp; anchorX == typedObject.anchorX;
+-            result = result &amp;&amp; anchorY == typedObject.anchorY;
+-        }
+-        return result;
+-    }
++		return numberOfBits;
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
++	public void encode(FSCoder coder)
++	{
++		int _fieldSize = FSCoder.size(new int[] {controlX, controlY, anchorX, anchorY, 1 }, true);
+ 
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;controlX&quot;, controlX);
+-            Transform.append(buffer, &quot;controlY&quot;, controlY);
+-            Transform.append(buffer, &quot;anchorX&quot;, anchorX);
+-            Transform.append(buffer, &quot;anchorY&quot;, anchorY);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		
++		coder.writeBits(2, 2); // shapeType, edgeType
+ 
+-    public int length(FSCoder coder)
+-    {
+-        int numberOfBits = 6;
++		coder.writeBits(_fieldSize-2, 4);
++		coder.writeBits(controlX, _fieldSize);
++		coder.writeBits(controlY, _fieldSize);
++		coder.writeBits(anchorX, _fieldSize);
++		coder.writeBits(anchorY, _fieldSize);
++	}
+ 
+-        int _fieldSize = FSCoder.size(new int[]{controlX, controlY, anchorX, anchorY, 1}, true);
+-        
+-        numberOfBits += _fieldSize*4;
+-    
+-        coder.context[FSCoder.NumberOfShapeBits] += numberOfBits;
++	public void decode(FSCoder coder)
++	{
++		// skip over shapeType and edgeType
++		coder.adjustPointer(2);
+ 
+-        return numberOfBits;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        int _fieldSize = FSCoder.size(new int[]{controlX, controlY, anchorX, anchorY, 1}, true);
+-        
+-        coder.writeBits(1, 1);
+-        coder.writeBits(0, 1);
+-        coder.writeBits(_fieldSize-2, 4);
+-        coder.writeBits(controlX, _fieldSize);
+-        coder.writeBits(controlY, _fieldSize);
+-        coder.writeBits(anchorX, _fieldSize);
+-        coder.writeBits(anchorY, _fieldSize);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        int fieldSize = 0;
+-        
+-        /* shapeType */ coder.readBits(1, false);
+-        /* edgeType */ coder.readBits(1, false);
+-        fieldSize = coder.readBits(4, false) + 2;
+-        controlX = coder.readBits(fieldSize, true);
+-        controlY = coder.readBits(fieldSize, true);
+-        anchorX = coder.readBits(fieldSize, true);
+-        anchorY = coder.readBits(fieldSize, true);
+-    }
++		int fieldSize = coder.readBits(4, false) + 2;
++		controlX = coder.readBits(fieldSize, true);
++		controlY = coder.readBits(fieldSize, true);
++		anchorX = coder.readBits(fieldSize, true);
++		anchorY = coder.readBits(fieldSize, true);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSLine.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSLine.java	2008-03-18 16:02:06 UTC (rev 358)
++++ dev/dev-2-4/src/com/flagstone/transform/FSLine.java	2008-03-18 16:02:44 UTC (rev 359)
+@@ -31,225 +31,267 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSLine defines a straight line. 
++ * FSLine defines a straight line. The line is drawn from the current drawing
++ * point to the end point specified in the FSLine object which is specified
++ * relative to the current drawing point. Once the line is drawn, the end of the
++ * line is now the current drawing point.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;x&lt;/td&gt;
++ * &lt;td&gt;The x-coordinate of the end point of the line, relative to the current
++ * drawing point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;y&lt;/td&gt;
++ * &lt;td&gt;The y-coordinate of the end point of the line, relative to the current
++ * drawing point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The relative coordinates are specified in twips (where 20 twips = 1 pixel)
++ * and must be in the range -65536..65535.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Lines are drawn with rounded corners and line ends. Different join and line
++ * end styles can be created by drawing line segments as a sequence of filled
++ * shapes. With 1 twip equal to 1/20th of a pixel this technique can easily be
++ * used to draw the narrowest of visible lines.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * &lt;p&gt;
++ * The FSLine class represents the StraightEdge record from the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSLine extends FSShapeObject implements Cloneable, Codeable
++{
++	private int x;
++	private int y;
++	
++	private boolean vertical;
++	private boolean general;
++	private int size;
+ 
+-&lt;p&gt;The line is drawn from the current drawing point to the end point specified in the FSLine object which is specified relative to the current drawing point. Once the line is drawn, the end of the line is now the current drawing point.&lt;/P&gt;
++	/**
++	 * Construct an FSLine object and initialise it with the values decoded from
++	 * an encoded line.
++	 * 
++	 * @param coder
++	 *            an FSCoder object containing the encoded colour transform.
++	 */
++	public FSLine(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSLine with the specified relative coordinates.
++	 * 
++	 * @param xValue
++	 *            the x-coordinate of the end point, specified relative to the
++	 *            current drawing point.
++	 * @param yValue
++	 *            the y-coordinate of the end point, specified relative to the
++	 *            current drawing point.
++	 */
++	public FSLine(int xValue, int yValue)
++	{
++		setX(xValue);
++		setY(yValue);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Construct an FSCoordTransform object by copying an existing object.
++	 * 
++	 * @param obj
++	 *            an FSLine object.
++	 */
++	public FSLine(FSLine obj)
++	{
++		x = obj.x;
++		y = obj.y;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSLine_0&quot;&gt;x&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The x-coordinate of the end point of the line, relative to the current drawing point.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the relative x-coordinate.
++	 * 
++	 * @return the x-coordinate of the end point.
++	 */
++	public int getX()
++	{
++		return x;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSLine_1&quot;&gt;y&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The y-coordinate of the end point of the line, relative to the current drawing point.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the relative y-coordinate.
++	 * 
++	 * @return the y-coordinate of the end point.
++	 */
++	public int getY()
++	{
++		return y;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Sets the relative x-coordinate.
++	 * 
++	 * @param p
++	 *            the x-coordinate of the end point.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setX(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		x = p;
++	}
+ 
+-&lt;p&gt;The relative coordinates are specified in twips (where 20 twips = 1 pixel) and must be in the range -65536..65535.&lt;/p&gt;
++	/**
++	 * Sets the relative y-coordinate.
++	 * 
++	 * @param p
++	 *            the y-coordinate of the end point.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range -65535..65535.
++	 */
++	public void setY(int p)
++	{
++		if (p &lt; -65535 || p &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Coordinates must be in the range -65535..65535.&quot;);
++		}
++		y = p;
++	}
+ 
+-&lt;p&gt;Lines are drawn with rounded corners and line ends. Different join and line end styles can be created by drawing line segments as a sequence of filled shapes. With 1 twip equal to 1/20th of a pixel this technique can easily be used to draw the narrowest of visible lines.&lt;/p&gt;
++	/**
++	 * Sets the relative x and y coordinates.
++	 * 
++	 * @param x
++	 *            the x-coordinate of the end point.
++	 * @param y
++	 *            the y-coordinate of the end point.
++	 */
++	public void setPoint(int x, int y)
++	{
++		setX(x);
++		setY(y);
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-&lt;p&gt;The FSLine class represents the StraightEdge record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSLine extends FSTransformObject
+-{
+-    private int x = 0;
+-    private int y = 0;
++		if (obj == null)
++		{
++			return false;
++		}
+ 
+-    /**
+-     * Construct an FSLine object and initialize it with the values decoded from 
+-     * an encoded line.
+-     * 
+-     * @param coder an FSCoder object containing the encoded colour transform.
+-     */
+-    public FSLine(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSLine with the specified relative coordinates.
++		if (obj == this)
++		{
++			return true;
++		}
+ 
+-        @param xValue the x-coordinate of the end point, specified relative to the current drawing point.
+-        @param yValue the y-coordinate of the end point, specified relative to the current drawing point.
+-        */
+-    public FSLine(int xValue, int yValue)
+-    {
+-        setX(xValue);
+-        setY(yValue);
+-    }
+-    /**
+-     * Construct an FSCoordTransform object by copying an existing object.
+-     */
+-    public FSLine(FSLine obj)
+-    {
+-        x = obj.x;
+-        y = obj.y;
+-    }
++		if (obj instanceof FSLine)
++		{
++			FSLine line = (FSLine) obj;
+ 
+-    /** Gets the relative x-coordinate.
++			result = x == line.x;
++			result = result &amp;&amp; y == line.y;
++		}
++		return result;
++	}
+ 
+-        @return the x-coordinate of the end point.
+-        */
+-    public int getX() 
+-    {
+-        return x;
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Gets the relative y-coordinate.
++		buffer.append(&quot;FSLine : {&quot;);
++		buffer.append(&quot;x = (&quot;).append(x).append(&quot;; &quot;);
++		buffer.append(&quot;y = (&quot;).append(y).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @return the y-coordinate of the end point.*/
+-    public int getY() 
+-    {
+-        return y;
+-    }
++		return buffer.toString();
++	}
+ 
+-    /** Sets the relative x-coordinate.
++	public int length(FSCoder coder)
++	{
++		vertical = x == 0;
++		general = x != 0 &amp;&amp; y != 0;
++		size = FSCoder.size(new int[]
++		{
++			x, y, 1 }, true);
+ 
+-        @param aNumber the x-coordinate of the end point.
+-        */
+-    public void setX(int aNumber)
+-    {
+-        x = aNumber;
+-    }
++		int numberOfBits = 7;
+ 
+-    /** Sets the relative y-coordinate.
++		if (general)
++			numberOfBits += size &lt;&lt; 2;
++		else
++		{
++			numberOfBits += 1 + size;
++		}
+ 
+-        @param aNumber the y-coordinate of the end point.
+-        */
+-    public void setY(int aNumber)
+-    {
+-        y = aNumber;
+-    }
++		coder.context[FSCoder.NumberOfShapeBits] += numberOfBits;
+ 
+-    /** Sets the relative x and y coordinates.
++		return numberOfBits;
++	}
+ 
+-        @param xValue the x-coordinate of the end point.
+-        @param yValue the y-coordinate of the end point.
+-        */
+-    public void setPoint(int xValue, int yValue)
+-    {
+-        x = xValue;
+-        y = yValue;
+-    }
++	public void encode(FSCoder coder)
++	{
++		coder.writeBits(3, 2);
++		coder.writeBits(size - 2, 4);
++		coder.writeBits(general ? 1 : 0, 1);
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSLine typedObject = (FSLine)anObject;
+-            
+-            result = x == typedObject.x;
+-            result = result &amp;&amp; y == typedObject.y;
+-        }
+-        return result;
+-    }
++		if (general)
++		{
++			coder.writeBits(x, size);
++			coder.writeBits(y, size);
++		} else
++		{
++			coder.writeBits(vertical ? 1 : 0, 1);
++			coder.writeBits(vertical ? y : x, size);
++		}
++	}
+ 
+-     public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
++	public void decode(FSCoder coder)
++	{
++		coder.adjustPointer(2); // shape and edge
+ 
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;x&quot;, x);
+-            Transform.append(buffer, &quot;y&quot;, y);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		size = coder.readBits(4, false) + 2;
+ 
+-    public int length(FSCoder coder)
+-    {
+-        int numberOfBits = 7;
+-    
+-        int _fieldSize = FSCoder.size(new int[]{x, y, 1}, true);
+-
+-        if (containsGeneralLine())
+-            numberOfBits += _fieldSize * 2;
+-        else
+-        {
+-            numberOfBits += 1 + _fieldSize;
+-        }
+-    
+-        coder.context[FSCoder.NumberOfShapeBits] += numberOfBits;
+-
+-        return numberOfBits;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        boolean _containsGeneralLine = containsGeneralLine();
+-        boolean _containsVerticalLine = containsVerticalLine();
+-        
+-        int _fieldSize = FSCoder.size(new int[]{x, y, 1}, true);
+-
+-        coder.writeBits(1, 1);
+-        coder.writeBits(1, 1);
+-        coder.writeBits(_fieldSize-2, 4);
+-        coder.writeBits(_containsGeneralLine ? 1 : 0, 1);
+-            
+-        if (_containsGeneralLine)
+-        {
+-            coder.writeBits(x, _fieldSize);
+-            coder.writeBits(y, _fieldSize);
+-        }
+-        else
+-        {
+-            coder.writeBits(_containsVerticalLine ? 1 : 0, 1);
+-            coder.writeBits(_containsVerticalLine ? y : x, _fieldSize);
+-        } 
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        /* shapeType */ coder.readBits(1, false);
+-        /* edgeType */ coder.readBits(1, false);
+-        int fieldSize = coder.readBits(4, false)+2;
+-
+-        boolean _containsGeneralLine = coder.readBits(1, false) != 0 ? true : false;
+-
+-        if (_containsGeneralLine)
+-        {
+-            x = coder.readBits(fieldSize, true);
+-            y = coder.readBits(fieldSize, true);
+-        }
+-        else
+-        {
+-            boolean _containsVerticalLine = coder.readBits(1, false) != 0;
+-
+-            if (_containsVerticalLine)
+-            {
+-                y = coder.readBits(fieldSize, true);
+-            }
+-            else
+-            {
+-                x = coder.readBits(fieldSize, true);
+-            }
+-        }
+-    }
+-    
+-    private boolean containsGeneralLine()
+-    {
+-        return x != 0 &amp;&amp; y != 0;
+-    }
+-    
+-    private boolean containsVerticalLine()
+-    {
+-        return x == 0;
+-    }
++		if (coder.readBits(1, false) != 0)
++		{
++			x = coder.readBits(size, true);
++			y = coder.readBits(size, true);
++		} else
++		{
++			if (coder.readBits(1, false) != 0)
++			{
++				y = coder.readBits(size, true);
++			} else
++			{
++				x = coder.readBits(size, true);
++			}
++		}
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000294.html">[Transform-svn] r358 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000296.html">[Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#295">[ date ]</a>
+              <a href="thread.html#295">[ thread ]</a>
+              <a href="subject.html#295">[ subject ]</a>
+              <a href="author.html#295">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

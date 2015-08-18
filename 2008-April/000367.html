@@ -1,0 +1,842 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r431%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200804022146.m32Lk5fD008026%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000366.html">
+   <LINK REL="Next"  HREF="000368.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r431%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200804022146.m32Lk5fD008026%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  2 23:46:05 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000366.html">[Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000368.html">[Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#367">[ date ]</a>
+              <a href="thread.html#367">[ thread ]</a>
+              <a href="subject.html#367">[ subject ]</a>
+              <a href="author.html#367">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-02 23:45:53 +0200 (Wed, 02 Apr 2008)
+New Revision: 431
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSAudioData.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineSound.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java
+   dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+   dev/dev-3-0/src/com/flagstone/transform/FSVideo.java
+   dev/dev-3-0/src/com/flagstone/transform/Transform.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+   dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+   dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java
+Log:
+Refactored constants to relocate them in definition objects.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSAudioData.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSAudioData.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSAudioData.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -137,8 +137,9 @@
+ 	 *            time in milliseconds from the start of the file that the sound
+ 	 *            will be played..
+ 	 * @param aFormat
+-	 *            the encoding format for the sound, either FSSound.NATIVE_PCM,
+-	 *            FSSound.ADPCM, FSSound.MP3, FSSound.NELLYMOSER_8K or FSSound.NELLYMOSER.
++	 *            the encoding format for the sound, either FSDefineSound.NATIVE_PCM,
++	 *            FSDefineSound.ADPCM, FSDefineSound.MP3, FSDefineSound.NELLYMOSER_8K 
++	 *            or FSDefineSound.NELLYMOSER.
+ 	 * @param rate
+ 	 *            the number of samples per second that the sound is played at,
+ 	 *            either 5512, 11025, 22050 or 44100.
+@@ -167,8 +168,8 @@
+ 	}
+ 
+ 	/**
+-	 * Gets the compression format used, either FSSound.NATIVE_PCM, FSSound.ADPCM, 
+-	 * FSSound.MP3, FSSound.NELLYMOSER_8K or FSSound.NELLYMOSER.
++	 * Gets the compression format used, either FSDefineSound.NATIVE_PCM, FSDefineSound.ADPCM, 
++	 * FSDefineSound.MP3, FSDefineSound.NELLYMOSER_8K or FSDefineSound.NELLYMOSER.
+ 	 * 
+ 	 * @return a constant defining the type of compression.
+ 	 */
+@@ -178,8 +179,8 @@
+ 	}
+ 
+ 	/**
+-	 * Sets the encoding format used, either FSSound.NATIVE_PCM, FSSound.ADPCM,
+-	 * FSSound.MP3, FSSound.NELLYMOSER_8K or FSSound.NELLYMOSER.
++	 * Sets the encoding format used, either FSDefineSound.NATIVE_PCM, FSDefineSound.ADPCM,
++	 * FSDefineSound.MP3, FSDefineSound.NELLYMOSER_8K or FSDefineSound.NELLYMOSER.
+ 	 * 
+ 	 * @param encoding
+ 	 *            the format for the sound.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -233,7 +233,7 @@
+ 		super(DefineFont2, anIdentifier);
+ 		setName(name);
+ 		
+-		encoding = FSSpan.Unicode;
++		encoding = FSDefineText.Unicode;
+ 		small = false;
+ 		bold = false;
+ 		italic = false;
+@@ -892,7 +892,7 @@
+ 		if (context.version &gt; 5)
+ 			wideCodes = true;
+ 		else
+-			wideCodes = (encoding != FSSpan.ANSI) ? true : false;
++			wideCodes = (encoding != FSDefineText.ANSI) ? true : false;
+ 
+ 		super.length(context);
+ 
+@@ -938,15 +938,15 @@
+ 		if (context.version &gt; 5)
+ 			wideCodes = true;
+ 		else
+-			wideCodes = encoding != FSSpan.ANSI;
++			wideCodes = encoding != FSDefineText.ANSI;
+ 
+-		if (encoding == FSSpan.ANSI)
++		if (encoding == FSDefineText.ANSI)
+ 			format = 1;
+ 		// Flash 7
+ 		else if (small)
+ 			format = 2;
+ 		// End Flash 7
+-		else if (encoding == FSSpan.SJIS)
++		else if (encoding == FSDefineText.SJIS)
+ 			format = 4;
+ 
+ 		super.encode(coder, context);
+@@ -1032,16 +1032,16 @@
+ 		boolean containsLayout = coder.readBits(1, false) != 0 ? true : false;
+ 		int format = coder.readBits(3, false);
+ 
+-		encoding = FSSpan.Unicode;
++		encoding = FSDefineText.Unicode;
+ 
+ 		if (format == 1)
+-			encoding = FSSpan.ANSI;
++			encoding = FSDefineText.ANSI;
+ 		// Flash 7
+ 		else if (format == 2)
+ 			small = true;
+ 		// End Flash 7
+ 		else if (format == 4)
+-			encoding = FSSpan.SJIS;
++			encoding = FSDefineText.SJIS;
+ 
+ 		boolean containsWideOffsets = coder.readBits(1, false) != 0 ? true : false;
+ 		boolean containsWideCodes = coder.readBits(1, false) != 0 ? true : false;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineSound.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineSound.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineSound.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -70,8 +70,8 @@
+  * 
+  * &lt;tr&gt;
+  * &lt;td&gt; format&lt;/a&gt;&lt;/td&gt;
+- * &lt;td&gt;The format of the sound data - FSSound.NATIVE_PCM, FSSound.ADPCM,
+- * FSSound.MP3, FSSound.PCM or FSSound.NELLYMOSER&lt;/td&gt;
++ * &lt;td&gt;The format of the sound data - FSDefineSound.NATIVE_PCM, FSDefineSound.ADPCM,
++ * FSDefineSound.MP3, FSDefineSound.PCM or FSDefineSound.NELLYMOSER&lt;/td&gt;
+  * &lt;/tr&gt;
+  * 
+  * &lt;tr&gt;
+@@ -145,6 +145,40 @@
+  */
+ public class FSDefineSound extends Definition
+ {
++	/**
++	 * Identifies an uncompressed pulse code modulated sound. The byte-order for
++	 * 16-bit sound samples is dependent on the host platform on which the sound
++	 * is played.
++	 */
++	public static final int NATIVE_PCM = 0;
++
++	/** 
++	 * Identifies an adaptive pulse code modulated sound. 
++	 */
++	public static final int ADPCM = 1;
++
++	/** 
++	 * Identifies an MP3 format sound. 
++	 * */
++	public static final int MP3 = 2;
++
++	/**
++	 * Identifies an uncompressed pulse code modulated sound, little-endian byte
++	 * order.
++	 */
++	public static final int PCM = 3;
++
++	/** 
++	 * Nellymoser Asao encoded at 8KHz. Use only for Flash Video (flv) files,
++	 * Do not use for SWF files.
++	 */
++	public static final int NELLYMOSER_8K = 5;
++
++	/** 
++	 * Identifies a Nellymoser Asao encoded sound. 
++	 */
++	public static final int NELLYMOSER = 6;
++
+ 	private int format;
+ 	private int playbackRate;
+ 	private int playbackChannels;
+@@ -173,9 +207,9 @@
+ 	 *            the unique identifier for this sound.
+ 	 * @param aFormat
+ 	 *            the encoding format for the sound. For Flash 1 the formats may
+-	 *            be FSSound.NATIVE_PCM, FSSound.PCM or FSSound.ADPCM. For Flash
+-	 *            4 or later include FSSound.MP3 and Flash 6 or later include
+-	 *            FSSound.NELLYMOSER.
++	 *            be FSDefineSound.NATIVE_PCM, FSDefineSound.PCM or FSDefineSound.ADPCM. 
++	 *            For Flash 4 or later include FSDefineSound.MP3 and Flash 6 or 
++	 *            later include FSDefineSound.NELLYMOSER.
+ 	 * @param rate
+ 	 *            the number of samples per second that the sound is played at ,
+ 	 *            either 5512, 11025, 22050 or 44100.
+@@ -228,9 +262,9 @@
+ 	}
+ 
+ 	/**
+-	 * Gets the compression format used, either FSSound.NATIVE_PCM, FSSound.PCM
+-	 * or FSSound.ADPCM (all Flash 1), FSSound.MP3 (Flash 4+) or
+-	 * FSSound.NELLYMOSER (Flash 6+).
++	 * Gets the compression format used, either FSDefineSound.NATIVE_PCM, FSDefineSound.PCM
++	 * or FSDefineSound.ADPCM (all Flash 1), FSDefineSound.MP3 (Flash 4+) or
++	 * FSDefineSound.NELLYMOSER (Flash 6+).
+ 	 * 
+ 	 * @return a constant defining the type of compression.
+ 	 */
+@@ -291,9 +325,9 @@
+ 	}
+ 
+ 	/**
+-	 * Sets the compression format used, either FSSound.NATIVE_PCM,
+-	 * FSSound.ADPCM or FSSound.PCM from Flash 1 onwards, FSSound.MP3 from Flash
+-	 * 4 onwards, or FSSound.NELLYMOSER from Flash 6 onwards.
++	 * Sets the compression format used, either FSDefineSound.NATIVE_PCM,
++	 * FSDefineSound.ADPCM or FSDefineSound.PCM from Flash 1 onwards, FSDefineSound.MP3 from Flash
++	 * 4 onwards, or FSDefineSound.NELLYMOSER from Flash 6 onwards.
+ 	 * 
+ 	 * @param encoding
+ 	 *            the format for the sound.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -156,6 +156,28 @@
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+ 	private List&lt;FSSpan&gt; objects;
++	/** Code used to identify the spoken language for traditional Chinese fonts. */
++	public static final int TraditionalChinese = 5;
++	/** Code used to identify the spoken language for simplified Chinese fonts. */
++	public static final int SimplifiedChinese = 4;
++	/** Code used to identify the spoken language for Japanese fonts. */
++	public static final int Korean = 3;
++	/** Code used to identify the spoken language for Japanese fonts. */
++	public static final int Japanese = 2;
++	/** Code used to identify the spoken language for Latin fonts. */
++	public static final int Latin = 1;
++	/**
++	 * Defines that the font character set is based on the ANSI UTF-8 standard
++	 * which supports standard ASCII encoded strings.
++	 */
++	public static final int ANSI = 1;
++	/**
++	 * Defines that the font character set is based on the SJIS standard for
++	 * representing Kanji characters.
++	 */
++	public static final int SJIS = 2;
++	/** Defines that the font character set is based on the Unicode standard. */
++	public static final int Unicode = 0;
+ 
+ 	/**
+ 	 * Construct an FSDefineText object, initialising it with values decoded from
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -116,15 +116,12 @@
+  */
+ public class FSDefineVideo extends Definition implements Displayable
+ {
+-	// / The video data was encoded using the Sorenson modified H263 format.
++	/** The video data was encoded using the Sorenson modified H263 format. */
+ 	public static final int H263 = 2;
+ 
+-	// Flash 7
+-	// / The video data was encoded using Macromedia's ScreenVideo format.
++	/** The video data was encoded using Macromedia's ScreenVideo format. */
+ 	public static final int ScreenVideo = 3;
+ 
+-	// End Flash 7
+-
+ 	/**
+ 	 * Instruct the Flash Player to use the deblocking value specified in the
+ 	 * video data.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -299,12 +299,10 @@
+ 	public static final int _yscale = (Transform.VERSION &lt; 5) ? 0x40400000 : 3;
+ 
+ 	/** The number of the current frame playing in the movie clip. */
+-	public static final int _currentframe = (Transform.VERSION &lt; 5) ? 0x40800000
+-					: 4;
++	public static final int _currentframe = (Transform.VERSION &lt; 5) ? 0x40800000 : 4;
+ 
+ 	/** The total number of frames in the movie clip. */
+-	public static final int _totalframes = (Transform.VERSION &lt; 5) ? 0x40a00000
+-					: 5;
++	public static final int _totalframes = (Transform.VERSION &lt; 5) ? 0x40a00000 : 5;
+ 
+ 	/** The transparency of the movie clip. */
+ 	public static final int _alpha = (Transform.VERSION &lt; 5) ? 0x40c00000 : 6;
+@@ -319,29 +317,25 @@
+ 	public static final int _height = (Transform.VERSION &lt; 5) ? 0x41100000 : 9;
+ 
+ 	/** The angle of rotation of the movie clip in degrees. */
+-	public static final int _rotation = (Transform.VERSION &lt; 5) ? 0x41200000
+-					: 10;
++	public static final int _rotation = (Transform.VERSION &lt; 5) ? 0x41200000 : 10;
+ 
+ 	/** The path of the movie clip relative to the root movie in the Player. */
+ 	public static final int _target = (Transform.VERSION &lt; 5) ? 0x41300000 : 11;
+ 
+ 	/** The number of frames form the movie clip loaded. */
+-	public static final int _framesloaded = (Transform.VERSION &lt; 5) ? 0x41400000
+-					: 12;
++	public static final int _framesloaded = (Transform.VERSION &lt; 5) ? 0x41400000 : 12;
+ 
+ 	/** The name of movie clip. */
+ 	public static final int _name = (Transform.VERSION &lt; 5) ? 0x41500000 : 13;
+ 
+ 	/** The name of the movie clip currently being dragged */
+-	public static final int _droptarget = (Transform.VERSION &lt; 5) ? 0x41600000
+-					: 14;
++	public static final int _droptarget = (Transform.VERSION &lt; 5) ? 0x41600000 : 14;
+ 
+ 	/** The URL from which the movie clip was loaded. */
+ 	public static final int _url = (Transform.VERSION &lt; 5) ? 0x41700000 : 15;
+ 
+ 	/** Identifies the level of aliasing being performed by the Player. */
+-	public static final int _highquality = (Transform.VERSION &lt; 5) ? 0x41800000
+-					: 16;
++	public static final int _highquality = (Transform.VERSION &lt; 5) ? 0x41800000 : 16;
+ 
+ 	/**
+ 	 * Identifies whether a yellow rectangle is drawn around a button or test
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSoundInfo.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -1,5 +1,5 @@
+ /*
+- * FSSound.java
++ * FSSoundInfo.java
+  * Transform
+  * 
+  * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+@@ -119,41 +119,7 @@
+  */
+ public class FSSoundInfo implements Cloneable, Codeable
+ {
+-	/**
+-	 * Identifies an uncompressed pulse code modulated sound. The byte-order for
+-	 * 16-bit sound samples is dependent on the host platform on which the sound
+-	 * is played.
+-	 */
+-	public static final int NATIVE_PCM = 0;
+-
+ 	/** 
+-	 * Identifies an adaptive pulse code modulated sound. 
+-	 */
+-	public static final int ADPCM = 1;
+-
+-	/** 
+-	 * Identifies an MP3 format sound. 
+-	 * */
+-	public static final int MP3 = 2;
+-
+-	/**
+-	 * Identifies an uncompressed pulse code modulated sound, little-endian byte
+-	 * order.
+-	 */
+-	public static final int PCM = 3;
+-
+-	/** 
+-	 * Nellymoser Asao encoded at 8KHz. Use only for Flash Video (flv) files,
+-	 * Do not use for SWF files.
+-	 */
+-	public static final int NELLYMOSER_8K = 5;
+-
+-	/** 
+-	 * Identifies a Nellymoser Asao encoded sound. 
+-	 */
+-	public static final int NELLYMOSER = 6;
+-
+-	/** 
+ 	 * Start playing the sound. 
+ 	 */
+ 	public static final int Start = 0;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -53,8 +53,8 @@
+  * 
+  * &lt;tr&gt;
+  * &lt;td&gt;format&lt;/td&gt;
+- * &lt;td&gt;The format of the encoded sound data - FSSound.PCM (Little0endian byte
+- * order), FSSound.ADPCM, or FSSound.NATIVE_PCM (Big-endian or Little-Endian
++ * &lt;td&gt;The format of the encoded sound data - FSDefineSound.PCM (Little-endian byte
++ * order), FSDefineSound.ADPCM, or FSDefineSound.NATIVE_PCM (Big-endian or Little-Endian
+  * byte order depending on the platform where the sound was generated.).&lt;/td&gt;
+  * &lt;/tr&gt;
+  * 
+@@ -259,7 +259,7 @@
+ 	 * 
+ 	 * @param encoding
+ 	 *            the compression format for the sound data, either
+-	 *            FSSound.ADPCM or FSSound.MP3.
++	 *            FSDefineSound.ADPCM or FSDefineSound.MP3.
+ 	 */
+ 	public void setFormat(int encoding)
+ 	{
+@@ -516,7 +516,7 @@
+ 		buffer.append(&quot;streamSampleSize = &quot;).append(streamSampleSize).append(&quot;; &quot;);
+ 		buffer.append(&quot;streamSampleCount = &quot;).append(streamSampleCount).append(&quot;; &quot;);
+ 		
+-		if (format == FSSoundInfo.MP3) {
++		if (format == FSDefineSound.MP3) {
+ 			buffer.append(&quot;latency = &quot;).append(latency).append(&quot;; &quot;);
+ 		}
+ 		buffer.append(&quot;}&quot;);
+@@ -530,7 +530,7 @@
+ 
+ 		length += 4;
+ 
+-		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSDefineSound.MP3 &amp;&amp; latency &gt; 0)
+ 			length += 2;
+ 
+ 		return length;
+@@ -581,7 +581,7 @@
+ 		coder.writeBits(streamChannels - 1, 1);
+ 		coder.writeWord(streamSampleCount, 2);
+ 
+-		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSDefineSound.MP3 &amp;&amp; latency &gt; 0)
+ 			coder.writeWord(latency, 2);
+ 	}
+ 
+@@ -629,7 +629,7 @@
+ 		streamChannels = coder.readBits(1, false) + 1;
+ 		streamSampleCount = coder.readWord(2, false);
+ 
+-		if (length == 6 &amp;&amp; format == FSSoundInfo.MP3)
++		if (length == 6 &amp;&amp; format == FSDefineSound.MP3)
+ 			latency = coder.readWord(2, true);
+ 	}
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead2.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSoundStreamHead2.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -65,10 +65,10 @@
+  * 
+  * &lt;tr&gt;
+  * &lt;td&gt;format&lt;/td&gt;
+- * &lt;td&gt;The format of the encoded sound data - FSSound.PCM (Little-Endian byte
+- * order), FSSound.ADPCM, FSSound.NATIVE_PCM (Big-Endian or Little-Endian byte
+- * order depending on the platform where the sound was created), FSSound.MP3 or
+- * FSSound.NELLYMOSER&lt;/td&gt;
++ * &lt;td&gt;The format of the encoded sound data - FSDefineSound.PCM (Little-Endian byte
++ * order), FSDefineSound.ADPCM, FSDefineSound.NATIVE_PCM (Big-Endian or Little-Endian byte
++ * order depending on the platform where the sound was created), FSDefineSound.MP3 or
++ * FSDefineSound.NELLYMOSER&lt;/td&gt;
+  * &lt;/tr&gt;
+  * 
+  * &lt;tr&gt;
+@@ -171,8 +171,8 @@
+ 	 * 
+ 	 * @param encoding
+ 	 *            the compression format for the sound data, either
+-	 *            FSSound.NATIVE_PCM, FSSound.ADPCM, FSSound.MP3, FSSound.PCM or
+-	 *            FSSound.NELLYMOSER (Flash 6+ only).
++	 *            FSDefineSound.NATIVE_PCM, FSDefineSound.ADPCM, FSDefineSound.MP3, 
++	 *            FSDefineSound.PCM or FSDefineSound.NELLYMOSER (Flash 6+ only).
+ 	 * @param playRate
+ 	 *            the recommended rate for playing the sound, either 5512,
+ 	 *            11025, 22050 or 44100 Hz.
+@@ -257,8 +257,8 @@
+ 	 * 
+ 	 * @param encoding
+ 	 *            the compression format for the sound data, either
+-	 *            FSSound.NATIVE_PCM, FSSound.ADPCM, FSSound.MP3, FSSound.PCM or
+-	 *            FSSound.NELLYMOSER.
++	 *            FSDefineSound.NATIVE_PCM, FSDefineSound.ADPCM, FSDefineSound.MP3, 
++	 *            FSDefineSound.PCM or FSDefineSound.NELLYMOSER.
+ 	 */
+ 	public void setFormat(int encoding)
+ 	{
+@@ -514,7 +514,7 @@
+ 		buffer.append(&quot;streamSampleSize = &quot;).append(streamSampleSize).append(&quot;; &quot;);
+ 		buffer.append(&quot;streamSampleCount = &quot;).append(streamSampleCount).append(&quot;; &quot;);
+ 
+-		if (format == FSSoundInfo.MP3) {
++		if (format == FSDefineSound.MP3) {
+ 			buffer.append(&quot;latency = &quot;).append(latency).append(&quot;; &quot;);
+ 		}
+ 		buffer.append(&quot;}&quot;);
+@@ -528,7 +528,7 @@
+ 
+ 		length += 4;
+ 
+-		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSDefineSound.MP3 &amp;&amp; latency &gt; 0)
+ 			length += 2;
+ 
+ 		return length;
+@@ -579,7 +579,7 @@
+ 		coder.writeBits(streamChannels - 1, 1);
+ 		coder.writeWord(streamSampleCount, 2);
+ 
+-		if (format == FSSoundInfo.MP3 &amp;&amp; latency &gt; 0)
++		if (format == FSDefineSound.MP3 &amp;&amp; latency &gt; 0)
+ 			coder.writeWord(latency, 2);
+ 	}
+ 
+@@ -627,7 +627,7 @@
+ 		streamChannels = coder.readBits(1, false) + 1;
+ 		streamSampleCount = coder.readWord(2, false);
+ 
+-		if (length == 6 &amp;&amp; format == FSSoundInfo.MP3)
++		if (length == 6 &amp;&amp; format == FSDefineSound.MP3)
+ 			latency = coder.readWord(2, true);
+ 	}
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSSpan.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSSpan.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -211,40 +211,6 @@
+  */
+ public class FSSpan implements Cloneable, Codeable
+ {
+-	/** Defines that the font character set is based on the Unicode standard. */
+-	public static final int Unicode = 0;
+-
+-	/**
+-	 * Defines that the font character set is based on the SJIS standard for
+-	 * representing Kanji characters.
+-	 */
+-	public static final int SJIS = 2;
+-
+-	/**
+-	 * Defines that the font character set is based on the ANSI UTF-8 standard
+-	 * which supports standard ASCII encoded strings.
+-	 */
+-	public static final int ANSI = 1;
+-
+-	// Flash 6
+-	// / Code used to identify the spoken language for Latin fonts.
+-	public static final int Latin = 1;
+-
+-	// / Code used to identify the spoken language for Japanese fonts.
+-	public static final int Japanese = 2;
+-
+-	// / Code used to identify the spoken language for Japanese fonts.
+-	public static final int Korean = 3;
+-
+-	// / Code used to identify the spoken language for simplified Chinese fonts.
+-	public static final int SimplifiedChinese = 4;
+-
+-	// / Code used to identify the spoken language for traditional Chinese
+-	// fonts.
+-	public static final int TraditionalChinese = 5;
+-
+-	// End Flash 6
+-
+ 	private int identifier;
+ 	private FSColor color;
+ 	private int offsetX;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSVideo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSVideo.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/FSVideo.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -80,21 +80,6 @@
+ 	 */
+ 	public static final int Optional = 3;
+ 
+-	/*
+-	 * Index values for the context array in FSVideoCoder.
+-	 */
+-	static final int Action = 0;
+-
+-	static final int Version = 1;
+-
+-	static final int Type = 2;
+-
+-	static final int Delta = 3;
+-
+-	static final int Identifier = 4;
+-
+-	static final int Codec = 5;
+-
+ 	static FSVideoObject decodeObject(FSCoder coder, FSContext context)
+ 	{
+ 		FSVideoObject currentObject = null;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/Transform.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/Transform.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/Transform.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -63,19 +63,6 @@
+ 	public static final int RELEASE = 0;
+ 
+ 	/**
+-	 * VALUE_NOT_SET is used to signify that a field has not yet assigned a
+-	 * value. Some Flash tags contain optional fields to reduce the size of the
+-	 * binary data when a tag is encoded. These fields are only encoded if they
+-	 * have been assigned a valid value. The range of valid values will depend
+-	 * on the number of bits used to encode the field and whether it is a signed
+-	 * or unsigned value. VALUE_NOT_SET was chosen to be the largest negative
+-	 * integer - since the largest optional field is 16-bits in length and thus
+-	 * no confusion will result.
+-	 */
+-	// TODO get rid of this.
+-	//public static final int VALUE_NOT_SET = Integer.MIN_VALUE;
+-
+-	/**
+ 	 * The main method reports basic information about the package. The method
+ 	 * prints out the version of Flash supported and the version number along
+ 	 * with copyright and licensing information.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -24,12 +24,12 @@
+ import com.flagstone.transform.FSCoder;
+ import com.flagstone.transform.FSCoordTransform;
+ import com.flagstone.transform.FSDefineFont2;
++import com.flagstone.transform.FSDefineText;
+ import com.flagstone.transform.FSKerning;
+ import com.flagstone.transform.FSMovie;
+ import com.flagstone.transform.FSMovieObject;
+ import com.flagstone.transform.FSShape;
+ import com.flagstone.transform.FSShapeStyle;
+-import com.flagstone.transform.FSSpan;
+ 
+ public class Font
+ {
+@@ -107,8 +107,8 @@
+ 
+     	encoding = font.getEncoding();   	
+     	
+-    	if (encoding == FSSpan.ANSI) {
+-    		encoding = FSSpan.Unicode;
++    	if (encoding == FSDefineText.ANSI) {
++    		encoding = FSDefineText.Unicode;
+     	}
+ 
+     	key = generateKey(name, isBold, isItalic);
+@@ -168,7 +168,7 @@
+         font = font.deriveFont(1.0f);
+ 
+         name = font.getName();
+-        encoding = FSSpan.Unicode;
++        encoding = FSDefineText.Unicode;
+ 
+         Rectangle2D transform = transformToEMSquare(font, fontContext);
+ 
+@@ -866,14 +866,14 @@
+             
+             if (platformId == 0) // Unicode
+             {
+-                encoding = FSSpan.Unicode;
++                encoding = FSDefineText.Unicode;
+             }
+             else if (platformId == 1) // Macintosh
+             {
+                 switch (encodingId)
+                 {
+-                    case 1: encoding = FSSpan.SJIS; break;
+-                    default: encoding = FSSpan.ANSI; break;
++                    case 1: encoding = FSDefineText.SJIS; break;
++                    default: encoding = FSDefineText.ANSI; break;
+                 }
+                     
+             }
+@@ -881,9 +881,9 @@
+             {
+                 switch (encodingId)
+                 {
+-                    case 1: encoding = FSSpan.Unicode; break;
+-                    case 2: encoding = FSSpan.SJIS; break;
+-                    default: encoding = FSSpan.ANSI; break;
++                    case 1: encoding = FSDefineText.Unicode; break;
++                    case 2: encoding = FSDefineText.SJIS; break;
++                    default: encoding = FSDefineText.ANSI; break;
+                 }
+             }
+ 
+@@ -965,7 +965,7 @@
+             }
+             coder.setPointer(current);
+         }
+-        encoding = FSSpan.SJIS;
++        encoding = FSDefineText.SJIS;
+     }
+     
+     private void decodeGlyphs(FSCoder coder, int glyfOffset)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -116,7 +116,7 @@
+         int numberOfFrames = 0;
+         int frameStart = 0;
+ 
+-        format = FSSoundInfo.MP3;
++        format = FSDefineSound.MP3;
+         sampleSize = 2;
+         
+         while (coder.eof() == false)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -93,7 +93,7 @@
+  * FSSoundConstructor soundGenerator = new FSSoundGenerator(&quot;sound.wav&quot;);
+  *
+  * movie.add(soundGenerator.defineSound(soundId));
+- * movie.add(new FSSound(soundId, FSSound.Start));
++ * movie.add(new FSSound(soundId, FSSoundInfo.Start));
+  *&lt;/pre&gt;
+  *
+  * 2. Streaming Sounds.\n
+@@ -176,12 +176,12 @@
+ 
+ 		        switch (format)
+ 		        {
+-		            case FSSoundInfo.PCM:
+-		            case FSSoundInfo.ADPCM:
++		            case FSDefineSound.PCM:
++		            case FSDefineSound.ADPCM:
+ 		                bytes = new byte[sound.length];
+ 		                System.arraycopy(sound, 0, bytes, 0, sound.length);
+ 		                break;
+-		            case FSSoundInfo.MP3:
++		            case FSDefineSound.MP3:
+ 		                bytes = new byte[2+sound.length];
+ 		                bytes[0] = 0;
+ 		                bytes[1] = 0;
+@@ -259,7 +259,7 @@
+ 
+ 			 	switch (format)
+ 		        {
+-		            case FSSoundInfo.PCM:
++		            case FSDefineSound.PCM:
+ 		        	    for (int i=0; i&lt;numberOfBlocks; i++)
+ 		        	    {
+ 			                firstSample = i*samplesPerBlock;
+@@ -275,9 +275,9 @@
+ 			                array.add(new FSSoundStreamBlock(bytes));
+ 		        	    }
+ 		                break;
+-		            case FSSoundInfo.ADPCM:
++		            case FSDefineSound.ADPCM:
+ 		                break;
+-		            case FSSoundInfo.MP3:
++		            case FSDefineSound.MP3:
+ 		                FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+ 		                
+ 		                coder.findBits(0x7FF, 11, 8);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java	2008-04-02 21:22:37 UTC (rev 430)
++++ dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java	2008-04-02 21:45:53 UTC (rev 431)
+@@ -137,7 +137,7 @@
+ 
+     private void decodeFMT(FSCoder coder) throws DataFormatException
+     {
+-        format = FSSoundInfo.PCM;
++        format = FSDefineSound.PCM;
+         
+         if (coder.readWord(2, false) != 1)
+             throw new DataFormatException(&quot;Compressed WAV files are not currently supported.&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000366.html">[Transform-svn] r430 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000368.html">[Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#367">[ date ]</a>
+              <a href="thread.html#367">[ thread ]</a>
+              <a href="subject.html#367">[ subject ]</a>
+              <a href="author.html#367">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

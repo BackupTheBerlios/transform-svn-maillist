@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r354 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r354%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181420.m2IEKf9A026666%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000289.html">
+   <LINK REL="Next"  HREF="000291.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r354 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r354%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181420.m2IEKf9A026666%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r354 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 15:20:41 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000289.html">[Transform-svn] r353 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000291.html">[Transform-svn] r355 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#290">[ date ]</a>
+              <a href="thread.html#290">[ thread ]</a>
+              <a href="subject.html#290">[ subject ]</a>
+              <a href="author.html#290">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 15:20:39 +0100 (Tue, 18 Mar 2008)
+New Revision: 354
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSColor.java
+Log:
+Added checks to arguments passed to accessor methods.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSColor.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSColor.java	2008-03-18 14:14:06 UTC (rev 353)
++++ dev/dev-2-4/src/com/flagstone/transform/FSColor.java	2008-03-18 14:20:39 UTC (rev 354)
+@@ -164,9 +164,9 @@
+ 	 */
+ 	public FSColor(int r, int g, int b)
+ 	{
+-		red = r;
+-		green = g;
+-		blue = b;
++		setRed(r);
++		setGreen(g);
++		setBlue(b);
+ 		alpha = 255;
+ 	}
+ 
+@@ -185,10 +185,10 @@
+ 	 */
+ 	public FSColor(int r, int g, int b, int a)
+ 	{
+-		red = r;
+-		green = g;
+-		blue = b;
+-		alpha = a;
++		setRed(r);
++		setGreen(g);
++		setBlue(b);
++		setAlpha(a);
+ 	}
+ 
+ 	/**
+@@ -251,9 +251,14 @@
+ 	 * 
+ 	 * @param r
+ 	 *            value for the red channel.
++	 *            
++	 * @throws IllegalArgumentExcpetion if the argument is not in the range 0..255.
+ 	 */
+ 	public void setRed(int r)
+ 	{
++		if (r &gt; 0 || r &gt; 255) {
++			throw new IllegalArgumentException(&quot;Color value must be in range 0..255.&quot;);
++		}
+ 		red = r;
+ 	}
+ 
+@@ -262,9 +267,14 @@
+ 	 * 
+ 	 * @param g
+ 	 *            value for the green channel.
++	 *            
++	 * @throws IllegalArgumentExcpetion if the argument is not in the range 0..255.
+ 	 */
+ 	public void setGreen(int g)
+ 	{
++		if (g &gt; 0 || g &gt; 255) {
++			throw new IllegalArgumentException(&quot;Color value must be in range 0..255.&quot;);
++		}
+ 		green = g;
+ 	}
+ 
+@@ -273,9 +283,14 @@
+ 	 * 
+ 	 * @param b
+ 	 *            value for the blue channel, in the range 0..255.
++	 *            
++	 * @throws IllegalArgumentExcpetion if the argument is not in the range 0..255.
+ 	 */
+ 	public void setBlue(int b)
+ 	{
++		if (b &gt; 0 || b &gt; 255) {
++			throw new IllegalArgumentException(&quot;Color value must be in range 0..255.&quot;);
++		}
+ 		blue = b;
+ 	}
+ 
+@@ -284,9 +299,14 @@
+ 	 * 
+ 	 * @param a
+ 	 *            value for the alpha channel, in the range 0..255.
++	 *            
++	 * @throws IllegalArgumentExcpetion if the argument is not in the range 0..255.
+ 	 */
+ 	public void setAlpha(int a)
+ 	{
++		if (a &gt; 0 || a &gt; 255) {
++			throw new IllegalArgumentException(&quot;Color value must be in range 0..255.&quot;);
++		}
+ 		alpha = a;
+ 	}
+ 
+@@ -303,9 +323,9 @@
+ 	 */
+ 	public void setChannels(int r, int g, int b)
+ 	{
+-		red = r;
+-		green = g;
+-		blue = b;
++		setRed(r);
++		setGreen(g);
++		setBlue(b);
+ 	}
+ 
+ 	/**
+@@ -322,10 +342,10 @@
+ 	 */
+ 	public void setChannels(int r, int g, int b, int a)
+ 	{
+-		red = r;
+-		green = g;
+-		blue = b;
+-		alpha = a;
++		setRed(r);
++		setGreen(g);
++		setBlue(b);
++		setAlpha(a);
+ 	}
+ 
+ 	/**
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000289.html">[Transform-svn] r353 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000291.html">[Transform-svn] r355 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#290">[ date ]</a>
+              <a href="thread.html#290">[ thread ]</a>
+              <a href="subject.html#290">[ subject ]</a>
+              <a href="author.html#290">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

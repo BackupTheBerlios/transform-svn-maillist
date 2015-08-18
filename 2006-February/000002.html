@@ -1,0 +1,435 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r62 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r62%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200602211436.k1LEajA2016338%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000006.html">
+   <LINK REL="Next"  HREF="000003.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r62 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r62%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200602211436.k1LEajA2016338%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r62 - trunk/src/com/flagstone/transform/test">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 15:36:45 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000006.html">[Transform-svn] r61 - trunk/src/com/flagstone/transform/examples
+</A></li>
+        <LI>Next message: <A HREF="000003.html">[Transform-svn] r63 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#2">[ date ]</a>
+              <a href="thread.html#2">[ thread ]</a>
+              <a href="subject.html#2">[ subject ]</a>
+              <a href="author.html#2">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 15:36:31 +0100 (Tue, 21 Feb 2006)
+New Revision: 62
+
+Added:
+   trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+Modified:
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+   trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+   trunk/src/com/flagstone/transform/test/TextDumpTest.java
+Log:
+com.flagstone.transform.test: Added tests for the constructor
+classes and tidied up some unused variables in existing classes.
+
+Added: trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java	2006-02-21 14:34:20 UTC (rev 61)
++++ trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java	2006-02-21 14:36:31 UTC (rev 62)
+@@ -0,0 +1,96 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class FSImageConstructorTest
++{
++    private File sourceDir = null;
++    private File destDir = null;
++    private String extension = null;
++    
++    public FSImageConstructorTest()
++    {
++    }
++    /**
++     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
++     * @testng.parameters value = &quot;srcDir dstDir ext&quot;
++     */
++    public void configure(String srcDir, String dstDir, String ext)
++    {
++        sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++        extension = ext;
++    }
++    /**
++     * @testng.test dataProvider=&quot;files&quot;
++     */
++    public void displayImage(File imageFile)
++    {
++        try 
++        {
++            String fileName = imageFile.getName();
++            fileName = fileName.substring(0, fileName.lastIndexOf('.')) + &quot;.swf&quot;;
++    
++            File destFile = new File(destDir, fileName);
++ 
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            FSImageConstructor imageConstructor = new FSImageConstructor(imageFile.getPath());
++            encodeImageToFile(imageConstructor, destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
++     * @testng.data-provider name=&quot;files&quot;
++     */
++    public Object[][] findFiles()
++    {
++        FilenameFilter filter = new FilenameFilter() 
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(extension);
++            }
++        };
++        
++        String[] files = sourceDir.list(filter);
++        Object[][] parameters = new Object[files.length][1];
++        
++        for (int i=0; i&lt;files.length; i++)
++            parameters[i] = new Object[] { new File(sourceDir, files[i]) };
++        
++        return parameters;
++    }
++    private void encodeImageToFile(FSImageConstructor generator, File file) throws Exception
++    {
++        FSMovie movie = new FSMovie();
++        
++        int imageId = movie.newIdentifier();
++        int shapeId = movie.newIdentifier();
++        
++        int xOrigin = generator.getWidth()/2;
++        int yOrigin = generator.getHeight()/2;
++        
++        FSSolidLine borderStyle = new FSSolidLine(20, FSColorTable.black());
++        
++        FSDefineObject image = generator.defineImage(imageId);
++        FSDefineShape3 shape = generator.defineEnclosingShape(shapeId, imageId, 
++            -xOrigin, -yOrigin, borderStyle);
++        
++        movie.setFrameRate(1.0f);
++        movie.setFrameSize(shape.getBounds());
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(image);
++        movie.add(shape);
++        movie.add(new FSPlaceObject2(shapeId, 1, 0, 0));
++        movie.add(new FSShowFrame());
++        
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-02-21 14:34:20 UTC (rev 61)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-02-21 14:36:31 UTC (rev 62)
+@@ -39,7 +39,6 @@
+ {
+     private File sourceDir = null;
+     private File destDir = null;
+-    private String testSuite = null;
+     private String extension = &quot;.swf&quot;;
+     
+     public FSMovieTest()
+@@ -53,8 +52,6 @@
+     {
+         sourceDir = new File(srcDir);
+         destDir = new File(dstDir);
+-        
+-        testSuite = sourceDir.getName();
+     }
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+@@ -82,11 +79,10 @@
+         try 
+         {
+             File srcFile = new File(sourceDir, file);
+-            File testDir = new File(destDir, &quot;encode&quot;+File.separator+testSuite);
+-            File destFile = new File(testDir, file);
++            File destFile = new File(destDir, file);
+             
+-            if (testDir.exists() == false)
+-                assert testDir.mkdirs() : &quot;Count not create directory: &quot;+testDir;
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+             
+             FSMovie movie = new FSMovie(srcFile.getPath());
+             movie.encodeToFile(destFile.getPath());
+@@ -108,11 +104,10 @@
+         try 
+         {
+             File srcFile = new File(sourceDir, file);
+-            File testDir = new File(destDir, &quot;clone&quot;+File.separator+testSuite);
+-            File destFile = new File(testDir, file);
++            File destFile = new File(destDir, file);
+             
+-            if (testDir.exists() == false)
+-                assert testDir.mkdirs() : &quot;Count not create directory: &quot;+testDir;
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+             
+             FSMovie movie = new FSMovie(srcFile.getPath());
+             
+@@ -129,6 +124,29 @@
+         }
+     }
+     /**
++     * @testng.test dataProvider=&quot;files&quot;
++     */
++    public void toText(String file)
++    {
++        try
++        {
++            File srcFile = new File(sourceDir, file);
++            File dstFile = new File(destDir, file.substring(0, file.length()-3)+&quot;txt&quot;);
++            
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            new TextDump(new String[] {
++                            &quot;--fileIn&quot;, srcFile.getPath(), 
++                            &quot;--fileOut&quot;, dstFile.getPath()});
++
++        }
++        catch (Throwable e)
++        {
++            assert false : file+&quot;: &quot;+e.toString();
++        }
++    }
++    /**
+      * @testng.data-provider name=&quot;files&quot;
+      */
+     public Object[][] findFiles()
+
+Modified: trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2006-02-21 14:34:20 UTC (rev 61)
++++ trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2006-02-21 14:36:31 UTC (rev 62)
+@@ -29,8 +29,6 @@
+  */
+ package com.flagstone.transform.test;
+ 
+-import com.flagstone.transform.*;
+-
+ public class FSSetBackgroundColorTest 
+ {    
+     public FSSetBackgroundColorTest()
+
+Added: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-02-21 14:34:20 UTC (rev 61)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-02-21 14:36:31 UTC (rev 62)
+@@ -0,0 +1,140 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.*;
++import java.awt.*;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class FSTextConstructorTest
++{
++    private File sourceDir = null;
++    private File destDir = null;
++    private String extension = null;
++    
++    public FSTextConstructorTest()
++    {
++    }
++    /**
++     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
++     * @testng.parameters value = &quot;srcDir dstDir ext&quot;
++     */
++    public void configure(String srcDir, String dstDir, String ext)
++    {
++        sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++        extension = ext;
++    }
++	/**
++     * @testng.test
++	 */
++    public void displayAWTFont()
++    {
++        try 
++        {
++            Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
++
++            for (int i=0; i&lt;fonts.length; i++)
++            {
++                String fontName = fonts[i].getFontName();
++    
++                File destFile = new File(destDir, fontName + &quot;.swf&quot;);
++     
++                if (destDir.exists() == false)
++                    assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++                
++                FSTextConstructor textGenerator = new FSTextConstructor(1, fontName);            
++                encodeFontToFile(textGenerator, destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++	/**
++     * @testng.test dataProvider=&quot;files&quot;
++	 */
++    public void displayTrueTypeFont(String fontFile)
++    {
++        try 
++        {
++            File srcFile = new File(sourceDir, fontFile);
++            File destFile = new File(destDir, fontFile.substring(0, fontFile.lastIndexOf('.')) + &quot;.swf&quot;);
++ 
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            FSTextConstructor textGenerator = new FSTextConstructor(1, srcFile.getPath());          
++            encodeFontToFile(textGenerator, destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
++     * @testng.data-provider name=&quot;files&quot;
++     */
++    public Object[][] findFiles()
++    {
++        FilenameFilter filter = new FilenameFilter() 
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(extension);
++            }
++        };
++        
++        String[] files = sourceDir.list(filter);       
++
++        Object[][] parameters = new Object[files.length][1];
++        
++        for (int i=0; i&lt;files.length; i++)
++            parameters[i] = new Object[] { files[i] };
++        
++        return parameters;
++    }
++      
++    private void encodeFontToFile(FSTextConstructor textGenerator, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;        
++        int margin = fontSize;
++                
++        FSMovie movie = new FSMovie();
++        ArrayList lines = new ArrayList();
++        char c = 0;
++
++        for (int i=0; i&lt;32; i++)
++        {
++            StringBuffer line = new StringBuffer();
++            
++            for (int j=0; j&lt;64; j++, c++)
++
++                line.append((char)c);
++
++            lines.add(line.toString());
++        }
++        
++        int fontId = movie.newIdentifier();
++        
++        FSDefineText2 text = textGenerator.defineTextBlock(movie.newIdentifier(), lines, fontSize, FSColorTable.black(), lineSpacing);
++        FSDefineFont2 font = textGenerator.defineFont();
++        
++        font.setIdentifier(fontId);
++
++        int screenWidth = text.getBounds().getWidth() + margin + margin;
++        int screenHeight = text.getBounds().getHeight() + margin + margin;
++            
++        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(font);
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+Modified: trunk/src/com/flagstone/transform/test/TextDumpTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/TextDumpTest.java	2006-02-21 14:34:20 UTC (rev 61)
++++ trunk/src/com/flagstone/transform/test/TextDumpTest.java	2006-02-21 14:36:31 UTC (rev 62)
+@@ -30,9 +30,7 @@
+ package com.flagstone.transform.test;
+ 
+ import java.io.*;
+-import java.util.zip.*;
+ 
+-import com.flagstone.transform.*;
+ import com.flagstone.transform.tools.*;
+ 
+ public class TextDumpTest
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000006.html">[Transform-svn] r61 - trunk/src/com/flagstone/transform/examples
+</A></li>
+	<LI>Next message: <A HREF="000003.html">[Transform-svn] r63 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#2">[ date ]</a>
+              <a href="thread.html#2">[ thread ]</a>
+              <a href="subject.html#2">[ subject ]</a>
+              <a href="author.html#2">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

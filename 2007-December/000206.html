@@ -1,0 +1,609 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r270 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r270%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221558.lBMFwmrv010159%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000205.html">
+   <LINK REL="Next"  HREF="000207.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r270 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r270%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221558.lBMFwmrv010159%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r270 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 22 16:58:48 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000205.html">[Transform-svn] r269 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000207.html">[Transform-svn] r271 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#206">[ date ]</a>
+              <a href="thread.html#206">[ thread ]</a>
+              <a href="subject.html#206">[ subject ]</a>
+              <a href="author.html#206">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-22 16:58:45 +0100 (Sat, 22 Dec 2007)
+New Revision: 270
+
+Modified:
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Fixed bug 12769 where the SOI and EOI markers were reversed.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2007-12-22 15:47:37 UTC (rev 269)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2007-12-22 15:58:45 UTC (rev 270)
+@@ -1,42 +1,42 @@
+ /*
+  * FSDefineJPEGImage2.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+ package com.flagstone.transform;
+ 
+ /**
+-FSDefineJPEGImage2 is used to define a JPEG encoded image with an integrated 
+-encoding table. 
+-  
+-&lt;p&gt;It extends the FSDefineJPEGImage class by including a separate encoding table, 
+-rather than using an FSJPEGEncodingTable object to store the encoding table. 
+-This allows multiple JPEG images with different amounts of compression to be 
++FSDefineJPEGImage2 is used to define a JPEG encoded image with an integrated
++encoding table.
++
++&lt;p&gt;It extends the FSDefineJPEGImage class by including a separate encoding table,
++rather than using an FSJPEGEncodingTable object to store the encoding table.
++This allows multiple JPEG images with different amounts of compression to be
+ included within a Flash file.&lt;/p&gt;
+ 
+ &lt;table class=&quot;datasheet&quot;&gt;
+@@ -49,7 +49,7 @@
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage2_1&quot;&gt;identifier&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the 
++&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the
+ image from other objects.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+@@ -64,16 +64,16 @@
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Although the encoding table defines how the image is compressed it is not 
+-essential. If an FSDefineJPEGImage3 object is created with an empty encoding 
+-table then the Flash Player will still display the JPEG image correctly. The 
+-empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD8, 
+-0xFF, 0xD9. For convenience passing a null reference to any of the constructors 
++&lt;p&gt;Although the encoding table defines how the image is compressed it is not
++essential. If an FSDefineJPEGImage3 object is created with an empty encoding
++table then the Flash Player will still display the JPEG image correctly. The
++empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD8,
++0xFF, 0xD9. For convenience passing a null reference to any of the constructors
+ or to the setEncodingTable method will create an empty table.&lt;/p&gt;
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
+ 
+-&lt;p&gt;The simplest way to use the FSDefineJPEGImage2 class is to use the constructor 
++&lt;p&gt;The simplest way to use the FSDefineJPEGImage2 class is to use the constructor
+ that specifies the JPEG file to initialise the object:&lt;/p&gt;
+ 
+ &lt;pre&gt;
+@@ -81,7 +81,7 @@
+ byte[] bytes = new byte[(int)aFile.length()];
+ 
+ try {
+-    FileInputStream imageContents = new FileInputStream(aFile);            
++    FileInputStream imageContents = new FileInputStream(aFile);
+     imageContents.read(bytes);
+     imageContents.close();
+ }
+@@ -107,9 +107,9 @@
+     private byte[] encodingTable = null;
+ 
+     /**
+-     * Construct an FSDefineJPEGImage2 object, initalizing it with values decoded 
++     * Construct an FSDefineJPEGImage2 object, initalizing it with values decoded
+      * from an encoded object.
+-     * 
++     *
+      * @param coder an FSCoder containing the binary data.
+      */
+     public FSDefineJPEGImage2(FSCoder coder)
+@@ -141,7 +141,7 @@
+         setEncodingTable(null);
+     }
+     /**
+-     * Constructs an FSDefineJPEGImage2 object by copying values from an 
++     * Constructs an FSDefineJPEGImage2 object by copying values from an
+      * existing object.
+      *
+      * @param obj an FSDefineJPEGImage2 object.
+@@ -181,7 +181,7 @@
+     public void setEncodingTable(byte[] bytes)
+     {
+         if (bytes == null) {
+-            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++            bytes = new byte[] { (byte)0xFF, (byte)0xD9, (byte)0xFF, (byte)0xD8 };
+         }
+         encodingTable = bytes;
+     }
+@@ -189,21 +189,21 @@
+     public Object clone()
+     {
+         FSDefineJPEGImage2 anObject = (FSDefineJPEGImage2)super.clone();
+-        
++
+         anObject.image = Transform.clone(image);
+         anObject.encodingTable = Transform.clone(encodingTable);
+-        
++
+         return anObject;
+     }
+ 
+     public boolean equals(Object anObject)
+     {
+         boolean result = false;
+-        
++
+         if (super.equals(anObject))
+         {
+             FSDefineJPEGImage2 typedObject = (FSDefineJPEGImage2)anObject;
+-            
++
+             result = Transform.equals(image, typedObject.image);
+             result = result &amp;&amp; Transform.equals(encodingTable, typedObject.encodingTable);
+         }
+@@ -213,7 +213,7 @@
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+         buffer.append(name());
+-        
++
+         if (depth &gt; 0)
+         {
+             buffer.append(&quot;: { &quot;);
+@@ -226,13 +226,13 @@
+     public int length(FSCoder coder)
+     {
+         super.length(coder);
+-        
++
+         length += encodingTable.length;
+         length += image.length;
+ 
+         return length;
+     }
+-    
++
+     public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+@@ -240,9 +240,9 @@
+         coder.writeBytes(image);
+         coder.endObject(name());
+     }
+-    
++
+     public void decode(FSCoder coder)
+-    {        
++    {
+         super.decode(coder);
+         setEncodingTable(readJPEGStream(coder));
+         byte[] data = new byte[length-encodingTable.length-2];
+@@ -250,30 +250,30 @@
+         setImage(data);
+         coder.endObject(name());
+     }
+-    
++
+     private byte[] readJPEGStream(FSCoder coder)
+     {
+         byte bytes[] = null;
++        
++        int start = coder.getPointer();
++        int end = start + ((length-2) &lt;&lt; 3);
++        int word = coder.readBits(16, false);
++        int eoi = word == 0xFFD8 ? 0xFFD9 : 0xFFD8;
+ 
+-        int eoi = 0xFFD9;        
+-        int start = coder.getPointer();
+-        int end = start + ((length-2) &lt;&lt; 3);        
+-        int word = 0;
+- 
+         do {
+             word = coder.scanBits(16, false);
+-            
+-            if (word == eoi) 
++
++            if (word == eoi)
+             {
+                 end = coder.getPointer()+16;
+                 break;
+             }
+             coder.adjustPointer(8);
+-        } 
++        }
+         while (coder.getPointer() &lt; end);
+-            
+-        int len = (end-start) &gt;&gt;&gt; 3; 
+-        
++
++        int len = (end-start) &gt;&gt;&gt; 3;
++
+         coder.setPointer(start);
+         bytes = new byte[len];
+         coder.readBytes(bytes);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2007-12-22 15:47:37 UTC (rev 269)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2007-12-22 15:58:45 UTC (rev 270)
+@@ -1,37 +1,37 @@
+ /*
+  * FSDefineJPEGImage3.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+ package com.flagstone.transform;
+ 
+ /**
+-FSDefineJPEGImage3 is used to define a transparent JPEG encoded image. 
++FSDefineJPEGImage3 is used to define a transparent JPEG encoded image.
+ 
+ &lt;p&gt;It extends the FSDefineJPEGImage3 class by including a separate zlib compressed table of alpha channel values. This allows the transparency of existing JPEG encoded images to be changed without re-encoding the original image.&lt;/p&gt;
+ 
+@@ -60,19 +60,19 @@
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage3_3&quot;&gt;alpha&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing the zlib encoded alpha channel data for each 
++&lt;td&gt;An array of bytes containing the zlib encoded alpha channel data for each
+ pixel in the image.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Although the encoding table defines how the image is compressed it is not 
+-essential. If an FSDefineJPEGImage3 object is created with an empty encoding 
+-table then the Flash Player will still display the JPEG image correctly. The 
+-empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD8, 
+-0xFF, 0xD9. For convenience passing a null reference to any of the constructors 
++&lt;p&gt;Although the encoding table defines how the image is compressed it is not
++essential. If an FSDefineJPEGImage3 object is created with an empty encoding
++table then the Flash Player will still display the JPEG image correctly. The
++empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD8,
++0xFF, 0xD9. For convenience passing a null reference to any of the constructors
+ or to the setEncodingTable method will create an empty table.&lt;/p&gt;
+ 
+-&lt;p&gt;The simplest way to use the FSDefineJPEGImage3 class is to use the constructor 
++&lt;p&gt;The simplest way to use the FSDefineJPEGImage3 class is to use the constructor
+ that specifies the JPEG file to initialise the object:&lt;/p&gt;
+ 
+ &lt;pre&gt;
+@@ -82,26 +82,26 @@
+ byte[] compressedAlpha = null;
+ 
+ try {
+-    FileInputStream imageContents = new FileInputStream(aFile);            
++    FileInputStream imageContents = new FileInputStream(aFile);
+     imageContents.read(bytes);
+     imageContents.close();
+-    
++
+     // Set the level of transparency;
+-    
++
+     for (int i=0; i&lt;bytes.length; i++)
+         alpha[i] = (byte)128;
+ 
+     Deflater deflater = new Deflater();
+-    
++
+     byte[] tmp = new byte[alpha.length];
+-    
++
+     deflater.setInput(alpha);
+     deflater.finish();
+-    
++
+     int bytesCompressed = deflater.deflate(tmp);
+-    
++
+     compressedAlpha = new byte[bytesCompressed];
+-    
++
+     for (int i=0; i&lt;bytesCompressed; i++)
+         compressedAlpha[i] = tmp[i];
+ }
+@@ -115,15 +115,15 @@
+ movie.add(new FSDefineJPEGImage3(movie.newIdentifier(), bytes, null, compressedAlpha));
+ &lt;/pre&gt;
+ 
+-&lt;p&gt;This generates an object with an empty encoding table, however the image will 
+-still be displayed correctly. The empty encoding table is not a null object. The 
++&lt;p&gt;This generates an object with an empty encoding table, however the image will
++still be displayed correctly. The empty encoding table is not a null object. The
+ alpha channel data is set so the image is completely opaque.&lt;/P&gt;
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+-&lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the 
++&lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the
+ Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+- */  
++ */
+ public class FSDefineJPEGImage3 extends FSDefineObject
+ {
+     private byte[] image = null;
+@@ -131,9 +131,9 @@
+     private byte[] alpha = null;
+ 
+     /**
+-     * Construct an FSDefineJPEGImage3 object, initalizing it with values 
++     * Construct an FSDefineJPEGImage3 object, initalizing it with values
+      * decoded from an encoded object.
+-     * 
++     *
+      * @param coder an FSCoder containing the binary data.
+      */
+     public FSDefineJPEGImage3(FSCoder coder)
+@@ -157,7 +157,7 @@
+         setCompressedAlpha(alphaBytes);
+     }
+     /**
+-     * Constructs an FSDefineJPEGImage object by copying values from an existing 
++     * Constructs an FSDefineJPEGImage object by copying values from an existing
+      * object.
+      *
+      * @param obj an FSDefineJPEGImage object.
+@@ -195,7 +195,7 @@
+     public void setEncodingTable(byte[] bytes)
+     {
+         if (bytes == null) {
+-            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++            bytes = new byte[] { (byte)0xFF, (byte)0xD9, (byte)0xFF, (byte)0xD8 };
+         }
+         encodingTable = bytes;
+     }
+@@ -221,22 +221,22 @@
+     public Object clone()
+     {
+         FSDefineJPEGImage3 anObject = (FSDefineJPEGImage3)super.clone();
+-        
++
+         anObject.image = Transform.clone(image);
+         anObject.encodingTable = Transform.clone(encodingTable);
+         anObject.alpha = Transform.clone(alpha);
+-        
++
+         return anObject;
+     }
+ 
+     public boolean equals(Object anObject)
+     {
+         boolean result = false;
+-        
++
+         if (super.equals(anObject))
+         {
+             FSDefineJPEGImage3 typedObject = (FSDefineJPEGImage3)anObject;
+-            
++
+             result = Transform.equals(image, typedObject.image);
+             result = result &amp;&amp; Transform.equals(encodingTable, typedObject.encodingTable);
+             result = result &amp;&amp; Transform.equals(alpha, typedObject.alpha);
+@@ -247,7 +247,7 @@
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+         buffer.append(name());
+-        
++
+         if (depth &gt; 0)
+         {
+             buffer.append(&quot;: { &quot;);
+@@ -261,7 +261,7 @@
+     public int length(FSCoder coder)
+     {
+         super.length(coder);
+-    
++
+         length += 4;
+         length += encodingTable.length;
+         length += image.length;
+@@ -270,11 +270,11 @@
+ 
+         return length;
+     }
+-    
++
+     public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+-        
++
+         coder.writeWord(encodingTable.length+image.length, 4);
+         coder.writeBytes(encodingTable);
+         coder.writeBytes(image);
+@@ -284,13 +284,13 @@
+ 
+         coder.endObject(name());
+     }
+-    
++
+     public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+-        
++
+         int offset = coder.readWord(4, false);
+-        
++
+         setEncodingTable(readJPEGStream(coder));
+         byte[] imageIn = new byte[offset-encodingTable.length];
+         coder.readBytes(imageIn);
+@@ -298,33 +298,33 @@
+         byte[] alphaIn = new byte[length-offset-6];
+         coder.readBytes(alphaIn);
+          setCompressedAlpha(alphaIn);
+-        
++
+         coder.endObject(name());
+     }
+ 
+     private byte[] readJPEGStream(FSCoder coder)
+     {
+         byte bytes[] = null;
+-
+-        int eoi = 0xFFD9;        
++        
+         int start = coder.getPointer();
+-        int end = start + ((length-2) &lt;&lt; 3);        
+-        int word = 0;
++        int end = start + ((length-2) &lt;&lt; 3);
++        int word = coder.readBits(16, false);
++        int eoi = word == 0xFFD8 ? 0xFFD9 : 0xFFD8;
+ 
+         do {
+             word = coder.scanBits(16, false);
+-            
+-            if (word == eoi) 
++
++            if (word == eoi)
+             {
+                 end = coder.getPointer()+16;
+                 break;
+             }
+             coder.adjustPointer(8);
+-        } 
++        }
+         while (coder.getPointer() &lt; end);
+-            
+-        int len = (end-start) &gt;&gt;&gt; 3; 
+-        
++
++        int len = (end-start) &gt;&gt;&gt; 3;
++
+         coder.setPointer(start);
+         bytes = new byte[len];
+         coder.readBytes(bytes);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000205.html">[Transform-svn] r269 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000207.html">[Transform-svn] r271 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#206">[ date ]</a>
+              <a href="thread.html#206">[ thread ]</a>
+              <a href="subject.html#206">[ subject ]</a>
+              <a href="author.html#206">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

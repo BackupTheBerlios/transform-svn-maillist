@@ -1,0 +1,3554 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r110 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r110%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603031901.k23J1Jr3000864%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000050.html">
+   <LINK REL="Next"  HREF="000052.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r110 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r110%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603031901.k23J1Jr3000864%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r110 - in trunk: doc src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Fri Mar  3 20:01:19 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000050.html">[Transform-svn] r109 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000052.html">[Transform-svn] r111 - in trunk: doc src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#51">[ date ]</a>
+              <a href="thread.html#51">[ thread ]</a>
+              <a href="subject.html#51">[ subject ]</a>
+              <a href="author.html#51">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-03 19:59:51 +0100 (Fri, 03 Mar 2006)
+New Revision: 110
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSAction.java
+   trunk/src/com/flagstone/transform/FSActionObject.java
+   trunk/src/com/flagstone/transform/FSBitmapFill.java
+   trunk/src/com/flagstone/transform/FSBounds.java
+   trunk/src/com/flagstone/transform/FSButton.java
+   trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSButtonSound.java
+   trunk/src/com/flagstone/transform/FSCall.java
+   trunk/src/com/flagstone/transform/FSCharacter.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSColorTransform.java
+   trunk/src/com/flagstone/transform/FSCoordTransform.java
+   trunk/src/com/flagstone/transform/FSCurve.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDefineButton2.java
+   trunk/src/com/flagstone/transform/FSDefineFont.java
+   trunk/src/com/flagstone/transform/FSDefineFont2.java
+   trunk/src/com/flagstone/transform/FSDefineImage.java
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+   trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+   trunk/src/com/flagstone/transform/FSDefineObject.java
+   trunk/src/com/flagstone/transform/FSDefineShape.java
+   trunk/src/com/flagstone/transform/FSDefineShape2.java
+   trunk/src/com/flagstone/transform/FSDefineShape3.java
+   trunk/src/com/flagstone/transform/FSDefineSound.java
+   trunk/src/com/flagstone/transform/FSDefineText.java
+   trunk/src/com/flagstone/transform/FSDefineText2.java
+   trunk/src/com/flagstone/transform/FSDefineTextField.java
+   trunk/src/com/flagstone/transform/FSDefineVideo.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+   trunk/src/com/flagstone/transform/FSEnvelope.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSExport.java
+   trunk/src/com/flagstone/transform/FSFillStyle.java
+   trunk/src/com/flagstone/transform/FSFontInfo.java
+   trunk/src/com/flagstone/transform/FSFontInfo2.java
+   trunk/src/com/flagstone/transform/FSFrameLabel.java
+   trunk/src/com/flagstone/transform/FSFree.java
+   trunk/src/com/flagstone/transform/FSGetUrl.java
+   trunk/src/com/flagstone/transform/FSGetUrl2.java
+   trunk/src/com/flagstone/transform/FSGotoFrame.java
+   trunk/src/com/flagstone/transform/FSGotoFrame2.java
+   trunk/src/com/flagstone/transform/FSGotoLabel.java
+   trunk/src/com/flagstone/transform/FSGradient.java
+   trunk/src/com/flagstone/transform/FSGradientFill.java
+   trunk/src/com/flagstone/transform/FSIf.java
+   trunk/src/com/flagstone/transform/FSImport.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java
+   trunk/src/com/flagstone/transform/FSJump.java
+   trunk/src/com/flagstone/transform/FSKerning.java
+   trunk/src/com/flagstone/transform/FSLimitScript.java
+   trunk/src/com/flagstone/transform/FSLine.java
+   trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+   trunk/src/com/flagstone/transform/FSMorphGradient.java
+   trunk/src/com/flagstone/transform/FSMorphGradientFill.java
+   trunk/src/com/flagstone/transform/FSMorphSolidFill.java
+   trunk/src/com/flagstone/transform/FSMorphSolidLine.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/src/com/flagstone/transform/FSMovieObject.java
+   trunk/src/com/flagstone/transform/FSNewFunction.java
+   trunk/src/com/flagstone/transform/FSNewFunction2.java
+   trunk/src/com/flagstone/transform/FSNull.java
+   trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+   trunk/src/com/flagstone/transform/FSPlaceObject.java
+   trunk/src/com/flagstone/transform/FSPlaceObject2.java
+   trunk/src/com/flagstone/transform/FSPointer.java
+   trunk/src/com/flagstone/transform/FSProperty.java
+   trunk/src/com/flagstone/transform/FSProtect.java
+   trunk/src/com/flagstone/transform/FSPush.java
+   trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+   trunk/src/com/flagstone/transform/FSRegisterCopy.java
+   trunk/src/com/flagstone/transform/FSRegisterIndex.java
+   trunk/src/com/flagstone/transform/FSRegisterVariable.java
+   trunk/src/com/flagstone/transform/FSRemoveObject.java
+   trunk/src/com/flagstone/transform/FSRemoveObject2.java
+   trunk/src/com/flagstone/transform/FSSerialNumber.java
+   trunk/src/com/flagstone/transform/FSSetBackgroundColor.java
+   trunk/src/com/flagstone/transform/FSSetTarget.java
+   trunk/src/com/flagstone/transform/FSShape.java
+   trunk/src/com/flagstone/transform/FSShapeStyle.java
+   trunk/src/com/flagstone/transform/FSShowFrame.java
+   trunk/src/com/flagstone/transform/FSSolidFill.java
+   trunk/src/com/flagstone/transform/FSSolidLine.java
+   trunk/src/com/flagstone/transform/FSSound.java
+   trunk/src/com/flagstone/transform/FSSoundStreamBlock.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+   trunk/src/com/flagstone/transform/FSStartSound.java
+   trunk/src/com/flagstone/transform/FSTabOrder.java
+   trunk/src/com/flagstone/transform/FSTable.java
+   trunk/src/com/flagstone/transform/FSTableIndex.java
+   trunk/src/com/flagstone/transform/FSText.java
+   trunk/src/com/flagstone/transform/FSTransformObject.java
+   trunk/src/com/flagstone/transform/FSUnknownAction.java
+   trunk/src/com/flagstone/transform/FSUnknownObject.java
+   trunk/src/com/flagstone/transform/FSVideoFrame.java
+   trunk/src/com/flagstone/transform/FSVoid.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+   trunk/src/com/flagstone/transform/FSWith.java
+Log:
+Methods used to encode and decode objects:
+   
+    int length(FSCoder)
+    void decode(FSCoder)
+    void encode(FSCoder)
+          
+along with the construtor &lt;class&gt;(FSCoder) are all &quot;upgraded&quot; to 
+public to support testing.
+
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/doc/CHANGES.txt	2006-03-03 18:59:51 UTC (rev 110)
+@@ -17,6 +17,17 @@
+     
+     * Removed private copies of constants used to identify different types of 
+       object. This was left over from supporting different versions of Flash.
++      
++    * cleaned up initialization of attributes.
++    
++    * Methods used to encode and decode objects:
++   
++          int length(FSCoder)
++          void decode(FSCoder)
++          void encode(FSCoder)
++          
++      along with the construtor &lt;class&gt;(FSCoder) are all &quot;upgraded&quot; to public
++      to support testing.
+ 
+ 2006-03-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSAction.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSAction.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -1056,13 +1056,13 @@
+         buffer.append(name());
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -147,14 +147,14 @@
+         return result;
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         length = 0;
+         
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.beginObject(name());
+         coder.writeWord(type, 1);
+@@ -163,7 +163,7 @@
+             coder.writeWord(length, 2);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         coder.beginObject(name());
+         
+
+Modified: trunk/src/com/flagstone/transform/FSBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBitmapFill.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSBitmapFill.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -234,7 +234,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = super.length(coder);
+ 
+@@ -244,7 +244,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -252,7 +252,7 @@
+         transform.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSBounds.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBounds.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSBounds.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -311,7 +311,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfBits = 0;
+         int fieldSize = FSCoder.size(new int[]{minX, maxX, minY, maxY}, true);
+@@ -322,7 +322,7 @@
+         return numberOfBits&gt;&gt;3; 
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfBits = FSCoder.size(new int[]{minX, maxX, minY, maxY}, true);
+         
+@@ -335,7 +335,7 @@
+         coder.alignToByte();
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         coder.alignToByte();
+         
+
+Modified: trunk/src/com/flagstone/transform/FSButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButton.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSButton.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -331,7 +331,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 0;
+     
+@@ -344,7 +344,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeBits(0, 4);
+         coder.writeBits(state, 4);
+@@ -357,7 +357,7 @@
+ // End Flash 3
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         coder.readBits(4, false);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -173,7 +173,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -183,7 +183,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -192,7 +192,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -378,7 +378,7 @@
+         }
+     }
+     
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 2;
+     
+@@ -401,7 +401,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(event, 2);
+ 
+@@ -438,7 +438,7 @@
+         coder.writeWord(0, 1);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         event = coder.readWord(2, false);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonSound.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSButtonSound.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -255,7 +255,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -272,7 +272,7 @@
+         return length;
+     }
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -288,7 +288,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSCall.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -101,18 +101,18 @@
+         buffer.append(name());
+     }
+     
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         return super.length(coder);
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSCharacter.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCharacter.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSCharacter.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -215,7 +215,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
+         int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+@@ -223,13 +223,13 @@
+         return numberOfGlyphBits + numberOfAdvanceBits;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeBits(glyphIndex, coder.context[FSCoder.NumberOfGlyphBits]);
+         coder.writeBits(advance, coder.context[FSCoder.NumberOfAdvanceBits]);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
+         int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -462,7 +462,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 4 + ((coder.context[FSCoder.Version] &gt; 5) ? 4 : 2);
+     
+@@ -489,7 +489,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int eventSize = (coder.context[FSCoder.Version] &gt; 5) ? 4 : 2;
+         
+@@ -555,7 +555,7 @@
+         coder.writeWord(0, 1);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int eventSize = (coder.context[FSCoder.Version] &gt; 5) ? 4 : 2;
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColorTransform.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSColorTransform.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -592,7 +592,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfBits = 6;
+         int fieldSize = fieldSize(coder);
+@@ -610,7 +610,7 @@
+         return numberOfBits&gt;&gt;3;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfBits = fieldSize(coder);
+         boolean containsMultiplyTerms = containsMultiplyTerms(coder);
+@@ -643,7 +643,7 @@
+         coder.alignToByte();
+     }
+      
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean containsAddTerms = false;
+         boolean containsMultiplyTerms = false;
+
+Modified: trunk/src/com/flagstone/transform/FSCoordTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoordTransform.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSCoordTransform.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -384,7 +384,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfBits = 7 + translateFieldSize()*2;
+     
+@@ -399,7 +399,7 @@
+         return numberOfBits&gt;&gt;3;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int translateBits = translateFieldSize();
+         
+@@ -433,7 +433,7 @@
+         coder.alignToByte();
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int scaleFieldSize = 0;
+         int rotateFieldSize = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSCurve.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCurve.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSCurve.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -278,7 +278,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfBits = 6;
+ 
+@@ -291,7 +291,7 @@
+         return numberOfBits;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int _fieldSize = FSCoder.size(new int[]{controlX, controlY, anchorX, anchorY, 1}, true);
+         
+@@ -304,7 +304,7 @@
+         coder.writeBits(anchorY, _fieldSize);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int fieldSize = 0;
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -352,7 +352,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -380,7 +380,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -422,7 +422,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -349,7 +349,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {    
+         super.length(coder);
+     
+@@ -379,7 +379,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int offsetStart = 0;
+         int offsetEnd = 0;
+@@ -432,7 +432,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int actionsOffset = 0;
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineFont.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -168,7 +168,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -186,7 +186,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -220,7 +220,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         shapes = new ArrayList();
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -676,7 +676,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         boolean wideOffsets = wideOffsetsForIndexedArray(shapes, coder);
+         int wideCodes = 0;
+@@ -721,7 +721,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         boolean wideOffsets = wideOffsetsForIndexedArray(shapes, coder);
+         int wideCodes = 0;
+@@ -817,7 +817,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean containsWideOffsets = false;
+         boolean containsWideCodes = false;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineImage.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -303,7 +303,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -314,7 +314,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.beginObject(name());
+ 
+@@ -343,7 +343,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -289,7 +289,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -300,7 +300,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.beginObject(name());
+ 
+@@ -326,7 +326,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -177,7 +177,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -186,14 +186,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeBytes(image);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);    
+         byte[] data = new byte[length-2];    
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -210,7 +210,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -220,7 +220,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeBytes(encodingTable);
+@@ -228,7 +228,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {        
+         super.decode(coder);
+         setEncodingTable(readJPEGStream(coder));
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -247,7 +247,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -260,7 +260,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -274,7 +274,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -410,7 +410,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -451,7 +451,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -518,7 +518,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int fillStyleCount = 0;
+         int lineStyleCount = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -190,7 +190,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+             
+@@ -207,7 +207,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -217,7 +217,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -82,7 +82,7 @@
+         Transform.append(buffer, &quot;identifier&quot;, identifier);
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -91,14 +91,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+         coder.writeWord(identifier, 2);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineShape.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -319,7 +319,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -348,7 +348,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -378,7 +378,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int fillStyleCount = 0;
+         int lineStyleCount = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -321,7 +321,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -352,7 +352,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -400,7 +400,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int fillStyleCount = 0;
+         int lineStyleCount = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -314,7 +314,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -350,7 +350,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+         int numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+@@ -401,7 +401,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int fillStyleCount = 0;
+         int lineStyleCount = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineSound.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineSound.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -326,7 +326,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -336,7 +336,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -365,7 +365,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineText.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -279,7 +279,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -301,7 +301,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -324,7 +324,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int glyphBits = 0;
+         int advanceBits = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineText2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -276,7 +276,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -300,7 +300,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -325,7 +325,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int glyphBits = 0;
+         int advanceBits = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineTextField.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineTextField.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -938,7 +938,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         boolean _containsFont = containsFont();
+         boolean _containsColor = containsColor();
+@@ -963,7 +963,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         boolean _containsFont = containsFont();
+         boolean _containsColor = containsColor();
+@@ -1025,7 +1025,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean _containsFont = false;
+         boolean _containsColor = false;
+
+Modified: trunk/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineVideo.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDefineVideo.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -345,7 +345,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -354,7 +354,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -369,7 +369,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -247,7 +247,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -269,7 +269,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -306,7 +306,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -139,7 +139,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -148,7 +148,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -159,7 +159,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -136,7 +136,7 @@
+         }
+     }
+ 
+-     int length(FSCoder coder)
++     public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -145,7 +145,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -156,7 +156,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSEnvelope.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnvelope.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSEnvelope.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -189,20 +189,20 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 8;
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(mark, 4);
+         coder.writeWord(left, 2);
+         coder.writeWord(right, 2);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         mark = coder.readWord(4, false);
+         left = coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -378,7 +378,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         super.length(coder);
+         
+@@ -417,7 +417,7 @@
+         return length;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         super.encode(coder);
+ 
+@@ -551,7 +551,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean containsVariable = false;
+         boolean containsCatch = false;
+
+Modified: trunk/src/com/flagstone/transform/FSExport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExport.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSExport.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -172,7 +172,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -188,7 +188,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -206,7 +206,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSFillStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFillStyle.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSFillStyle.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -112,19 +112,19 @@
+         return result;
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 1;
+     
+          return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(type, 1);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         type = coder.readWord(1, false);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSFontInfo.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -355,7 +355,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -375,7 +375,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {    
+         super.encode(coder);
+         
+@@ -395,7 +395,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int nameLength = 0;
+        
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSFontInfo2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -337,7 +337,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -349,7 +349,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {    
+         super.encode(coder);
+         
+@@ -370,7 +370,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int nameLength = 0;
+         
+
+Modified: trunk/src/com/flagstone/transform/FSFrameLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFrameLabel.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSFrameLabel.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -290,7 +290,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -303,7 +303,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeString(label);
+@@ -316,7 +316,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSFree.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFree.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSFree.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -126,7 +126,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -135,14 +135,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(identifier, 2);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);        
+         identifier = coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGetUrl.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -236,7 +236,7 @@
+         }
+     }
+     
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -246,7 +246,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -258,7 +258,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         url = coder.readString();
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGetUrl2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -245,7 +245,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -254,14 +254,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(requestType, 1);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         requestType = coder.readWord(1, false);
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGotoFrame.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -152,7 +152,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -161,14 +161,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(frameNumber, 2);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGotoFrame2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -259,7 +259,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -268,7 +268,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -284,7 +284,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean containsOffset = false; 
+         
+
+Modified: trunk/src/com/flagstone/transform/FSGotoLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoLabel.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGotoLabel.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -158,7 +158,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -167,7 +167,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -176,7 +176,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         label = coder.readString();
+
+Modified: trunk/src/com/flagstone/transform/FSGradient.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGradient.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGradient.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -176,7 +176,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 1;
+     
+@@ -185,13 +185,13 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(ratio, 1);
+         color.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         ratio = coder.readWord(1, false);
+         color = new FSColor(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGradientFill.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSGradientFill.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -251,7 +251,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = super.length(coder);
+     
+@@ -264,7 +264,7 @@
+          return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -275,7 +275,7 @@
+             ((FSTransformObject)gradientIterator.next()).encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int count = 0;
+         
+
+Modified: trunk/src/com/flagstone/transform/FSIf.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSIf.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSIf.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -143,7 +143,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -152,14 +152,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(offset, 2);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         offset = coder.readWord(2, true);
+
+Modified: trunk/src/com/flagstone/transform/FSImport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSImport.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSImport.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -211,7 +211,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -229,7 +229,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+            
+@@ -250,7 +250,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -277,7 +277,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -302,7 +302,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -343,7 +343,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -174,7 +174,7 @@
+         }        
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -183,7 +183,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -199,7 +199,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSJump.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJump.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSJump.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -136,7 +136,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -145,14 +145,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(offset, 2);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         offset = coder.readWord(2, true);
+
+Modified: trunk/src/com/flagstone/transform/FSKerning.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSKerning.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSKerning.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -184,7 +184,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = (coder.context[FSCoder.WideCodes] != 0) ? 4 : 2;
+     
+@@ -193,7 +193,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         int numberOfBytes = (coder.context[FSCoder.WideCodes] != 0) ? 2 : 1;
+     
+@@ -202,7 +202,7 @@
+         coder.writeWord(adjustment, 2);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int numberOfBytes = (coder.context[FSCoder.WideCodes] != 0) ? 2 : 1;
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSLimitScript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLimitScript.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSLimitScript.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -170,7 +170,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -179,7 +179,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -188,7 +188,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLine.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSLine.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -173,7 +173,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfBits = 7;
+     
+@@ -191,7 +191,7 @@
+         return numberOfBits;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         boolean _containsGeneralLine = containsGeneralLine();
+         boolean _containsVerticalLine = containsVerticalLine();
+@@ -215,7 +215,7 @@
+         } 
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         /* shapeType */ coder.readBits(1, false);
+         /* edgeType */ coder.readBits(1, false);
+
+Modified: trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -212,7 +212,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = super.length(coder);
+ 
+@@ -223,7 +223,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(identifier, 2);
+@@ -231,7 +231,7 @@
+         endTransform.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         identifier= coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSMorphGradient.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphGradient.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMorphGradient.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -232,7 +232,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 2;
+     
+@@ -242,7 +242,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(startRatio, 1);
+         startColor.encode(coder);
+@@ -250,7 +250,7 @@
+         endColor.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         startRatio = coder.readWord(1, false);
+         startColor = new FSColor(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSMorphGradientFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphGradientFill.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMorphGradientFill.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -285,7 +285,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = super.length(coder);
+     
+@@ -299,7 +299,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         startTransform.encode(coder);
+@@ -310,7 +310,7 @@
+             ((FSTransformObject)gradientIterator.next()).encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMorphSolidFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphSolidFill.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMorphSolidFill.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -182,7 +182,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = super.length(coder);
+     
+@@ -192,14 +192,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         startColor.encode(coder);
+         endColor.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         startColor = new FSColor(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSMorphSolidLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphSolidLine.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMorphSolidLine.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -233,7 +233,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 4;
+     
+@@ -243,7 +243,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(startWidth, 2);
+         coder.writeWord(endWidth, 2);
+@@ -251,7 +251,7 @@
+         endColor.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         startWidth = coder.readWord(2, false);
+         endWidth = coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -1525,7 +1525,7 @@
+         return len;
+     }
+ 
+-    private    int numberOfFrames()
++    private int numberOfFrames()
+     {
+         int numberOfFrames = 0;
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -223,7 +223,7 @@
+         buffer.append(name());
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         coder.context[FSCoder.Type] = type;
+         
+@@ -232,7 +232,7 @@
+         return length;
+     }
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.beginObject(name());
+ 
+@@ -249,7 +249,7 @@
+         }
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         coder.beginObject(name());
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSNewFunction.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -347,7 +347,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         super.length(coder);
+         
+@@ -376,7 +376,7 @@
+         return length;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         coder.beginObject(name());
+ 
+@@ -426,7 +426,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int argumentCount = 0;
+         int bytesRead = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -492,7 +492,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         super.length(coder);
+         
+@@ -518,7 +518,7 @@
+         return length;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         coder.beginObject(name());
+ 
+@@ -565,7 +565,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int argumentCount = 0;
+         int bytesRead = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSNull.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNull.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSNull.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -51,16 +51,16 @@
+         buffer.append(name());
+     }
+ 
+-    int length(FSCoder coder) 
++    public int length(FSCoder coder) 
+     { 
+         return 0; 
+     }
+     
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+     }
+     
+-    void decode(FSCoder coder) 
++    public void decode(FSCoder coder) 
+     {
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -95,14 +95,14 @@
+         buffer.append(name());
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+             
+         return length;
+     }    
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.context[FSCoder.Empty] = 1;
+         
+@@ -112,7 +112,7 @@
+         coder.endObject(name());
+     }
+ 
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSPlaceObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -304,7 +304,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         length += 4;
+@@ -314,7 +314,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -328,7 +328,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int lengthRead = coder.getPointer();
+         
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -853,7 +853,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -891,7 +891,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -966,7 +966,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean containsClipEvents = false;
+         boolean containsClippingDepth = false;
+
+Modified: trunk/src/com/flagstone/transform/FSPointer.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPointer.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSPointer.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -133,7 +133,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         length += 4;
+@@ -141,14 +141,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(pointer, 4);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         pointer = coder.readWord(4, false);
+
+Modified: trunk/src/com/flagstone/transform/FSProperty.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProperty.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSProperty.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -96,18 +96,18 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         return 5;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         coder.writeWord(1, 1);
+         coder.writeWord(value, 4);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         /* type */ coder.readWord(1, false);
+         value = coder.readWord(4, false);
+
+Modified: trunk/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProtect.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSProtect.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -139,7 +139,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -149,7 +149,7 @@
+         return length;
+     }    
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -163,7 +163,7 @@
+          coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -510,7 +510,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -546,7 +546,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -611,7 +611,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -134,7 +134,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -143,7 +143,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeString(name);
+@@ -151,7 +151,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         name = coder.readString();
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterCopy.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterCopy.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSRegisterCopy.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -144,7 +144,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -153,13 +153,13 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(registerNumber, 1);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         registerNumber = coder.readWord(1, false);
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterIndex.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterIndex.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSRegisterIndex.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -134,18 +134,18 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         return 2;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         coder.writeWord(4, 1);
+         coder.writeWord(index, 1);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         /* type */ coder.readWord(1, false);
+         index = coder.readWord(1, false);
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterVariable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterVariable.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSRegisterVariable.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -145,7 +145,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 1;
+         
+@@ -154,14 +154,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(index, 1);
+         coder.writeString(name);
+         coder.writeWord(0, 1);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         index = coder.readWord(1, false);
+         name = coder.readString();
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSRemoveObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -187,7 +187,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         length += 4;
+@@ -195,7 +195,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(identifier, 2);
+@@ -203,7 +203,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         identifier = coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSRemoveObject2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -131,7 +131,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         length += 2;
+@@ -139,14 +139,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(layer, 2);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         layer = coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSSerialNumber.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSerialNumber.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSerialNumber.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -139,7 +139,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+@@ -148,7 +148,7 @@
+         return length;
+     }    
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+            coder.writeString(serialNumber);
+@@ -156,7 +156,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         serialNumber = coder.readString();
+
+Modified: trunk/src/com/flagstone/transform/FSSetBackgroundColor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetBackgroundColor.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSetBackgroundColor.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -152,7 +152,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -161,14 +161,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         color.encode(coder);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         color = new FSColor(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSSetTarget.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetTarget.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSetTarget.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -144,7 +144,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -153,7 +153,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -162,7 +162,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         target = coder.readString();
+
+Modified: trunk/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShape.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSShape.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -203,7 +203,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int numberOfBits = 0;
+         
+@@ -227,7 +227,7 @@
+         return numberOfBits&gt;&gt;3;
+     }
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         if (objects != null)
+         {      
+@@ -246,7 +246,7 @@
+         }
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         if (coder.context[FSCoder.DecodeShapes] == 1)
+         {
+
+Modified: trunk/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShapeStyle.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSShapeStyle.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -564,7 +564,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         boolean _containsStyles = containsStyles();
+         boolean _containsLineStyle = containsLineStyle();
+@@ -621,7 +621,7 @@
+         return numberOfBits;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         boolean _containsStyles = containsStyles();
+         boolean _containsLineStyle = containsLineStyle();
+@@ -701,7 +701,7 @@
+         }
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean containsStyles = false;
+         boolean containsLineStyle = false;
+
+Modified: trunk/src/com/flagstone/transform/FSShowFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShowFrame.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSShowFrame.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -127,14 +127,14 @@
+         buffer.append(name());
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+ 
+         return length;
+     }    
+ 
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.context[FSCoder.Empty] = 1;
+         super.encode(coder);
+@@ -142,7 +142,7 @@
+         coder.endObject(name());
+     }
+ 
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         coder.endObject(name());
+
+Modified: trunk/src/com/flagstone/transform/FSSolidFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSolidFill.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSolidFill.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -182,7 +182,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = super.length(coder);
+     
+@@ -191,13 +191,13 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         color.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         color = new FSColor(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSSolidLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSolidLine.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSolidLine.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -199,7 +199,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         int length = 2;
+     
+@@ -208,13 +208,13 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         coder.writeWord(width, 2);
+         color.encode(coder);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         width = coder.readWord(2, false);
+         color = new FSColor(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSound.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSound.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -366,7 +366,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         boolean _containsInPoint = containsInPoint();
+         boolean _containsOutPoint = containsOutPoint();
+@@ -384,7 +384,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         boolean _containsInPoint = containsInPoint();
+         boolean _containsOutPoint = containsOutPoint();
+@@ -413,7 +413,7 @@
+         }
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         boolean _containsInPoint = false;
+         boolean _containsOutPoint = false;
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamBlock.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamBlock.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSoundStreamBlock.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -151,7 +151,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -160,14 +160,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeBytes(soundData);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         soundData = new byte[length];
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -373,7 +373,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -385,7 +385,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -436,7 +436,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -386,7 +386,7 @@
+          }
+      }
+ 
+-     int length(FSCoder coder)
++     public int length(FSCoder coder)
+      {
+          super.length(coder);
+     
+@@ -398,7 +398,7 @@
+          return length;
+      }
+     
+-     void encode(FSCoder coder)
++     public void encode(FSCoder coder)
+      {
+          super.encode(coder);
+         
+@@ -449,7 +449,7 @@
+          coder.endObject(name());
+      }
+     
+-     void decode(FSCoder coder)
++     public void decode(FSCoder coder)
+      {
+          super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSStartSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSStartSound.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSStartSound.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -140,7 +140,7 @@
+         }
+     }
+     
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         length += sound.length(coder);
+@@ -148,14 +148,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         sound.encode(coder);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);        
+         sound = new FSSound(coder);
+
+Modified: trunk/src/com/flagstone/transform/FSTabOrder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTabOrder.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSTabOrder.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -168,7 +168,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -177,7 +177,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -186,7 +186,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTable.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSTable.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -207,7 +207,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -219,7 +219,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+ 
+@@ -236,7 +236,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSTableIndex.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTableIndex.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSTableIndex.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -148,12 +148,12 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         return index &lt; 256 ? 2 : 3;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         int type = index &lt; 256 ? 8 : 9;
+         
+@@ -161,7 +161,7 @@
+         coder.writeWord(index, type == 8 ? 1 : 2);
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int type = coder.readWord(1, false);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSText.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSText.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSText.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -465,7 +465,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         boolean _containsFont = containsFont();
+         boolean _containsColor = containsColor();
+@@ -498,7 +498,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         boolean _containsFont = containsFont();
+         boolean _containsColor = containsColor();
+@@ -541,7 +541,7 @@
+         }
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         /* type */ coder.readBits(1, false);
+         /* reserved */ coder.readBits(3, false);
+
+Modified: trunk/src/com/flagstone/transform/FSTransformObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTransformObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSTransformObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -128,7 +128,7 @@
+     */
+     public abstract void appendDescription(StringBuffer buffer, int depth);
+     
+-    abstract int length(FSCoder coder);
+-    abstract void encode(FSCoder coder);
+-    abstract void decode(FSCoder coder);
++    abstract public int length(FSCoder coder);
++    abstract public void encode(FSCoder coder);
++    abstract public void decode(FSCoder coder);
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSUnknownAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSUnknownAction.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSUnknownAction.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -137,7 +137,7 @@
+         buffer.append(name());
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -146,14 +146,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeBytes(data);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSUnknownObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSUnknownObject.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSUnknownObject.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -137,7 +137,7 @@
+         buffer.append(name());
+     }
+     
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -146,14 +146,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeBytes(data);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         data = new byte[length];
+
+Modified: trunk/src/com/flagstone/transform/FSVideoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -216,7 +216,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+     
+@@ -225,7 +225,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         
+@@ -236,7 +236,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         
+
+Modified: trunk/src/com/flagstone/transform/FSVoid.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVoid.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSVoid.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -53,16 +53,16 @@
+         buffer.append(name());
+     }
+ 
+-    int length(FSCoder coder) 
++    public int length(FSCoder coder) 
+     { 
+         return 0; 
+     }
+     
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+     }
+     
+-    void decode(FSCoder coder) 
++    public void decode(FSCoder coder) 
+     {
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -181,7 +181,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -190,7 +190,7 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(frameNumber, 2);
+@@ -198,7 +198,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         frameNumber = coder.readWord(2, false);
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -155,7 +155,7 @@
+         }
+     }
+ 
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     {
+         super.length(coder);
+         
+@@ -164,14 +164,14 @@
+         return length;
+     }
+     
+-    void encode(FSCoder coder)
++    public void encode(FSCoder coder)
+     {
+         super.encode(coder);
+         coder.writeWord(actionCount, 1);
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+         actionCount = coder.readWord(1, false);
+
+Modified: trunk/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWith.java	2006-03-03 18:51:55 UTC (rev 109)
++++ trunk/src/com/flagstone/transform/FSWith.java	2006-03-03 18:59:51 UTC (rev 110)
+@@ -184,7 +184,7 @@
+         }
+     }
+     
+-    int length(FSCoder coder)
++    public int length(FSCoder coder)
+     { 
+         super.length(coder);
+         
+@@ -204,7 +204,7 @@
+         return length;
+     }
+         
+-    void encode(FSCoder coder) 
++    public void encode(FSCoder coder) 
+     {
+         coder.beginObject(name());
+      
+@@ -238,7 +238,7 @@
+         coder.endObject(name());
+     }
+     
+-    void decode(FSCoder coder)
++    public void decode(FSCoder coder)
+     {
+         int bytesRead = 0;
+         
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000050.html">[Transform-svn] r109 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000052.html">[Transform-svn] r111 - in trunk: doc src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#51">[ date ]</a>
+              <a href="thread.html#51">[ thread ]</a>
+              <a href="subject.html#51">[ subject ]</a>
+              <a href="author.html#51">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

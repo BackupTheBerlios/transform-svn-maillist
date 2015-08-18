@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r165 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r165%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200606200718.k5K7Ir2S025059%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000103.html">
+   <LINK REL="Next"  HREF="000105.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r165 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r165%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200606200718.k5K7Ir2S025059%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r165 - in trunk: doc src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Tue Jun 20 09:18:53 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000103.html">[Transform-svn] r164 - in trunk: doc src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000105.html">[Transform-svn] r166 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#104">[ date ]</a>
+              <a href="thread.html#104">[ thread ]</a>
+              <a href="subject.html#104">[ subject ]</a>
+              <a href="author.html#104">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-20 09:18:32 +0200 (Tue, 20 Jun 2006)
+New Revision: 165
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Fixed bug in FSDefinedJPEGImage2 and FSDefinedJPEGImage3 where 
+the encoding table could not be set to null (to create an empty 
+table).
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-06-11 13:12:59 UTC (rev 164)
++++ trunk/doc/CHANGES.txt	2006-06-20 07:18:32 UTC (rev 165)
+@@ -1,3 +1,8 @@
++2006-06-20 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Fixed bug in FSDefinedJPEGImage2 and FSDefinedJPEGImage3 where the 
++      encoding table could not be set to null (to create an empty table).
++
+ 2006-06-11 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Confirmed integration of TestNG into ant buils file, test.xml.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-06-11 13:12:59 UTC (rev 164)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-06-20 07:18:32 UTC (rev 165)
+@@ -31,9 +31,13 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSDefineJPEGImage2 is used to define a JPEG encoded image with an integrated encoding table. 
++FSDefineJPEGImage2 is used to define a JPEG encoded image with an integrated 
++encoding table. 
+   
+-&lt;p&gt;It extends the FSDefineJPEGImage class by including a separate encoding table, rather than using an FSJPEGEncodingTable object to store the encoding table. This allows multiple JPEG images with different amounts of compression to be included within a Flash file.&lt;/p&gt;
++&lt;p&gt;It extends the FSDefineJPEGImage class by including a separate encoding table, 
++rather than using an FSJPEGEncodingTable object to store the encoding table. 
++This allows multiple JPEG images with different amounts of compression to be 
++included within a Flash file.&lt;/p&gt;
+ 
+ &lt;table class=&quot;datasheet&quot;&gt;
+ 
+@@ -45,7 +49,8 @@
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage2_1&quot;&gt;identifier&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the image from other objects.&lt;/td&gt;
++&lt;td&gt;A unique identifier, in the range 1..65535, that is used to reference the 
++image from other objects.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+@@ -59,11 +64,17 @@
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Although the encoding table defines how the image is compressed it is not essential. If an FSDefineJPEGImage2 object is created with an empty encoding table then the Flash Player will still display the JPEG image correctly. The empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD9, 0xFF, 0xD8. Note however that this is reversed from StartOfImage (SOI, 0xFFD8) and EndOfImage (EOI, 0xFFD9) tags defined in the JPEG file format specification. This appears to be a bug in Flash. However the order is preserved to ensure compatibility although code has been tested with the normal order for the tags and the images were displayed correctly.&lt;/p&gt;
++&lt;p&gt;Although the encoding table defines how the image is compressed it is not 
++essential. If an FSDefineJPEGImage3 object is created with an empty encoding 
++table then the Flash Player will still display the JPEG image correctly. The 
++empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD8, 
++0xFF, 0xD9. For convenience passing a null reference to any of the constructors 
++or to the setEncodingTable method will create an empty table.&lt;/p&gt;
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
+ 
+-&lt;p&gt;The simplest way to use the FSDefineJPEGImage2 class is to use the constructor that specifies the JPEG file to initialise the object:&lt;/p&gt;
++&lt;p&gt;The simplest way to use the FSDefineJPEGImage2 class is to use the constructor 
++that specifies the JPEG file to initialise the object:&lt;/p&gt;
+ 
+ &lt;pre&gt;
+ File aFile = new File(filename);
+@@ -93,9 +104,7 @@
+ public final class FSDefineJPEGImage2 extends FSDefineObject
+ {
+     private byte[] image = null;
+-    private byte[] encodingTable = new byte[] { 
+-        (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 
+-    };
++    private byte[] encodingTable = null;
+ 
+     /**
+      * Construct an FSDefineJPEGImage2 object, initalizing it with values decoded 
+@@ -129,6 +138,7 @@
+     {
+         super(DefineJPEGImage2, anIdentifier);
+         setImage(imageBytes);
++        setEncodingTable(null);
+     }
+     /**
+      * Constructs an FSDefineJPEGImage2 object by copying values from an 
+@@ -170,6 +180,9 @@
+         */
+     public void setEncodingTable(byte[] bytes)
+     {
++        if (bytes == null) {
++            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++        }
+         encodingTable = bytes;
+     }
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-06-11 13:12:59 UTC (rev 164)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-06-20 07:18:32 UTC (rev 165)
+@@ -60,13 +60,20 @@
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a name=&quot;FSDefineJPEGImage3_3&quot;&gt;alpha&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing the zlib encoded alpha channel data for each pixel in the image.&lt;/td&gt;
++&lt;td&gt;An array of bytes containing the zlib encoded alpha channel data for each 
++pixel in the image.&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ 
+-&lt;p&gt;Although the encoding table defines how the image is compressed it is not essential. If an FSDefineJPEGImage3 object is created with an empty encoding table then the Flash Player will still display the JPEG image correctly. The empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD9, 0xFF, 0xD8. Note however that this is reversed from StartOfImage (SOI, 0xFFD8) and EndOfImage (EOI, 0xFFD9) tags defined in the JPEG file format specification. This appears to be a bug in Flash. However the order is preserved to ensure compatibility although code has been tested with the normal order for the tags and the images were displayed correctly.&lt;/p&gt;
++&lt;p&gt;Although the encoding table defines how the image is compressed it is not 
++essential. If an FSDefineJPEGImage3 object is created with an empty encoding 
++table then the Flash Player will still display the JPEG image correctly. The 
++empty encoding table is not a null object. It contains four bytes: 0xFF, 0xD8, 
++0xFF, 0xD9. For convenience passing a null reference to any of the constructors 
++or to the setEncodingTable method will create an empty table.&lt;/p&gt;
+ 
+-&lt;p&gt;The simplest way to use the FSDefineJPEGImage3 class is to use the constructor that specifies the JPEG file to initialise the object:&lt;/p&gt;
++&lt;p&gt;The simplest way to use the FSDefineJPEGImage3 class is to use the constructor 
++that specifies the JPEG file to initialise the object:&lt;/p&gt;
+ 
+ &lt;pre&gt;
+ File aFile = new File(filename);
+@@ -108,18 +115,19 @@
+ movie.add(new FSDefineJPEGImage3(movie.newIdentifier(), bytes, null, compressedAlpha));
+ &lt;/pre&gt;
+ 
+-&lt;p&gt;This generates an object with an empty encoding table, however the image will still be displayed correctly. The empty encoding table is not a null object. The alpha channel data is set so the image is completely opaque.&lt;/P&gt;
++&lt;p&gt;This generates an object with an empty encoding table, however the image will 
++still be displayed correctly. The empty encoding table is not a null object. The 
++alpha channel data is set so the image is completely opaque.&lt;/P&gt;
+ 
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+-&lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
++&lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the 
++Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+ public final class FSDefineJPEGImage3 extends FSDefineObject
+ {
+     private byte[] image = null;
+-    private byte[] encodingTable = new byte[] { 
+-        (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 
+-    };
++    private byte[] encodingTable = null;
+     private byte[] alpha = null;
+ 
+     /**
+@@ -186,6 +194,9 @@
+         */
+     public void setEncodingTable(byte[] bytes)
+     {
++        if (bytes == null) {
++            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++        }
+         encodingTable = bytes;
+     }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000103.html">[Transform-svn] r164 - in trunk: doc src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000105.html">[Transform-svn] r166 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#104">[ date ]</a>
+              <a href="thread.html#104">[ thread ]</a>
+              <a href="subject.html#104">[ subject ]</a>
+              <a href="author.html#104">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

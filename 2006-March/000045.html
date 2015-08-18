@@ -1,0 +1,5707 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r104 - in trunk/src/com/flagstone/transform: . examples test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r104%20-%20in%20trunk/src/com/flagstone/transform%3A%20.%20examples%20test&In-Reply-To=%3C200603031803.k23I3jtt007196%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000044.html">
+   <LINK REL="Next"  HREF="000046.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r104 - in trunk/src/com/flagstone/transform: . examples test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r104%20-%20in%20trunk/src/com/flagstone/transform%3A%20.%20examples%20test&In-Reply-To=%3C200603031803.k23I3jtt007196%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r104 - in trunk/src/com/flagstone/transform: . examples test">smackay at berlios.de
+       </A><BR>
+    <I>Fri Mar  3 19:03:45 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000044.html">[Transform-svn] r103 - in trunk: doc src/com/flagstone/transform/test test test/benchmarks test/suites
+</A></li>
+        <LI>Next message: <A HREF="000046.html">[Transform-svn] r105 - trunk/test/benchmarks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#45">[ date ]</a>
+              <a href="thread.html#45">[ thread ]</a>
+              <a href="subject.html#45">[ subject ]</a>
+              <a href="author.html#45">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-03 19:00:33 +0100 (Fri, 03 Mar 2006)
+New Revision: 104
+
+Modified:
+   trunk/src/com/flagstone/transform/FSAction.java
+   trunk/src/com/flagstone/transform/FSActionObject.java
+   trunk/src/com/flagstone/transform/FSBitmapFill.java
+   trunk/src/com/flagstone/transform/FSBounds.java
+   trunk/src/com/flagstone/transform/FSButton.java
+   trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSButtonSound.java
+   trunk/src/com/flagstone/transform/FSCall.java
+   trunk/src/com/flagstone/transform/FSCharacter.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSColor.java
+   trunk/src/com/flagstone/transform/FSColorTransform.java
+   trunk/src/com/flagstone/transform/FSCoordTransform.java
+   trunk/src/com/flagstone/transform/FSCurve.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDefineButton2.java
+   trunk/src/com/flagstone/transform/FSDefineFont.java
+   trunk/src/com/flagstone/transform/FSDefineFont2.java
+   trunk/src/com/flagstone/transform/FSDefineImage.java
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+   trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+   trunk/src/com/flagstone/transform/FSDefineObject.java
+   trunk/src/com/flagstone/transform/FSDefineShape.java
+   trunk/src/com/flagstone/transform/FSDefineShape2.java
+   trunk/src/com/flagstone/transform/FSDefineShape3.java
+   trunk/src/com/flagstone/transform/FSDefineSound.java
+   trunk/src/com/flagstone/transform/FSDefineText.java
+   trunk/src/com/flagstone/transform/FSDefineText2.java
+   trunk/src/com/flagstone/transform/FSDefineTextField.java
+   trunk/src/com/flagstone/transform/FSDefineVideo.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+   trunk/src/com/flagstone/transform/FSEnvelope.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSExport.java
+   trunk/src/com/flagstone/transform/FSFillStyle.java
+   trunk/src/com/flagstone/transform/FSFontInfo.java
+   trunk/src/com/flagstone/transform/FSFontInfo2.java
+   trunk/src/com/flagstone/transform/FSFrameLabel.java
+   trunk/src/com/flagstone/transform/FSFree.java
+   trunk/src/com/flagstone/transform/FSGetUrl.java
+   trunk/src/com/flagstone/transform/FSGetUrl2.java
+   trunk/src/com/flagstone/transform/FSGotoFrame.java
+   trunk/src/com/flagstone/transform/FSGotoFrame2.java
+   trunk/src/com/flagstone/transform/FSGotoLabel.java
+   trunk/src/com/flagstone/transform/FSGradient.java
+   trunk/src/com/flagstone/transform/FSGradientFill.java
+   trunk/src/com/flagstone/transform/FSIf.java
+   trunk/src/com/flagstone/transform/FSImport.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java
+   trunk/src/com/flagstone/transform/FSJump.java
+   trunk/src/com/flagstone/transform/FSKerning.java
+   trunk/src/com/flagstone/transform/FSLimitScript.java
+   trunk/src/com/flagstone/transform/FSLine.java
+   trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+   trunk/src/com/flagstone/transform/FSMorphGradient.java
+   trunk/src/com/flagstone/transform/FSMorphGradientFill.java
+   trunk/src/com/flagstone/transform/FSMorphSolidFill.java
+   trunk/src/com/flagstone/transform/FSMorphSolidLine.java
+   trunk/src/com/flagstone/transform/FSMovieObject.java
+   trunk/src/com/flagstone/transform/FSNewFunction.java
+   trunk/src/com/flagstone/transform/FSNewFunction2.java
+   trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+   trunk/src/com/flagstone/transform/FSPlaceObject.java
+   trunk/src/com/flagstone/transform/FSPlaceObject2.java
+   trunk/src/com/flagstone/transform/FSPointer.java
+   trunk/src/com/flagstone/transform/FSProperty.java
+   trunk/src/com/flagstone/transform/FSProtect.java
+   trunk/src/com/flagstone/transform/FSPush.java
+   trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+   trunk/src/com/flagstone/transform/FSRegisterCopy.java
+   trunk/src/com/flagstone/transform/FSRegisterIndex.java
+   trunk/src/com/flagstone/transform/FSRegisterVariable.java
+   trunk/src/com/flagstone/transform/FSRemoveObject.java
+   trunk/src/com/flagstone/transform/FSRemoveObject2.java
+   trunk/src/com/flagstone/transform/FSSerialNumber.java
+   trunk/src/com/flagstone/transform/FSSetBackgroundColor.java
+   trunk/src/com/flagstone/transform/FSSetTarget.java
+   trunk/src/com/flagstone/transform/FSShape.java
+   trunk/src/com/flagstone/transform/FSShapeStyle.java
+   trunk/src/com/flagstone/transform/FSShowFrame.java
+   trunk/src/com/flagstone/transform/FSSolidFill.java
+   trunk/src/com/flagstone/transform/FSSolidLine.java
+   trunk/src/com/flagstone/transform/FSSound.java
+   trunk/src/com/flagstone/transform/FSSoundStreamBlock.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+   trunk/src/com/flagstone/transform/FSStartSound.java
+   trunk/src/com/flagstone/transform/FSTabOrder.java
+   trunk/src/com/flagstone/transform/FSTable.java
+   trunk/src/com/flagstone/transform/FSTableIndex.java
+   trunk/src/com/flagstone/transform/FSText.java
+   trunk/src/com/flagstone/transform/FSUnknownAction.java
+   trunk/src/com/flagstone/transform/FSUnknownObject.java
+   trunk/src/com/flagstone/transform/FSVideoFrame.java
+   trunk/src/com/flagstone/transform/FSVoid.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+   trunk/src/com/flagstone/transform/FSWith.java
+   trunk/src/com/flagstone/transform/examples/FillStyles.java
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+Log:
+Made constructors that initialize attributes from an FSCoder public.
+These methods will be used for testing. All classes.
+
+Added copy constructors to all classes.
+
+
+Modified: trunk/src/com/flagstone/transform/FSAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSAction.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSAction.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -1010,22 +1010,37 @@
+     /// Factory method for generating an FSAction object representing a Extends action.
+     public static FSAction Extends() { return new FSAction(FSAction.Extends); }
+     
+-    FSAction(FSCoder coder)
++    /**
++     * Construct an FSAction object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSAction(FSCoder coder)
+     {
+         super(0);
+         decode(coder);
+     }
+-
+-    /** Constructs a stack-based action with the specified type. 
+-
+-        @param aType the code used to denote the type of action performed.
+-        */
++    /** 
++     * Constructs a stack-based action with the specified type.
++     * 
++     * @param aType the code used to denote the type of action performed.
++     */
+     public FSAction(int aType)
+     {
+         super(aType);
+     }
+-
+     /**
++     * Constructs an FSAction object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSAction object.
++     */
++    public FSAction(FSAction obj)
++    {
++        super(obj);
++    }    
++    /**
+      * Returns a string identifying the type of stack-based action that the 
+      * object represents.
+      * 
+
+Modified: trunk/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -109,11 +109,16 @@
+     protected int size = 0;
+     protected int length = 0;
+     
+-    FSActionObject(int aType)
++    protected FSActionObject(int aType)
+     {
+         type = aType;
+     }
+-
++    protected FSActionObject(FSActionObject obj)
++    {
++        type = obj.type;
++        size = obj.size;
++        length = obj.length;
++    }  
+     /** Gets the code used that identifies the type of the action when it is encoded. 
+ 
+         @return the code used to denote the type of action performed.
+
+Modified: trunk/src/com/flagstone/transform/FSBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBitmapFill.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSBitmapFill.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -116,11 +116,17 @@
+     private int identifier = 0;
+     private FSCoordTransform transform = new FSCoordTransform(0,0);
+     
+-    FSBitmapFill(FSCoder coder)
++    /**
++     * Construct an FSBitmapFill object an initialize it with values decoded 
++     * from an encoded FSBitmapFill object.
++     * 
++     * @param coder an FSCoder object containing an FSBitmapFill encoded as 
++     * binary data.
++     */
++    public FSBitmapFill(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** 
+      * Constructs an FSBitmapFill object, specifying whether the image is tiled
+      * or clipped within the shape, the identifier of the object containing the
+@@ -143,6 +149,16 @@
+         setIdentifier(anIdentifier);
+         setTransform(aTransform);
+     }
++    /**
++     * Construct an FSBitmapFill object by copying an existing object.
++     * 
++     * @param object an FSBitmapFill object. 
++     */
++    public FSBitmapFill(FSBitmapFill obj)
++    {
++        identifier = obj.identifier;
++        transform = new FSCoordTransform(obj.transform);
++    }   
+ 
+     /** Gets the identifier of the object containing the image to be displayed.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSBounds.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBounds.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSBounds.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -107,11 +107,17 @@
+     private int maxX = 0;
+     private int maxY = 0;
+     
+-    FSBounds(FSCoder coder)
++    /**
++     * Construct an FSBounds object an initialize it with values decoded from 
++     * a binary encoded FSBounds object.
++     * 
++     * @param coder an FSCoder object containing an FSBounds encoded as binary
++     * data.
++     */
++    public FSBounds(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSBounds object representing a rectangle with the top left corner at (xl,yl) and bottom right corner at (xr,yr).
+ 
+         @param xl x-coordinate of the top left corner.
+@@ -126,6 +132,19 @@
+         setMaxX(xr);
+         setMaxY(yr);
+     }
++    /**
++     * Construct an FSBounds object and initialize it with value from another 
++     * FSBounds object.
++     * 
++     * @param obj an FSBounds object.
++     */
++    public FSBounds(FSBounds obj)
++    {
++        minX = obj.minX;
++        maxX = obj.maxX;
++        minY = obj.minY;
++        maxY = obj.maxY;
++    }
+ 
+     /** Gets the x-coordinate of the top left corner of the bounding rectangle.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButton.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSButton.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -103,11 +103,16 @@
+     private FSCoordTransform transform = null;
+     private FSColorTransform colorTransform = null;
+ 
+-    FSButton(FSCoder coder)
++    /**
++     * Construct an FSButton object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSButton(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /**  Constructs an FSButton object without a coordinate or colour transform that will be applied to the shape drawn for the button states. The transforms default to unity transforms which do not change the location of colour of the shape for the button.
+ 
+         @param aState the state of the button when the shape is drawn.
+@@ -155,6 +160,23 @@
+         setTransform(aTransform);
+         setColorTransform(aColorTransform);
+     }
++    /**
++     * Constructs an FSButton object by copying values from an existing object.
++     *
++     * @param obj an FSButton object.
++     */
++    public FSButton(FSButton obj)
++    {
++        state = obj.state;
++        identifier = obj.identifier;
++        layer = obj.layer;
++        transform = new FSCoordTransform(obj.transform);
++        
++        if (obj.colorTransform != null)
++            colorTransform = new FSColorTransform(obj.colorTransform);
++        else
++            colorTransform = null;
++    }
+ 
+     /** Get the state(s) of the button when the shape is drawn.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -66,7 +66,13 @@
+     private int identifier = 0;
+     private FSColorTransform colorTransform = null;
+ 
+-    FSButtonColorTransform(FSCoder coder)
++    /**
++     * Construct an FSButtonColorTransform object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSButtonColorTransform(FSCoder coder)
+     {
+         super(_ButtonColorTransform);
+         decode(coder);
+@@ -83,6 +89,19 @@
+         setIdentifier(anIdentifier);
+         setColorTransform(aColorTransform);
+     }
++    /**
++     * Constructs an FSButtonColorTransform object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSButtonColorTransform object.
++     */
++    public FSButtonColorTransform(FSButtonColorTransform obj)
++    {
++        super(obj);
++        
++        identifier = obj.identifier;
++        colorTransform = new FSColorTransform(obj.colorTransform);
++    }
+ 
+     /** Gets the identifier of the button that this FSButtonColorTransform object applies to. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -182,7 +182,10 @@
+     private int event = 0;
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+-    
++   
++    /*
++     * This constructor is used only then lazily decoding actions.
++     */
+     FSButtonEvent(FSCoder coder, int length)
+     {
+         if (coder.context[FSCoder.DecodeActions] == 0)
+@@ -190,12 +193,16 @@
+         
+         decode(coder);
+     }
+-
+-    FSButtonEvent(FSCoder coder)
++    /**
++     * Construct an FSButtonEvent object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSButtonEvent(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSButtonEvent object that defines the array of actions that will be executed when a particular event occurs.
+ 
+         @param aNumber the event code.
+@@ -206,7 +213,6 @@
+         setEvent(aNumber);
+         setActions(anArray);
+     }
+-
+     /** 
+      * Constructs an FSButtonEvent object that defines the array of actions that 
+      * will be executed when a particular event occurs.
+@@ -219,7 +225,29 @@
+         setEvent(aNumber);
+         setEncodedActions(bytes);
+     }
++    /**
++     * Constructs an FSButtonEvent object by copying values from an existing object.
++     *
++     * @param obj an FSButtonEvent object.
++     */
++    public FSButtonEvent(FSButtonEvent obj)
++    {
++        event = obj.event;
++        
++        if (obj.actions != null)
++        {
++            actions = new ArrayList();
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            encodedActions = Transform.clone(obj.encodedActions);
++        }
++    }
+ 
++
+     /** Add an action to the end of the actions array.
+         
+         @param anAction an object derived from the base class FSActionObject.
+
+Modified: trunk/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonSound.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSButtonSound.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -89,12 +89,17 @@
+     private int identifier = 0;
+     private FSSound[] sound = new FSSound[] {null, null, null, null};
+     
+-    FSButtonSound(FSCoder coder)
++    /**
++     * Construct an FSButtonSound object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSButtonSound(FSCoder coder)
+     {
+         super(_ButtonSound);
+         decode(coder);
+     }
+-
+     /**  Constructs an FSButtonSound object that defines the sound played for a single button event.
+ 
+         @param anIdentifier the identifier of the FSDefineButton or FSDefineButton2 object that defines the button.
+@@ -108,6 +113,26 @@
+         setIdentifier(anIdentifier);
+         setSoundForEvent(eventCode, aSound);
+     }
++    /**
++     * Constructs an FSButtonSound object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSButtonSound object.
++     */
++    public FSButtonSound(FSButtonSound obj)
++    {
++        super(obj);
++        
++        identifier = obj.identifier;
++        
++        for (int i=0; i&lt;4; i++)
++        {
++            if (obj.sound[i] != null)
++                sound[i] = new FSSound(obj.sound[i]);
++            else
++                sound[i] = null;
++        }
++    }
+ 
+     /** Gets the identifier of the button that this object applies to.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSCall.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -68,12 +68,17 @@
+  */  
+ public final class FSCall extends FSActionObject
+ {
+-    FSCall(FSCoder coder)
++    /**
++     * Construct an FSCall object, initalizing it with values decoded from an 
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSCall(FSCoder coder)
+     {
+         super(_Call);
+         decode(coder);
+     }
+-
+     /** 
+      * Constructs an FSCall object. 
+      */
+@@ -81,6 +86,15 @@
+     {
+         super(_Call);
+     }
++    /**
++     * Constructs an FSCall object by copying values from an existing object.
++     *
++     * @param obj an FSCall object.
++     */
++    public FSCall(FSCall obj)
++    {
++        super(obj);
++    }
+     
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSCharacter.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCharacter.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSCharacter.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -106,11 +106,16 @@
+     private int glyphIndex = 0;
+     private int advance = 0;
+ 
+-    FSCharacter(FSCoder coder)
++    /**
++     * Construct an FSCharacter object, initalizing it with values decoded from 
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSCharacter(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** 
+      * Constructs an FSCharacter specifying the index of the glyph to be displayed 
+      * and the spacing to the next glyph.
+@@ -126,6 +131,16 @@
+         setGlyphIndex(anIndex);
+         setAdvance(anAdvance);
+     }
++    /**
++     * Constructs an FSCharacter object by copying values from an existing object.
++     *
++     * @param obj an FSCharacter object.
++     */
++    public FSCharacter(FSCharacter obj)
++    {
++        glyphIndex = obj.glyphIndex;
++        advance = obj.advance;
++    }
+ 
+     /** 
+      * Gets the index of the glyph, in a font definition object, that will 
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -220,11 +220,16 @@
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+     
+-    FSClipEvent(FSCoder coder)
++    /**
++     * Construct an FSClipEvent object, initalizing it with values decoded from 
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSClipEvent(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSClipEvent object that defines the array of actions that will be executed when a particular event occurs.
+ 
+         @param eventCode the code representing one or more events.
+@@ -280,6 +285,28 @@
+         setEncodedActions(bytes);
+     }
+ // End Flash 6
++    /**
++     * Constructs an FSCall object by copying values from an existing object.
++     *
++     * @param obj an FSCall object.
++     */
++    public FSClipEvent(FSClipEvent obj)
++    {
++        event = obj.event;
++        keyCode = obj.keyCode;
++        
++        if (actions != null)
++        {
++            actions = new ArrayList();
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            encodedActions = Transform.clone(obj.encodedActions);
++        }
++    }
+ 
+     /** Adds an action to the array of actions.
+         
+
+Modified: trunk/src/com/flagstone/transform/FSColor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColor.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSColor.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -92,11 +92,17 @@
+     private int blue = 255;
+     private int alpha = 255;
+ 
++    /**
++     * Construct an FSColor object and initialize it with values decoded from 
++     * a binary encoded FSColor object.
++     * 
++     * @param coder an FSCoder object containing an FSColor encoded as binary
++     * data.
++     */
+     public FSColor(FSCoder coder)
+     {
+         decode(coder);
+     }    
+-
+     /** 
+      * Constructs an FSColor object containing red, green and blue channels. The
+      * alpha channel defaults to the value 255 - defining an opaque colour.
+@@ -126,6 +132,19 @@
+         setBlue(b);
+         setAlpha(a);
+     }
++    /**
++     * Construct an FSColor object and initialize it with value from another 
++     * FSColor object.
++     * 
++     * @param obj an FSColor object.
++     */
++    public FSColor(FSColor obj)
++    {
++        red = obj.red;
++        green = obj.green;
++        blue = obj.blue;
++        alpha = obj.alpha;
++    }
+ 
+     /** Gets the value for the red colour channel. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColorTransform.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSColorTransform.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -175,17 +175,23 @@
+     private int addBlue = 0;
+     private int addAlpha = 0;
+ 
+-    FSColorTransform(FSCoder coder)
++    /**
++     * Construct an FSColorTransform object an initialize with the values 
++     * decoded from an encoded colour transform
++     * 
++     * @param coder an FSCoder object containing the encoded colour transform.
++     */
++    public FSColorTransform(FSCoder coder)
+     {
+         decode(coder);
+     }    
+-
+-    /** Constructs an FSColorTransform object defining a unity transform. If the transform is applied to a shape its colour will not change.
+-        */
++    /** 
++     * Constructs an FSColorTransform object defining a unity transform. If the 
++     * transform is applied to a shape its colour will not change.
++     */
+     public FSColorTransform()
+     {
+     }    
+-
+     /** Constructs an FSColorTransform object with the specified add terms.
+ 
+         Each colour channel is transformed by the following calculation:
+@@ -352,6 +358,23 @@
+         setAddBlue(addBlueTerm);
+         setAddAlpha(addAlphaTerm);
+     }
++    /**
++     * Construct an FSColorTansform object and initialize it using a copy of 
++     * the values from another colour transform.
++     * 
++     * @param obj a colour transform.
++     */
++    public FSColorTransform(FSColorTransform obj)
++    {
++        multiplyRed = obj.multiplyRed;
++        multiplyGreen = obj.multiplyGreen;
++        multiplyBlue = obj.multiplyBlue;
++        multiplyAlpha = obj.multiplyAlpha;
++        addRed = obj.addRed;
++        addGreen = obj.addGreen;
++        addBlue = obj.addBlue;
++        addAlpha = obj.addAlpha;
++    }
+ 
+     /** Gets the value of the multiply term for the red channel. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSCoordTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoordTransform.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSCoordTransform.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -159,22 +159,31 @@
+         {0.0f, 0.0f, 1.0f} 
+     };
+ 
+-    FSCoordTransform(FSCoder coder)
++    /**
++     * Construct an FSCoordTransform object and initialize it with values decoded 
++     * from a binary encoded FSCoordTransform object.
++     * 
++     * @param coder an FSCoder object containing an FSColor encoded as binary
++     * data.
++     */
++    public FSCoordTransform(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+-    /** Constructs an FSCoordTransform object defining a unity transform. If the transform is applied to a shape its location or appearance will not change.
+-        */
++    /** 
++     * Constructs an FSCoordTransform object defining a unity transform. If the 
++     * transform is applied to a shape its location or appearance will not change.
++     */
+     public FSCoordTransform()
+     {
+-    }
+-
+-    /** Constructs an FSCoordTransform object defining a translation transform that will change an objects location to the specified coordinates. 
+-    
+-        @param x the x-coordinate where the object will be displayed.
+-        @param y the y-coordinate where the object will be displayed.
+-        */
++    }  
++    /** 
++     * Constructs an FSCoordTransform object defining a translation transform 
++     * that will change an objects location to the specified coordinates. 
++     * 
++     * @param x the x-coordinate where the object will be displayed.
++     * @param y the y-coordinate where the object will be displayed.
++     */
+     public FSCoordTransform(int x, int y)
+     {
+         float xValue = (float)x;
+@@ -183,7 +192,6 @@
+         matrix[0][2] = xValue;
+         matrix[1][2] = yValue;
+     }
+-
+     /** 
+      * Constructs an FSCoordTransform object defining translation and scaling transforms
+      * that will change an object's location and size.
+@@ -209,6 +217,15 @@
+     {
+         setMatrix(aMatrix);
+     }
++    /**
++     * Construct an FSCoordTransform object by copying an existing object.
++     */
++    public FSCoordTransform(FSCoordTransform obj)
++    {
++        for(int i=0; i&lt;3; i++)
++            for (int j = 0; j&lt;3; j++)
++                matrix[i][j] = obj.matrix[i][j];
++    }
+     
+     /** Sets the translation points of the transform.
+      * 
+
+Modified: trunk/src/com/flagstone/transform/FSCurve.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCurve.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSCurve.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -81,11 +81,16 @@
+     private int anchorX = 0;
+     private int anchorY = 0;
+ 
+-    FSCurve(FSCoder coder)
++    /**
++     * Construct an FSCurve object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSCurve(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** 
+      * Constructs an FSCurve object specifying the anchor and control point 
+      * coordinates - specified in twips. 
+@@ -102,6 +107,19 @@
+         setAnchorX(ax);
+         setAnchorY(ay);
+     }
++    /**
++     * Constructs an FSCurve object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSCurve object.
++     */
++    public FSCurve(FSCurve obj)
++    {
++        controlX = obj.controlX;
++        controlY = obj.controlY;
++        anchorX = obj.anchorX;
++        anchorY = obj.anchorY;
++    }    
+ 
+     /** Gets the x-coordinate of the control point relative to the current 
+      * drawing point.  
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -148,12 +148,17 @@
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+ 
+-    FSDefineButton(FSCoder coder)
++    /**
++     * Construct an FSDefineButton object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineButton(FSCoder coder)
+     {
+         super(DefineButton, 0);
+         decode(coder);
+     }
+-
+     /**  Constructs an FSDefineButton object with the identifier, button records and actions.
+ 
+         @param anIdentifier a unique identifier for this button.
+@@ -166,7 +171,33 @@
+         setButtonRecords(buttonRecordArray);
+         setActions(actionArray);
+     }
++    /**
++     * Constructs an FSDefineButton object by copying values from an existing object.
++     *
++     * @param obj an FSDefineButton object.
++     */
++    public FSDefineButton(FSDefineButton obj)
++    {
++        super(obj);
++        
++        buttonRecords = new ArrayList();
++        
++        for (Iterator i = obj.buttonRecords.iterator(); i.hasNext();)
++            buttonRecords.add(((FSButton)i.next()).clone());
+ 
++        if (actions != null)
++        {
++            actions = new ArrayList();
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            encodedActions = Transform.clone(obj.encodedActions);
++        }
++    }
++
+     /**  
+      * Constructs an FSDefineButton object with the identifier, button records and 
+      * encoded actions.
+@@ -268,8 +299,8 @@
+         
+         anObject.buttonRecords = new ArrayList();
+             
+-        for (Iterator i = actions.iterator(); i.hasNext();)
+-            anObject.actions.add(((FSButton)i.next()).clone());
++        for (Iterator i = buttonRecords.iterator(); i.hasNext();)
++            anObject.buttonRecords.add(((FSButton)i.next()).clone());
+ 
+         if (actions != null)
+         {
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -130,12 +130,17 @@
+     private ArrayList buttonEvents = null;
+     private byte[] encodedEvents = null;
+     
+-    FSDefineButton2(FSCoder coder)
++    /**
++     * Construct an FSDefineButton2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineButton2(FSCoder coder)
+     {
+         super(_DefineButton2, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineButton object, specifying the unique identifier, the type of button to be created, the button records that describe the button's appearance and the actions that are performed in response to each button event.
+ 
+         @param anIdentifier a unique identifier for this button.
+@@ -169,7 +174,35 @@
+         setButtonRecords(buttonRecordArray);
+         setEncodedEvents(bytes);
+     }
++    /**
++     * Constructs an FSDefineButton2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineButton2 object.
++     */
++    public FSDefineButton2(FSDefineButton2 obj)
++    {
++        super(obj);
++        buttonType = obj.buttonType;
++        
++        buttonRecords = new ArrayList();
++            
++        for (Iterator i = obj.buttonRecords.iterator(); i.hasNext();)
++            buttonRecords.add(((FSButton)i.next()).clone());
+ 
++        if (buttonEvents != null)
++        {
++            buttonEvents = new ArrayList();
++            
++            for (Iterator i = obj.buttonEvents.iterator(); i.hasNext();)
++                buttonEvents.add(((FSButtonEvent)i.next()).clone());
++        }
++        else
++        {
++            encodedEvents = Transform.clone(obj.encodedEvents);
++        }
++    }
++
+     /** Adds an FSButton to the array of button records.
+ 
+         @param aButton a button record.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineFont.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -67,12 +67,17 @@
+ {
+     private ArrayList shapes = null;
+     
+-    FSDefineFont(FSCoder coder)
++    /**
++     * Construct an FSCall object, initalizing it with values decoded from an 
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineFont(FSCoder coder)
+     {
+         super(FSMovieObject.DefineFont, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineFont object setting the unique identifier for the object and the array of glyphs used to render the characters used from the font.
+ 
+         @param anIdentifier the unique identifier for this object.
+@@ -83,7 +88,22 @@
+         super(FSMovieObject.DefineFont, anIdentifier);
+         setShapes(anArray);
+     }
++    /**
++     * Constructs an FSDefineFont object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineFont object.
++     */
++    public FSDefineFont(FSDefineFont obj)
++    {
++        super(obj);
+ 
++        shapes = new ArrayList();
++        
++        for (Iterator i = obj.shapes.iterator(); i.hasNext();)
++            shapes.add(((FSShape)i.next()).clone());
++    }
++
+     /** Add a shape to the array of shapes.
+ 
+         @param anObject a shape.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -168,12 +168,17 @@
+     private ArrayList bounds = null;
+     private ArrayList kernings = null;
+     
+-    FSDefineFont2(FSCoder coder)
++    /**
++     * Construct an FSDefineFont2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineFont2(FSCoder coder)
+     {
+         super(_DefineFont2, 0);
+         decode(coder);
+     }
+-
+     /** 
+      * Constructs an FSDefineFont2 object specifying only the name of the font. 
+      *
+@@ -195,7 +200,73 @@
+         super(_DefineFont2, anIdentifier);
+         setName(name);
+     }
++    /**
++     * Constructs an FSDefineFont2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineFont2 object.
++     */
++    public FSDefineFont2(FSDefineFont2 obj)
++    {
++        super(obj);
++        encoding = obj.encoding;
++        small = obj.small;
++        italic = obj.italic;
++        bold = obj.bold;
++        language = obj.language;
++        name = new String(obj.name);
++        
++        shapes = new ArrayList();
++        
++        for (Iterator i = obj.shapes.iterator(); i.hasNext();)
++            shapes.add(((FSShape)i.next()).clone());
+ 
++        codes = new ArrayList();
++            
++        for (Iterator i = obj.codes.iterator(); i.hasNext();)
++            codes.add(new Integer(((Integer)i.next()).intValue()));
++
++        ascent = obj.ascent;
++        descent = obj.descent;
++        leading = obj.leading;
++        
++        if (advances != null)
++        {
++            advances = new ArrayList();
++            
++            for (Iterator i = obj.advances.iterator(); i.hasNext();)
++                advances.add(new Integer(((Integer)i.next()).intValue()));
++        }
++        else
++        {
++            advances = null;
++        }
++
++        if (bounds != null)
++        {
++            bounds = new ArrayList();
++            
++            for (Iterator i = obj.bounds.iterator(); i.hasNext();)
++                bounds.add(((FSBounds)i.next()).clone());
++        }
++        else
++        {
++            bounds = null;
++        }
++
++        if (kernings != null)
++        {
++            kernings = new ArrayList();
++            
++            for (Iterator i = obj.kernings.iterator(); i.hasNext();)
++                kernings.add(((FSKerning)i.next()).clone());
++        }
++        else
++        {
++            kernings = null;
++        }
++    }
++
+     /** Add a shape to the array of shapes.
+ 
+         @param anObject a shape.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineImage.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -106,13 +106,18 @@
+     
+     private byte[] compressedData = null;
+ 
+-    FSDefineImage(FSCoder coder)
++    /**
++     * Construct an FSDefineImage object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineImage(FSCoder coder)
+     {
+         super(_DefineImage, 0);
+         extendLength = true;
+         decode(coder);
+     }
+-    
+     /** Constructs an FSDefineImage object defining a colour-mapped image.
+         
+         @param anIdentifier    the unique identifier for this object
+@@ -150,6 +155,21 @@
+         setTableSize(0);
+         setCompressedData(compressedBytes);
+     }    
++    /**
++     * Constructs an FSDefineImage object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineImage object.
++     */
++    public FSDefineImage(FSDefineImage obj)
++    {
++        super(obj);
++        width = obj.width;
++        height = obj.height;
++        pixelSize = obj.pixelSize;
++        tableSize = obj.tableSize;
++        compressedData = Transform.clone(obj.compressedData);        
++    }    
+ 
+     /** Gets the width of the image. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -96,12 +96,17 @@
+     
+     private byte[] compressedData = null;
+ 
+-    FSDefineImage2(FSCoder coder)
++    /**
++     * Construct an FSCall object, initalizing it with values decoded from an 
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineImage2(FSCoder coder)
+     {
+         super(_DefineImage2, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineImage2 object defining a colour-mapped image.
+ 
+     @param anIdentifier    the unique identifier for this object
+@@ -136,6 +141,21 @@
+         setTableSize(0);
+         setCompressedData(compressedBytes);
+     }
++    /**
++     * Constructs an FSDefineImage2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineImage2 object.
++     */
++    public FSDefineImage2(FSDefineImage2 obj)
++    {
++        super(obj);
++        width = obj.width;
++        height = obj.height;
++        pixelSize = obj.pixelSize;
++        tableSize = obj.tableSize;
++        compressedData = Transform.clone(obj.compressedData);        
++    }
+ 
+     /** Gets the width of the image. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -93,12 +93,17 @@
+ {
+     private byte[] image = null;
+     
+-    FSDefineJPEGImage(FSCoder coder)
++    /**
++     * Construct an FSDefineJPEGImage object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineJPEGImage(FSCoder coder)
+     {
+         super(FSMovieObject.DefineJPEGImage, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineJPEGImage object with the identifier and JPEG data.
+ 
+         @param anIdentifier    the unique identifier for this object
+@@ -109,6 +114,17 @@
+         super(FSMovieObject.DefineJPEGImage, anIdentifier);
+         setImage(bytes);
+     }
++    /**
++     * Constructs an FSDefineJPEGImage object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineJPEGImage object.
++     */
++    public FSDefineJPEGImage(FSDefineJPEGImage obj)
++    {
++        super(obj);
++        image = Transform.clone(obj.image);
++    }
+ 
+     /** Gets the image data.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -97,12 +97,17 @@
+         (byte)0xFF, (byte)0xD9, (byte)0xFF, (byte)0xD8 
+     };
+ 
+-    FSDefineJPEGImage2(FSCoder coder)
++    /**
++     * Construct an FSDefineJPEGImage2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineJPEGImage2(FSCoder coder)
+     {
+         super(_DefineJPEGImage2, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineJPEGImage2 object with the identifier, JPEG image data and JPEG encoding table data.
+ 
+         @param anIdentifier    the unique identifier for this object
+@@ -115,7 +120,6 @@
+         setImage(imageBytes);
+         setEncodingTable(encodingBytes);
+     }
+-
+     /** Constructs an FSDefineJPEGImage2 object with the identifier, JPEG image data and JPEG encoding table data.
+ 
+         @param anIdentifier    the unique identifier for this object
+@@ -126,6 +130,18 @@
+         super(_DefineJPEGImage2, anIdentifier);
+         setImage(imageBytes);
+     }
++    /**
++     * Constructs an FSDefineJPEGImage2 object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSDefineJPEGImage2 object.
++     */
++    public FSDefineJPEGImage2(FSDefineJPEGImage2 obj)
++    {
++        super(obj);
++        image = Transform.clone(obj.image);
++        encodingTable = Transform.clone(obj.encodingTable);
++    }
+ 
+     /** Gets the image data.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -122,12 +122,17 @@
+     };
+     private byte[] alpha = null;
+ 
+-    FSDefineJPEGImage3(FSCoder coder)
++    /**
++     * Construct an FSDefineJPEGImage3 object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineJPEGImage3(FSCoder coder)
+     {
+         super(_DefineJPEGImage3, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineJPEGImage3 object with the specified image data, encoding table and
+         alpha channel data.
+ 
+@@ -143,6 +148,19 @@
+         setEncodingTable(encodingBytes);
+         setCompressedAlpha(alphaBytes);
+     }
++    /**
++     * Constructs an FSDefineJPEGImage object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineJPEGImage object.
++     */
++    public FSDefineJPEGImage3(FSDefineJPEGImage3 obj)
++    {
++        super(obj);
++        image = Transform.clone(obj.image);
++        encodingTable = Transform.clone(obj.encodingTable);
++        alpha = Transform.clone(obj.alpha);
++    }
+ 
+     /** Gets the encoding table.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -164,12 +164,17 @@
+     private FSShape startShape = null;
+     private FSShape endShape = null;
+ 
+-    FSDefineMorphShape(FSCoder coder)
++    /**
++     * Construct an FSDefineJPEGImage object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineMorphShape(FSCoder coder)
+     {
+         super(_DefineMorphShape, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineMorphShape object.
+ 
+         @param anIdentifier an unique identifier for this object.
+@@ -190,7 +195,32 @@
+         setStartShape(startShape);
+         setEndShape(endShape);
+     }
++    /**
++     * Constructs an FSDefineJPEGImage object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineJPEGImage object.
++     */
++    public FSDefineMorphShape(FSDefineMorphShape obj)
++    {
++        super(obj);
++        startBounds = new FSBounds(obj.startBounds);
++        endBounds = new FSBounds(obj.endBounds);
+ 
++        fillStyles = new ArrayList();
++        
++        for (Iterator i = obj.fillStyles.iterator(); i.hasNext();)
++            fillStyles.add(((FSFillStyle)i.next()).clone());
++
++        lineStyles = new ArrayList();
++            
++        for (Iterator i = obj.lineStyles.iterator(); i.hasNext();)
++            lineStyles.add(((FSLineStyle)i.next()).clone());
++
++        startShape = new FSShape(obj.startShape);
++        endShape = new FSShape(obj.endShape);
++    }
++
+     /** Add a FSSolidLine object to the array of line styles.
+ 
+         @param aLineStyle and FSSolidLine object.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -69,12 +69,17 @@
+ {
+     private ArrayList objects = null;
+ 
+-    FSDefineMovieClip(FSCoder coder)
++    /**
++     * Construct an FSDefineMovieClip object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineMovieClip(FSCoder coder)
+     {
+         super(_DefineMovieClip, 0);
+         decode(coder);
+     }
+-
+     /** 
+      * Constructs an FSDefineMovieClip object with the unique identifier. The 
+      * Array of objects used to control the movie is empty.
+@@ -86,7 +91,6 @@
+         super(_DefineMovieClip, anIdentifier);
+         setObjects(new ArrayList());
+     }
+-
+     /** Constructs an FSDefineMovieClip object with the unique identifier and array of movie objects.
+ 
+         @param anIdentifier a unique identifier for the movie clip.
+@@ -97,7 +101,22 @@
+         super(_DefineMovieClip, anIdentifier);
+         setObjects(anArray);
+     }
++    /**
++     * Constructs an FSDefineShape object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineShape object.
++     */
++    public FSDefineMovieClip(FSDefineMovieClip obj)
++    {
++        super(obj);
+ 
++        objects = new ArrayList();
++        
++        for (Iterator i = obj.objects.iterator(); i.hasNext();)
++            objects.add(((FSMovieObject)i.next()).clone());
++    }
++
+     /** Adds the movie object to the array of actions.
+ 
+         @param anObject an object belonging to a class derived from FSMovieObject.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineObject.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineObject.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -53,7 +53,12 @@
+         super(type);
+         setIdentifier(anIdentifier);
+     }
+-
++    protected FSDefineObject(FSDefineObject obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++    }
++    
+     /** Returns the unique identifier assigned to this Define tag. 
+ 
+         @return the unique identifier for the object.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineShape.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -123,12 +123,17 @@
+     private ArrayList lineStyles = null;
+     private FSShape shape = null;
+ 
+-    FSDefineShape(FSCoder coder)
++    /**
++     * Construct an FSDefineShape object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineShape(FSCoder coder)
+     {
+         super(FSMovieObject.DefineShape, 0);
+         decode(coder);
+     }
+-    
+     /** Constructs an FSDefineShape object.
+ 
+         @param anIdentifier the unique identifier for the shape in the range 1..65535.
+@@ -145,7 +150,30 @@
+         setLineStyles(lineStyleArray);
+         setShape(aShape);
+     }
++    /**
++     * Constructs an FSDefineShape object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineShape object.
++     */
++    public FSDefineShape(FSDefineShape obj)
++    {
++        super(obj);
++        bounds = new FSBounds(obj.bounds);
++        
++        fillStyles = new ArrayList();
++        
++        for (Iterator i = obj.fillStyles.iterator(); i.hasNext();)
++            fillStyles.add(((FSFillStyle)i.next()).clone());
+ 
++        lineStyles = new ArrayList();
++            
++        for (Iterator i = obj.lineStyles.iterator(); i.hasNext();)
++            lineStyles.add(((FSLineStyle)i.next()).clone());
++
++        shape = new FSShape(obj.shape);
++    }
++    
+     /** Add a FSSolidLine object to the array of line styles.
+ 
+         @param aLineStyle and FSSolidLine object.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -124,12 +124,17 @@
+     private ArrayList lineStyles = null;
+     private FSShape shape = null;
+ 
+-    FSDefineShape2(FSCoder coder)
++    /**
++     * Construct an FSDefineShape2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineShape2(FSCoder coder)
+     {
+         super(_DefineShape2, 0);
+         decode(coder);
+     }
+-    
+     /** Constructs an FSDefineShape2 object.
+ 
+         @param anIdentifier the unique identifier for the shape.
+@@ -146,8 +151,30 @@
+         setLineStyles(lineStyleArray);
+         setShape(aShape);
+     }
++    /**
++     * Constructs an FSDefineShape object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineShape object.
++     */
++    public FSDefineShape2(FSDefineShape2 obj)
++    {
++        super(obj);
++        bounds = new FSBounds(obj.bounds);
++        
++        fillStyles = new ArrayList();
++        
++        for (Iterator i = obj.fillStyles.iterator(); i.hasNext();)
++            fillStyles.add(((FSFillStyle)i.next()).clone());
++
++        lineStyles = new ArrayList();
++            
++        for (Iterator i = obj.lineStyles.iterator(); i.hasNext();)
++            lineStyles.add(((FSLineStyle)i.next()).clone());
++
++        shape = new FSShape(obj.shape);
++    }
+     
+-
+     /** Add a FSSolidLine object to the array of line styles.
+ 
+         @param aLineStyle and FSSolidLine object.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -117,12 +117,17 @@
+     private ArrayList lineStyles = null;
+     private FSShape shape = null;
+ 
+-    FSDefineShape3(FSCoder coder)
++    /**
++     * Construct an FSDefineShape3 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineShape3(FSCoder coder)
+     {
+         super(_DefineShape3, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineShape3 object.
+ 
+         @param anIdentifier the unique identifier for the shape.
+@@ -139,7 +144,30 @@
+         setLineStyles(lineStyleArray);
+         setShape(aShape);
+     }
++    /**
++     * Constructs an FSDefineShape object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineShape object.
++     */
++    public FSDefineShape3(FSDefineShape3 obj)
++    {
++        super(obj);
++        bounds = new FSBounds(obj.bounds);
++        
++        fillStyles = new ArrayList();
++        
++        for (Iterator i = obj.fillStyles.iterator(); i.hasNext();)
++            fillStyles.add(((FSFillStyle)i.next()).clone());
+ 
++        lineStyles = new ArrayList();
++            
++        for (Iterator i = obj.lineStyles.iterator(); i.hasNext();)
++            lineStyles.add(((FSLineStyle)i.next()).clone());
++
++        shape = new FSShape(obj.shape);
++    }
++
+     /** Add a FSSolidLine object to the array of line styles.
+ 
+         @param aLineStyle and FSSolidLine object.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineSound.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineSound.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -30,6 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ /**
+ FSDefineSound is used to define a sound that will be played when a given event occurs. 
+ 
+@@ -123,12 +126,17 @@
+     private int sampleCount = 0;
+     private byte[] soundData = null;
+ 
+-    FSDefineSound(FSCoder coder)
++    /**
++     * Construct an FSDefineSound object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineSound(FSCoder coder)
+     {
+         super(FSMovieObject.DefineSound, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineSound object specifying the unique identifier and all the parameters required to describe the sound.
+ 
+         @param anIdentifier the unique identifier for this sound.
+@@ -149,6 +157,22 @@
+         setSampleCount(count);
+         setSoundData(bytes);
+     }
++    /**
++     * Constructs an FSDefineSound object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineSound object.
++     */
++    public FSDefineSound(FSDefineSound obj)
++    {
++        super(obj);
++        format = obj.format;
++        playbackRate = obj.playbackRate;
++        playbackChannels = obj.playbackChannels;
++        playbackSampleSize = obj.playbackSampleSize;
++        sampleCount = obj.sampleCount;
++        soundData = Transform.clone(obj.soundData);
++    }
+ 
+     /**    Gets the compression format used, either FSSound.NATIVE_PCM, FSSound.PCM or FSSound.ADPCM (all Flash 1), FSSound.MP3 (Flash 4+) or FSSound.NELLYMOSER (Flash 6+).
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineText.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -124,12 +124,17 @@
+     private FSCoordTransform transform = null;
+     private ArrayList objects = null;
+ 
+-    FSDefineText(FSCoder coder)
++    /**
++     * Construct an FSDefineText object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineText(FSCoder coder)
+     {
+         super(FSMovieObject.DefineText, 0);
+         decode(coder);
+     }
+-    
+     /** Constructs an FSDefineText object with the specified bounding rectangle, coordinate transform and text records.
+ 
+         @param anIdentifier the unique identifier for this object. Must be in the range 1..65535
+@@ -146,6 +151,23 @@
+         setTransform(aTransform);
+         setObjects(array);
+     }
++    /**
++     * Constructs an FSDefineText object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineText object.
++     */
++    public FSDefineText(FSDefineText obj)
++    {
++        super(obj);
++        bounds = new FSBounds(obj.bounds);
++        transform = new FSCoordTransform(obj.transform);
++        
++        objects = new ArrayList(obj.objects.size());
++        
++        for (Iterator i = obj.objects.iterator(); i.hasNext();)
++            objects.add(((FSText)i.next()).clone());
++    }    
+ 
+     /** Add a FSText object to the array of text records.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineText2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -123,12 +123,17 @@
+     private FSCoordTransform transform = null;
+     private ArrayList objects = null;
+ 
+-    FSDefineText2(FSCoder coder)
++    /**
++     * Construct an FSDefineText2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineText2(FSCoder coder)
+     {
+         super(_DefineText2, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineText2 object with the specified bounding rectangle, coordinate transform and text records.
+ 
+     @param anIdentifier the unique identifier for this object.
+@@ -143,6 +148,23 @@
+         setTransform(aTransform);
+         setObjects(textRecordArray);
+     }
++    /**
++     * Constructs an FSDefineText object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineText object.
++     */
++    public FSDefineText2(FSDefineText2 obj)
++    {
++        super(obj);
++        bounds = new FSBounds(obj.bounds);
++        transform = new FSCoordTransform(obj.transform);
++        
++        objects = new ArrayList(obj.objects.size());
++        
++        for (Iterator i = obj.objects.iterator(); i.hasNext();)
++            objects.add(((FSText)i.next()).clone());
++    }    
+     
+     /** Add a FSText object to the array of text records.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineTextField.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineTextField.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -301,12 +301,17 @@
+     private String variableName = &quot;&quot;;
+     private String initialText = &quot;&quot;;
+ 
+-    FSDefineTextField(FSCoder coder)
++    /**
++     * Construct an FSDefineTextField object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineTextField(FSCoder coder)
+     {
+         super(_DefineTextField, 0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSDefineTextField object with the specified identifier and with the size defined by the bounding rectangle. All other attributes are set to their default values which will result in a blank, single-line, editable text field. Any values entered will not be assigned to a variable. Since no font is specified the text will be displayed in a non-spaced font 20 twips in height.
+ 
+         @param anIdentifier the unique identifier for this object.
+@@ -317,7 +322,6 @@
+         super(_DefineTextField, anIdentifier);
+         setBounds(aBounds);
+     }
+-
+     /** Constructs an FSDefineTextField object setting the attributes added to the Hashtable. Each entry consists of a key-value pair. The key is one of the pre-defined attribute names while the value is an instance of a wrapper class (Boolean, Integer or String) that will be assigned to the specified attribute.
+ 
+         @param anIdentifier the unique identifier for this object.
+@@ -330,6 +334,39 @@
+         setBounds(aBounds);
+         setAttributes(attributes);
+     }
++    /**
++     * Constructs an FSDefineText object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineText object.
++     */
++    public FSDefineTextField(FSDefineTextField obj)
++    {
++        super(obj);
++        bounds = new FSBounds(obj.bounds);
++        wordWrapped = obj.wordWrapped;
++        multiline = obj.multiline;
++        password = obj.password;
++        readOnly = obj.readOnly;
++        reserved1 = obj.reserved1;
++        selectable = obj.selectable;
++        bordered = obj.bordered;
++        reserved2 = obj.reserved2;
++        html = obj.html;
++        useFontGlyphs = obj.useFontGlyphs;
++        autoSize = obj.autoSize;
++        fontIdentifier = obj.fontIdentifier;
++        fontHeight = obj.fontHeight;
++        color = new FSColor(obj.color);
++        maxLength = obj.maxLength;
++        alignment = obj.alignment;
++        leftMargin = obj.leftMargin;
++        rightMargin = obj.rightMargin;
++        indent = obj.indent;
++        leading = obj.leading;
++        variableName = new String(obj.variableName);
++        initialText = new String(obj.initialText);
++    }    
+ 
+     /** Gets the bounding rectangle that completely encloses the text field.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineVideo.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDefineVideo.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -30,6 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ /**
+ The FSDefineVideo class is used to display video within a Flash file. 
+  
+@@ -121,16 +124,21 @@
+     private boolean smoothing = false;
+     private int codec = 0;
+ 
+-    FSDefineVideo(FSCoder coder)
++    /**
++     * Construct an FSDefineVideo object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDefineVideo(FSCoder coder)
+     {
+         super(_DefineVideo, 0);
+         decode(coder);
+     }
+-
+     /**
+      * Constructs an FSDefineVideo object with the specified parameters.
+      *
+-     * @param anIdentifier    the unique identifier for this object
++     * @param anIdentifier the unique identifier for this object
+      * @param count the number of video frames.
+      * @param width the width of each frame in pixels.
+      * @param height the height of each frame in pixels.
+@@ -149,6 +157,22 @@
+         setSmoothing(smoothing);
+         setCodec(codec);
+     }
++    /**
++     * Constructs an FSDefineVideo object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDefineVideo object.
++     */
++    public FSDefineVideo(FSDefineVideo obj)
++    {
++        super(obj);
++        frameCount = obj.frameCount;
++        width = obj.width;
++        height = obj.height;
++        deblocking = obj.deblocking;
++        smoothing = obj.smoothing;
++        codec = obj.codec;
++    }    
+ 
+     /**
+      * Gets the number of frames in the video.
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -83,14 +83,19 @@
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+     
+-    FSDoAction(FSCoder coder)
++    /**
++     * Construct an FSDoAction object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSDoAction(FSCoder coder)
+     {
+         super(FSMovieObject.DoAction);
+         decode(coder);
+     }
++    /** Constructs an FSDoAction object with an array of actions.
+ 
+-    /**  Constructs an FSDoAction object with an array of actions.
+-
+         @param anArray the array of action objects.
+         */
+     public FSDoAction(ArrayList anArray)
+@@ -98,7 +103,6 @@
+         super(FSMovieObject.DoAction);
+         setActions(anArray);
+     }
+-
+     /**
+      * Constructs an FSDoAction object with an array of encoded actions
+      * generated by the classes in Translate.
+@@ -110,7 +114,29 @@
+         super(FSMovieObject.DoAction);
+         setEncodedActions(bytes);
+     }
++    /**
++     * Constructs an FSDoAction object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSDoAction object.
++     */
++    public FSDoAction(FSDoAction obj)
++    {
++        super(obj);
+ 
++        if (obj.actions != null)
++        {
++            actions = new ArrayList(obj.actions.size());
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            encodedActions = Transform.clone(obj.encodedActions);
++        }
++    }    
++
+     /** 
+      * Adds the action object to the array of actions. If the object already
+      * contains encoded actions then they will be deleted.
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -30,6 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ /**
+ Enables a movie to be debugged when played using the Flash authoring tool, allowing the 
+ variables defined in the arrays of actions specified in object to be inspected.
+@@ -60,17 +63,38 @@
+ {
+     private String password = null;
+         
+-    FSEnableDebugger(FSCoder coder)
++    /**
++     * Construct an FSEnableDebugger object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSEnableDebugger(FSCoder coder)
+     {
+         super(_EnableDebugger);
+         decode(coder);
+     }
+-    
++    /** 
++     * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
++     *
++     * @param aString the string defining the password.
++     */
+     public FSEnableDebugger(String password)
+     {
+         super(_EnableDebugger);
+         setPassword(password);
+     }
++    /**
++     * Constructs an FSEnableDebugger object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSEnableDebugger object.
++     */
++    public FSEnableDebugger(FSEnableDebugger obj)
++    {
++        super(obj);
++        password = new String(obj.password);
++    }    
+ 
+     /** Gets the MD5 encrypted password.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -60,17 +60,38 @@
+ {
+     private String password = null;
+         
+-    FSEnableDebugger2(FSCoder coder)
++    /**
++     * Construct an FSEnableDebugger2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSEnableDebugger2(FSCoder coder)
+     {
+         super(_EnableDebugger2);
+         decode(coder);
+     }
+-    
++    /** 
++     * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
++     *
++     * @param aString the string defining the password.
++     */
+     public FSEnableDebugger2(String password)
+     {
+         super(_EnableDebugger2);
+         setPassword(password);
+     }
++    /**
++     * Constructs an FSEnableDebugger2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSEnableDebugger2 object.
++     */
++    public FSEnableDebugger2(FSEnableDebugger2 obj)
++    {
++        super(obj);
++        password = new String(obj.password);
++    }    
+ 
+     /** Gets the MD5 encrypted password.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSEnvelope.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnvelope.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSEnvelope.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -30,6 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ /**
+ FSEnvelope is used to define an envelope which controls how a particular sound is 
+ played over time. 
+@@ -70,11 +73,16 @@
+     private int left = 0;
+     private int right = 0;
+ 
+-    FSEnvelope(FSCoder coder)
++    /**
++     * Construct an FSEnvelope object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSEnvelope(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an envelope specifying the mark, left and right values.
+ 
+         @param markValue the sample number in the 44.1KHz playback data stream where the levels for the channels is applied.
+@@ -87,6 +95,18 @@
+         setLeft(leftValue);
+         setRight(rightValue);
+     }
++    /**
++     * Constructs an FSEnvelope object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSEnvelope object.
++     */
++    public FSEnvelope(FSEnvelope obj)
++    {
++        mark = obj.mark;
++        left = obj.left;
++        right = obj.right;
++    }    
+ 
+     /** Gets the sample number in the 44.1KHz playback data stream where the level information is applied.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -93,12 +93,17 @@
+     private ArrayList catchActions = null;
+     private ArrayList finalActions = null;
+ 
+-    FSExceptionHandler(FSCoder coder)
++    /**
++     * Construct an FSExceptionHandler object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSExceptionHandler(FSCoder coder)
+     {
+         super(_ExceptionHandler);
+         decode(coder);
+     }
+-    
+     /**
+      * Constructs a new exception handler with the thrown object assigned to a local variable.
+      *
+@@ -117,7 +122,6 @@
+         catchActions = catchArray;
+         finalActions = finallyArray;
+     }
+-
+     /**
+      * Constructs a new exception handler with the thrown object assigned to one of the 
+      * Flash Player's internal registers.
+@@ -137,6 +141,51 @@
+         catchActions = catchArray;
+         finalActions = finallyArray;
+     }
++    /**
++     * Constructs an FSExceptionHandler object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSExceptionHandler object.
++     */
++    public FSExceptionHandler(FSExceptionHandler obj)
++    {
++        super(obj);
++        register = obj.register;
++        
++        if (obj.variable != null)
++            variable = new String(obj.variable);
++        else
++            variable = null;
++        
++        tryActions = new ArrayList(obj.tryActions.size());
++        
++        for (Iterator i = obj.tryActions.iterator(); i.hasNext();)
++            tryActions.add(((FSActionObject)i.next()).clone());
++        
++        if (obj.catchActions != null)
++        {
++            catchActions = new ArrayList(obj.catchActions.size());
++            
++            for (Iterator i = obj.catchActions.iterator(); i.hasNext();)
++                catchActions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            catchActions = null;
++        }
++        
++        if (obj.finalActions != null)
++        {
++            finalActions = new ArrayList(obj.finalActions.size());
++            
++            for (Iterator i = obj.finalActions.iterator(); i.hasNext();)
++                finalActions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            finalActions = null;
++        }
++    }    
+ 
+     /** Adds the action object to the array of actions for the try block.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSExport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExport.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSExport.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -78,17 +78,21 @@
+ {
+     private Hashtable objects = new Hashtable();
+         
+-    FSExport(FSCoder coder)
++    FSExport()
+     {
+         super(_Export);
+-        decode(coder);
+     }
+-    
+-    FSExport()
++    /**
++     * Construct an FSExport object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSExport(FSCoder coder)
+     {
+         super(_Export);
++        decode(coder);
+     }
+-
+     /** Constructs an FSExport object that exports the object with the specified identifier. The exported object is assigned the specified name to allow it to be referenced in files importing the object. 
+ 
+         @param anIdentifier the identifier of the object to be exported.
+@@ -99,6 +103,23 @@
+         super(_Export);
+         add(anIdentifier, aString);
+     }
++    /**
++     * Constructs an FSExport object by copying values from an existing object.
++     *
++     * @param obj an FSExport object.
++     */
++    public FSExport(FSExport obj)
++    {
++        super(obj);
++        
++        objects = new Hashtable(obj.objects.size());
++        
++        for (Iterator i = obj.objects.keySet().iterator(); i.hasNext();)
++        {
++            Object key = i.next();
++            objects.put(key, new String((String)objects.get(key)));
++        }
++    }    
+ 
+     /** Adds the identifier and name to the list of objects to be exported.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSFillStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFillStyle.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSFillStyle.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -53,15 +53,18 @@
+     
+     protected int type = 0;
+     
+-    FSFillStyle(FSCoder coder)
++    FSFillStyle()
+     {
+-        decode(coder);
+     }
+ 
+-    FSFillStyle()
++    protected FSFillStyle(FSCoder coder)
+     {
++        decode(coder);
+     }
+-
++    protected FSFillStyle(FSFillStyle obj)
++    {
++        type = obj.type;
++    }
+     protected FSFillStyle(int aType)
+     {
+         setType(aType);
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSFontInfo.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -121,14 +121,22 @@
+     private boolean bold = false;
+     private ArrayList codes = new ArrayList();
+     
++    /*
++     * attributes used to retain state during encoding.
++     */
+     private boolean _containsWideCodes = false;
+     
+-    FSFontInfo(FSCoder coder)
++    /**
++     * Construct an FSFontInfo object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSFontInfo(FSCoder coder)
+     {
+         super(FSMovieObject.FontInfo);
+         decode(coder);
+     }
+-
+     /**  Constructs a basic FSFontInfo object specifying only the name of the font.
+     
+         @param anIdentifier the unique identifier of the FSDefineFont that contains the glyphs for the font.
+@@ -140,6 +148,27 @@
+         setIdentifier(anIdentifier);
+         setName(aName);
+     }
++    /**
++     * Constructs an FSFontInfo object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSFontInfo object.
++     */
++    public FSFontInfo(FSFontInfo obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++        name = new String(obj.name);
++        encoding = obj.encoding;
++        small = obj.small;
++        italic = obj.italic;
++        bold = obj.bold;
++        
++        codes = new ArrayList(obj.codes.size());
++        
++        for (Iterator i = obj.codes.iterator(); i.hasNext();)
++            codes.add(new Integer(((Integer)i.next()).intValue()));
++    }    
+ 
+     /** Gets the identifier of the font that this font information is for.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSFontInfo2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -79,12 +79,17 @@
+     private int language = 1; // FSText.Latin
+     private ArrayList codes = new ArrayList();
+     
+-    FSFontInfo2(FSCoder coder)
++    /**
++     * Construct an FSFontInfo2 object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSFontInfo2(FSCoder coder)
+     {
+         super(_FontInfo2);
+         decode(coder);
+     }
+-
+     /**  Constructs a basic FSFontInfo2 object specifying only the name of the font.
+     
+         @param anIdentifier the unique identifier of the FSDefineFont that contains the glyphs for the font.
+@@ -96,6 +101,28 @@
+         setIdentifier(anIdentifier);
+         setName(aName);
+     }
++    /**
++     * Constructs an FSFontInfo2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSFontInfo2 object.
++     */
++    public FSFontInfo2(FSFontInfo2 obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++        name = new String(obj.name);
++        encoding = obj.encoding;
++        small = obj.small;
++        italic = obj.italic;
++        bold = obj.bold;
++        language = obj.language;
++        
++        codes = new ArrayList(obj.codes.size());
++        
++        for (Iterator i = obj.codes.iterator(); i.hasNext();)
++            codes.add(new Integer(((Integer)i.next()).intValue()));
++    }    
+ 
+     /** Gets the identifier of the font that this font information is for.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSFrameLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFrameLabel.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSFrameLabel.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -30,6 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.ArrayList;
++import java.util.Iterator;
++
+ /**
+ FSFrameLabel defines a name for the current frame in a movie or movie clip. 
+   
+@@ -154,17 +157,22 @@
+     private boolean anchor = false;
+ // End Flash 6
+         
+-    FSFrameLabel(FSCoder coder)
++    FSFrameLabel()
+     {
+         super(_FrameLabel);
+-        decode(coder);
+     }
+-    
+-    FSFrameLabel()
++
++    /**
++     * Construct an FSFrameLabel object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSFrameLabel(FSCoder coder)
+     {
+         super(_FrameLabel);
++        decode(coder);
+     }
+-
+     /** Constructs an FSFrameLabel object with the specified name. 
+ 
+         @param aString the string that defines the label that will be assigned to the current frame.
+@@ -174,7 +182,6 @@
+         super(_FrameLabel);
+         setLabel(aString);
+     }
+-
+ // Flash 6
+     /** Constructs an FSFrameLabel object with the specified name. If the isAnchor 
+      *  flag is true then the frame will be directly selectable by a URL and the 
+@@ -190,6 +197,18 @@
+         setAnchor(isAnchor);
+     }
+ // End Flash 6
++    /**
++     * Constructs an FSFrameLabel object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSFrameLabel object.
++     */
++    public FSFrameLabel(FSFrameLabel obj)
++    {
++        super(obj);
++        label = new String(label);
++        anchor = obj.anchor;
++    }    
+ 
+     /** Gets the label.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSFree.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFree.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSFree.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -57,12 +57,17 @@
+ {
+     private int identifier = 0;
+         
+-    FSFree(FSCoder coder)
++    /**
++     * Construct an FSFree object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSFree(FSCoder coder)
+     {
+         super(_Free);
+         decode(coder);
+     }
+-
+     /** Constructs an FSFree object with the specified identifier. The identifier must be in the range 1..65535.
+ 
+         @param anIdentifier the identifier of the object to be deleted.
+@@ -72,7 +77,17 @@
+         super(_Free);
+         setIdentifier(anIdentifier);
+     }
+-
++    /**
++     * Constructs an FSFree object by copying values from an existing object.
++     *
++     * @param obj an FSFree object.
++     */
++    public FSFree(FSFree obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++    }    
++ 
+     /** Gets the identifier of the object to be deleted.
+ 
+         @return the object's identifier.
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGetUrl.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -131,17 +131,21 @@
+     private String url = null;
+     private String target = &quot;&quot;;
+     
+-    FSGetUrl(FSCoder coder)
++    FSGetUrl()
+     {
+         super(FSActionObject.GetUrl);
+-        decode(coder);
+     }
+-
+-    FSGetUrl()
++    /**
++     * Construct an FSGetUrl object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGetUrl(FSCoder coder)
+     {
+         super(FSActionObject.GetUrl);
++        decode(coder);
+     }
+-
+     /** Constructs an FSGetUrl with the specified url and target frame. 
+ 
+         @param urlString a fully qualified URL.
+@@ -153,7 +157,6 @@
+         setUrl(urlString);
+         setTarget(targetString);
+     }
+-
+     /**  Constructs an FSGetUrl with the specified url. The target defaults to the current window. 
+ 
+         @param urlString a fully qualified URL.
+@@ -163,6 +166,22 @@
+         super(FSActionObject.GetUrl);
+         setUrl(urlString);
+     }
++    /**
++     * Constructs an FSGetUrl object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGetUrl object.
++     */
++    public FSGetUrl(FSGetUrl obj)
++    {
++        super(obj);
++        url = new String(obj.url);
++        
++        if (obj.target != null)
++            target = new String(obj.target);
++        else
++            target = null;
++    }    
+ 
+     /** Gets the URL. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGetUrl2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -176,12 +176,17 @@
+         
+     private int requestType = MovieToLevel;
+     
+-    FSGetUrl2(FSCoder coder)
++    /**
++     * Construct an FSGetUrl2 object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGetUrl2(FSCoder coder)
+     {
+         super(_GetUrl2);
+         decode(coder);
+     }
+-
+     /** Constructs an FSGetUrl2 using the specified request type. 
+ 
+         @param aType the type of request to be performed. Must be one of the constants defined in this class.
+@@ -191,6 +196,17 @@
+         super(_GetUrl2);
+         setRequestType(aType);
+     }
++    /**
++     * Constructs an FSGetUrl2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGetUrl2 object.
++     */
++    public FSGetUrl2(FSGetUrl2 obj)
++    {
++        super(obj);
++        requestType = obj.requestType;
++    }    
+ 
+     /** Gets the request type. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGotoFrame.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -83,12 +83,17 @@
+ {
+     private int frameNumber = 1;
+ 
+-    FSGotoFrame(FSCoder coder)
++    /**
++     * Construct an FSGotoFrame object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGotoFrame(FSCoder coder)
+     {
+         super(_GotoFrame);
+         decode(coder);
+     }
+-
+     /** Constructs an FSGotoFrame with the specified frame number. The frame number must be in the range 1..65535.
+ 
+         @param aNumber the number of the frame.
+@@ -98,6 +103,17 @@
+         super(_GotoFrame);
+         setFrameNumber(aNumber);
+     }
++    /**
++     * Constructs an FSGotoFrame object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGotoFrame object.
++     */
++    public FSGotoFrame(FSGotoFrame obj)
++    {
++        super(obj);
++        frameNumber = obj.frameNumber;
++    }    
+ 
+     /** Gets the number of the frame to move the main time-line to.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGotoFrame2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -144,12 +144,17 @@
+     private boolean playFrame = false;
+     private int frameOffset = 0;
+     
+-    FSGotoFrame2(FSCoder coder)
++    /**
++     * Construct an FSGotoFrame2 object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGotoFrame2(FSCoder coder)
+     {
+         super(_GotoFrame2);
+         decode(coder);
+     }
+-
+     /** Constructs an FSGotoFrame2 object with the specified play flag setting. 
+ 
+         @param aBool true if the player should being playing the movie at the specified frame. 
+@@ -160,7 +165,6 @@
+         super(_GotoFrame2);
+         setPlayFrame(aBool);
+     }
+-
+ // Flash 5
+     /** Constructs an FSGotoFrame2 object with the specified play flag setting 
+      *  and frame offset for a given scene. 
+@@ -176,7 +180,20 @@
+         setPlayFrame(aBool);
+         setFrameOffset(offset);
+     }
+-
++//  End Flash 5
++    /**
++     * Constructs an FSGotoFrame2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGotoFrame object.
++     */
++    public FSGotoFrame2(FSGotoFrame2 obj)
++    {
++        super(obj);
++        playFrame = obj.playFrame;
++        frameOffset = obj.frameOffset;
++    }    
++//  Flash 5
+     /** Gets the offset that will be added to the 'logical' frame number obtained 
+      *  from the stack to generate the 'physical' frame number.
+      * 
+
+Modified: trunk/src/com/flagstone/transform/FSGotoLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoLabel.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGotoLabel.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -85,17 +85,21 @@
+ {
+     private String label = null;
+     
+-    FSGotoLabel(FSCoder coder)
++    FSGotoLabel()
+     {
+         super(_GotoLabel);
+-        decode(coder);
+     }
+-
+-    FSGotoLabel()
++    /**
++     * Construct an FSGotoLabel object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGotoLabel(FSCoder coder)
+     {
+         super(_GotoLabel);
++        decode(coder);
+     }
+-
+     /** Constructs an FSGotoLabel action with the specified frame label. 
+ 
+         @param aString the label assigned a particular frame in the movie.
+@@ -105,6 +109,17 @@
+         super(_GotoLabel);
+         setLabel(aString);
+     }
++    /**
++     * Constructs an FSGotoLabel object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGotoLabel object.
++     */
++    public FSGotoLabel(FSGotoLabel obj)
++    {
++        super(obj);
++        label = new String(obj.label);
++    }    
+ 
+     /** Gets the frame label.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSGradient.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGradient.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGradient.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -61,11 +61,16 @@
+     private int ratio = 0;
+     private FSColor color = null;
+     
+-    FSGradient(FSCoder coder)
++    /**
++     * Construct an FSGradient object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGradient(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSGradient object with the specified ratio and color.
+ 
+         @param aRatio the ratio along the gradient square.
+@@ -76,6 +81,17 @@
+         setRatio(aRatio);
+         setColor(aColor);
+     }
++    /**
++     * Constructs an FSGradient object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGradient object.
++     */
++    public FSGradient(FSGradient obj)
++    {
++        ratio = obj.ratio;
++        color = new FSColor(obj.color);
++    }    
+ 
+     /** Gets the ratio that defines the relative point across the gradient square.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGradientFill.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSGradientFill.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -124,11 +124,16 @@
+     private FSCoordTransform transform = null;
+     private ArrayList gradients = new ArrayList();
+     
+-    FSGradientFill(FSCoder coder)
++    /**
++     * Construct an FSGradientFill object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSGradientFill(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /**  Constructs an FSGradientFill object specifying the type, coordinate transform and array of gradient records.
+ 
+         @param aType the type of gradient fill, either FSFillStyle.Linear or FSFillStyle.Radial.
+@@ -141,6 +146,22 @@
+         setTransform(aTransform);
+         setGradients(anArray);
+     }
++    /**
++     * Constructs an FSGradientFill object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGradientFill object.
++     */
++    public FSGradientFill(FSGradientFill obj)
++    {
++        super(obj);
++        transform = new FSCoordTransform(obj.transform);
++        
++        gradients = new ArrayList(obj.gradients.size());
++        
++        for (Iterator i = obj.gradients.iterator(); i.hasNext();)
++            gradients.add(((FSGradient)i.next()).clone());
++    }    
+ 
+     /** Add a FSGradient object to the array of gradient objects.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSIf.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSIf.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSIf.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -75,12 +75,17 @@
+ {
+     private int offset = 0;
+ 
+-    FSIf(FSCoder coder)
++    /**
++     * Construct an FSIf object, initalizing it with values decoded from an 
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSIf(FSCoder coder)
+     {
+         super(_If);
+         decode(coder);
+     }
+-
+     /** Constructs an if action with the specified offset. The offset must be in the range  -32768..32767.
+ 
+         @param anOffset the number of bytes to add to the instruction pointer if the value popped off the stack evaluates to true.
+@@ -90,6 +95,16 @@
+         super(_If);
+         setOffset(anOffset);
+     }
++    /**
++     * Constructs an FSIf object by copying values from an existing object.
++     *
++     * @param obj an FSIf object.
++     */
++    public FSIf(FSIf obj)
++    {
++        super(obj);
++        offset = obj.offset;
++    }    
+ 
+     /** Gets the offset that will be added to the instruction pointer if the value at the top of the stack evaluates to true (non-zero).
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSImport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSImport.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSImport.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -89,17 +89,21 @@
+     private String url = null;
+     private Hashtable objects = new Hashtable();
+         
+-    FSImport(FSCoder coder)
++    FSImport()
+     {
+         super(_Import);
+-        decode(coder);
+     }
+-    
+-    FSImport()
++    /**
++     * Construct an FSImport object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSImport(FSCoder coder)
+     {
+         super(_Import);
++        decode(coder);
+     }
+-
+     /** Constructs an FSImport object that imports an object from the specified file. The exported object is referenced by a name assigned to it when it was exported. The newly imported object must be assigned an identifier that is unique within the movie the object is imported into. Limited security is provided by requiring that the URL must be in the same domain or sub-domain as the URL of the movie which contains this object.
+ 
+         @param aUrl the URL referencing the file to be imported.
+@@ -112,6 +116,25 @@
+         setUrl(aUrl);
+         add(anIdentifier, aString);
+     }
++    /**
++     * Constructs an FSImport object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSImport object.
++     */
++    public FSImport(FSImport obj)
++    {
++        super(obj);
++        url = new String(obj.url);
++        
++        objects = new Hashtable(obj.objects.size());
++        
++        for (Iterator i = obj.objects.keySet().iterator(); i.hasNext();)
++        {
++            Object key = i.next();
++            objects.put(key, new String((String)objects.get(key)));
++        }
++    }    
+ 
+     /** Adds the identifier and name to the list of objects to be imported.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -91,12 +91,17 @@
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+     
+-    FSInitialize(FSCoder coder)
++    /**
++     * Construct an FSInitialize object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSInitialize(FSCoder coder)
+     {
+         super(_Initialize);
+         decode(coder);
+     }
+-
+     /**  
+      * Constructs an FSInitialize object that will initialize the movie clip 
+      * with the specified identifier with the actions in the array.
+@@ -123,7 +128,31 @@
+         setIdentifier(anIdentifier);
+         setEncodedActions(bytes);
+     }
++    /**
++     * Constructs an FSInitialize object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSInitialize object.
++     */
++    public FSInitialize(FSInitialize obj)
++    {
++        super(obj);
+ 
++        identifier = obj.identifier;
++        
++        if (obj.actions != null)
++        {
++            actions = new ArrayList(obj.actions.size());
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++        else
++        {
++            encodedActions = Transform.clone(obj.encodedActions);
++        }
++    }    
++
+     /** Returns the identifier of the movie clip that will be initialized. 
+ 
+         @return the identifier of the movie clip.
+
+Modified: trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -84,18 +84,24 @@
+ {
+     private byte[] encodingTable = null;
+ 
+-    FSJPEGEncodingTable(FSCoder coder)
++    /**
++     * Construct an FSJPEGEncodingTable object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSJPEGEncodingTable(FSCoder coder)
+     {
+         super(FSMovieObject.JPEGTables);
+         decode(coder);
+     }
+-
+-    /** Constructs an FSJPEGEncodingTable object with an empty encoding table. */ 
++    /** 
++     * Constructs an FSJPEGEncodingTable object with an empty encoding table. 
++     */ 
+     public FSJPEGEncodingTable()
+     {
+         super(FSMovieObject.JPEGTables);
+     }
+-
+     /** Constructs an FSJPEGEncodingTable object with the encoding table data.
+ 
+         @param bytes an array of bytes contains the data for the encoding table.
+@@ -105,6 +111,21 @@
+         super(FSMovieObject.JPEGTables);
+         setEncodingTable(bytes);
+     }
++    /**
++     * Constructs an FSJPEGEncodingTable object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSJPEGEncodingTable object.
++     */
++    public FSJPEGEncodingTable(FSJPEGEncodingTable obj)
++    {
++        super(obj);
++        
++        if (obj.encodingTable != null)
++            encodingTable = Transform.clone(obj.encodingTable);
++        else
++            encodingTable = null;
++    }    
+ 
+     /** Gets the encoding table.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSJump.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJump.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSJump.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -68,12 +68,17 @@
+ {
+     private int offset = 0;
+ 
+-    FSJump(FSCoder coder)
++    /**
++     * Construct an FSJump object, initalizing it with values decoded from an 
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSJump(FSCoder coder)
+     {
+         super(_Jump);
+         decode(coder);
+     }
+-
+     /** Constructs an FSJump action with the specified offset. The offset must be in the range -32768..32767.
+ 
+         @param anOffset the number of bytes to add to the instruction pointer.
+@@ -83,6 +88,16 @@
+         super(_Jump);
+         setOffset(anOffset);
+     }
++    /**
++     * Constructs an FSJump object by copying values from an existing object.
++     *
++     * @param obj an FSJump object.
++     */
++    public FSJump(FSJump obj)
++    {
++        super(obj);
++        offset = obj.offset;
++    }    
+ 
+     /** Gets the offset that will be added to the instruction pointer.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSKerning.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSKerning.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSKerning.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -68,11 +68,16 @@
+     private int rightGlyphIndex = 0;
+     private int adjustment = 0;
+     
+-    FSKerning(FSCoder coder)
++    /**
++     * Construct an FSKerning object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSKerning(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSKerning object specifying the glyph indexes and adjustment. The value for the adjustment must be specified in twips.
+ 
+         @param leftIndex the index in a code table for the glyph on the left side of the pair.
+@@ -85,6 +90,18 @@
+         setRightGlyphIndex(rightIndex);
+         setAdjustment(adjust);
+     }
++    /**
++     * Constructs an FSKerning object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSKerning object.
++     */
++    public FSKerning(FSKerning obj)
++    {
++        leftGlyphIndex = obj.leftGlyphIndex;
++        rightGlyphIndex = obj.rightGlyphIndex;
++        adjustment = obj.adjustment;
++    }    
+ 
+     /** Gets the index of the left glyph in the kerning pair.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSLimitScript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLimitScript.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSLimitScript.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -66,12 +66,17 @@
+     private int depth = 0; 
+     private int timeout = 0; 
+     
++    /**
++     * Construct an FSLimitScript object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
+     public FSLimitScript(FSCoder coder)
+     {
+         super(_LimitScript);
+         decode(coder);
+     }
+-
+     /**
+      * Constructs an FSLimitScript object that limits the recursion depth to &lt;em&gt;depth&lt;/em&gt; levels
+      * and specifies that any sequence of actions will timeout after &lt;em&gt;timeout&lt;/em&gt; seconds.
+@@ -85,6 +90,18 @@
+         setDepth(depth);
+         setTimeout(timeout);
+     }
++    /**
++     * Constructs an FSLimitScript object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSLimitScript object.
++     */
++    public FSLimitScript(FSLimitScript obj)
++    {
++        super(obj);
++        depth = obj.depth;
++        timeout = obj.timeout;
++    }    
+ 
+     /**
+      * Gets the maximum recursion level.
+
+Modified: trunk/src/com/flagstone/transform/FSLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLine.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSLine.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -64,11 +64,16 @@
+     private int x = 0;
+     private int y = 0;
+ 
+-    FSLine(FSCoder coder)
++    /**
++     * Construct an FSLine object and initialize it with the values decoded from 
++     * an encoded line.
++     * 
++     * @param coder an FSCoder object containing the encoded colour transform.
++     */
++    public FSLine(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSLine with the specified relative coordinates.
+ 
+         @param xValue the x-coordinate of the end point, specified relative to the current drawing point.
+@@ -79,6 +84,14 @@
+         setX(xValue);
+         setY(yValue);
+     }
++    /**
++     * Construct an FSCoordTransform object by copying an existing object.
++     */
++    public FSLine(FSLine obj)
++    {
++        x = obj.x;
++        y = obj.y;
++    }
+ 
+     /** Gets the relative x-coordinate.
+ 
+@@ -210,8 +223,6 @@
+ 
+         boolean _containsGeneralLine = coder.readBits(1, false) != 0 ? true : false;
+ 
+-        // Dummy reads are used so event logging registers fields in the correct order
+-        // Fields are recorded in the following order: containsVerticalLine, x, y.
+         if (_containsGeneralLine)
+         {
+             x = coder.readBits(fieldSize, true);
+
+Modified: trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -79,15 +79,21 @@
+  */  
+ public final class FSMorphBitmapFill extends FSFillStyle
+ {
+-    private int identifier= 0;
++    private int identifier = 0;
+     private FSCoordTransform startTransform = new FSCoordTransform(0,0);
+     private FSCoordTransform endTransform = new FSCoordTransform(0,0);
+ 
+-    FSMorphBitmapFill(FSCoder coder)
++    /**
++     * Construct an FSMorphBitmapFill object an initialize it with values 
++     * decoded from an encoded FSMorphBitmapFill object.
++     * 
++     * @param coder an FSCoder object containing an FSMorphBitmapFill encoded 
++     * as binary data.
++     */
++    public FSMorphBitmapFill(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSMorphBitmapFill specifying the type, bitmap image and coordinated transforms for the image at the start and end of the morphing process.
+ 
+         @param aType the type of fill either FSFillStyle.Tiled or FSFillStyle.Clipped.
+@@ -102,6 +108,17 @@
+         setStartTransform(aStartTransform);
+         setEndTransform(anEndTransform);
+     }
++    /**
++     * Construct an FSMorphBitmapFill object by copying an existing object.
++     * 
++     * @param object an FSMorphBitmapFill object. 
++     */
++    public FSMorphBitmapFill(FSMorphBitmapFill obj)
++    {
++        identifier = obj.identifier;
++        startTransform = new FSCoordTransform(obj.startTransform);
++        endTransform = new FSCoordTransform(obj.endTransform);
++    }   
+ 
+     /** Gets the identifier of the bitmap image.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMorphGradient.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphGradient.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSMorphGradient.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -78,11 +78,16 @@
+     private FSColor startColor = null;
+     private FSColor endColor = null;
+     
+-    FSMorphGradient(FSCoder coder)
++    /**
++     * Construct an FSMorphGradient object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSMorphGradient(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSMorphGradient object specifying the starting and ending ratios and colours.
+ 
+         @param aStartRatio the ratio along the gradient square at the start of the morphing process.
+@@ -97,6 +102,19 @@
+         setStartColor(aStartColor);
+         setEndColor(anEndColor);
+     }
++    /**
++     * Constructs an FSMorphGradient object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSMorphGradient object.
++     */
++    public FSMorphGradient(FSMorphGradient obj)
++    {
++        startRatio = obj.startRatio;
++        endRatio = obj.endRatio;
++        startColor = new FSColor(obj.startColor);
++        endColor = new FSColor(obj.endColor);
++    }    
+ 
+     /** Gets the ratio at the start of the morphing process.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMorphGradientFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphGradientFill.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSMorphGradientFill.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -133,11 +133,16 @@
+     private FSCoordTransform endTransform = null;
+     private ArrayList gradients = null;
+     
+-    FSMorphGradientFill(FSCoder coder)
++    /**
++     * Construct an FSMorphGradientFill object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSMorphGradientFill(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSMorphGradientFill object specifying the type of fill, starting and ending coordinate transforms and the array of gradient records.
+ 
+         @param aType the type of gradient fill, either FSFillStyle.Linear or FSFillStyle.Radial.
+@@ -152,6 +157,23 @@
+         setEndTransform(anEndTransform);
+         setGradients(anArray);
+     }
++    /**
++     * Constructs an FSMorphGradientFill object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSMorphGradientFill object.
++     */
++    public FSMorphGradientFill(FSMorphGradientFill obj)
++    {
++        super(obj);
++        startTransform = new FSCoordTransform(obj.startTransform);
++        endTransform = new FSCoordTransform(obj.endTransform);
++        
++        gradients = new ArrayList(obj.gradients.size());
++        
++        for (Iterator i = obj.gradients.iterator(); i.hasNext();)
++            gradients.add(((FSGradient)i.next()).clone());
++    }    
+ 
+     /** Add a FSMorphGradient object to the array of gradient objects.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMorphSolidFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphSolidFill.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSMorphSolidFill.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -74,11 +74,16 @@
+     private FSColor startColor = null;
+     private FSColor endColor = null;
+     
+-    FSMorphSolidFill(FSCoder coder)
++    /**
++     * Construct an FSMorphSolidFill object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSMorphSolidFill(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSMorphSolidFill object specifying the starting and ending colours.
+ 
+         @param aStartColor the colour at the start of the morphing process.
+@@ -90,6 +95,18 @@
+         setStartColor(aStartColor);
+         setEndColor(anEndColor);
+     }
++    /**
++     * Constructs an FSMorphSolidFill object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSMorphSolidFill object.
++     */
++    public FSMorphSolidFill(FSMorphSolidFill obj)
++    {
++        super(obj);
++        startColor = new FSColor(obj.startColor);
++        endColor = new FSColor(obj.endColor);
++    }    
+ 
+     /** Gets the colour at the start of the morphing process.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMorphSolidLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphSolidLine.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSMorphSolidLine.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -73,11 +73,16 @@
+     private FSColor startColor = null;
+     private FSColor endColor = null;
+     
+-    FSMorphSolidLine(FSCoder coder)
++    /**
++     * Construct an FSMorphSolidLine object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSMorphSolidLine(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSMorphLineStyle object specifying the starting and ending widths and colours.
+ 
+         @param aStartWidth the width of the line at the start of the morphing process.
+@@ -92,6 +97,19 @@
+         setStartColor(aStartColor);
+         setEndColor(anEndColor);
+     }
++    /**
++     * Constructs an FSMorphSolidLine object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSMorphSolidLine object.
++     */
++    public FSMorphSolidLine(FSMorphSolidLine obj)
++    {
++        startWidth = obj.startWidth;
++        endWidth = obj.endWidth;
++        startColor = new FSColor(obj.startColor);
++        endColor = new FSColor(obj.endColor);
++    }    
+ 
+     /** Gets the width of the line at the start of the morphing process.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -215,11 +215,21 @@
+      * 
+      * @param aType an identifier indicating the type of movie object.
+      */
+-    public FSMovieObject(int aType)
++    protected FSMovieObject(int aType)
+     {
+         type = aType;
+     }
+-
++    /**
++     * Constructs a movie object by copying an existing one.
++     * 
++     * @param aType an identifier indicating the type of movie object.
++     */
++    protected FSMovieObject(FSMovieObject obj)
++    {
++        type = obj.type;
++        length = obj.length;
++        extendLength = obj.extendLength;
++    }
+     /** 
+      * Gets the code used that identifies the type of the object when it is 
+      * encoded. 
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSNewFunction.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -149,17 +149,21 @@
+ 
+     private int actionsLength = 0;
+     
+-    FSNewFunction(FSCoder coder)
++    FSNewFunction()
+     {
+         super(_NewFunction);
+-        decode(coder);
+     }
+-    
+-    FSNewFunction()
++    /**
++     * Construct an FSNewFunction object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSNewFunction(FSCoder coder)
+     {
+         super(_NewFunction);
++        decode(coder);
+     }
+-
+     /** Constructs an FSNewFunction with the specified name, argument names and actions to be executed. The order of the Strings in the argument array indicate the order in which the values will be popped off the stack when the function is executed. The fist argument is popped from the stack first.
+ 
+         @param aString the name of the function.
+@@ -173,7 +177,6 @@
+         setArguments(argumentArray);
+         setActions(actionArray);
+     }
+-
+     /** Constructs an anonymous FSNewFunction with the specified argument names and actions to be executed. Use this constructor when defining functions that will be assigned to object variables and used as methods.
+ 
+         @param argumentArray an array of Strings listing the names of the arguments.
+@@ -185,6 +188,37 @@
+         setArguments(argumentArray);
+         setActions(actionArray);
+     }
++    /**
++     * Constructs an FSNewFunction object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSNewFunction object.
++     */
++    public FSNewFunction(FSNewFunction obj)
++    {
++        super(obj);
++
++        if (obj.name != null)
++            name = new String(obj.name);
++        else
++            name = null;
++        
++        if (obj.arguments != null)
++        {
++            arguments = new ArrayList(obj.arguments.size());
++            
++            for (Iterator i = obj.arguments.iterator(); i.hasNext();)
++                arguments.add(new String(i.next().toString()));
++        }
++
++        if (obj.actions != null)
++        {
++            actions = new ArrayList(obj.actions.size());
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++    }    
+     
+     /** Adds the name of an argument to the array of argument names.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -230,14 +230,22 @@
+     private ArrayList arguments = null;
+     private ArrayList actions = null;
+     
+-    private int actionsLength = 0;
++    /*
++     * variables used to record state when encoding.
++     */
++    private int _actionsLength = 0;
+ 
+-    FSNewFunction2(FSCoder coder)
++    /**
++     * Construct an FSNewFunction2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSNewFunction2(FSCoder coder)
+     {
+         super(_NewFunction2);
+         decode(coder);
+     }
+-    
+     /** 
+      * Constructs an FSNewFunction with the specified name, argument names and actions to 
+      * be executed. The order of the Strings in the argument array indicate the order in 
+@@ -255,7 +263,6 @@
+         setArguments(arguments);
+         setActions(actions);
+     }
+-
+     /** 
+      * Constructs an anonymous FSNewFunction with the specified argument names and actions 
+      * to be executed. Use this constructor when defining functions that will be assigned 
+@@ -270,7 +277,41 @@
+         setArguments(arguments);
+         setActions(actions);
+     }
++    /**
++     * Constructs an FSNewFunction2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSNewFunction2 object.
++     */
++    public FSNewFunction2(FSNewFunction2 obj)
++    {
++        super(obj);
+ 
++        if (obj.name != null)
++            name = new String(obj.name);
++        else
++            name = null;
++        
++        registerCount = obj.registerCount;
++        optimizations = obj.optimizations;
++        
++        if (obj.arguments != null)
++        {
++            arguments = new ArrayList(obj.arguments.size());
++            
++            for (Iterator i = obj.arguments.iterator(); i.hasNext();)
++                arguments.add(new String(i.next().toString()));
++        }
++
++        if (obj.actions != null)
++        {
++            actions = new ArrayList(obj.actions.size());
++            
++            for (Iterator i = obj.actions.iterator(); i.hasNext();)
++                actions.add(((FSActionObject)i.next()).clone());
++        }
++    }    
++
+     /** Adds the name of an argument to the array of argument names.
+ 
+         @param anArgument the name of an argument passed to the FSNewFunction object.
+@@ -465,16 +506,16 @@
+         
+         length += 2;
+         
+-        actionsLength = 0;
++        _actionsLength = 0;
+ 
+         for (Iterator i = actions.iterator(); i.hasNext();)
+         {
+             FSActionObject currentAction = (FSActionObject)i.next();
+             
+-            actionsLength += currentAction.length(coder);
+-            actionsLength += (currentAction.getType() &gt; 128) ? 3 : 1;
++            _actionsLength += currentAction.length(coder);
++            _actionsLength += (currentAction.getType() &gt; 128) ? 3 : 1;
+         }
+-        length += actionsLength;
++        length += _actionsLength;
+         
+         return length;
+     }
+@@ -484,7 +525,7 @@
+         coder.beginObject(name());
+ 
+         coder.writeWord(type, 1);
+-        coder.writeWord(length - actionsLength, 2);
++        coder.writeWord(length - _actionsLength, 2);
+ 
+         if (name != null)
+             coder.writeString(name);
+@@ -498,7 +539,7 @@
+         for (Iterator i = arguments.iterator(); i.hasNext();)
+             ((FSRegisterVariable)i.next()).encode(coder);
+ 
+-        coder.writeWord(actionsLength, 2);
++        coder.writeWord(_actionsLength, 2);
+            
+         for (Iterator i=actions.iterator(); i.hasNext();)
+         {
+@@ -545,10 +586,10 @@
+         for (int i=0; i&lt;argumentCount; i++)
+             arguments.add(new FSRegisterVariable(coder));
+ 
+-        actionsLength = coder.readWord(2, false);
+-        length += actionsLength;
++        _actionsLength = coder.readWord(2, false);
++        length += _actionsLength;
+         
+-        while (bytesRead &lt; actionsLength)
++        while (bytesRead &lt; _actionsLength)
+         {
+             FSActionObject anAction = FSMovie.decodeAction(coder);
+             
+
+Modified: trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -63,17 +63,32 @@
+  */  
+ public final class FSPathsArePostscript extends FSMovieObject
+ {
+-    FSPathsArePostscript(FSCoder coder)
++    /**
++     * Construct an FSPathsArePostscript object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSPathsArePostscript(FSCoder coder)
+     {
+         super(_PathsArePostscript);
+         decode(coder);
+     }
+-
+     /** Constructs an FSPathsArePostscript object. */
+     public FSPathsArePostscript()
+     {
+         super(_PathsArePostscript);
+     }
++    /**
++     * Constructs an FSPathsArePostscript object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSPathsArePostscript object.
++     */
++    public FSPathsArePostscript(FSPathsArePostscript obj)
++    {
++        super(obj);
++    }    
+     
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSPlaceObject.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -123,12 +123,17 @@
+     private FSCoordTransform transform = null;
+     private FSColorTransform colorTransform = null;
+         
+-    FSPlaceObject(FSCoder coder)
++    /**
++     * Construct an FSPlaceObject object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSPlaceObject(FSCoder coder)
+     {
+         super(FSMovieObject.PlaceObject);
+         decode(coder);
+     }
+-
+     /** Constructs an FSPlaceObject object that places an object with the identifier into the display list layer at the specified coordinates (x,y).
+ 
+         @param anIdentifier the unique identifier for the object to the placed on the display list.
+@@ -173,6 +178,22 @@
+         setTransform(aTransform);
+         setColorTransform(aColorTransform);
+     }
++    /**
++     * Constructs an FSPlaceObject object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSPlaceObject object.
++     */
++    public FSPlaceObject(FSPlaceObject obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++        layer = obj.layer;
++        transform = new FSCoordTransform(obj.transform);
++        
++        if (obj.colorTransform != null)
++            colorTransform = new FSColorTransform(obj.colorTransform);
++    }    
+ 
+     /** Gets the identifier of the object.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -271,12 +271,17 @@
+     private ArrayList clipEvents = null;
+     private byte[] encodedEvents = null;
+         
+-    FSPlaceObject2(FSCoder coder)
++    /**
++     * Construct an FSPlaceObject2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSPlaceObject2(FSCoder coder)
+     {
+         super(_PlaceObject2);
+         decode(coder);
+     }
+-
+     /** Constructs an FSPlaceObject2 object to place a new object on the display list at the coordinates on the screen.
+ 
+         @param anIdentifier the identifier of a new object to be displayed.
+@@ -521,6 +526,43 @@
+         setTransform(transform);
+         setColorTransform(colorTransform);
+     }
++    /**
++     * Constructs an FSPlaceObject2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSPlaceObject2 object.
++     */
++    public FSPlaceObject2(FSPlaceObject2 obj)
++    {
++        super(obj);
++        place = obj.place;
++        layer = obj.layer;
++        identifier = obj.identifier;
++        
++        if (obj.transform != null)
++            transform = new FSCoordTransform(obj.transform);
++        
++        if (obj.colorTransform != null)
++            colorTransform = new FSColorTransform(obj.colorTransform);
++        
++        ratio = obj.ratio;
++        clippingDepth = obj.clippingDepth;
++        
++        if (obj.name != null)
++            name = new String(obj.name);
++        
++        if (obj.clipEvents != null)
++        {
++            clipEvents = new ArrayList(obj.clipEvents.size());
++            
++            for (Iterator i = obj.clipEvents.iterator(); i.hasNext();)
++                clipEvents.add(((FSClipEvent)i.next()).clone());
++        }
++        else
++        {
++            encodedEvents = Transform.clone(encodedEvents);
++        }
++    }    
+ 
+     /** Adds a clip event to the array of clip events. If the object already
+      * contains a set of encoded clip event objects they will be deleted.
+
+Modified: trunk/src/com/flagstone/transform/FSPointer.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPointer.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSPointer.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -61,12 +61,17 @@
+ {
+     private int pointer = 0;
+ 
+-    FSPointer(FSCoder coder)
++    /**
++     * Construct an FSPointer object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSPointer(FSCoder coder)
+     {
+         super(_DefineBitsPtr);
+         decode(coder);
+     }
+-
+     /** Constructs an FSPointer object, specifying the pointer.
+ 
+         @param aPointer the pointer.
+@@ -76,6 +81,17 @@
+         super(_DefineBitsPtr);
+         setPointer(aPointer);
+     }
++    /**
++     * Constructs an FSPointer object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSPointer object.
++     */
++    public FSPointer(FSPointer obj)
++    {
++        super(obj);
++        pointer = obj.pointer;
++    }    
+ 
+     /** Gets the value for the pointer.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSProperty.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProperty.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSProperty.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -34,15 +34,35 @@
+ {
+     private int value = 0;
+ 
+-    FSProperty(FSCoder coder)
++    /**
++     * Construct an FSProperty object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSProperty(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
++    /**
++     * Construct an FSProperty object with the proerty value.
++     * 
++     * @param aValue an integer representing a movie property.
++     */
+     public FSProperty(int aValue)
+     {
+         setValue(aValue);
+     }
++    /**
++     * Constructs an FSProperty object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSProperty object.
++     */
++    public FSProperty(FSProperty obj)
++    {
++        value = obj.value;
++    }    
+ 
+     public int getValue() 
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProtect.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSProtect.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -63,12 +63,17 @@
+ {
+     private String password = null;
+         
+-    FSProtect(FSCoder coder)
++    /**
++     * Construct an FSProtect object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSProtect(FSCoder coder)
+     {
+         super(_Protect);
+         decode(coder);
+     }
+-
+     /** Constructs an Protect object. */
+     public FSProtect()
+     {
+@@ -81,6 +86,17 @@
+         super(_Protect);
+         setPassword(password);
+     }
++    /**
++     * Constructs an FSProtect object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSProtect object.
++     */
++    public FSProtect(FSProtect obj)
++    {
++        super(obj);
++        password = new String(obj.password);
++    }    
+ 
+     /** Gets the MD5 encrypted password.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -226,12 +226,17 @@
+     
+     private ArrayList values = new ArrayList();
+ 
+-    FSPush(FSCoder coder)
++    /**
++     * Construct an FSPush object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSPush(FSCoder coder)
+     {
+         super(_Push);
+         decode(coder);
+     }
+-
+     /** Constructs an FSPush action object with no values added. */
+     public FSPush()
+     {
+@@ -327,7 +332,42 @@
+         super(_Push);
+         setValues(anArray);
+     }
++    /**
++     * Constructs an FSPush object by copying values from an existing object.
++     *
++     * @param obj an FSPush object.
++     */
++    public FSPush(FSPush obj)
++    {
++        super(obj);
+ 
++        values = new ArrayList(obj.values.size());
++
++        for (Iterator i = obj.values.iterator(); i.hasNext();)
++        {
++            Object value = i.next();
++            
++            if (value instanceof Boolean)
++                values.add(new Boolean(((Boolean)value).booleanValue()));
++            else if (value instanceof Integer)
++                values.add(new Integer(((Integer)value).intValue()));
++            else if (value instanceof Float)
++                values.add(new Float(((Float)value).floatValue()));
++            else if (value instanceof Double)
++                values.add(new Double(((Double)value).doubleValue()));
++            else if (value instanceof String)
++                values.add(new String((String)value));
++            else if (value instanceof FSNull)
++                values.add(((FSNull)value).clone());
++            else if (value instanceof FSVoid)
++                values.add(((FSVoid)value).clone());
++            else if (value instanceof FSTableIndex)
++                values.add(((FSTableIndex)value).clone());
++            else if (value instanceof FSRegisterIndex)
++                values.add(((FSRegisterIndex)value).clone());
++        }
++    }    
++
+     /** Adds a boolean value to the array of values that will be pushed onto the stack.
+ 
+         @param aBool a boolean value.
+
+Modified: trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -59,12 +59,17 @@
+ {
+     private String name = null;
+         
+-    FSQuicktimeMovie(FSCoder coder)
++    /**
++     * Construct an FSQuicktimeMovie object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSQuicktimeMovie(FSCoder coder)
+     {
+         super(_QuicktimeMovie);
+         decode(coder);
+     }
+-
+     /** Constructs an FSQuicktimeMovie object referencing the specified file.
+ 
+         @param aString the file or URL where the file is located.
+@@ -74,6 +79,17 @@
+         super(_QuicktimeMovie);
+         setName(aString);
+     }
++    /**
++     * Constructs an FSQuicktimeMovie object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSQuicktimeMovie object.
++     */
++    public FSQuicktimeMovie(FSQuicktimeMovie obj)
++    {
++        super(obj);
++        name = new String(obj.name);
++    }    
+ 
+     /** Gets the reference to the file containing the movie.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterCopy.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterCopy.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSRegisterCopy.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -72,12 +72,17 @@
+ {
+     private int registerNumber = 0;
+     
+-    FSRegisterCopy(FSCoder coder)
++    /**
++     * Construct an FSRegisterCopy object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSRegisterCopy(FSCoder coder)
+     {
+         super(_RegisterCopy);
+         decode(coder);
+     }
+-
+     /** Constructs an FSRegisterCopy object with the register number.
+ 
+         @param anIndex the number of one of the Flash Player's internal registers.
+@@ -87,6 +92,17 @@
+         super(_RegisterCopy);
+         setRegisterNumber(anIndex);
+     }
++    /**
++     * Constructs an FSRegisterCopy object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSRegisterCopy object.
++     */
++    public FSRegisterCopy(FSRegisterCopy obj)
++    {
++        super(obj);
++        registerNumber = obj.registerNumber;
++    }    
+ 
+     /** Gets the number of the Player register that the value on the stack will be copied to.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterIndex.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterIndex.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSRegisterIndex.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -65,11 +65,16 @@
+ {
+     private int index = 0;
+ 
+-    FSRegisterIndex(FSCoder coder)
++    /**
++     * Construct an FSRegisterIndex object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSRegisterIndex(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSRegisterIndex object referencing the value stored in one of the Flash Player's internal registers.
+ 
+         @param anIndex the register number.
+@@ -78,6 +83,16 @@
+     {
+         setIndex(anIndex);
+     }
++    /**
++     * Constructs an FSRegisterIndex object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSRegisterIndex object.
++     */
++    public FSRegisterIndex(FSRegisterIndex obj)
++    {
++        index = obj.index;
++    }    
+ 
+     /** Gets the number of the Flash Player's internal register.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterVariable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterVariable.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSRegisterVariable.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -42,11 +42,16 @@
+     private int index = 0;
+     private String name = null;
+ 
+-    FSRegisterVariable(FSCoder coder)
++    /**
++     * Construct an FSRegisterVariable object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSRegisterVariable(FSCoder coder)
+     {
+         decode(coder);
+     }    
+-
+     /**
+      * Constructs a new FSRegisterVariable object specifying the name of the argument and 
+      * the number of the register it will be mapped to. If the index is 0 then the 
+@@ -67,6 +72,17 @@
+      * @return the number of the register, 1..255, in which the function argument will be stored, 0 if the argument will be stored in a local variable.
+      */
+     public int getIndex() { return index; }
++    /**
++     * Constructs an FSRegisterVariable object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSRegisterVariable object.
++     */
++    public FSRegisterVariable(FSRegisterVariable obj)
++    {
++        index = obj.index;
++        name = new String(obj.name);
++    }    
+ 
+     /**
+      * Gets the name of the function argument.
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSRemoveObject.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -95,12 +95,17 @@
+     private int identifier = 0;
+     private int layer = 0;
+ 
+-    FSRemoveObject(FSCoder coder)
++    /**
++     * Construct an FSRemoveObject object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSRemoveObject(FSCoder coder)
+     {
+         super(FSMovieObject.RemoveObject);
+         decode(coder);
+     }
+-
+     /**  Constructs an FSRemoveObject object that will remove an object with the specified identifier from the given layer in the display list.
+ 
+         @param anIdentifier the unique identifier for the object currently on the display list.
+@@ -112,6 +117,18 @@
+         setIdentifier(anIdentifier);
+         setLayer(layer);
+     }
++    /**
++     * Constructs an FSRemoveObject object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSRemoveObject object.
++     */
++    public FSRemoveObject(FSRemoveObject obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++        layer = obj.layer;
++    }    
+ 
+     /** Gets the identifier of the object to be removed from the display list.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSRemoveObject2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -59,12 +59,17 @@
+ {
+     private int layer = 0;
+ 
+-    FSRemoveObject2(FSCoder coder)
++    /**
++     * Construct an FSRemoveObject2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSRemoveObject2(FSCoder coder)
+     {
+         super(_RemoveObject2);
+         decode(coder);
+     }
+-
+     /** Constructs an FSRemoveObject2, specifying the layer in the display list where the object to be removed is currently displayed.
+ 
+         @param layer the layer number on which the object is displayed.
+@@ -74,6 +79,17 @@
+         super(_RemoveObject2);
+         setLayer(layer);
+     }
++    /**
++     * Constructs an FSRemoveObject2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSRemoveObject2 object.
++     */
++    public FSRemoveObject2(FSRemoveObject2 obj)
++    {
++        super(obj);
++        layer = obj.layer;
++    }    
+ 
+     /** Gets the layer in the display list where the object to be removed is currently displayed.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSerialNumber.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSerialNumber.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSerialNumber.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -64,12 +64,17 @@
+ {
+     private String serialNumber = null;
+     
+-    FSSerialNumber(FSCoder coder)
++    /**
++     * Construct an FSSerialNumber object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSerialNumber(FSCoder coder)
+     {
+         super(_SerialNumber);
+         decode(coder);
+     }
+-
+     /** Constructs an FSSerialNumber action with the specified string. 
+ 
+         @param aString an arbitrary string containing the serial number.
+@@ -79,6 +84,17 @@
+         super(_SerialNumber);
+         setSerialNumber(aString);
+     }
++    /**
++     * Constructs an FSSerialNumber object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSSerialNumber object.
++     */
++    public FSSerialNumber(FSSerialNumber obj)
++    {
++        super(obj);
++        serialNumber = new String(obj.serialNumber);
++    }    
+ 
+     /** Gets the serial number.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSetBackgroundColor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetBackgroundColor.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSetBackgroundColor.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -68,12 +68,17 @@
+ {
+     private FSColor color = null;
+     
+-    FSSetBackgroundColor(FSCoder coder)
++    /**
++     * Construct an FSSetBackgroundColor object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSetBackgroundColor(FSCoder coder)
+     {
+         super(FSMovieObject.SetBackgroundColor);
+         decode(coder);
+     }
+-
+     /** Constructs an FSSetBackgroundColor object with a the specified colour.
+ 
+         @param aColor the colour for the background.
+@@ -83,6 +88,17 @@
+         super(FSMovieObject.SetBackgroundColor);
+         setColor(aColor);
+     }
++    /**
++     * Constructs an FSSetBackgroundColor object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSSetBackgroundColor object.
++     */
++    public FSSetBackgroundColor(FSSetBackgroundColor obj)
++    {
++        super(obj);
++        color = new FSColor(obj.color);
++    }    
+ 
+     /** Gets the colour for the movie background.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSetTarget.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetTarget.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSetTarget.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -75,12 +75,17 @@
+ {
+     private String target = &quot;&quot;;
+     
+-    FSSetTarget(FSCoder coder)
++    /**
++     * Construct an FSSetTarget object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSetTarget(FSCoder coder)
+     {
+         super(_SetTarget);
+         decode(coder);
+     }
+-
+     /** Constructs an FSSetTarget action that changes the context to the specified target.
+ 
+         @param aString the name of a movie clip.
+@@ -90,6 +95,17 @@
+         super(_SetTarget);
+         setTarget(aString);
+     }
++    /**
++     * Constructs an FSSetTarget object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSSetTarget object.
++     */
++    public FSSetTarget(FSSetTarget obj)
++    {
++        super(obj);
++        target = new String(obj.target);
++    }    
+ 
+     /** Gets the name of the target movie clip. 
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShape.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSShape.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -58,6 +58,9 @@
+     private ArrayList objects = null;
+     private byte[] encodedObjects = null; 
+ 
++    /*
++     * This method is only used when lazily decoding shapes.
++     */
+     FSShape(FSCoder coder, int length)
+     {
+         if (coder.context[FSCoder.DecodeShapes] == 0)
+@@ -66,17 +69,21 @@
+         decode(coder);
+     }
+ 
+-    FSShape(FSCoder coder)
++    /**
++     * Construct an FSShape object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSShape(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSShape object with no shape objects. */
+     public FSShape()
+     {
+         objects = new ArrayList();
+     }
+-
+     /** Constructs an FSShape object, specifying the Objects that describe how the shape is drawn.
+ 
+         @param anArray the array of shape records.
+@@ -85,6 +92,25 @@
+     {
+         setObjects(anArray);
+     }
++    /**
++     * Constructs an FSShape object by copying values from an existing object.
++     *
++     * @param obj an FSShape object.
++     */
++    public FSShape(FSShape obj)
++    {
++        if (objects != null)
++        {
++            objects = new ArrayList();
++        
++            for (Iterator i = obj.objects.iterator(); i.hasNext();)
++                objects.add(((FSTransformObject)i.next()).clone());
++        }
++        else
++        {
++            encodedObjects = Transform.clone(obj.encodedObjects);
++        }
++    }
+ 
+     /** Adds the object to the array of shape records.
+ 
+@@ -127,10 +153,17 @@
+     {
+         FSShape anObject = (FSShape)super.clone();
+         
+-        anObject.objects = new ArrayList();
++        if (objects != null)
++        {
++            anObject.objects = new ArrayList();
+         
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-            anObject.objects.add(((FSTransformObject)i.next()).clone());
++            for (Iterator i = objects.iterator(); i.hasNext();)
++                anObject.objects.add(((FSTransformObject)i.next()).clone());
++        }
++        else
++        {
++            anObject.encodedObjects = Transform.clone(encodedObjects);
++        }
+ 
+         return anObject;
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShapeStyle.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSShapeStyle.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -221,11 +221,16 @@
+     private ArrayList fillStyles = null;
+     private ArrayList lineStyles = null;
+ 
+-    FSShapeStyle(FSCoder coder)
++    /**
++     * Construct an FSShapeStyle object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSShapeStyle(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSShapeStyle object, selecting the line and fill styles.
+ 
+         @param lineStyleIndex selects the line style at lineStyleIndex in the line styles array of the parent FSShape object.
+@@ -238,7 +243,6 @@
+         setFillStyle(fillStyleIndex);
+         setAltFillStyle(altFillStyleIndex);
+     }
+-
+     /** Constructs an FSShapeStyle object, selecting the relative drawing point.
+ 
+         @param relativeX move the current point by relativeX in the x direction.
+@@ -249,7 +253,6 @@
+         setMoveX(relativeX);
+         setMoveY(relativeY);
+     }
+-
+     /** Constructs an FSShapeStyle object, specifying the new set of line and fill styles for the parent shape.
+ 
+         @param lineStylesArray an array of FSLineStyle objects.
+@@ -315,7 +318,45 @@
+         setLineStyles(lineStylesArray);
+         setFillStyles(fillStylesArray);
+     }
++    /**
++     * Constructs an FSShapeStyle object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSShapeStyle object.
++     */
++    public FSShapeStyle(FSShapeStyle obj)
++    {
++        moveX = obj.moveX;
++        moveY = obj.moveY;
++        fillStyle = obj.fillStyle;
++        altFillStyle = obj.altFillStyle;
++        lineStyle = obj.lineStyle;
+ 
++        if (obj.fillStyles != null)
++        {
++            fillStyles = new ArrayList();
++            
++            for (Iterator i = obj.fillStyles.iterator(); i.hasNext();)
++                fillStyles.add(((FSFillStyle)i.next()).clone());
++        }
++        else
++        {
++            fillStyles = null;
++        }
++
++        if (obj.lineStyles != null)
++        {
++            lineStyles = new ArrayList();
++            
++            for (Iterator i = obj.lineStyles.iterator(); i.hasNext();)
++                lineStyles.add(((FSLineStyle)i.next()).clone());
++        }
++        else
++        {
++            fillStyles = null;
++        }
++    }    
++
+     /** Add a FSSolidLine object to the array of line styles.
+ 
+         @param aLineStyle and FSSolidLine object.
+
+Modified: trunk/src/com/flagstone/transform/FSShowFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShowFrame.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSShowFrame.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -95,17 +95,32 @@
+  */
+ public final class FSShowFrame extends FSMovieObject
+ {
+-    FSShowFrame(FSCoder coder)
++    /**
++     * Construct an FSShowFrame object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSShowFrame(FSCoder coder)
+     {
+         super(FSMovieObject.ShowFrame);
+         decode(coder);
+     }
+-
+     /** Constructs an FSShowFrame object. */
+     public FSShowFrame()
+     {
+         super(FSMovieObject.ShowFrame);
+     }
++    /**
++     * Constructs an FSShowFrame object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSShowFrame object.
++     */
++    public FSShowFrame(FSShowFrame obj)
++    {
++        super(obj);
++    }    
+ 
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSSolidFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSolidFill.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSolidFill.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -99,11 +99,16 @@
+ {
+     private FSColor color = null;
+     
+-    FSSolidFill(FSCoder coder)
++    /**
++     * Construct an FSSolidFill object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSolidFill(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /**    Constructs an FSSolidFill object of the specified colour.
+ 
+         @param aColor an FSColor object that defines the colour that the area will be filled with.
+@@ -113,6 +118,17 @@
+         super(FSFillStyle.Solid);
+         setColor(aColor);
+     }
++    /**
++     * Constructs an FSSolidFill object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSSolidFill object.
++     */
++    public FSSolidFill(FSSolidFill obj)
++    {
++        super(obj);
++        color = new FSColor(obj.color);
++    }    
+ 
+     /** Gets the colour of the fill style.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSolidLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSolidLine.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSolidLine.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -94,11 +94,16 @@
+     private int width = 0;
+     private FSColor color = null;
+     
+-    FSSolidLine(FSCoder coder)
++    /**
++     * Construct an FSSolidLine object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSolidLine(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSSolidLine, specifying the width and colour of the line. 
+ 
+         @param aWidth the width of the line.
+@@ -109,6 +114,17 @@
+         setWidth(aWidth);
+         setColor(aColor);
+     }
++    /**
++     * Constructs an FSSolidLine object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSSolidLine object.
++     */
++    public FSSolidLine(FSSolidLine obj)
++    {
++        width = obj.width;
++        color = new FSColor(obj.color);
++    }    
+ 
+     /**  Gets the width of the line.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSound.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSound.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -111,11 +111,16 @@
+     private int loopCount = 0;
+     private ArrayList envelopes = null;
+ 
+-    FSSound(FSCoder coder)
++    /**
++     * Construct an FSSound object, initalizing it with values decoded from an 
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSound(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSSound object specifying how the sound is played.
+ 
+         @param anIdentifier the unique identifier of the object that contains the sound data.
+@@ -190,6 +195,25 @@
+         setLoopCount(aCount);
+         setEnvelopes(anArray);
+     }
++    /**
++     * Constructs an FSSound object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSSound object.
++     */
++    public FSSound(FSSound obj)
++    {
++        identifier = obj.identifier;
++        mode = obj.mode;
++        inPoint = obj.inPoint;
++        outPoint = obj.outPoint;
++        loopCount = obj.loopCount;
++        
++        envelopes = new ArrayList();
++        
++        for (Iterator i = obj.envelopes.iterator(); i.hasNext();)
++            envelopes.add(((FSEnvelope)i.next()).clone());        
++    }
+ 
+     /** Add a FSEnvelope object to the array of envelope objects.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamBlock.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamBlock.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSoundStreamBlock.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -70,12 +70,17 @@
+ {
+     private byte[] soundData = null;
+     
+-    FSSoundStreamBlock(FSCoder coder)
++    /**
++     * Construct an FSSoundStreamBlock object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSoundStreamBlock(FSCoder coder)
+     {
+         super(FSMovieObject.SoundStreamBlock);
+         decode(coder);
+     }
+-
+     /** Constructs an FSSoundStreamBlock specifying the sound data in the format defined by a preceding FSSoundStreamHead or FSSoundStreamHead2 object.
+ 
+         @param bytes an array of bytes containing the sound data.
+@@ -85,6 +90,17 @@
+         super(FSMovieObject.SoundStreamBlock);
+         setSoundData(bytes);
+     }
++    /**
++     * Constructs an FSSoundStreamBlock object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSSoundStreamBlock object.
++     */
++    public FSSoundStreamBlock(FSSoundStreamBlock obj)
++    {
++        super(obj);
++        soundData = Transform.clone(obj.soundData);
++    }    
+ 
+     /** Gets the sound data in the format defined by a preceding FSSoundStreamHead or FSSoundStreamHead2 object.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -130,12 +130,17 @@
+     private int streamSampleCount = 0;
+     private int latency = 0;
+ 
+-    FSSoundStreamHead(FSCoder coder)
++    /**
++     * Construct an FSSoundStreamHead object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSoundStreamHead(FSCoder coder)
+     {
+         super(FSMovieObject.SoundStreamHead);
+         decode(coder);
+     }
+-    
+     /** Constructs an FSSoundStreamHead object specifying all the parameters required to define the sound.
+ 
+         @param playRate the recommended rate for playing the sound, either 5512, 11025, 22050 or 44100 Hz.
+@@ -161,7 +166,27 @@
+         setStreamSampleCount(streamingCount);
+         setLatency(latency);
+     }
+-
++    /**
++     * Constructs an FSSoundStreamHead object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSSoundStreamHead object.
++     */
++    public FSSoundStreamHead(FSSoundStreamHead obj)
++    {
++        super(obj);
++        format = obj.format;
++        playbackRate = obj.playbackRate;
++        playbackChannels = obj.playbackChannels;
++        playbackSampleSize = obj.playbackSampleSize;
++        
++        streamRate = obj.streamRate;
++        streamChannels = obj.streamChannels;
++        streamSampleSize = obj.streamSampleSize;
++        streamSampleCount = obj.streamSampleCount;
++        latency = obj.latency;
++    }
++    
+     /** Gets the streaming sound format. For the FSSoundStreamHead class supports 
+      * ADPCM or MP3 encoded sound data.
+     
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -138,12 +138,17 @@
+      */
+     private int _reserved = 0;
+ 
+-    FSSoundStreamHead2(FSCoder coder)
++    /**
++     * Construct an FSSoundStreamHead2 object, initalizing it with values 
++     * decoded from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSSoundStreamHead2(FSCoder coder)
+     {
+         super(_SoundStreamHead2);
+         decode(coder);
+     }
+-
+     /** Constructs an FSSoundStreamHead2 object specifying all the parameters required to define the sound.
+ 
+     @param encoding the compression format for the sound data, either FSSound.NATIVE_PCM, FSSound.ADPCM, FSSound.MP3, FSSound.PCM or FSSound.NELLYMOSER (Flash 6+ only).
+@@ -172,6 +177,27 @@
+         setStreamSampleCount(streamingCount);
+         setLatency(latency);
+     }
++    /**
++     * Constructs an FSSoundStreamHead2 object by copying values from an 
++     * existing object.
++     *
++     * @param obj an FSSoundStreamHead2 object.
++     */
++    public FSSoundStreamHead2(FSSoundStreamHead2 obj)
++    {
++        super(obj);
++        format = obj.format;
++        playbackRate = obj.playbackRate;
++        playbackChannels = obj.playbackChannels;
++        playbackSampleSize = obj.playbackSampleSize;
++        
++        streamRate = obj.streamRate;
++        streamChannels = obj.streamChannels;
++        streamSampleSize = obj.streamSampleSize;
++        streamSampleCount = obj.streamSampleCount;
++        latency = obj.latency;
++        _reserved = obj._reserved;
++    }
+ 
+     /** 
+      * Gets the streaming sound format. For the FSSoundStreamHead2 class supports 
+
+Modified: trunk/src/com/flagstone/transform/FSStartSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSStartSound.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSStartSound.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -56,12 +56,17 @@
+ {
+     private FSSound sound = null;
+ 
+-    FSStartSound(FSCoder coder)
++    /**
++     * Construct an FSStartSound object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSStartSound(FSCoder coder)
+     {
+         super(FSMovieObject.StartSound);
+         decode(coder);
+     }
+-
+     /** Constructs an FSStartSound object with an FSSound object that identifies the sound and controls how it is played.
+ 
+         @param aSound the FSSound object.
+@@ -71,6 +76,17 @@
+         super(FSMovieObject.StartSound);
+         setSound(aSound);
+     }
++    /**
++     * Constructs an FSStartSound object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSStartSound object.
++     */
++    public FSStartSound(FSStartSound obj)
++    {
++        super(obj);
++        sound = new FSSound(obj.sound);
++    }    
+ 
+     /**  Gets the FSSound object describing how the sound will be played.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSTabOrder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTabOrder.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSTabOrder.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -64,7 +64,13 @@
+     private int layer = 0; 
+     private int index = 0; 
+     
+-    FSTabOrder(FSCoder coder)
++    /**
++     * Construct an FSTabOrder object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSTabOrder(FSCoder coder)
+     {
+         super(_TabOrder);
+         decode(coder);
+@@ -83,8 +89,19 @@
+         setLayer(layer);
+         setIndex(index);
+     }
+-
+     /**
++     * Constructs an FSTabOrder object by copying values from an existing object.
++     *
++     * @param obj an FSTabOrder object.
++     */
++    public FSTabOrder(FSTabOrder obj)
++    {
++        super(obj);
++        
++        layer = obj.layer;
++        index = obj.index;
++    }
++    /**
+      * Gets the layer number which contains the object assigned to the tabbing order.
+      *
+      * @return the layer number.
+
+Modified: trunk/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTable.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSTable.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -105,18 +105,22 @@
+ {
+     private ArrayList values = null;
+     
+-    FSTable(FSCoder coder)
++    /**
++     * Construct an FSTable object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSTable(FSCoder coder)
+     {
+         super(_Table);
+         decode(coder);
+     }
+-
+     /** Constructs an empty table. */
+     public FSTable()
+     {
+         super(_Table);
+     }
+-
+     /** Constructs an FSTable object using the array of strings.
+ 
+         @param anArray of Strings that will be added to the table.
+@@ -126,7 +130,22 @@
+         super(_Table);
+         setValues(anArray);
+     }
++    /**
++     * Constructs an FSTable object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSGotoFrame object.
++     */
++    public FSTable(FSTable obj)
++    {
++        super(obj);
+ 
++        values = new ArrayList(obj.values.size());
++        
++        for (Iterator i = obj.values.iterator(); i.hasNext();)
++            values.add(new String((String)i.next()));
++    }    
++
+     /** Adds a String to the variable table.
+ 
+         @param aString a String that will be added to the end of the table.
+
+Modified: trunk/src/com/flagstone/transform/FSTableIndex.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTableIndex.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSTableIndex.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -72,11 +72,16 @@
+ {
+     private int index = 0;
+ 
+-    FSTableIndex(FSCoder coder)
++    /**
++     * Construct an FSTableIndex object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSTableIndex(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /** Constructs an FSTableIndex object referencing the value stored in the literal table.
+ 
+         @param anIndex the index into the literal table.
+@@ -85,6 +90,16 @@
+     {
+         setIndex(anIndex);
+     }
++    /**
++     * Constructs an FSTableIndex object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSTableIndex object.
++     */
++    public FSTableIndex(FSTableIndex obj)
++    {
++        index = obj.index;
++    }    
+ 
+     /** Gets the index in the table of string literals.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSText.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSText.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSText.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -218,11 +218,16 @@
+ 
+     private ArrayList characters = new ArrayList();
+ 
+-    FSText(FSCoder coder)
++    /**
++     * Construct an FSText object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSText(FSCoder coder)
+     {
+         decode(coder);
+     }
+-
+     /**
+      * Constructs an FSText object specifying the array of characters to be displayed and their 
+      * relative placement within a block of text. The selected font, colour of the text and height 
+@@ -261,6 +266,24 @@
+         setHeight(aHeight);
+         setCharacters(anArray);
+     }
++    /**
++     * Constructs an FSText object by copying values from an existing object.
++     *
++     * @param obj an FSText object.
++     */
++    public FSText(FSText obj)
++    {
++        identifier = obj.identifier;
++        color = new FSColor(obj.color);
++        offsetX = obj.offsetX;
++        offsetY = obj.offsetY;
++        height = obj.height;
++        
++        characters = new ArrayList(obj.characters.size());
++        
++        for (Iterator i = obj.characters.iterator(); i.hasNext();)
++            characters.add(((FSCharacter)i.next()).clone());
++    }    
+ 
+     /** Gets the identifier of the font in which the text will be displayed.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSUnknownAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSUnknownAction.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSUnknownAction.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -57,12 +57,17 @@
+ {
+     private byte[] data = null;
+     
+-    FSUnknownAction(FSCoder coder)
++    /**
++     * Construct an FSUnknownAction object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSUnknownAction(FSCoder coder)
+     {
+         super(0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSUnknownAction object of the specified type with the encoded Flash data.
+ 
+         @param aType the code identifying the action type.
+@@ -73,6 +78,21 @@
+         super(aType);
+         data = bytes;
+     }
++    /**
++     * Constructs an FSUnknownAction object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSUnknownAction object.
++     */
++    public FSUnknownAction(FSUnknownAction obj)
++    {
++        super(obj);
++        
++        if (obj.data != null)
++            data = Transform.clone(obj.data);
++        else
++            data = null;
++    }    
+ 
+     /** Gets the encoded data for the action.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSUnknownObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSUnknownObject.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSUnknownObject.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -57,12 +57,17 @@
+ {
+     private byte[] data = null;
+     
+-    FSUnknownObject(FSCoder coder)
++    /**
++     * Construct an FSUnknownObject object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSUnknownObject(FSCoder coder)
+     {
+         super(0);
+         decode(coder);
+     }
+-
+     /** Constructs an FSUnknownObject object of the specified type with the encoded Flash data.
+ 
+         @param aType the code identifying the tag type.
+@@ -73,6 +78,21 @@
+         super(aType);
+         setData(bytes);
+     }
++    /**
++     * Constructs an FSUnknownObject object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSUnknownObject object.
++     */
++    public FSUnknownObject(FSUnknownObject obj)
++    {
++        super(obj);
++        
++        if (obj.data != null)
++            data = Transform.clone(obj.data);
++        else
++            data = null;
++    }    
+ 
+     /** Gets the encoded data for the tag.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSVideoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -72,12 +72,17 @@
+     
+     private byte[] data = null;
+ 
+-    FSVideoFrame(FSCoder coder)
++    /**
++     * Construct an FSVideoFrame object, initalizing it with values decoded from
++     * an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSVideoFrame(FSCoder coder)
+     {
+         super(_VideoFrame);
+         decode(coder);
+     }
+-
+     /**
+      * Constructs a new FSVideoFrame object which will display the specified frame of video data
+      * in the FSDefineVideo object that matches the identifier. 
+@@ -94,6 +99,20 @@
+         setFrameNumber(frameNumber);
+         setData(data);
+     }
++    /**
++     * Constructs an FSVideoFrame object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSVideoFrame object.
++     */
++    public FSVideoFrame(FSVideoFrame obj)
++    {
++        super(obj);
++        identifier = obj.identifier;
++        frameNumber = obj.frameNumber;
++        
++        data = Transform.clone(obj.data);
++    }    
+ 
+     /**
+      * Get the identifier of the FSDefineVideo object where the frame will be displayed.
+
+Modified: trunk/src/com/flagstone/transform/FSVoid.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVoid.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSVoid.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -41,7 +41,9 @@
+  */  
+ public final class FSVoid extends FSTransformObject
+ {
+-    /** Constructs an FSVoid object. */     
++    /** 
++     * Constructs an FSVoid object. 
++     */     
+     public FSVoid()
+     {
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -89,12 +89,17 @@
+     private int frameNumber = 1;
+     private int actionCount = 0;
+     
+-    FSWaitForFrame(FSCoder coder)
++    /**
++     * Construct an FSWaitForFrame object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSWaitForFrame(FSCoder coder)
+     {
+         super(_WaitForFrame);
+         decode(coder);
+     }
+-
+     /** Constructs an FSWaitForFrame object with the specified frame number and the number of actions that will be executed when the frame is loaded.
+ 
+         @param aFrameNumber the number of the frame to wait for.
+@@ -106,6 +111,18 @@
+         setFrameNumber(aFrameNumber);
+         setActionCount(anActionCount);
+     }
++    /**
++     * Constructs an FSWaitForFrame object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSWaitForFrame object.
++     */
++    public FSWaitForFrame(FSWaitForFrame obj)
++    {
++        super(obj);
++        frameNumber = obj.frameNumber;
++        actionCount = obj.actionCount;
++    }    
+ 
+     /** Gets the frame number.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -86,12 +86,17 @@
+ {
+     private int actionCount = 0;
+     
+-    FSWaitForFrame2(FSCoder coder)
++    /**
++     * Construct an FSWaitForFrame2 object, initalizing it with values decoded 
++     * from an encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSWaitForFrame2(FSCoder coder)
+     {
+         super(_WaitForFrame2);
+         decode(coder);
+     }
+-
+     /** Constructs an FSWaitForFrame2 object with the number of actions to execute if the frame has been loaded.
+ 
+         @param aNumber the number of actions to execute.
+@@ -101,6 +106,17 @@
+         super(_WaitForFrame2);
+         setActionCount(aNumber);
+     }
++    /**
++     * Constructs an FSWaitForFrame2 object by copying values from an existing 
++     * object.
++     *
++     * @param obj an FSWaitForFrame2 object.
++     */
++    public FSWaitForFrame2(FSWaitForFrame2 obj)
++    {
++        super(obj);
++        actionCount = obj.actionCount;
++    }    
+ 
+     /** Gets the number of actions to execute.
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWith.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/FSWith.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -86,14 +86,22 @@
+ {
+     private ArrayList actions = null;
+     
++    /*
++     * Variables used when encoding.
++     */
+     private int actionsLength = 0;
+     
+-    FSWith(FSCoder coder)
++    /**
++     * Construct an FSWith object, initalizing it with values decoded from an
++     * encoded object.
++     * 
++     * @param coder an FSCoder containing the binary data.
++     */
++    public FSWith(FSCoder coder)
+     {
+         super(_With);
+         decode(coder);
+     }
+-
+     /** Constructs an FSWith object with an array of actions.
+ 
+         @param anArray the array of action objects.
+@@ -103,7 +111,21 @@
+         super(_With);
+         setActions(anArray);
+     }
++    /**
++     * Constructs an FSWith object by copying values from an existing object.
++     *
++     * @param obj an FSGotoFrame object.
++     */
++    public FSWith(FSWith obj)
++    {
++        super(obj);
+ 
++        actions = new ArrayList(obj.actions.size());
++        
++        for (Iterator i = obj.actions.iterator(); i.hasNext();)
++            actions.add(((FSActionObject)i.next()).clone());
++    }    
++
+     /** Adds the action object to the array of actions.
+ 
+         @param anAction an object belonging to a class derived from FSActionObject.
+
+Modified: trunk/src/com/flagstone/transform/examples/FillStyles.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/FillStyles.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/examples/FillStyles.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -173,7 +173,7 @@
+     
+             fillStyles.add(new FSBitmapFill(FSFillStyle.Clipped, image.getIdentifier(), transform));
+     
+-            movie.add(new FSJPEGEncodingTable(null)); // The image will still be displayed with a null table
++            movie.add(new FSJPEGEncodingTable()); // The image will still be displayed with a null table
+             movie.add(image);
+             movie.add(new FSDefineShape(identifier, bounds, fillStyles, lineStyles, new FSShape(rectangle)));
+             movie.add(new FSPlaceObject(identifier, 3, 10000, 1600));
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-03-03 09:54:21 UTC (rev 103)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-03-03 18:00:33 UTC (rev 104)
+@@ -123,7 +123,7 @@
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+      */
+-    public void lazyDecoding(String file)
++    public void lazyDecode(String file)
+     {
+         try 
+         {
+@@ -145,7 +145,7 @@
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+      */
+-    public void lazyEncoding(String file)
++    public void lazyEncode(String file)
+     {
+         try 
+         {
+@@ -247,6 +247,35 @@
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+      */
++    public void benchmarkEncode(String file)
++    {
++        try 
++        {
++            File srcFile = new File(sourceDir, file);
++           
++            FSMovie movie = new FSMovie(srcFile.getPath());
++
++            System.gc();
++            
++            double before = (double)System.currentTimeMillis();
++            
++            for (int i=0; i&lt;iterations; i++)
++            {
++                movie.encode();
++            }
++            
++            double duration = (System.currentTimeMillis() - before)/(double)iterations;
++            
++            buffer.append(file).append('\t').append(duration).append(newline);
++        }
++        catch (Exception e)
++        {
++            assert false : file+&quot;: &quot;+e.toString();
++        }
++    }
++    /**
++     * @testng.test dataProvider=&quot;files&quot;
++     */
+     public void benchmarkLazyDecode(String file)
+     {
+         try 
+@@ -282,6 +311,41 @@
+         }
+     }
+     /**
++     * @testng.test dataProvider=&quot;files&quot;
++     */
++    public void benchmarkLazyEncode(String file)
++    {
++        try 
++        {
++            File srcFile = new File(sourceDir, file);
++            
++            FSMovie movie = new FSMovie();
++            
++            movie.setDecodeActions(false);
++            movie.setDecodeShapes(false);
++            movie.setDecodeGlyphs(false);
++            
++            movie.decodeFromFile(srcFile.getPath());            
++ 
++            System.gc();
++            
++            double before = (double)System.currentTimeMillis();
++            
++            for (int i=0; i&lt;iterations; i++)
++            {
++                movie.encode();
++            }
++            
++            double duration = (System.currentTimeMillis() - before)/(double)iterations;
++            
++            buffer.append(file).append('\t').append(duration).append(newline);
++        }
++        catch (Exception e)
++        {
++            assert false : file+&quot;: &quot;+e.toString();
++        }
++    }
++    /**
+      * @testng.data-provider name=&quot;files&quot;
+      */
+     public Object[][] findFiles()
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000044.html">[Transform-svn] r103 - in trunk: doc src/com/flagstone/transform/test test test/benchmarks test/suites
+</A></li>
+	<LI>Next message: <A HREF="000046.html">[Transform-svn] r105 - trunk/test/benchmarks
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#45">[ date ]</a>
+              <a href="thread.html#45">[ thread ]</a>
+              <a href="subject.html#45">[ subject ]</a>
+              <a href="author.html#45">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

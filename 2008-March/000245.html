@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r309 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r309%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200803011652.m21GqG4U009717%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000246.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r309 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r309%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200803011652.m21GqG4U009717%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r309 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Mar  1 17:52:16 CET 2008</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000246.html">[Transform-svn] r310 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#245">[ date ]</a>
+              <a href="thread.html#245">[ thread ]</a>
+              <a href="subject.html#245">[ subject ]</a>
+              <a href="author.html#245">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-01 17:52:14 +0100 (Sat, 01 Mar 2008)
+New Revision: 309
+
+Modified:
+   trunk/src/com/flagstone/transform/FSCoder.java
+Log:
+IllegalArgumentExceptions are no longer thrown when changing the internal pointer. Instead the value is clamped to the start or end of the buffer.
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2008-01-31 13:04:10 UTC (rev 308)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2008-03-01 16:52:14 UTC (rev 309)
+@@ -459,8 +459,12 @@
+      */
+     public void setPointer(int location)
+     {
+-        if (location &lt; 0 || location &gt; end)
+-            throw new IllegalArgumentException();
++        if (location &lt; 0) {
++        	location = 0;
++        }
++        else if (location &gt; end) {
++        	location = end;
++        }
+ 
+         ptr = location;
+     }
+@@ -501,8 +505,9 @@
+     }
+     
+     /*
+-     * Core methods for readig and writing bits and multibyte words
++     * Core methods for reading and writing bits and multibyte words
+      */
++    
+     /**
+      * Read a bit field from the internal buffer.
+      * 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000246.html">[Transform-svn] r310 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#245">[ date ]</a>
+              <a href="thread.html#245">[ thread ]</a>
+              <a href="subject.html#245">[ subject ]</a>
+              <a href="author.html#245">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

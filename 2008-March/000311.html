@@ -1,0 +1,2494 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r375%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182120.m2ILKY6u031097%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000310.html">
+   <LINK REL="Next"  HREF="000312.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r375%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182120.m2ILKY6u031097%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 22:20:34 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000310.html">[Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000312.html">[Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#311">[ date ]</a>
+              <a href="thread.html#311">[ thread ]</a>
+              <a href="subject.html#311">[ subject ]</a>
+              <a href="author.html#311">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 22:20:27 +0100 (Tue, 18 Mar 2008)
+New Revision: 375
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSMovie.java
+Log:
+Refactored code used to decode objects into the respective base classes. Removed deprecated methods containing listeners.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMovie.java	2008-03-18 21:19:10 UTC (rev 374)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMovie.java	2008-03-18 21:20:27 UTC (rev 375)
+@@ -35,1680 +35,834 @@
+ import java.io.*;
+ 
+ /**
+-FSMovie is a container class for the objects that represents the data structures in a Flash file.
+-
+-&lt;p&gt;FSMovie is the core class of the Transform package. It is used to parse and generate Flash files, translating the binary format of the Flash file into an array objects that can be inspected and updated.&lt;/p&gt;
+-
+-&lt;p&gt;An FSMovie object also contains the attributes that make up the header information of the Flash file, identifying the version support, size of the Flash Player screen, etc.:&lt;/p&gt;
+-
+-&lt;table class=&quot;datasheet&quot;&gt;
+-
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
+-
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSMovie_0&quot;&gt;signature&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The signature is a three character code that identifies that the file contains Flash encoded data. For Flash versions 1 to 5 this was 'F', 'W', 'S' (&quot;SWF&quot; reversed). In Flash 6, zlib compressed files were introduced to reduce file sizes. Compressed files are identified by the signature,  'C', 'W', 'S'.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSMovie_1&quot;&gt;version&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The version of Flash that is contained in the file.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSMovie_2&quot;&gt;frameSize&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An FSBounds object that define the size of the Flash Player's screen when playing the movie.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSMovie_3&quot;&gt;frameRate&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The number of frames per second that the movie will be played at.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSMovie_4&quot;&gt;objects&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of FSMovieObjects that define the shapes, buttons, images etc to be displayed along with the commands that control how the movie is animated.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;/table&gt;
+-
+-&lt;p&gt;The header information defined in the Macromedia Flash (SWF) File Format Specification also identifies the length of the (uncompressed) movie and the number of frames. These attributes are derived when the FSMovie object is encoded to a file.&lt;/p&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;Generating a Flash File&lt;/h1&gt;
+-
+-&lt;p&gt;Flash files can be built from scratch by simply constructing instances of objects that represent
+-the respective Flash data structure and adding them to an FSMovie object in the order they will
+-be executed by the Flash player.&lt;/p&gt;
+-
+-&lt;pre&gt;
+-FSMovie movie = new FSMovie();
+-
+-// Define a shape to be displayed
+-
+-FSDefineShape rectangle = new FSDefineShape(movie.newIdentifier(), ....);
+-
+-// Set the size of the Flash Player screen 400x400 and the number of
+-// frames displayed per second.
+-
+-movie.setFrameSize(new FSBounds(0, 0, 400, 400));
+-movie.setFrameRate(1.0);
+-
+-// Set the background colour for the movie
+-
+-movie.add(new FSSetBackgroundColor(FSColor.lightblue()));
+-
+-// Add the shape to the movie. All objects must be defined before
+-// they can be used.
+-
+-movie.add(rectangle);
+-
+-// Place the shape in the centre of the screen (200,200) on the first layer
+-// in the Flash Player's display list.
+-
+-movie.add(new FSPlaceObject2(FSPlaceObject2.New, rectangle.getIdentifier(), 1, 200, 200));
+-
+-// Display the frame
+-
+-movie.add(new FSShowFrame());
+-
+-&lt;/pre&gt;
+-
+-&lt;p&gt;Note that when the shape was defined a call was made to the newIdentifier() method on the movie. Each object that defines either a shape, button, sound etc., is assigned a unique identifier to allow the object to be referenced in objects such as FSPlaceObject which places the shape on the Flash Player's display list. The identifier is unique only within a movie so the FSMovie class maintains a counter that is used to generate values for the identifiers that are assigned to objects derived from the FSDefineObject class.&lt;/p&gt;
+-
+-&lt;p&gt;To generate a Flash file use the &lt;code&gt;encodeToFile(String fileName)&lt;/code&gt; method:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-try {
+-    aMovie.encodeToFile(filename);
+-}
+-catch (Exception e) {
+-    ... Process Exception ...
+-}
+-&lt;/pre&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;Parsing a Flash File&lt;/h1&gt;
+-
+-&lt;p&gt;To parse a Flash file simply create an instance using the &lt;code&gt;FSMovie(String fileName)&lt;/code&gt;
+-constructor:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-FSMovie aMovie = null;
+-String fileName = &quot;aFlashFile.swf&quot;;
+-
+-try {
+-    aMovie = new FSMovie(filename);
+-}
+-catch (Exception e) {
+-    ... Process Exception ...
+-}
+-&lt;/pre&gt;
+-
+-&lt;p&gt;The objects array of the movie will contain an instance of the respective package class for
+-each data structure  decoded from the file. The objects may be inspected and their attributes
+-changed accordingly.&lt;/p&gt;
+-
+-&lt;p&gt;The FSMovie object keeps track of the identifiers assigned to objects that define the shapes,
+-buttons, sounds etc. that make up a Flash file. If a new object is added to the movie then
+-the call to newIdentifier() is guaranteed to return a value that is unique within the movie.&lt;/p&gt;
+-
+-&lt;p&gt;&lt;b&gt;Multiple Language Support&lt;/b&gt;&lt;br&gt;Formal support for Unicode strings was added in
+-Flash 6, providing a unified mechanism for supporting different languages. Previously
+-Macromedia released different versions of the Flash authoring tool that supported a
+-character set unique to a given language, for example SJIS for the Japanese language
+-edition. The FSMovie class includes the &lt;em&gt;encoding&lt;/em&gt; attribute that identifies
+-the character set used to encode the strings found in objects such as FSFrameLabel
+-and FSDefineTextField. Note this does not include the characters in font definitions.
+-The default value of UTF8 is the same encoding scheme used by Macromedia so files
+-containing Flash 6 or later may be decoded from any source. For earlier version of
+-Flash the encoding attribute may be set to match the character set of the application
+-used to encoded the Flash file.&lt;/p&gt;';
+-*/
++ * FSMovie is a container class for the objects that represents the data
++ * structures in a Flash file.
++ * 
++ * FSMovie is the core class of the Transform package. It is used to parse and
++ * generate Flash files, translating the binary format of the Flash file into an
++ * array objects that can be inspected and updated.
++ * 
++ * An FSMovie object also contains the attributes that make up the header
++ * information of the Flash file, identifying the version support, size of the
++ * Flash Player screen, etc.:
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;signature&lt;/td&gt;
++ * &lt;td&gt;The signature is a three character code that identifies that the file
++ * contains Flash encoded data. For Flash versions 1 to 5 this was 'F', 'W', 'S'
++ * (&quot;SWF&quot; reversed). In Flash 6, zlib compressed files were introduced to reduce
++ * file sizes. Compressed files are identified by the signature, 'C', 'W', 'S'.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;version&lt;/td&gt;
++ * &lt;td&gt;The version of Flash that is contained in the file.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;frameSize&lt;/td&gt;
++ * &lt;td&gt;An FSBounds object that define the size of the Flash Player's screen
++ * when playing the movie.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;frameRate&lt;/td&gt;
++ * &lt;td&gt;The number of frames per second that the movie will be played at.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;objects&lt;/td&gt;
++ * &lt;td&gt;An array of FSMovieObjects that define the shapes, buttons, images etc
++ * to be displayed along with the commands that control how the movie is
++ * animated.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * The header information defined in the Macromedia Flash (SWF) File Format
++ * Specification also identifies the length of the (uncompressed) movie and the
++ * number of frames. These attributes are derived when the FSMovie object is
++ * encoded to a file.
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Generating a Flash File&lt;/h1&gt;
++ * 
++ * Flash files can be built from scratch by simply constructing instances of
++ * objects that represent the respective Flash data structure and adding them to
++ * an FSMovie object in the order they will be executed by the Flash player.
++ * 
++ * &lt;pre&gt;
++ * FSMovie movie = new FSMovie();
++ * 
++ * // Define a shape to be displayed
++ * FSDefineShape rectangle = new FSDefineShape(movie.newIdentifier(), ....);
++ * 
++ * // Set the size of the Flash Player screen 400x400 and the number of
++ * // frames displayed per second.
++ * movie.setFrameSize(new FSBounds(0, 0, 400, 400));
++ * movie.setFrameRate(1.0);
++ * 
++ * // Set the background colour for the movie
++ * movie.add(new FSSetBackgroundColor(FSColor.lightblue()));
++ * 
++ * // Add the shape to the movie. All objects must be defined before
++ * // they can be used.
++ * movie.add(rectangle);
++ * 
++ * // Place the shape in the centre of the screen (200,200) on the first layer
++ * // in the Flash Player's display list.
++ * movie.add(new FSPlaceObject2(FSPlaceObject2.New, rectangle.getIdentifier(), 1, 200, 200));
++ * 
++ * // Display the frame
++ * movie.add(new FSShowFrame());
++ * &lt;/pre&gt;
++ * 
++ * Note that when the shape was defined a call was made to the newIdentifier()
++ * method on the movie. Each object that defines either a shape, button, sound
++ * etc., is assigned a unique identifier to allow the object to be referenced in
++ * objects such as FSPlaceObject which places the shape on the Flash Player's
++ * display list. The identifier is unique only within a movie so the FSMovie
++ * class maintains a counter that is used to generate values for the identifiers
++ * that are assigned to objects derived from the FSDefineObject class.
++ * 
++ * To generate a Flash file use the &lt;code&gt;encodeToFile(String fileName)&lt;/code&gt;
++ * method:
++ * 
++ * &lt;pre&gt;
++ * try {
++ *     aMovie.encodeToFile(filename);
++ * }
++ * catch (Exception e) {    
++ *     ... Process Exception ...
++ * }
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Parsing a Flash File&lt;/h1&gt;
++ * 
++ * To parse a Flash file simply create an instance using the
++ * &lt;code&gt;FSMovie(String fileName)&lt;/code&gt; constructor:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSMovie aMovie = null;
++ * String fileName = &quot;aFlashFile.swf&quot;;
++ * 
++ * try {
++ *     aMovie = new FSMovie(filename);
++ * }
++ * catch (Exception e) {
++ *     ... Process Exception ...
++ * }
++ * &lt;/pre&gt;
++ * 
++ * The objects array of the movie will contain an instance of the respective
++ * package class foreach data structure decoded from the file. The objects may
++ * be inspected and their attributes changed accordingly.
++ * 
++ * The FSMovie object keeps track of the identifiers assigned to objects that
++ * define the shapes, buttons, sounds etc. that make up a Flash file. If a new
++ * object is added to the movie then the call to newIdentifier() is guaranteed
++ * to return a value that is unique within the movie.
++ * 
++ * &lt;b&gt;Multiple Language Support&lt;/b&gt;&lt;br&gt;
++ * Formal support for Unicode strings was added in Flash 6, providing a unified
++ * mechanism for supporting different languages. Previously Macromedia released
++ * different versions of the Flash authoring tool that supported a character set
++ * unique to a given language, for example SJIS for the Japanese language
++ * edition. The FSMovie class includes the &lt;em&gt;encoding&lt;/em&gt; attribute that
++ * identifies the character set used to encode the strings found in objects such
++ * as FSFrameLabel and FSDefineTextField. Note this does not include the
++ * characters in font definitions. The default value of UTF8 is the same
++ * encoding scheme used by Macromedia so files containing Flash 6 or later may
++ * be decoded from any source. For earlier version of Flash the encoding
++ * attribute may be set to match the character set of the application used to
++ * encoded the Flash file.
++ * &lt;/p&gt;';
++ */
+ public class FSMovie implements Cloneable
+ {
+-    static void encodeObjects(FSCoder coder, ArrayList array)
+-    {
+-        for (Iterator i = array.iterator(); i.hasNext();)
+-        {
+-            FSMovieObject object = (FSMovieObject)i.next();
++	private boolean decodeActions = true;
++	private boolean decodeShapes = true;
++	private boolean decodeGlyphs = true;
+ 
+-            int objStart = coder.getPointer();
+-            int objLength = object.getLength();
+-            int start = coder.getPointer() + ((object.getExtendLength() || objLength &gt;= 63) ? 48 : 16);
+-            int next = start + (objLength &lt;&lt; 3);
++	private int identifier = 0;
++	private String encoding = &quot;UTF8&quot;;
++	
++	private String signature;
++	private int version;
++	private FSBounds frameSize;
++	private int length;
++	private float frameRate;
++	private int frameCount;
++	private ArrayList&lt;FSMovieObject&gt; objects = new ArrayList&lt;FSMovieObject&gt;();
+ 
+-            object.encode(coder);
+-            coder.setPointer(next);
++	/**
++	 * Constructs an FSMovie object with no objects. The Flash version defaults
++	 * to the package constant Transform.VERSION. From VERSION = 6 onwards the
++	 * signature attribute defaults to &quot;CWS&quot; indicating that the binary data
++	 * generated when a movie is encoded movie will be compressed using the zlib
++	 * algorithm.
++	 */
++	public FSMovie()
++	{
++		signature = Transform.VERSION &gt; 5 ? &quot;CWS&quot; : &quot;FWS&quot;;
++		version = Transform.VERSION;
++	}
+ 
+-            int delta = (coder.getPointer() - next) &gt;&gt; 3;
++	/**
++	 * Constructs an FSMovie object and decodes the contents of the specified
++	 * file to generate an array of objects representing the Flash file. If an
++	 * error occurs while reading and parsing the file then an exception is
++	 * thrown.
++	 * 
++	 * @param fileName
++	 *            the path to the Flash file that will be parsed.
++	 * 
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws FSCoderException -
++	 *             if an error occurs while decoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while reading the file.
++	 */
++	public FSMovie(String fileName) throws IOException, DataFormatException
++	{
++		decodeFromFile(fileName);
++	}
+ 
+-            if (delta != 0)
+-            {
+-                coder.context[FSCoder.CodingError] = 1;
+-                coder.context[FSCoder.TypeInError] = object.getType();
+-                coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
+-                coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
+-                coder.context[FSCoder.Delta] = delta;
+-            }
+-        }
+-    }
+-    static FSMovieObject decodeObject(FSCoder coder)
+-    {
+-        FSMovieObject currentObject = null;
++	/**
++	 * Constructs an FSMovie object and decodes the binary data presented in the
++	 * byte array to generate an array of objects representing the Flash data.
++	 * If an error occurs while parsing the data then an Exception is thrown.
++	 * 
++	 * @param data
++	 *            an array of bytes containing the Flash binary data.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws FSCoderException -
++	 *             if an error occurs while decoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while reading the file.
++	 */
++	public FSMovie(byte[] data) throws DataFormatException, IOException
++	{
++		decodeFromData(data);
++	}
+ 
+-        int objStart = coder.getPointer();
+-        int type = coder.scanWord(2, false) &gt;&gt; 6;
+-        int length = coder.scanWord(2, false) &amp; 0x3F;
+-        int next = coder.getPointer() + 16 + (length &lt;&lt; 3);
+-        int identifier = 0;
++	/**
++	 * Returns a unique identifier for an object derived from the FSDefineObject
++	 * class. In order to reference objects that define items such as shapes,
++	 * sounds, etc. each must be assigned an identifier that is unique for a
++	 * given Movie.
++	 * 
++	 * When binary data is decoded into a sequence of objects, the Movie class
++	 * tracks each Define tag decoded, recording the highest value. If a new
++	 * Define tag is added to the array of decoded objects the identifier
++	 * assigned to the new tag will be guaranteed to be unique.
++	 * 
++	 * @return an unique identifier for objects that define shapes, sounds, etc.
++	 *         in a Flash file.
++	 */
++	public int newIdentifier()
++	{
++		return ++identifier;
++	}
+ 
+-        if (type == 0)
+-        {
+-            /*
+-             * Skip over the End object so it does not generate an event.
+-             */
+-            coder.setPointer(next);
+-            return currentObject;
+-        }
++	/**
++	 * Gets the current value for the unique identifier that will be assigned to
++	 * definition objects (classes derived from the FSDefineObject class). The
++	 * value returned is the last value requested using the newIdentifier()
++	 * method.
++	 * 
++	 * @return current value for the unique identifier.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
+ 
+-        if (length == 0x3F)
+-        {
+-            coder.adjustPointer(16);
+-            length = coder.scanWord(4, false);
+-            next = coder.getPointer() + 32 + (length &lt;&lt; 3);
+-            coder.adjustPointer(-16);
+-        }
++	/**
++	 * Sets the initial value for the unique identifier assigned to definition
++	 * objects. When a new identifier is requested the identifier is incremented
++	 * before being returned. For most situations the method argument will be
++	 * zero. This method should be used with caution as generating definition
++	 * object with duplicate identifiers will most probably crash the program
++	 * displaying the Flash file generated.
++	 * 
++	 * @param aValue
++	 *            the initial value for the unique identifier.
++	 */
++	public void setIdentifier(int aValue)
++	{
++		identifier = aValue;
++	}
+ 
+-        switch (type)
+-        {
+-            case FSMovieObject.ShowFrame:
+-                currentObject = FSShowFrame.getInstance();
+-                coder.setPointer(next);
+-                break;
+-            case FSMovieObject.DefineShape:
+-                currentObject = new FSDefineShape(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.PlaceObject:
+-                currentObject = new FSPlaceObject(coder);
+-                break;
+-            case FSMovieObject.RemoveObject:
+-                currentObject = new FSRemoveObject(coder);
+-                break;
+-            case FSMovieObject.DefineJPEGImage:
+-                currentObject = new FSDefineJPEGImage(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineButton:
+-                currentObject = new FSDefineButton(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.JPEGTables:
+-                currentObject = new FSJPEGEncodingTable(coder);
+-                break;
+-            case FSMovieObject.SetBackgroundColor:
+-                currentObject = new FSSetBackgroundColor(coder);
+-                break;
+-            case FSMovieObject.DefineFont:
+-                currentObject = new FSDefineFont(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineText:
+-                currentObject = new FSDefineText(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DoAction:
+-                currentObject = new FSDoAction(coder);
+-                break;
+-            case FSMovieObject.FontInfo:
+-                currentObject = new FSFontInfo(coder);
+-                break;
+-            case FSMovieObject.DefineSound:
+-                currentObject = new FSDefineSound(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.StartSound:
+-                currentObject = new FSStartSound(coder);
+-                break;
+-            case FSMovieObject.SoundStreamHead:
+-                currentObject = new FSSoundStreamHead(coder);
+-                break;
+-            case FSMovieObject.SoundStreamBlock:
+-                currentObject = new FSSoundStreamBlock(coder);
+-                break;
+-// Flash 2
+-            case FSMovieObject.ButtonSound:
+-                currentObject = new FSButtonSound(coder);
+-                break;
+-            case FSMovieObject.DefineImage:
+-                currentObject = new FSDefineImage(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineJPEGImage2:
+-                currentObject = new FSDefineJPEGImage2(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineShape2:
+-                currentObject = new FSDefineShape2(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.ButtonColorTransform:
+-                currentObject = new FSButtonColorTransform(coder);
+-                break;
+-            case FSMovieObject.Protect:
+-                currentObject = new FSProtect(coder);
+-                break;
+-// Flash 3
+-            case FSMovieObject.Free:
+-                currentObject = new FSFree(coder);
+-                break;
+-            case FSMovieObject.PlaceObject2:
+-                currentObject = new FSPlaceObject2(coder);
+-                break;
+-            case FSMovieObject.RemoveObject2:
+-                currentObject = new FSRemoveObject2(coder);
+-                break;
+-            case FSMovieObject.DefineShape3:
+-                currentObject = new FSDefineShape3(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineText2:
+-                currentObject = new FSDefineText2(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineButton2:
+-                currentObject = new FSDefineButton2(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineJPEGImage3:
+-                currentObject = new FSDefineJPEGImage3(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineImage2:
+-                currentObject = new FSDefineImage2(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineMovieClip:
+-                currentObject = new FSDefineMovieClip(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.FrameLabel:
+-                currentObject = new FSFrameLabel(coder);
+-                break;
+-            case FSMovieObject.SoundStreamHead2:
+-                currentObject = new FSSoundStreamHead2(coder);
+-                break;
+-            case FSMovieObject.DefineMorphShape:
+-                currentObject = new FSDefineMorphShape(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.DefineFont2:
+-                currentObject = new FSDefineFont2(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-// Flash 4
+-            case FSMovieObject.PathsArePostscript:
+-                currentObject = FSPathsArePostscript.getInstance();
+-                coder.setPointer(next);
+-                break;
+-            case FSMovieObject.DefineTextField:
+-                currentObject = new FSDefineTextField(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.QuicktimeMovie:
+-                currentObject = new FSQuicktimeMovie(coder);
+-                break;
+-            case FSMovieObject.SerialNumber:
+-                currentObject = new FSSerialNumber(coder);
+-                break;
+-            case FSMovieObject.DefineBitsPtr:
+-                currentObject = new FSPointer(coder);
+-                break;
+-// Flash 5
+-            case FSMovieObject.EnableDebugger:
+-                currentObject = new FSEnableDebugger(coder);
+-                break;
+-            case FSMovieObject.Export:
+-                currentObject = new FSExport(coder);
+-                break;
+-            case FSMovieObject.Import:
+-                currentObject = new FSImport(coder);
+-                break;
+-// Flash 6
+-            case FSMovieObject.Initialize:
+-                currentObject = new FSInitialize(coder);
+-                break;
+-            case FSMovieObject.DefineVideo:
+-                currentObject = new FSDefineVideo(coder);
+-                identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                break;
+-            case FSMovieObject.VideoFrame:
+-                currentObject = new FSVideoFrame(coder);
+-                break;
+-            case FSMovieObject.FontInfo2:
+-                currentObject = new FSFontInfo2(coder);
+-                break;
+-            case FSMovieObject.EnableDebugger2:
+-                currentObject = new FSEnableDebugger2(coder);
+-                break;
+-// Flash 7
+-            case FSMovieObject.LimitScript:
+-                currentObject = new FSLimitScript(coder);
+-                break;
+-            case FSMovieObject.TabOrder:
+-                currentObject = new FSTabOrder(coder);
+-                break;
+-            default:
+-            	Integer key = new Integer(type);
+-            
+-            	if (typeTable.containsKey(key))
+-            	{
+-            		try
+-            		{
+-                		Class obj = (Class)typeTable.get(key);
+-                		currentObject = (FSMovieObject)obj.newInstance();
+-                		currentObject.decode(coder);  		
+-                		
+-                		if (currentObject instanceof FSDefineObject) {
+-                            identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                		}
+-            		}
+-            		catch (Exception e)
+-            		{
+-                        currentObject = new FSUnknownObject(coder);            		
+-            		}
+-            	}
+-            	else 
+-            	{
+-                    currentObject = new FSUnknownObject(coder);            		
+-            	}
+-                break;
+-        }
++	/**
++	 * Gets the encoding scheme for strings encoded and decoded from Flash
++	 * files. The default encoding format is UTF8 which provides backward
++	 * compatibility for Flash files that contain ASCII encoded string. For
++	 * files generated by internationalized versions of the Flash authoring tool
++	 * any string recognised by the Java environment as identifying a character
++	 * encoding scheme may be used. For example, &quot;SJIS&quot; may be used to decode
++	 * files generated using the Japanese language version of Flash - Version 5
++	 * or earlier.
++	 * 
++	 * With the introduction of Flash 6 support for Unicode strings was added so
++	 * the default encoding of UTF8 will be useful for most applications.
++	 * 
++	 * @return the string identifying the format for strings. Any string
++	 *         recognised by the Java environment may be used, &quot;ASCII&quot;, &quot;SJIS&quot;
++	 *         and UTF8&quot; will be the three most commonly used.
++	 */
++	public String getEncoding()
++	{
++		return encoding;
++	}
+ 
+-        int delta = (coder.getPointer() - next) &gt;&gt; 3;
++	/**
++	 * Sets the encoding scheme for strings encoded and decoded from Flash
++	 * files. For files generated by internationalized versions of the Flash
++	 * authoring tool any string recognised by the Java environment as
++	 * identifying a character encoding scheme may be used. For example, &quot;SJIS&quot;
++	 * may be used to decode files generated using the Japanese language version
++	 * of Flash - Version 5 or earlier.
++	 * 
++	 * @param encoding
++	 *            string identifying the format for strings. Any string
++	 *            recognised by the Java environment may be used, &quot;ASCII&quot;,
++	 *            &quot;SJIS&quot; and UTF8&quot; will be the three most commonly used.
++	 */
++	public void setEncoding(String encoding)
++	{
++		this.encoding = encoding;
++	}
+ 
+-        if (delta != 0)
+-        {
+-            coder.context[FSCoder.CodingError] = 1;
+-            coder.context[FSCoder.TypeInError] = currentObject.getType();
+-            coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
+-            coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
+-            coder.context[FSCoder.Delta] = delta;
+-        }
++	public void setDecodeActions(boolean decode)
++	{
++		decodeActions = decode;
++	}
+ 
+-        coder.setPointer(next);
++	public boolean willDecodeActions()
++	{
++		return decodeActions;
++	}
+ 
+-        if (identifier != 0)
+-            coder.context[FSCoder.Identifier] = Math.max(coder.context[FSCoder.Identifier], identifier);
++	public void setDecodeShapes(boolean decode)
++	{
++		decodeShapes = decode;
++	}
+ 
+-        return currentObject;
+-    }
++	public boolean willDecodeShapes()
++	{
++		return decodeShapes;
++	}
+ 
+-    static FSActionObject decodeAction(FSCoder coder)
+-    {
+-        FSActionObject anAction = null;
++	public void setDecodeGlyphs(boolean decode)
++	{
++		decodeGlyphs = decode;
++	}
+ 
+-        int objStart = coder.getPointer();
+-        int type = coder.scanWord(1, false);
+-        int length = 0;
+-        int start = coder.getPointer() + 8;
+-        int next = start;
++	public boolean willDecodeGlyphs()
++	{
++		return decodeGlyphs;
++	}
+ 
+-        if (type &gt; 128)
+-        {
+-            coder.adjustPointer(8);
+-            length = coder.scanWord(2, false);
+-            start = coder.getPointer() + 16;
+-            next = start + (length &lt;&lt; 3);
+-            coder.adjustPointer(-8);
+-        }
++	/**
++	 * Gets the signature identifying that the movie contains Flash. Up to
++	 * version 5 the string &quot;FWS&quot; identifies that data is encoded using the
++	 * Flash file format. From Flash version 6 onwards Flash data could also be
++	 * compressed using the zlib algorithm to reduce the file size. A signature
++	 * of &quot;CWS&quot; is used to denote that a file contain compressed Flash data. The
++	 * original signature &quot;FWS&quot; is still used to denote that a file contains
++	 * uncompressed data.
++	 * 
++	 * When encoding a FSMovie object the signature also determines whether the
++	 * data generated will be compressed.
++	 * 
++	 * @return the string identifying the format for the encoded Flash data.
++	 */
++	public String getSignature()
++	{
++		return signature;
++	}
+ 
+-        switch (type)
+-        {
+-            case FSAction.End:
+-            case FSAction.NextFrame:
+-            case FSAction.PrevFrame:
+-            case FSAction.Play:
+-            case FSAction.Stop:
+-            case FSAction.ToggleQuality:
+-            case FSAction.StopSounds:
+-                anAction = FSAction.getInstance(type);
+-                coder.adjustPointer(8);
+-                break;
+-            case FSActionObject.GetUrl:
+-                anAction = new FSGetUrl(coder);
+-                break;
+-// Flash 3
+-            case FSActionObject.GotoFrame:
+-                anAction = new FSGotoFrame(coder);
+-                break;
+-// Flash 4
+-            case FSActionObject.GotoLabel:
+-                anAction = new FSGotoLabel(coder);
+-                break;
+-            case FSActionObject.SetTarget:
+-                anAction = new FSSetTarget(coder);
+-                break;
+-            case FSActionObject.WaitForFrame:
+-                anAction = new FSWaitForFrame(coder);
+-                break;
+-            case FSAction.IntegerAdd:
+-            case FSAction.Subtract:
+-            case FSAction.IntegerEquals:
+-            case FSAction.IntegerLess:
+-            case FSAction.Multiply:
+-            case FSAction.Divide:
+-            case FSAction.And:
+-            case FSAction.Or:
+-            case FSAction.Not:
+-            case FSAction.StringEquals:
+-            case FSAction.StringLength:
+-            case FSAction.StringExtract:
+-            case FSAction.Pop:
+-            case FSAction.ToInteger:
+-            case FSAction.GetVariable:
+-            case FSAction.SetVariable:
+-            case FSAction.SetTarget2:
+-            case FSAction.StringAdd:
+-            case FSAction.GetProperty:
+-            case FSAction.SetProperty:
+-            case FSAction.CloneSprite:
+-            case FSAction.RemoveSprite:
+-            case FSAction.Trace:
+-            case FSAction.StartDrag:
+-            case FSAction.EndDrag:
+-            case FSAction.StringLess:
+-            case FSAction.RandomNumber:
+-            case FSAction.MBStringLength:
+-            case FSAction.CharToAscii:
+-            case FSAction.AsciiToChar:
+-            case FSAction.GetTime:
+-            case FSAction.MBStringExtract:
+-            case FSAction.MBCharToAscii:
+-            case FSAction.MBAsciiToChar:
+-                anAction = FSAction.getInstance(type);
+-                coder.adjustPointer(8);
+-                break;
+-            case FSActionObject.Call:
+-                anAction = FSCall.getInstance();
+-                coder.setPointer(next);
+-                break;
+-            case FSActionObject.Push:
+-                anAction = new FSPush(coder);
+-                break;
+-            case FSActionObject.WaitForFrame2:
+-                anAction = new FSWaitForFrame2(coder);
+-                break;
+-            case FSActionObject.Jump:
+-                anAction = new FSJump(coder);
+-                break;
+-            case FSActionObject.If:
+-                anAction = new FSIf(coder);
+-                break;
+-            case FSActionObject.GetUrl2:
+-                anAction = new FSGetUrl2(coder);
+-                break;
+-            case FSActionObject.GotoFrame2:
+-                anAction = new FSGotoFrame2(coder);
+-                break;
+-// Flash 5
+-            case FSAction.Add:
+-            case FSAction.Equals:
+-            case FSAction.Less:
+-            case FSAction.Modulo:
+-            case FSAction.Enumerate:
+-            case FSAction.Duplicate:
+-            case FSAction.Swap:
+-            case FSAction.ExecuteMethod:
+-            case FSAction.NewMethod:
+-            case FSAction.ExecuteFunction:
+-            case FSAction.GetAttribute:
+-            case FSAction.SetAttribute:
+-            case FSAction.Increment:
+-            case FSAction.Decrement:
+-            case FSAction.LogicalShiftLeft:
+-            case FSAction.LogicalShiftRight:
+-            case FSAction.ArithmeticShiftRight:
+-            case FSAction.BitwiseAnd:
+-            case FSAction.BitwiseOr:
+-            case FSAction.BitwiseXOr:
+-            case FSAction.NamedObject:
+-            case FSAction.NewArray:
+-            case FSAction.NewObject:
+-            case FSAction.DeleteVariable:
+-            case FSAction.Delete:
+-            case FSAction.Return:
+-            case FSAction.ToNumber:
+-            case FSAction.ToString:
+-            case FSAction.GetType:
+-            case FSAction.GetTarget:
+-            case FSAction.NewVariable:
+-            case FSAction.InitVariable:
+-                anAction = FSAction.getInstance(type);
+-                coder.adjustPointer(8);
+-                break;
+-            case FSActionObject.Table:
+-                anAction = new FSTable(coder);
+-                length = anAction.getLength();
+-                next = start + (length &lt;&lt; 3);
+-                break;
+-            case FSActionObject.RegisterCopy:
+-                anAction = new FSRegisterCopy(coder);
+-                break;
+-            case FSActionObject.NewFunction:
+-                anAction = new FSNewFunction(coder);
+-                length = anAction.getLength();
+-                next = start + (length &lt;&lt; 3);
+-                break;
+-            case FSActionObject.With:
+-                anAction = new FSWith(coder);
+-                length = anAction.getLength();
+-                next = start + (length &lt;&lt; 3);
+-                break;
+-// Flash 6
+-            case FSAction.InstanceOf:
+-            case FSAction.EnumerateObject:
+-            case FSAction.Greater:
+-            case FSAction.StringGreater:
+-            case FSAction.StrictEquals:
+-                anAction = FSAction.getInstance(type);
+-                coder.adjustPointer(8);
+-                break;
+-// Flash 7
+-            case FSAction.Cast:
+-            case FSAction.Extends:
+-            case FSAction.Implements:
+-            case FSAction.Throw:
+-                anAction = FSAction.getInstance(type);
+-                coder.adjustPointer(8);
+-                break;
+-            case FSActionObject.ExceptionHandler:
+-                anAction = new FSExceptionHandler(coder);
+-                break;
+-            case FSActionObject.NewFunction2:
+-                anAction = new FSNewFunction2(coder);
+-                length = anAction.getLength();
+-                next = start + (length &lt;&lt; 3);
+-                break;
+-            default:
+-            	Integer key = new Integer(type);
+-            
+-	        	if (actionTable.containsKey(key))
+-	        	{
+-	        		try
+-	        		{
+-	            		Class obj = (Class)typeTable.get(key);
+-	            		anAction = (FSActionObject)obj.newInstance();
+-	            		anAction.decode(coder);  		
+-		                length = anAction.getLength();
+-		                next = start + (length &lt;&lt; 3);
+-	        		}
+-	        		catch (Exception e)
+-	        		{
+-		                anAction = new FSUnknownAction(coder);
+-	        		}
+-	        	}
+-	        	else {
+-	                anAction = new FSUnknownAction(coder);
+-	        	}
+-                break;
+-        }
++	/**
++	 * Sets the signature for the Flash data when it is encoded. The signature
++	 * is used to control whether the encoded data will be compressed. If the
++	 * signature is &quot;CWS&quot; then the movie data will be compressed. If the
++	 * signature is &quot;FWS&quot; then the data will not be compressed.
++	 * 
++	 * @param aString
++	 *            the signature used for the encoded Flash file.
++	 */
++	public void setSignature(String aString)
++	{
++		signature = aString;
++	}
+ 
+-        int delta = (coder.getPointer() - next) &gt;&gt; 3;
++	/**
++	 * Gets the number representing the version of Flash that the movie
++	 * represents.
++	 * 
++	 * @return an integer defining the Flash version number for the coder.
++	 */
++	public int getVersion()
++	{
++		return version;
++	}
+ 
+-        if (delta != 0)
+-        {
+-            coder.context[FSCoder.CodingError] = 1;
+-            coder.context[FSCoder.TypeInError] = anAction.getType();
+-            coder.context[FSCoder.StartOfError] = objStart &gt;&gt;&gt; 3;
+-            coder.context[FSCoder.ExpectedLength] = (next-objStart)&gt;&gt;&gt;3;
+-            coder.context[FSCoder.Delta] = delta;
+-        }
++	/**
++	 * Sets the Flash version supported in this Movie. Note that there are no
++	 * restrictions on the objects that can be used in a coder. Using objects
++	 * that are not supported by an earlier version of the Flash file format may
++	 * cause the Player to not display the movie correctly or even crash the
++	 * Player.
++	 * 
++	 * @param aNumber
++	 *            the version of the Flash file format that this movie utilises.
++	 */
++	public void setVersion(int aNumber)
++	{
++		version = aNumber;
++	}
+ 
+-        coder.setPointer(next);
++	/**
++	 * Gets the bounding rectangle that defines the size of the player screen.
++	 * 
++	 * @return the FSBounds object that defines the bounding rectangle that
++	 *         describes the size of each frame in the coder.
++	 */
++	public FSBounds getFrameSize()
++	{
++		return frameSize;
++	}
+ 
+-        return anAction;
+-    }
++	/**
++	 * Sets the bounding rectangle that defines the size of the player screen.
++	 * The coordinates of the bounding rectangle are also used to define the
++	 * coordinate range. For example if a 400 x 400 pixel rectangle is defined,
++	 * specifying the values for the x and y coordinates the range -200 to 200
++	 * sets the centre of the screen at (0,0), if the x and y coordinates are
++	 * specified in the range 0 to 400 then the centre of the screen will be at
++	 * (200, 200).
++	 * 
++	 * @param aBounds
++	 *            the FSBounds object that defines the frame size.
++	 */
++	public void setFrameSize(FSBounds aBounds)
++	{
++		frameSize = aBounds;
++	}
+ 
+-    static ArrayList decodeActions(byte[] encodedActions)
+-    {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, encodedActions);
+-        int length = encodedActions.length;
+-        int start;
++	/**
++	 * Gets the number of frames played per second that the movie will be
++	 * displayed at.
++	 * 
++	 * @return the speed the movie will be played at.
++	 */
++	public float getFrameRate()
++	{
++		return frameRate;
++	}
+ 
+-        ArrayList array = new ArrayList();
++	/**
++	 * Sets the number of frames played per second that the Player will display
++	 * the coder.
++	 * 
++	 * @param aNumber
++	 *            the number of frames per second that the movie is played.
++	 */
++	public void setFrameRate(float aNumber)
++	{
++		frameRate = aNumber;
++	}
+ 
+-        while (length &gt; 0)
+-        {
+-            start = coder.getPointer();
++	/**
++	 * Gets the array of objects contained in the Movie.
++	 * 
++	 * @return the array of objects that describe a coder.
++	 */
++	public ArrayList&lt;FSMovieObject&gt; getObjects()
++	{
++		return objects;
++	}
+ 
+-            array.add(FSMovie.decodeAction(coder));
+-            length -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
+-        }
+-        return array;
+-    }
++	/**
++	 * Sets the array of objects contained in the Movie.
++	 * 
++	 * @param anArray
++	 *            the array of objects that describe a coder.
++	 */
++	public void setObjects(ArrayList&lt;FSMovieObject&gt; anArray)
++	{
++		objects = anArray;
++	}
+ 
+-    static ArrayList decodeShape(byte[] bytes)
+-    {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++	/**
++	 * Adds the object to the Movie.
++	 * 
++	 * @param anObject
++	 *            the object to be added to the movie.
++	 */
++	public void add(FSMovieObject anObject)
++	{
++		objects.add(anObject);
++	}
+ 
+-        return decodeShape(coder);
+-    }
++	/**
++	 * Adds all of the objects in the array to the Movie.
++	 * 
++	 * @param array
++	 *            an array of FSMovieObjects.
++	 */
++	public void add(ArrayList&lt;FSMovieObject&gt; array)
++	{
++		objects.addAll(array);
++	}
+ 
+-    static ArrayList decodeShape(FSCoder coder)
+-    {
+-        ArrayList objects = new ArrayList();
++	/**
++	 * Decodes the contents of the specified file. An object for each tag
++	 * decoded from the file is placed in the Movie's object array in the order
++	 * they were decoded from the file. If an error occurs while reading and
++	 * parsing the file then an exception is thrown.
++	 * 
++	 * @param fileName
++	 *            the path to the Flash file that will be parsed.
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while reading the file.
++	 * @throws DataFormatException -
++	 *             if the file does not contain Flash data.
++	 * @throws FSCoderException -
++	 *             if an error occurs while decoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while reading the file.
++	 */
++	public void decodeFromFile(String fileName) throws FileNotFoundException,
++					DataFormatException, IOException
++	{
++		FileInputStream fileContents = null;
+ 
+-        int fillBits = coder.readBits(4, false);
+-        int lineBits = coder.readBits(4, false);
++		File swfFile = new File(fileName);
+ 
+-        coder.context[FSCoder.NumberOfFillBits] = fillBits;
+-        coder.context[FSCoder.NumberOfLineBits] = lineBits;
++		fileContents = new FileInputStream(swfFile);
+ 
+-        while (coder.scanBits(6, false) &gt; 0)
+-        {
+-            if ((coder.scanBits(6, false) &amp; 0x20) &gt; 0)
+-            {
+-                if ((coder.scanBits(6, false) &amp; 0x10) &gt; 0)
+-                    objects.add(new FSLine(coder));
+-                else
+-                    objects.add(new FSCurve(coder));
+-            }
+-            else
+-            {
+-                objects.add(new FSShapeStyle(coder));
+-            }
+-        }
++		int fileLength = (int) swfFile.length();
++		byte[] contents = new byte[fileLength];
+ 
+-        coder.adjustPointer(6); // Skip over end of shape marker
+-        coder.alignToByte();
++		fileContents.read(contents);
++		fileContents.close();
+ 
+-        return objects;
+-    }
++		decodeFromData(contents);
++	}
+ 
+-    private static HashMap typeTable = new HashMap();
+-    private static HashMap actionTable = new HashMap();
+-    
+-    /**
+-     * This method allows you to extend the Transform framework by adding new 
+-     * classes to decode the data structures that are not currently supported.
+-     * 
+-     * To add support for a new data structure simply sub-class FSMovieObject 
+- 	 * and implement the following methods:
+-     * 
+-     * public int length(FSCoder coder)
+-     * public void encode(FSCoder coder)
+-     * public void decode(FSCoder coder)
+-     * 
+-     * In addition you must implement the nullary or empty constructor so that
+-     * the object can be instantiated correctly.
+-     * 
+-     * When the FSMovie object encounters a data structure it does not support
+-     * it will use the type to perform a table lookup for any registered class.
+-     * If a class is found an object will be instantiated and then the data 
+-     * structure will be decoded by calling the decode() method.
+-     * 
+-     * If no class has been registered or if an error occurs while instantiating
+-     * the object then the data structure will be decoded as an FSUnknownObject.
+-     * 
+-     * @param type the type used to identify the type of data structure encoded
+-     * in the flash file.
+-     * 
+-     * @param aClass the class object that will be used to instantiate an object
+-     * and decode the data structure.
+-     */
+-    public static void registerClassForObject(int type, Class aClass)
+-    {
+-    	typeTable.put(new Integer(type), aClass);
+-    }
+-    
+-    /**
+-     * This method allows you to extend the Transform framework by adding new 
+-     * classes to decode the actions that are not currently supported.
+-     * 
+-     * To add support for a new action simply sub-class FSActionObject and 
+-     * implement the following methods:
+-     * 
+-     * public int length(FSCoder coder)
+-     * public void encode(FSCoder coder)
+-     * public void decode(FSCoder coder)
+-     * 
+-     * In addition you must implement the nullary or empty constructor so that
+-     * the object can be instantiated correctly.
+-     * 
+-     * When the FSMovie object encounters an action it does not support it will 
+-     * use the type to perform a table lookup for any registered class. If a 
+-     * class is found an object will be instantiated and then the data structure 
+-     * will be decoded by calling the decode() method.
+-     * 
+-     * If no object has been registered then the data structure will be decoded
+-     * as an FSUnknownAction.
+-     * 
+-     * @param type the type used to identify the type of action encoded
+-     * in the flash file.
+-     * 
+-     * @param aClass the Class object that will be instantiated and used to 
+-     * decode the action.
+-     */
+-    public static void registerClassForAction(int type, Class aClass)
+-    {
+-    	typeTable.put(new Integer(type), aClass);
+-    }
++	/**
++	 * Decodes the binary Flash data stored in the byte array. If an error
++	 * occurs while the data is being decoded an exception is thrown. The array
++	 * of objects in the Movie will contain the last tag successfully decoded.
++	 * 
++	 * @param bytes
++	 *            an array of bytes that contain the encoded Flash objects.
++	 * 
++	 * @throws DataFormatException
++	 *             if the file does not contain Flash data.
++	 * @throws FSCoderException
++	 *             if an error occurs while decoding the file.
++	 * @throws IOException
++	 *             if an I/O error occurs while reading the file.
++	 */
++	public void decodeFromData(byte[] bytes) throws DataFormatException,
++					IOException
++	{
++		FSCoder coder;
++		FSMovieObject object;
+ 
+-    private boolean decodeActions = true;
+-    private boolean decodeShapes = true;
+-    private boolean decodeGlyphs = true;
++		if (bytes == null)
++			throw new DataFormatException(&quot;Flash data is null or empty.&quot;);
+ 
+-    private int identifier = 0;
+-    private String encoding = &quot;UTF8&quot;;
++		if (!((bytes[0] == 0x43 || bytes[0] == 0x46) &amp;&amp; bytes[1] == 0x57 &amp;&amp; bytes[2] == 0x53))
++			throw new DataFormatException(
++							&quot;Data does not start with a valid Flash signature.&quot;);
+ 
+-    private String signature = &quot;&quot;;
+-    private int version = Transform.VERSION;
+-    private FSBounds frameSize = null;
+-    private int length = 0;
+-    private float frameRate = 0.0f;
+-    private int frameCount = 0;
++		if (bytes[0] == 0x43)
++			coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
++		else
++			coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+ 
+-    private ArrayList objects = new ArrayList();
++		signature = coder.readString(3, &quot;UTF8&quot;);
++		version = coder.readByte();
++		length = coder.readWord(4, false);
++		frameSize = new FSBounds(coder);
++		frameRate = coder.readFixedWord(1, 1);
++		frameCount = coder.readWord(2, false);
+ 
+-    /** Constructs an FSMovie object with no objects. The Flash version defaults to the package constant Transform.VERSION. From VERSION = 6 onwards the signature attribute defaults to &quot;CWS&quot; indicating that the binary data generated when a movie is encoded movie will be compressed using the zlib algorithm.
++		coder.context[FSCoder.Version] = version;
++		coder.context[FSCoder.DecodeActions] = decodeActions ? 1 : 0;
++		coder.context[FSCoder.DecodeShapes] = decodeShapes ? 1 : 0;
++		coder.context[FSCoder.DecodeGlyphs] = decodeGlyphs ? 1 : 0;
+ 
+-        */
+-    public FSMovie()
+-    {
+-        if (Transform.VERSION &gt; 5)
+-            signature = &quot;CWS&quot;;
+-        else
+-            signature = &quot;FWS&quot;;
+-    }
++		while ((object = FSMovieObject.decodeObject(coder)) != null)
++		{
++			objects.add(object);
++			
++			if (coder.context[FSCoder.Identifier] &gt; identifier) {
++				identifier = coder.context[FSCoder.Identifier];				
++			}
+ 
+-    /** Constructs an FSMovie object with the specified bounding rectangle, frame rate and no objects. The Flash version defaults to the package constant Transform.VERSION. From VERSION = 6 onwards the signature attribute defaults to &quot;CWS&quot; indicating that the binary data generated when a movie is encoded movie will be compressed using the zlib algorithm.
++			if (coder.context[FSCoder.CodingError] == 1)
++			{
++				throw new FSCoderException(
++								coder.context[FSCoder.TypeInError],
++								coder.context[FSCoder.StartOfError],
++								coder.context[FSCoder.ExpectedLength],
++								coder.context[FSCoder.Delta],
++								(coder.context[FSCoder.Delta] &gt; 0) ? &quot;ObjectOverflow&quot;
++												: &quot;ObjectUnderflow&quot;);
++			}
++		}
++	}
+ 
+-        @param aBounds the bounding rectangle that defines the size of each frame in the coder.
+-        @param framesPerSecond the number of frames per second that the Player plays the movie at.
+-        */
+-    public FSMovie(FSBounds aBounds, float framesPerSecond)
+-    {
+-        if (Transform.VERSION &gt; 5)
+-            signature = &quot;CWS&quot;;
+-        else
+-            signature = &quot;FWS&quot;;
++	/**
++	 * Encodes the array of objects and writes the data to the specified file.
++	 * If an error occurs while encoding the file then an exception is thrown.
++	 * 
++	 * @param fileName
++	 *            the path to the Flash file that the movie will be encoded to.
++	 * 
++	 * @throws FileNotFoundException -
++	 *             if an error occurs while opening the file.
++	 * @throws FSCoderException -
++	 *             if an error occurs while encoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while writing the file.
++	 */
++	public void encodeToFile(String fileName) throws FileNotFoundException,
++					IOException
++	{
++		FileOutputStream fileContents = null;
+ 
+-        setFrameSize(aBounds);
+-        setFrameRate(framesPerSecond);
+-    }
++		fileContents = new FileOutputStream(fileName);
+ 
+-    /**
+-     * Constructs an FSMovie object with the specified signature, version, bounding rectangle,
+-     * frame rate and array of objects.
+-     *
+-     * The signature controls whether the file will be compressed when encoded. If the signature is
+-     * &quot;FWS&quot; the file will not be compressed. If the signature is &quot;CWS&quot; then the file will be
+-     * compressed using the zlib algorithm after encoding. Note that compressed Flash files are
+-     * only readable by a Flash Player that supports Flash from version 6 onwards.
+-     *
+-        @param encoding the format used to encode or decode strings.
+-        @param signature a string indicating that the file contains Flash data,
+-        either &quot;FWS&quot; for uncompressed files or &quot;CWS&quot; for compressed files.
+-        @param version the version number of Flash implemented in this coder.
+-        @param aBounds the bounding rectangle that defines the size of each frame in the coder.
+-        @param framesPerSecond the number of frames per second that the Player plays the movie at.
+-        @param anArray the array of objects that define the coder.
+-        */
+-    public FSMovie(String encoding, String signature, int version, FSBounds aBounds, float framesPerSecond, ArrayList anArray)
+-    {
+-        setEncoding(encoding);
+-        setSignature(signature);
+-        setVersion(version);
+-        setFrameSize(aBounds);
+-        setFrameRate(framesPerSecond);
+-        setObjects(anArray);
+-    }
++		byte[] encodedData = encode();
+ 
+-    /** Constructs an FSMovie object and decodes the contents of the specified
+-     * 	file to generate an array of objects representing the Flash file. If
+-     * an error occurs while reading and parsing the file then an exception is
+-     * thrown.
+-     *
+-     * @param fileName the path to the Flash file that will be parsed.
+-     * @throws FileNotFoundException - if an error occurs while reading the file.
+-     * @throws DataFormatException - if the file does not contain Flash data.
+-     * @throws FSCoderException - if an error occurs while decoding the file.
+-     * @throws IOException - if an I/O error occurs while reading the file.
+-     */
+-    public FSMovie(String fileName) throws IOException, DataFormatException
+-    {
+-        decodeFromFile(fileName);
+-    }
+-    /**
+-     * Constructs an FSMovie object and decodes the contents of the specified
+-     * file to generate an array of objects representing the Flash file. If
+-     * an error occurs while reading and parsing the file a message is sent
+-     * to the registered movie listener object.
+-     *
+-     * @param fileName the path to the Flash file that will be parsed.
+-     * @param listener an FSMovieListener object where errors messages are
+-     * sent.
+-     *
+-     * @deprecated
+-     */
+-    public FSMovie(String fileName, FSMovieListener listener)
+-    {
+-        decodeFromFile(fileName, listener);
+-    }
++		fileContents.write(encodedData);
++		fileContents.close();
++	}
+ 
+-    /**
+-     * Constructs an FSMovie object and decodes the binary data presented in the byte array to generate
+-     * an array of objects representing the Flash data. If an error occurs while parsing the data then
+-     * an Exception is thrown.
+-     *
+-     * @param data an array of bytes containing the Flash binary data.
+-     * @throws DataFormatException - if the file does not contain Flash data.
+-     * @throws FSCoderException - if an error occurs while decoding the file.
+-     * @throws IOException - if an I/O error occurs while reading the file.
+-     */
+-    public FSMovie(byte[] data) throws DataFormatException, IOException
+-    {
+-        decodeFromData(data);
+-    }
+-    /**
+-     * Constructs an FSMovie object and decodes the binary data presented in the byte
+-     * array to generate an array of objects representing the Flash data. If an error
+-     * occurs while parsing the data then a message is sent to the movie listener.
+-     *
+-     * @param data an array of bytes containing the Flash binary data.
+-     * @param listener an FSMovieListener object where errors messages are
+-     * sent.
+-     *
+-     * @deprecated using the constructor FSMovie(byte[]) which throws an
+-     * exception if an error is detected.
+-     */
+-    public FSMovie(byte[] data, FSMovieListener listener)
+-    {
+-        decodeFromData(data, listener);
+-    }
++	/**
++	 * Returns the encoded representation of the array of objects that this
++	 * Movie contains. If an error occurs while encoding the file then an
++	 * exception is thrown.
++	 * 
++	 * @return the array of bytes representing the encoded objects.
++	 * @throws FSCoderException -
++	 *             if an error occurs while encoding the file.
++	 * @throws IOException -
++	 *             if an I/O error occurs while encoding the file.
++	 */
++	public byte[] encode() throws IOException
++	{
++		FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[0]);
+ 
+-    /** Returns a unique identifier for an object derived from the FSDefineObject class. In order to reference objects that define items such as shapes, sounds, etc. each must be assigned an identifier that is unique for a given Movie.
++		coder.context[FSCoder.Version] = version;
+ 
+-        When binary data is decoded into a sequence of objects, the Movie class tracks each Define tag decoded, recording the highest value. If a new Define tag is added to the array of decoded objects the identifier assigned to the new tag will be guaranteed to be unique.
++		length(coder);
+ 
+-        @return an unique identifier for objects that define shapes, sounds, etc. in a Flash file.
+-        */
+-    public synchronized int newIdentifier()
+-    {
+-        return ++identifier;
+-    }
++		coder.setData(FSCoder.LITTLE_ENDIAN, new byte[length]);
+ 
+-    /** Gets the current value for the unique identifier that will be assigned to definition objects (classes derived from the FSDefineObject class). The value returned is the last value requested using the newIdentifier() method.
++		coder.writeString(signature, &quot;UTF8&quot;);
++		coder.writeWord(version, 1);
++		coder.writeWord(length, 4);
++		frameSize.encode(coder);
++		coder.writeFixedWord(frameRate, 1, 1);
++		coder.writeWord(frameCount, 2);
+ 
+-        @return current value for the unique identifier.
+-        */
+-    public int getIdentifier()
+-    {
+-        return identifier;
+-    }
++		FSMovieObject.encode(coder, objects);
+ 
+-    /** Sets the initial value for the unique identifier assigned to definition objects. When a new identifier is requested the identifier is incremented before being returned. For most situations the method argument will be zero. This method should be used with caution as generating definition object with duplicate identifiers will most probably crash the program displaying the Flash file generated.
++		if (coder.context[FSCoder.CodingError] == 1)
++		{
++			throw new FSCoderException(
++							coder.context[FSCoder.TypeInError],
++							coder.context[FSCoder.StartOfError],
++							coder.context[FSCoder.ExpectedLength],
++							coder.context[FSCoder.Delta],
++							(coder.context[FSCoder.Delta] &gt; 0) ? &quot;ObjectOverflow&quot;
++											: &quot;ObjectUnderflow&quot;);
++		}
+ 
+-        @param aValue the initial value for the unique identifier.
+-        */
+-    public void setIdentifier(int aValue)
+-    {
+-        identifier = aValue;
+-    }
++		coder.writeWord(0, 2);
+ 
+-    /**
+-     * Gets the encoding scheme for strings encoded and decoded from Flash files. The default
+-     * encoding format is UTF8 which provides backward compatibility for Flash files that contain
+-     * ASCII encoded string. For files generated by internationalized versions of the Flash
+-     * authoring tool any string recognised by the Java environment as identifying a character
+-     * encoding scheme may be used. For example, &quot;SJIS&quot; may be used to decode files generated
+-     * using the Japanese language version of Flash - Version 5 or earlier.
+-     *
+-     * With the introduction of Flash 6 support for Unicode strings was added so the default
+-     * encoding of UTF8 will be useful for most applications.
+-     *
+-     * @return the string identifying the format for strings. Any string recognised by the Java
+-     * environment may be used, &quot;ASCII&quot;, &quot;SJIS&quot; and UTF8&quot; will be the three most commonly used.
+-     */
+-    public String getEncoding()
+-    {
+-        return encoding;
+-    }
++		byte[] data = null;
+ 
+-    /**
+-     * Sets the encoding scheme for strings encoded and decoded from Flash files. For files
+-     * generated by internationalized versions of the Flash authoring tool any string recognised
+-     * by the Java environment as identifying a character encoding scheme may be used. For example,
+-     * &quot;SJIS&quot; may be used to decode files generated using the Japanese language version of
+-     * Flash - Version 5 or earlier.
+-     *
+-     * @param encoding string identifying the format for strings. Any string recognised by the Java
+-     * environment may be used, &quot;ASCII&quot;, &quot;SJIS&quot; and UTF8&quot; will be the three most commonly used.
+-     */
+-    public void setEncoding(String encoding)
+-    {
+-        this.encoding = encoding;
+-    }
++		try
++		{
++			if (signature.charAt(0) == 'C')
++			{
++				data = zip(coder.getData(), length);
++			} else
++			{
++				data = coder.getData();
++			}
++		} catch (DataFormatException e)
++		{
++			throw new IOException(&quot;Error compressing Flash file.&quot;);
++		}
++		return data;
++	}
+ 
+-    public void setDecodeActions(boolean decode)
+-    {
+-        decodeActions = decode;
+-    }
+-    public boolean willDecodeActions()
+-    {
+-        return decodeActions;
+-    }
+-    public void setDecodeShapes(boolean decode)
+-    {
+-        decodeShapes = decode;
+-    }
+-    public boolean willDecodeShapes()
+-    {
+-        return decodeShapes;
+-    }
+-    public void setDecodeGlyphs(boolean decode)
+-    {
+-        decodeGlyphs = decode;
+-    }
+-    public boolean willDecodeGlyphs()
+-    {
+-        return decodeGlyphs;
+-    }
+-    /**
+-     * Gets the signature identifying that the movie contains Flash. Up to version 5 the string
+-     * &quot;FWS&quot; identifies that data is encoded using the Flash file format. From Flash version 6
+-     * onwards Flash data could also be compressed using the zlib algorithm to reduce the file
+-     * size. A signature of &quot;CWS&quot; is used to denote that a file contain compressed Flash data.
+-     * The original signature &quot;FWS&quot; is still used to denote that a file contains uncompressed
+-     * data.
+-     *
+-     * When encoding a FSMovie object the signature also determines whether the data generated
+-     * will be compressed.
+-     *
+-     * @return the string identifying the format for the encoded Flash data.
+-     */
+-    public String getSignature()
+-    {
+-        return signature;
+-    }
++	/**
++	 * Creates a deep copy of the entire movie.
++	 * 
++	 * @return a copy of the movie.
++	 */
++	public Object clone()
++	{
++		FSMovie anObject = null;
+ 
+-    /**
+-     * Sets the signature for the Flash data when it is encoded. The signature is used to control
+-     * whether the encoded data will be compressed. If the signature is &quot;CWS&quot; then the movie
+-     * data will be compressed. If the signature is &quot;FWS&quot; then the data will not be compressed.
+-     *
+-     * @param aString the signature used for the encoded Flash file.
+-     */
+-    public void setSignature(String aString)
+-    {
+-        signature = aString;
+-    }
++		try
++		{
++			anObject = (FSMovie) super.clone();
++			anObject.frameSize = (frameSize != null) ? (FSBounds) frameSize
++							.clone() : null;
+ 
+-    /** Gets the number representing the version of Flash that the movie represents.
++			anObject.objects = new ArrayList&lt;FSMovieObject&gt;();
+ 
+-        @return an integer defining the Flash version number for the coder.
+-        */
+-    public int getVersion()
+-    {
+-        return version;
+-    }
++			for (Iterator&lt;FSMovieObject&gt; i = objects.iterator(); i.hasNext();)
++			{
++				anObject.objects.add((FSMovieObject) i.next().clone());
++			}
++		} catch (CloneNotSupportedException e)
++		{
++			throw new InternalError(&quot;Cannot clone movie.&quot;);
++		}
+ 
+-    /** Sets the Flash version supported in this Movie. Note that there are no restrictions on the objects that can be used in a coder. Using objects that are not supported by an earlier version of the Flash file format may cause the Player to not display the movie correctly or even crash the Player.
++		return anObject;
++	}
+ 
+-        @param aNumber the version of the Flash file format that this movie utilises.
+-        */
+-    public void setVersion(int aNumber)
+-    {
+-        version = aNumber;
+-    }
++	/**
++	 * Returns true if anObject is equal to this one. The comparison is
++	 * performed on all the objects contained in the movie. Objects are
++	 * considered equal if they would generate identical binary data when they
++	 * are encoded to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-    /** Gets the bounding rectangle that defines the size of the player screen.
++		if (obj == null)
++		{
++			return false;
++		}
+ 
+-        @return the FSBounds object that defines the bounding rectangle that describes the size of each frame in the coder.
+-        */
+-    public FSBounds getFrameSize()
+-    {
+-        return frameSize;
+-    }
++		if (obj == this)
++		{
++			return true;
++		}
+ 
+-    /** Sets the bounding rectangle that defines the size of the player screen. The coordinates of the bounding rectangle are also used to define the coordinate range. For example if a 400 x 400 pixel  rectangle is defined, specifying the values for the x and y coordinates the range -200 to 200 sets the centre of the screen at (0,0), if the x and y coordinates are specified in the range 0 to 400 then the centre of the screen will be at (200, 200).
++		if (obj instanceof FSMovie)
++		{
++			FSMovie movie = (FSMovie) obj;
+ 
+-        @param aBounds the FSBounds object that defines the frame size.
+-        */
+-    public void setFrameSize (FSBounds aBounds)
+-    {
+-        frameSize = aBounds;
+-    }
++			result = version == movie.version;
+ 
+-    /** Gets the number of frames played per second that the movie will be displayed at.
++			if (frameSize != null)
++				result = result &amp;&amp; frameSize.equals(movie.frameSize);
++			else
++				result = result &amp;&amp; frameSize == movie.frameSize;
+ 
+-        @return the speed the movie will be played at.
+-        */
+-    public float getFrameRate()
+-    {
+-        return frameRate;
+-    }
++			result = result &amp;&amp; frameRate == movie.frameRate;
++			result = result &amp;&amp; objects.equals(movie.getObjects());
++		}
++		return result;
++	}
+ 
+-    /** Sets the number of frames played per second that the Player will display the coder.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @param aNumber the number of frames per second that the movie is played.
+-        */
+-    public void setFrameRate (float aNumber)
+-    {
+-        frameRate = aNumber;
+-    }
++		buffer.append(&quot;FSMovie : { &quot;);
++		buffer.append(&quot;signature = \&quot;&quot;).append(signature).append(&quot;\&quot;; &quot;);
++		buffer.append(&quot;version = &quot;).append(version).append(&quot;; &quot;);
++		buffer.append(&quot;frameSize = &quot;).append(frameSize.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;frameRate = &quot;).append(frameRate).append(&quot;; &quot;);
++		buffer.append(&quot;objects = array[&quot;).append(objects.size()).append(&quot;]; }&quot;);
+ 
+-    /** Gets the array of objects contained in the Movie.
++		return buffer.toString();
++	}
+ 
+-        @return the array of objects that describe a coder.
+-        */
+-    public ArrayList getObjects() { return objects; }
++	private int length(FSCoder coder)
++	{
++		length = 14; // Includes End
++		length += frameSize.length(coder);
++		length += FSMovieObject.length(coder, objects);
+ 
+-    /** Sets the array of objects contained in the Movie.
++		frameCount = 0;
+ 
+-        @param anArray the array of objects that describe a coder.
+-        */
+-    public void setObjects(ArrayList anArray)
+-    {
+-        objects = anArray;
+-    }
++		for (Iterator&lt;FSMovieObject&gt; i = objects.iterator(); i.hasNext();)
++		{
++			if (i.next().getType() == FSMovieObject.ShowFrame)
++			{
++				frameCount += 1;
++			}
++		}
+ 
+-    /** Adds the object to the Movie.
++		return length;
++	}
+ 
+-        @param anObject the object to be added to the movie.
+-        */
+-    public void add(FSMovieObject anObject)
+-    {
+-        objects.add(anObject);
+-    }
++	private byte[] zip(byte[] bytes, int len) throws DataFormatException
++	{
++		byte[] compressedData = null;
+ 
+-    /** Adds all of the objects in the array to the Movie.
++		Deflater deflater = new Deflater();
++		byte[] data = new byte[len];
+ 
+-        @param array an array of FSMovieObjects.
+-        */
+-    public void add(ArrayList array)
+-    {
+-        objects.addAll(array);
+-    }
++		deflater.setInput(bytes, 8, len - 8);
++		deflater.finish();
+ 
+-    /**
+-     * Gets an array of objects from the Movie with the specified type. For example
+-     * to retrieve all the FSDefineShape objects specified in a movie:
++		int bytesCompressed = deflater.deflate(data);
+ 
+-        &lt;pre&gt;
+-         ArrayList allShapes= aMovie.getObjectsOfType(FSMovieObject.DefineShape);
+-        &lt;/pre&gt;
++		compressedData = new byte[8 + bytesCompressed];
+ 
+-        Note that only objects at the &quot;top-level&quot; in the movie are checked, namely
+-        movie or definition objects. Objects &quot;owned&quot; by another object such as
+-        Action objects inside FSDoAction, FSButtonEvent or FSClipEvent objects
+-        cannot be retrieved using this method.
++		int i = 0;
++		int j = 0;
+ 
+-        @param aType the type to search the movie for.
+-        */
+-    public ArrayList getObjectsOfType(int aType)
+-    {
+-        ArrayList selectedObjects = new ArrayList();
++		for (i = 0; i &lt; 8; i++)
++			compressedData[i] = bytes[i];
+ 
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-        {
+-            FSMovieObject currentObject = (FSMovieObject)i.next();
++		for (j = 0; j &lt; bytesCompressed; i++, j++)
++			compressedData[i] = data[j];
+ 
+-            if (currentObject.getType() == aType)
+-                selectedObjects.add(currentObject);
+-        }
+-        return selectedObjects;
+-    }
++		return compressedData;
++	}
+ 
+-    /**
+-     * Decodes the contents of the specified file. An object for each tag decoded from the file
+-     * is placed in the  Movie's object array in the order they were decoded from the file. If
+-     * an error occurs while reading and parsing the file then an exception is thrown.
+-     *
+-     * @param fileName the path to the Flash file that will be parsed.
+-     * @throws FileNotFoundException - if an error occurs while reading the file.
+-     * @throws DataFormatException - if the file does not contain Flash data.
+-     * @throws FSCoderException - if an error occurs while decoding the file.
+-     * @throws IOException - if an I/O error occurs while reading the file.
+-     */
+-    public void decodeFromFile(String fileName) throws FileNotFoundException, DataFormatException, IOException
+-    {
+-        FileInputStream fileContents = null;
++	private byte[] unzip(byte[] bytes) throws DataFormatException
++	{
++		int movieLength = 0;
+ 
+-        File swfFile = new File(fileName);
++		for (int i = 0; i &lt; 4; i++)
++			movieLength += (bytes[i + 4] &amp; 0x000000FF) &lt;&lt; (i * 8);
+ 
+-        fileContents = new FileInputStream(swfFile);
++		byte[] data = new byte[movieLength];
+ 
+-        int fileLength = (int)swfFile.length();
+-        byte[] contents = new byte[fileLength];
++		// copy the uncompressed signature, version and length
+ 
+-        fileContents.read(contents);
+-        fileContents.close();
++		for (int i = 0; i &lt; 8; i++)
++			data[i] = bytes[i];
+ 
+-        decodeFromData(contents);
+-    }
+-    /**
+-     * Decodes the contents of the specified file. An object for each tag decoded from the file
+-     * is placed in the  Movie's object array in the order they were decoded from the file. If
+-     * an error occurs while reading and parsing the file then a message is sent to the
+-     * movie listener.
+-     *
+-     * @param fileName the path to the Flash file that will be parsed.
+-     * @param listener an FSMovieListener object where errors messages are
+-     * sent.
+-     *
+-     * @deprecated use the decodeFromFile(String) method which throws an
+-     * exception if an error is detected.
+-     *
+-     */
+-    public void decodeFromFile(String fileName, FSMovieListener listener)
+-    {
+-        FileInputStream fileContents = null;
++		Inflater inflater = new Inflater();
++		inflater.setInput(bytes, 8, bytes.length - 8);
++		inflater.inflate(data, 8, movieLength - 8);
+ 
+-        try
+-        {
+-            File swfFile = new File(fileName);
+-
+-            fileContents = new FileInputStream(swfFile);
+-
+-            int fileLength = (int)swfFile.length();
+-            byte[] contents = new byte[fileLength];
+-
+-            fileContents.read(contents);
+-            fileContents.close();
+-
+-            decodeFromData(contents, listener);
+-        }
+-        catch (SecurityException e)
+-        {
+-            if (listener != null)
+-                listener.logEvent(new FSMovieEvent(FSMovieEvent.Decode, FSMovieEvent.Error, 0, 0, &quot;FileNotFoundError&quot;));
+-        }
+-        catch (FileNotFoundException e)
+-        {
+-            if (listener != null)
+-                listener.logEvent(new FSMovieEvent(FSMovieEvent.Decode, FSMovieEvent.Error, 0, 0, &quot;FileNotFoundError&quot;));
+-        }
+-        catch (IOException e)
+-        {
+-            if (listener != null)
+-                listener.logEvent(new FSMovieEvent(FSMovieEvent.Decode, FSMovieEvent.Error, 0, 0, &quot;FileReadError&quot;));
+-        }
+-    }
+-
+-   /**
+-    * Decodes the binary Flash data stored in the byte array. If an error occurs while the data
+-    * is being decoded an exception is thrown. The array of objects in the Movie will
+-    * contain the last tag successfully decoded.
+-    *
+-    * @param bytes an array of bytes that contain the encoded Flash objects.
+-    *
+-    * @throws DataFormatException - if the file does not contain Flash data.
+-    * @throws FSCoderException - if an error occurs while decoding the file.
+-    * @throws IOException - if an I/O error occurs while reading the file.
+-    */
+-    public void decodeFromData(byte[] bytes) throws DataFormatException, IOException
+-    {
+-        FSCoder coder = null;
+-        FSMovieObject object = null;
+-
+-        isFlash(bytes);
+-
+-        if (bytes[0] == 0x43)
+-            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
+-        else
+-            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+-
+-        signature = coder.readString(3, &quot;UTF8&quot;);
+-        version = coder.readWord(1, false);
+-        /* length */ coder.readWord(4, false);
+-        frameSize = new FSBounds(coder);
+-        frameRate = coder.readFixedWord(1, 1);
+-        frameCount = coder.readWord(2, false);
+-
+-        coder.context[FSCoder.Version] = version;
+-        coder.context[FSCoder.DecodeActions] = decodeActions ? 1 : 0;
+-        coder.context[FSCoder.DecodeShapes] = decodeShapes ? 1 : 0;
+-        coder.context[FSCoder.DecodeGlyphs] = decodeGlyphs ? 1 : 0;
+-
+-        while ((object = decodeObject(coder)) != null)
+-        {
+-            objects.add(object);
+-
+-            if (coder.context[FSCoder.CodingError] == 1)
+-            {
+-                throw new FSCoderException(
+-                    coder.context[FSCoder.TypeInError],
+-                    coder.context[FSCoder.StartOfError],
+-                    coder.context[FSCoder.ExpectedLength],
+-                    coder.context[FSCoder.Delta],
+-                    (coder.context[FSCoder.Delta] &gt; 0) ? &quot;ObjectOverflow&quot; : &quot;ObjectUnderflow&quot;);
+-            }
+-        }
+-        identifier = coder.context[FSCoder.Identifier];
+-    }
+-
+-    /**
+-     * Decodes the binary Flash data stored in the byte array. If an error occurs while the data
+-     * is being decoded a message is sent to the movie listner object. The array of objects in
+-     * the Movie will contain the last tag successfully decoded.
+-     *
+-     * @param bytes an array of bytes that contain the encoded Flash objects.
+-     * @param listener an FSMovieListener object where errors messages are
+-     * sent.
+-     *
+-     * @deprecated use the decodeFromData(bytep[]) method which throws an
+-     * exception if an error is detected.
+-     */
+-    public void decodeFromData(byte[] bytes, FSMovieListener listener)
+-    {
+-        FSCoder coder = null;
+-        FSMovieObject object = null;
+-
+-        try
+-        {
+-            isFlash(bytes);
+-
+-            if (bytes[0] == 0x43)
+-                coder = new FSCoder(FSCoder.LITTLE_ENDIAN, unzip(bytes));
+-            else
+-                coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+-
+-            coder.context[FSCoder.Action]  = FSMovieEvent.Decode;
+-            coder.setListener(listener);
+-            coder.beginObject(&quot;FSMovie&quot;);
+-
+-            signature = coder.readString(3, &quot;UTF8&quot;);
+-            version = coder.readWord(1, false);
+-            length = coder.readWord(4, false);
+-            frameSize = new FSBounds(coder);
+-            frameRate = coder.readFixedWord(1, 1);
+-            frameCount = coder.readWord(2, false);
+-
+-            coder.context[FSCoder.Version] = version;
+-
+-            coder.beginObject(&quot;ArrayList&quot;);
+-
+-            while ((object = decodeObject(coder)) != null)
+-            {
+-                objects.add(object);
+-            }
+-
+-            coder.endObject(&quot;ArrayList&quot;);
+-
+-            identifier = coder.context[FSCoder.Identifier];
+-
+-            coder.endObject(&quot;FSMovie&quot;);
+-        }
+-        catch (DataFormatException e)
+-        {
+-            coder.logError(&quot;DataFormatError&quot;, 0, 0);
+-        }
+-    }
+-
+-    /**
+-     * Encodes the array of objects and writes the data to the specified file. If an error occurs
+-     * while encoding the file then an exception is thrown.
+-     *
+-     * @param fileName the path to the Flash file that the movie will be encoded to.
+-     *
+-     * @throws FileNotFoundException - if an error occurs while opening the file.
+-     * @throws FSCoderException - if an error occurs while encoding the file.
+-     * @throws IOException - if an I/O error occurs while writing the file.
+-     */
+-    public void encodeToFile(String fileName) throws FileNotFoundException, IOException
+-    {
+-        FileOutputStream fileContents = null;
+-
+-        fileContents = new FileOutputStream(fileName);
+-
+-        byte[] encodedData = encode();
+-
+-        fileContents.write(encodedData);
+-        fileContents.close();
+-    }
+-    /**
+-     * Encodes the array of objects and writes the data to the specified file. If an error occurs
+-     * while encoding the file then a message is sent to the movie listener.
+-     *
+-     * @param fileName the path to the Flash file that the movie will be encoded to.
+-     * @param listener an FSMovieListener object where errors messages are
+-     * sent.
+-     *
+-     * @deprecated use the encodeToFile(String) method which throws an
+-     * exception if an error is detected.
+-     */
+-    public void encodeToFile(String fileName, FSMovieListener listener)
+-    {
+-        FileOutputStream fileContents = null;
+-
+-        try
+-        {
+-            fileContents = new FileOutputStream(fileName);
+-
+-            byte[] encodedData = encode(listener);
+-
+-            fileContents.write(encodedData);
+-            fileContents.close();
+-        }
+-        catch (SecurityException e)
+-        {
+-            if (listener != null)
+-                listener.logEvent(new FSMovieEvent(FSMovieEvent.Encode, FSMovieEvent.Error, 0, 0, &quot;FileNotFoundError&quot;));
+-        }
+-        catch (FileNotFoundException e)
+-        {
+-            if (listener != null)
+-                listener.logEvent(new FSMovieEvent(FSMovieEvent.Encode, FSMovieEvent.Error, 0, 0, &quot;FileNotFoundError&quot;));
+-        }
+-        catch (IOException e)
+-        {
+-            if (listener != null)
+-                listener.logEvent(new FSMovieEvent(FSMovieEvent.Encode, FSMovieEvent.Error, 0, 0, &quot;FileWriteError&quot;));
+-        }
+-    }
+-
+-    /**
+-     * Returns the encoded representation of the array of objects that this Movie contains.
+-     * If an error occurs while encoding the file then an exception is thrown.
+-     *
+-     * @return the array of bytes representing the encoded objects.
+-     * @throws FSCoderException - if an error occurs while encoding the file.
+-     * @throws IOException - if an I/O error occurs while encoding the file.
+-     */
+-    public byte[] encode() throws IOException
+-    {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[0]);
+-
+-        coder.context[FSCoder.Action]  = FSMovieEvent.Encode;
+-        coder.context[FSCoder.Version] = version;
+-
+-        int fileLength = length(coder);
+-
+-        coder.setData(FSCoder.LITTLE_ENDIAN, new byte[fileLength]);
+-
+-        coder.writeString(signature, &quot;UTF8&quot;);
+-        coder.writeWord(version, 1);
+-        coder.writeWord(fileLength, 4);
+-        frameSize.encode(coder);
+-        coder.writeFixedWord(frameRate, 1, 1);
+-        coder.writeWord(numberOfFrames(), 2);
+-
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-        {
+-            FSMovieObject object = (FSMovieObject)i.next();
+-
+-            int len = object.getLength();
+-            int start = coder.getPointer() + ((object.getExtendLength() || len &gt;= 63) ? 48 : 16);
+-            int next = start + (len &lt;&lt; 3);
+-
+-            object.encode(coder);
+-            coder.setPointer(next);
+-
+-            if (coder.context[FSCoder.CodingError] == 1)
+-            {
+-                throw new FSCoderException(
+-                    coder.context[FSCoder.TypeInError],
+-                    coder.context[FSCoder.StartOfError],
+-                    coder.context[FSCoder.ExpectedLength],
+-                    coder.context[FSCoder.Delta],
+-                    (coder.context[FSCoder.Delta] &gt; 0) ? &quot;ObjectOverflow&quot; : &quot;ObjectUnderflow&quot;);
+-            }
+-        }
+-        coder.writeWord(0, 2);
+-
+-        byte[] data = null;
+-
+-        try
+-        {
+-             if (signature.equals(&quot;CWS&quot;))
+-                 data = zip(coder.getData(), fileLength);
+-             else
+-                data = coder.getData();
+-        }
+-        catch (DataFormatException e)
+-        {
+-            throw new IOException(&quot;Error compressing Flash file.&quot;);
+-        }
+-        return data;
+-    }
+-
+-    /**
+-     * Returns the encoded representation of the array of objects that this Movie contains.
+-     * If an error occurs while encoding the file then a message is sent to the
+-     * movie listner.
+-     *
+-     * @return the array of bytes representing the encoded objects.
+-     * @param listener an FSMovieListener object where errors messages are
+-     * sent.
+-     *
+-     * @deprecated use the encode() method which throws an exception if an
+-     * error is detected.
+-     */
+-    public byte[] encode(FSMovieListener listener)
+-    {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[0]);
+-
+-        coder.context[FSCoder.Action]  = FSMovieEvent.Encode;
+-        coder.context[FSCoder.Version] = version;
+-
+-        int fileLength = length(coder);
+-
+-         coder.setData(FSCoder.LITTLE_ENDIAN, new byte[fileLength]);
+-         coder.setListener(listener);
+-
+-        coder.beginObject(&quot;FSMovie&quot;);
+-
+-        coder.writeString(signature, &quot;UTF8&quot;);
+-        coder.writeWord(version, 1);
+-        coder.writeWord(fileLength, 4);
+-        frameSize.encode(coder);
+-        coder.writeFixedWord(frameRate, 8, 8);
+-        coder.writeWord(numberOfFrames(), 2);
+-
+-        coder.beginObject(&quot;ArrayList&quot;);
+-
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-        {
+-            FSMovieObject object = (FSMovieObject)i.next();
+-
+-            int len = object.getLength();
+-            int start = coder.getPointer() + ((object.getExtendLength() || len &gt;= 63) ? 48 : 16);
+-            int next = start + (len &lt;&lt; 3);
+-
+-            object.encode(coder);
+-            coder.setPointer(next);
+-
+-            int delta = (coder.getPointer() - next) &gt;&gt; 3;
+-
+-            if (delta &lt; 0)
+-                coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+-            else if (delta &gt; 0)
+-                coder.logError(&quot;ObjectUnderflow&quot;, next, delta);
+-        }
+-
+-        coder.endObject(&quot;ArrayList&quot;);
+-        coder.writeWord(0, 2);
+-        coder.endObject(&quot;FSMovie&quot;);
+-
+-        byte[] data = null;
+-
+-        try
+-        {
+-            if (signature.equals(&quot;CWS&quot;))
+-                data = zip(coder.getData(), fileLength);
+-            else
+-                data = coder.getData();
+-        }
+-        catch (DataFormatException e)
+-        {
+-            coder.logError(&quot;DataFormatError&quot;, 0, 0);
+-        }
+-        return data;
+-    }
+-
+-    /** Creates a deep copy of the entire movie.
+-
+-        @return a copy of the movie.
+-        */
+-    public Object clone()
+-    {
+-        FSMovie anObject = null;
+-
+-        try {
+-            anObject = (FSMovie)super.clone();
+-
+-            anObject.frameSize = (frameSize != null) ? (FSBounds)frameSize.clone() : null;
+-
+-            anObject.objects = new ArrayList();
+-
+-            for (Iterator i = objects.iterator(); i.hasNext();)
+-                anObject.objects.add(((FSMovieObject)i.next()).clone());
+-        }
+-        catch (CloneNotSupportedException e)
+-        {
+-            throw new InternalError(&quot;Cannot clone movie.&quot;);
+-        }
+-
+-        return anObject;
+-    }
+-
+-    /** Returns true if anObject is equal to this one. The comparison is performed on all the objects contained in the movie. Objects are considered equal if they would generate identical binary data when they are encoded to a Flash file.
+-
+-        @return true if this object would be identical to anObject when encoded.
+-        */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-
+-        if (super.equals(anObject))
+-        {
+-            FSMovie typedObject = (FSMovie)anObject;
+-
+-            result = version == typedObject.version;
+-
+-            if (frameSize != null)
+-                result = result &amp;&amp; frameSize.equals(typedObject.frameSize);
+-            else
+-                result = result &amp;&amp; frameSize == typedObject.frameSize;
+-
+-            result = result &amp;&amp; frameRate == typedObject.frameRate;
+-            result = result &amp;&amp; objects.equals(((FSMovie)anObject).getObjects());
+-        }
+-        return result;
+-    }
+-
+-    /**
+-     * AppendDescription is used to present a string description of the object including
+-     * all nested objects up to a specified depth. This method provide a more controlled
+-     * way of creating a string representation of an object since large objects such as
+-     * font or shape definitions can contain dozens of nested objects.
+-     *
+-     * The representation of the object is appended to the StringBuffer, showing the
+-     * name of the class and values of the attributes it contains. If the object contains
+-     * any attributes that are objects then the object graph will be traversed up to the
+-     * specified depth. If objects are nested at a level less than specified depth then
+-     * the full string representation of the object is displayed. For objects at the
+-     * specified depth only the name of the class is displayed. Any objects below this
+-     * depth are not displayed.
+-     *
+-     * @param buffer a StringBuffer to which the description of each object is appended.
+-     * @param depth the maximum level of nesting up to which objects will be displayed.
+-     */
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(&quot;FSMovie&quot;);
+-        buffer.append(&quot; : { &quot;);
+-        Transform.append(buffer, &quot;signature&quot;, signature);
+-        Transform.append(buffer, &quot;version&quot;, version);
+-        Transform.append(buffer, &quot;frameSize&quot;, frameSize, depth);
+-        Transform.append(buffer, &quot;frameRate&quot;, frameRate);
+-        Transform.append(buffer, &quot;objects&quot;, objects, depth);
+-        buffer.append(&quot;}&quot;);
+-    }
+-
+-    private int length(FSCoder coder)
+-    {
+-        int len = 14; // Includes End
+-
+-        len += frameSize.length(coder);
+-
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-        {
+-            FSMovieObject object = (FSMovieObject)i.next();
+-
+-            int objectLength = object.length(coder);
+-
+-            len += (object.getExtendLength() || objectLength &gt;= 63) ? objectLength+6 : objectLength+2;
+-         }
+-        return len;
+-    }
+-
+-    private int numberOfFrames()
+-    {
+-        int numberOfFrames = 0;
+-
+-        for (Iterator i = objects.iterator(); i.hasNext();)
+-        {
+-            if (((FSMovieObject)i.next()).getType() == FSMovieObject.ShowFrame)
+-                numberOfFrames += 1;
+-        }
+-        return numberOfFrames;
+-    }
+-
+-    private void isFlash(byte[] bytes) throws DataFormatException
+-    {
+-        if (bytes == null || bytes.length &lt; 8)
+-            throw new DataFormatException(&quot;Flash data is null or empty.&quot;);
+-
+-        boolean isFlash = (bytes[0] == 0x43 || bytes[0] == 0x46) &amp;&amp; bytes[1] == 0x57 &amp;&amp; bytes[2] == 0x53;
+-
+-//        if (isFlash &amp;&amp; bytes[3] &gt; Transform.VERSION)
+-//            throw new DataFormatException(&quot;Cannot decode files later than version &quot; + Transform.VERSION + &quot;.&quot;);
+-
+-        if (isFlash == false)
+-            throw new DataFormatException(&quot;Data does not start with a valid Flash signature.&quot;);
+-    }
+-
+-    private byte[] zip(byte[] bytes, int len) throws DataFormatException
+-    {
+-        byte[] compressedData = null;
+-
+-        Deflater deflater = new Deflater();
+-        byte[] data = new byte[len];
+-
+-        deflater.setInput(bytes, 8, len-8);
+-        deflater.finish();
+-
+-        int bytesCompressed = deflater.deflate(data);
+-
+-        compressedData = new byte[8+bytesCompressed];
+-
+-        int i = 0;
+-        int j = 0;
+-
+-        for (i=0; i&lt;8; i++)
+-            compressedData[i] = bytes[i];
+-
+-        for (j=0; j&lt;bytesCompressed; i++, j++)
+-            compressedData[i] = data[j];
+-
+-        return compressedData;
+-    }
+-
+-    private byte[] unzip(byte[] bytes) throws DataFormatException
+-    {
+-        int movieLength = 0;
+-
+-        for (int i=0; i&lt;4; i++)
+-            movieLength += (bytes[i+4] &amp; 0x000000FF) &lt;&lt; (i*8);
+-
+-        byte[] data = new byte[movieLength];
+-
+-        // copy the uncompressed signature, version and length
+-
+-        for (int i=0; i&lt;8; i++)
+-            data[i] = bytes[i];
+-
+-        Inflater inflater = new Inflater();
+-        inflater.setInput(bytes, 8, bytes.length-8);
+-        inflater.inflate(data, 8, movieLength-8);
+-
+-        return data;
+-    }
++		return data;
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000310.html">[Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000312.html">[Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#311">[ date ]</a>
+              <a href="thread.html#311">[ thread ]</a>
+              <a href="subject.html#311">[ subject ]</a>
+              <a href="author.html#311">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r93 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r93%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200602282359.k1SNxZXB005124%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000033.html">
+   <LINK REL="Next"  HREF="000035.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r93 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r93%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200602282359.k1SNxZXB005124%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r93 - trunk/src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Wed Mar  1 00:59:35 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000033.html">[Transform-svn] r92 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000035.html">[Transform-svn] r94 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-01 00:59:22 +0100 (Wed, 01 Mar 2006)
+New Revision: 93
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+FSTextConstructor: Added method public FSTextConstructor(int, Font) 
+to clearly separate setting a font from a file.
+      
+Added a reset(int) method to allow FSTextConstructor objects to be 
+reused when generating objects for more than one Flash file.
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-28 23:56:19 UTC (rev 92)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-28 23:59:22 UTC (rev 93)
+@@ -54,10 +54,8 @@
+  * specifying the name of the file:&lt;/p&gt;
+  * 
+  * &lt;pre&gt;
+- *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;Arial.otf&quot;);
+- *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;Arial.ttf&quot;);
+- *
+- *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;TimesNewRoman.swf&quot;);
++ * FSTextConstructor font = new FSTextConstructor(id, trueTypeFile.getPath());
++ * FSTextConstructor font = new FSTextConstructor(id, swfFile.getPath());
+  * &lt;/pre&gt;
+  * 
+  * &lt;P&gt;The OpenType or TrueType file is parsed to construct the font definition. 
+@@ -68,15 +66,14 @@
+  * character. An example Flash file can be found in the resources directory 
+  * included in this release.&lt;/p&gt;
+  * 
+- * &lt;P&gt;Font definitions from AWT templates are created by specifying the name of 
+- * the font:&lt;/p&gt;
++ * &lt;P&gt;Font definitions from AWT templates are created by passing a font object:&lt;/p&gt;
+  * 
+  * &lt;pre&gt;
+- *     FSTextConstructor font = new FSTextConstructor(identifier, &quot;Times New Roman Bold&quot;);
++ * FSTextConstructor font = new FSTextConstructor(id, new Font(&quot;Arial&quot;, Font.PLAIN, 1));
+  * &lt;/pre&gt;
+  * 
+  * &lt;p&gt;Only the font or file name needs to specified. Unlike Java fonts, font 
+- * definitions in Flash are size  independent, the size and colour in which a 
++ * definitions in Flash are size independent, the size and colour in which a 
+  * given string in rendered is specified in the object  that defines the text to 
+  * be displayed avoiding the need to create multiple font definitions for  the 
+  * same font name.&lt;/p&gt;
+@@ -282,8 +279,8 @@
+     private float descent = 0;
+     private float leading = 0;
+     
++    private short[] orderTable = new short[65536];
+     private short[] characterTable = new short[65536];
+-    private short[] orderTable = new short[65536];
+     private FSGlyph[] glyphTable = null;
+     
+     private int numberOfGlyphs = 0;
+@@ -295,31 +292,27 @@
+     /**
+      * Creates a new FSTextConstructor object using the specified font.
+      * 
+-     * &lt;P&gt;The fontName can be used to identify a particular font in two ways, either 
+-     * specifying:
++     * &lt;P&gt;The fontName can be used to identify a particular font in two ways, 
++     * either specifying:
+      * 
+      * &lt;ol&gt;
+      * &lt;li&gt;the name of a file containing a TrueType or OpenType font definition.&lt;/li&gt;
+      * &lt;li&gt;the name of a Flash file containing font definition.&lt;/li&gt;
+-     * &lt;li&gt;the name of an Java AWT font.&lt;/li&gt;
+-      * &lt;/ol&gt;
++     * &lt;/ol&gt;
+      *
+-     * For AWT fonts the name is comprised of a &lt;i&gt;font family name&lt;/i&gt; e.g. &quot;Times New Roman&quot;
+-     * followed by an optional suffix that identify the font style such as &quot;Bold&quot;,
+-     * &quot;Italic&quot; to give a complete font name e.g. &quot;Times New Roman Bold&quot; or &quot;Times New
+-     * Roman Bold Italic&quot;.&lt;/p&gt;
+-     *
+-     * @param anIdentifier a unique identifier that will be assigned to the font definition
+-     * object generated.
++     * IMPORTANT: This method previously allowed the name of a AWT Font to be 
++     * specified as an argument. This will no longer be supported in future 
++     * releases, use the FSTextCOnstructor(int, Font) method instead.
+      * 
+-     * @param fontName either the name of a Flash, TrueType or OpenType file containing an 
+-     * existing font definition or the name of an AWT font.
++     * @param anIdentifier a unique identifier that will be assigned to the 
++     * font definition object generated and referenced by all the text object
++     * generated.
+      * 
+-     * @throws IllegalArgumentException if the fontName specifies a font that is not 
+-     * available in the Java AWT environment.
++     * @param fontName either the name of a Flash, TrueType or OpenType file 
++     * containing an existing font definition.
+      * 
+-     * @throws FileNotFoundException if the fontName specifies a file and the file cannot
+-     * be found or opened.
++     * @throws FileNotFoundException if the fontName specifies a file and the 
++     * file cannot be found or opened.
+      * 
+      * @throws IOException if the fontName specifies a file and an error occurs while
+      * reading the file from disk.
+@@ -327,23 +320,64 @@
+      * @throws DataFormatException if the fontName specifies a file and an error occurs while 
+      * parsing the font definition.
+      */
+-    public FSTextConstructor(int anIdentifier, String fontName) throws FileNotFoundException, IOException, DataFormatException
++    public FSTextConstructor(int anIdentifier, String filename) throws IOException, DataFormatException
+     {
+         identifier = anIdentifier; 
+         
+         for (int i=0; i&lt;65536; i++)
+             orderTable[i] = -1;
+             
+-        if (fontName.toLowerCase().endsWith(&quot;.swf&quot;))
+-            decodeSWFFont(fontName);
+-        else if (fontName.toLowerCase().endsWith(&quot;.otf&quot;))
+-            decodeOpenTypeFont(fontName);
+-        else if (fontName.toLowerCase().endsWith(&quot;.ttf&quot;))
+-            decodeOpenTypeFont(fontName);
++        if (filename.toLowerCase().endsWith(&quot;.swf&quot;))
++            decodeSWFFont(filename);
++        else if (filename.toLowerCase().endsWith(&quot;.otf&quot;))
++            decodeOpenTypeFont(filename);
++        else if (filename.toLowerCase().endsWith(&quot;.ttf&quot;))
++            decodeOpenTypeFont(filename);
+         else
+-             decodeAWTFont(fontName);
+-     }
++             decodeAWTFont(filename);
++    }
+     /**
++     * Creates a new FSTextConstructor object using the specified font.
++     * 
++     * @param anIdentifier a unique identifier that will be assigned to the 
++     * font definition object generated and referenced by all the text object
++     * generated.
++     * 
++     * @param an AWT Font object.
++     */
++    public FSTextConstructor(int anIdentifier, Font font)
++    {
++        identifier = anIdentifier; 
++        
++        for (int i=0; i&lt;65536; i++)
++            orderTable[i] = -1;
++            
++        decodeAWTFont(font);
++    }    
++    /**
++     * Resets the FSTextConstructor to generate a new set of font and text 
++     * objects. 
++     * 
++     * The character sets defined for the font are cleared so the characters
++     * that will be used to generate the next font definition should be set with
++     * the willDisplay() method.
++     * 
++     * This method is useful when generating objects for more than one Flash
++     * file as it avoids the penalty of reloading the font definition which 
++     * can be very expensive.
++     * 
++     * @param anIdentifier a unique identifier that will be assigned to the 
++     * font definition object generated and referenced by all the text object
++     * generated.
++     */
++    public void reset(int anIdentifier)
++    {
++        identifier = anIdentifier; 
++        
++        for (int i=0; i&lt;65536; i++)
++            orderTable[i] = -1;      
++    }
++    /**
+      * Indicates whether or not this FSTextConstructor can display all the 
+      * characters specified in the array. This method returns the index of the 
+      * first character that cannot be displayed using this font. If the Font can 
+@@ -667,8 +701,7 @@
+         return path.defineTransparentShape(anIdentifier);
+     }
+ 
+-    private void decodeSWFFont(String filename)
+-        throws FileNotFoundException, IOException, DataFormatException
++    private void decodeSWFFont(String filename) throws IOException, DataFormatException
+     {
+         FSMovie fontMovie = new FSMovie(filename);
+ 
+@@ -729,7 +762,11 @@
+             glyphTable[character.getGlyphIndex()].advance = (int) (character.getAdvance() * (1024.0 / size));
+         }
+         orderTable[0] = 0;
+-    }
++    }  
++    /*
++     * This method will be superceded by decodeAWTFont(Font font) in a future 
++     * release.
++     */
+     private void decodeAWTFont(String fontName)
+     {
+         FontRenderContext fontContext = new FontRenderContext(new AffineTransform(), true, true);
+@@ -747,7 +784,6 @@
+         name = fontName;
+         encoding = FSText.Unicode;
+ 
+-//        AffineTransform transform = transformToEMSquare(font, fontContext);
+         Rectangle2D transform = transformToEMSquare(font, fontContext);
+ 
+         double scaleY = 1024.0; // Math.abs(1024.0 / bounds.getY());
+@@ -757,24 +793,15 @@
+ 
+         size = (float) scaleY;
+ 
+-//        size = (float) transform.getScaleX();
+-        
+         /*
+          The new font scaled to the EM Square must be derived using the size as well 
+          as the transform used for the glyphs otherwise the advance values are not 
+          scaled accordingly.
+          */
+-        Hashtable map = new Hashtable();
+-
+         AffineTransform at = AffineTransform.getTranslateInstance(translateX, translateY);
+         font = font.deriveFont(at);
+         font = font.deriveFont((float)scaleX);
+ 
+-//        map.put(TextAttribute.SIZE, new Float(size));
+-//        map.put(TextAttribute.TRANSFORM, transform);
+-
+-//        font = font.deriveFont(map);
+-        
+         missingGlyph = font.getMissingGlyphCode();
+ 
+         isBold = font.isBold();
+@@ -817,11 +844,99 @@
+            }
+            else
+            {
+-               //characterTable[currentChar] = (short)missingGlyph;                  
+-               //glyphTable[glyphIndex] = new FSGlyph(new FSShape(), new FSBounds(0, 0, 0, 0));
+-               //glyphTable[glyphIndex].advance = glyphTable[missingGlyph].advance;               
++                GlyphVector glyphVector = font.createGlyphVector(fontContext, new char[] { (char)missingGlyph });
++            
++                Shape outline = glyphVector.getGlyphOutline(0);
++                int advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
++    
++                characterTable[currentChar] = (short)glyphIndex;
++                glyphTable[glyphIndex] = new FSGlyph(convertShape(outline), new FSBounds(0, 0, 0, 0));
++                glyphTable[glyphIndex].advance = advance;
++    
++                if (font.hasUniformLineMetrics() == false)
++                {
++                    LineMetrics lineMetrics = font.getLineMetrics(new char[]
++                             {(char)currentChar }, 0, 1, fontContext);
++    
++                    ascent = 0; // Math.max(lineMetrics.getAscent() * 20, ascent);
++                    descent = 0; // Math.max(lineMetrics.getDescent() * 20, descent);
++                    leading = 0; // Math.max(lineMetrics.getLeading() * 20, leading);
++                }
++           }
++           glyphIndex++;
++           characterCode++;
++       }
++       orderTable[0] = (short)missingGlyph;
++    }
++    private void decodeAWTFont(Font font)
++    {
++        FontRenderContext fontContext = new FontRenderContext(new AffineTransform(), true, true);
++        font = font.deriveFont(1.0f);
+ 
+-               GlyphVector glyphVector = font.createGlyphVector(fontContext, new char[] { (char)missingGlyph });
++        name = font.getName();
++        encoding = FSText.Unicode;
++
++        Rectangle2D transform = transformToEMSquare(font, fontContext);
++
++        double scaleY = 1024.0; // Math.abs(1024.0 / bounds.getY());
++        double scaleX = scaleY;
++        double translateX = 1024.0 - (transform.getX() * 1024.0);
++        double translateY = 1024.0 - (transform.getY() * 1024.0);
++
++        size = (float) scaleY;
++
++        /*
++         The new font scaled to the EM Square must be derived using the size as well 
++         as the transform used for the glyphs otherwise the advance values are not 
++         scaled accordingly.
++         */
++        AffineTransform at = AffineTransform.getTranslateInstance(translateX, translateY);
++        font = font.deriveFont(at);
++        font = font.deriveFont((float)scaleX);
++
++        missingGlyph = font.getMissingGlyphCode();
++
++        isBold = font.isBold();
++        isItalic = font.isItalic();
++
++        int numGlyphs = font.getNumGlyphs();
++        int glyphIndex = 0;
++        int characterCode = 0;
++    
++        glyphTable = new FSGlyph[numGlyphs];
++    
++        /*
++         * Run through all the unicode character codes looking for a corresponding glyph.
++         */
++        while ((glyphIndex &lt; numGlyphs) &amp;&amp; (characterCode &lt; 65535))
++        {
++            char currentChar = (char) characterCode;
++    
++            if (font.canDisplay(currentChar))
++            {
++                GlyphVector glyphVector = font.createGlyphVector(fontContext,
++                       new char[] { currentChar });
++    
++                Shape outline = glyphVector.getGlyphOutline(0);
++                int advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
++    
++                characterTable[currentChar] = (short)glyphIndex;
++                glyphTable[glyphIndex] = new FSGlyph(convertShape(outline), new FSBounds(0, 0, 0, 0));
++                glyphTable[glyphIndex].advance = advance;
++    
++                if (font.hasUniformLineMetrics() == false)
++                {
++                    LineMetrics lineMetrics = font.getLineMetrics(new char[]
++                             { (char) currentChar }, 0, 1, fontContext);
++    
++                       ascent = 0; // Math.max(lineMetrics.getAscent() * 20, ascent);
++                       descent = 0; // Math.max(lineMetrics.getDescent() * 20, descent);
++                       leading = 0; // Math.max(lineMetrics.getLeading() * 20, leading);
++                }
++           }
++           else
++           {
++                GlyphVector glyphVector = font.createGlyphVector(fontContext, new char[] { (char)missingGlyph });
+             
+                 Shape outline = glyphVector.getGlyphOutline(0);
+                 int advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
+@@ -857,53 +972,29 @@
+         double h = 0.0;
+ 
+         /*
+-         * Scan through all the glyphs looking for glyphs that will fall outside the left or 
+-         * bottom side of the EM Square once the glyph has been scaled.
++         * Scan through all the glyphs looking for glyphs that will fall outside 
++         * the left or bottom side of the EM Square once the glyph has been scaled.
+          */
+-/*
+-        for (int i = 0; i &lt; numGlyphs; i++)
++        while ((glyphIndex &lt; numGlyphs) &amp;&amp; (characterCode &lt; 65535)) 
+         {
+-            char currentChar = (char) (i);
++            char currentChar = (char) characterCode;
+ 
+-            GlyphVector glyphVector = font.createGlyphVector(fontContext,
++            if (font.canDisplay(currentChar)) 
++            {
++                GlyphVector glyphVector = font.createGlyphVector(fontContext,
+                     new char[] { currentChar });
+-            Rectangle2D bounds = glyphVector.getGlyphOutline(0).getBounds2D();
+-
+-            x = Math.min(bounds.getX(), x);
+-            y = Math.min(bounds.getY(), y);
++                Rectangle2D bounds = glyphVector.getGlyphOutline(0).getBounds2D();
++    
++                x = Math.min(bounds.getX(), x);
++                y = Math.min(bounds.getY(), y);
++    
++                w = Math.max(bounds.getWidth(), w);
++                h = Math.max(bounds.getHeight(), h);
++    
++                glyphIndex++;
++            }
++            characterCode++;
+         }
+-*/
+-        while ( (glyphIndex &lt; numGlyphs) &amp;&amp; (characterCode &lt; 65535)) 
+-        {
+-          char currentChar = (char) characterCode;
+-
+-          if (font.canDisplay(currentChar)) {
+-            GlyphVector glyphVector = font.createGlyphVector(fontContext,
+-                new char[] { currentChar });
+-            Rectangle2D bounds = glyphVector.getGlyphOutline(0).getBounds2D();
+-
+-            x = Math.min(bounds.getX(), x);
+-            y = Math.min(bounds.getY(), y);
+-
+-            w = Math.max(bounds.getWidth(), w);
+-            h = Math.max(bounds.getHeight(), h);
+-
+-            glyphIndex++;
+-          }
+-          characterCode++;
+-        }
+-        /*
+-         * Assume glyphs are normally taller than they are wider. The font size gives the
+-         * most accurate measure for scaling the font to the 1024 x 1024 twip EM Square.
+-         */
+-/*
+-        double scaleXY = 1024.0 / (font.getSize() * 20.0);
+-
+-        transform.scale(scaleXY, scaleXY);
+-        transform.translate(-x, -y);
+-
+-        return transform;
+-*/        
+         return new Rectangle2D.Double(x, y, w, h);
+     }
+     /*
+@@ -1093,7 +1184,6 @@
+         }
+         return glyphCodes;
+     }
+-
+     /*
+      Return an array of advances for the glyphs that represent each of the characters in the string
+      */
+@@ -1110,7 +1200,6 @@
+ 
+         return glyphAdvances;
+     }
+-
+     /*
+      Return a new baseline scaled according to the new font size.
+      */
+@@ -1121,7 +1210,6 @@
+ 
+         return newBaseline;
+     }
+-    
+     private byte[] dataFromFile(String filename) throws FileNotFoundException, IOException
+     {
+         File aFile = new File(filename);
+@@ -1135,8 +1223,7 @@
+ 
+         return bytes;
+     }
+-
+-    private void decodeOpenTypeFont(String fontName) throws FileNotFoundException, IOException, DataFormatException
++    private void decodeOpenTypeFont(String fontName) throws IOException, DataFormatException
+     {
+         FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, dataFromFile(fontName));
+         
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000033.html">[Transform-svn] r92 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000035.html">[Transform-svn] r94 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

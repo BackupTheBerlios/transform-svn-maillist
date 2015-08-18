@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r96 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r96%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603010004.k2104R2M005805%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000036.html">
+   <LINK REL="Next"  HREF="000038.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r96 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r96%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603010004.k2104R2M005805%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r96 - in trunk: doc src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Wed Mar  1 01:04:27 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000036.html">[Transform-svn] r95 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000038.html">[Transform-svn] r97 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#37">[ date ]</a>
+              <a href="thread.html#37">[ thread ]</a>
+              <a href="subject.html#37">[ subject ]</a>
+              <a href="author.html#37">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-01 01:03:37 +0100 (Wed, 01 Mar 2006)
+New Revision: 96
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSColorTransform.java
+Log:
+Removed old doxygen directives
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-01 00:01:22 UTC (rev 95)
++++ trunk/doc/CHANGES.txt	2006-03-01 00:03:37 UTC (rev 96)
+@@ -1,7 +1,7 @@
+ 2006-02-28 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Removed old doxygen directives from FSMovie, FSSoundConstructor and
+-      FSShapeConstructor.
++      FSShapeConstructor, FSColorTransform.
+     
+     * Removed redundant exceptions declarations from method signatures:
+       FileNotFoundException is covered by IOException. Applies to FSMovie
+
+Modified: trunk/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColorTransform.java	2006-03-01 00:01:22 UTC (rev 95)
++++ trunk/src/com/flagstone/transform/FSColorTransform.java	2006-03-01 00:03:37 UTC (rev 96)
+@@ -190,11 +190,11 @@
+ 
+         Each colour channel is transformed by the following calculation:
+ 
+-        \verbatim
++        &lt;pre&gt;
+         newRed = red + addRedTerm
+         newGreen = green + addGreenTerm
+         newBlue = blue + addBlueTerm
+-        \endverbatim
++        &lt;/pre&gt;
+ 
+         The add term value for the alpha channel defaults to 0 so if the transform is added to an object that uses alpha channel information then the alpha channel will remain unchanged.
+ 
+@@ -215,12 +215,12 @@
+ 
+         Each colour channel is transformed by the following calculation:
+ 
+-        \verbatim
++        &lt;pre&gt;
+         newRed = red + addRedTerm
+         newGreen = green + addGreenTerm
+         newBlue = blue + addBlueTerm
+         newAlpha = alpha + addAlphaTerm
+-        \endverbatim
++        &lt;/pre&gt;
+ 
+         In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
+ 
+@@ -241,11 +241,11 @@
+ 
+         Each colour channel is transformed by the following calculation:
+ 
+-        \verbatim
++        &lt;pre&gt;
+         newRed = red * multiplyRedTerm
+         newGreen = green * multiplyGreenTerm
+         newBlue = blue * multiplyBlueTerm
+-        \endverbatim
++        &lt;/pre&gt;
+ 
+         The multiply term value for the alpha channel defaults to 1.0 so if the transform is added to an object that uses alpha channel information then the alpha channel will remain unchanged.
+ 
+@@ -266,12 +266,12 @@
+ 
+         Each colour channel is transformed by the following calculation:
+ 
+-        \verbatim
++        &lt;pre&gt;
+         newRed = red * multiplyRedTerm
+         newGreen = green * multiplyGreenTerm
+         newBlue = blue * multiplyBlueTerm
+         newAlpha = alpha * multiplyAlphaTerm
+-        \endverbatim
++        &lt;/pre&gt;
+ 
+         In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
+ 
+@@ -292,11 +292,11 @@
+ 
+         Each colour channel is transformed by the following calculation:
+ 
+-        \verbatim
++        &lt;pre&gt;
+         newRed = (red * multiplyRedTerm) + addRedTerm
+         newGreen = (green * multiplyGreenTerm) + addGreenTerm
+         newBlue = (blue * multiplyBlueTerm) + addBlueTerm
+-        \endverbatim
++        &lt;/pre&gt;
+ 
+         The multiply and add terms for the alpha channel default to 1.0 and 0 respectively so for objects that use the alpha channel information then the alpha channel will remain unchanged.
+ 
+@@ -323,12 +323,12 @@
+ 
+         Each colour channel is transformed by the following calculation:
+ 
+-        \verbatim
++        &lt;pre&gt;
+         newRed = (red * multiplyRedTerm) + addRedTerm
+         newGreen = (green * multiplyGreenTerm) + addGreenTerm
+         newBlue = (blue * multiplyBlueTerm) + addBlueTerm
+         newAlpha = (alpha * multiplyAlphaTerm) + addAlphaTerm
+-        \endverbatim
++        &lt;/pre&gt;
+ 
+         In the Flash Player the value assigned to the respective colour channel is clamped to the range 0..255.
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000036.html">[Transform-svn] r95 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000038.html">[Transform-svn] r97 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#37">[ date ]</a>
+              <a href="thread.html#37">[ thread ]</a>
+              <a href="subject.html#37">[ subject ]</a>
+              <a href="author.html#37">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

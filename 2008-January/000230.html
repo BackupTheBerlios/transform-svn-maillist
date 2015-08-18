@@ -1,0 +1,777 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r292 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r292%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200801301153.m0UBrZGT028834%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000227.html">
+   <LINK REL="Next"  HREF="000229.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r292 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r292%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200801301153.m0UBrZGT028834%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r292 - trunk/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Jan 30 12:53:35 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000227.html">[Transform-svn] r291 - trunk/doc/releases
+</A></li>
+        <LI>Next message: <A HREF="000229.html">[Transform-svn] r293 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#230">[ date ]</a>
+              <a href="thread.html#230">[ thread ]</a>
+              <a href="subject.html#230">[ subject ]</a>
+              <a href="author.html#230">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-30 12:53:28 +0100 (Wed, 30 Jan 2008)
+New Revision: 292
+
+Added:
+   trunk/src/com/flagstone/transform/test/FSFrameTest.java
+   trunk/src/com/flagstone/transform/test/FSHeaderTest.java
+   trunk/src/com/flagstone/transform/test/FSLayerTest.java
+   trunk/src/com/flagstone/transform/test/UtilityTests.java
+Modified:
+   trunk/src/com/flagstone/transform/test/AllTests.java
+Log:
+added unit tests for FSHeader, FSFrame, FSLayer.
+
+Modified: trunk/src/com/flagstone/transform/test/AllTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/AllTests.java	2008-01-28 11:37:00 UTC (rev 291)
++++ trunk/src/com/flagstone/transform/test/AllTests.java	2008-01-30 11:53:28 UTC (rev 292)
+@@ -12,6 +12,7 @@
+         suite.addTest(MovieObjectTests.suite());
+         suite.addTest(MovieTests.suite());
+         suite.addTest(ConstructorTests.suite());
++        suite.addTest(UtilityTests.suite());
+         return suite;
+     }
+ }
+
+Added: trunk/src/com/flagstone/transform/test/FSFrameTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSFrameTest.java	2008-01-28 11:37:00 UTC (rev 291)
++++ trunk/src/com/flagstone/transform/test/FSFrameTest.java	2008-01-30 11:53:28 UTC (rev 292)
+@@ -0,0 +1,148 @@
++/*
++ * FSFrameTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.util.ArrayList;
++
++import com.flagstone.transform.FSFrame;
++import com.flagstone.transform.FSMovie;
++import com.flagstone.transform.FSBounds;
++import com.flagstone.transform.FSDefineShape;
++import com.flagstone.transform.FSDoAction;
++import com.flagstone.transform.FSFrameLabel;
++import com.flagstone.transform.FSPlaceObject2;
++import com.flagstone.transform.FSRemoveObject2;
++import com.flagstone.transform.FSShape;
++import com.flagstone.transform.FSShowFrame;
++import com.flagstone.transform.FSPush;
++import com.flagstone.transform.FSGotoFrame2;
++
++import junit.framework.TestCase;
++
++public class FSFrameTest extends TestCase
++{
++	private FSMovie movie;
++	private FSBounds bounds;
++	private String label;
++	
++	private FSDefineShape shape;
++	private FSPlaceObject2 place;
++	private FSFrameLabel name;
++	private FSRemoveObject2 remove;
++	private FSDoAction doAction;
++	private ArrayList actions;
++	
++	protected void setUp()
++	{
++		int layer = 1;
++		
++		bounds = new FSBounds(0,0,100,100);
++		label = &quot;frame&quot;;
++		
++		movie = new FSMovie();
++		movie.setFrameSize(bounds);
++		movie.setFrameRate(1.0f);
++
++		shape = new FSDefineShape(movie.newIdentifier(), bounds, new ArrayList(), new ArrayList(), new FSShape());
++		place = new FSPlaceObject2(shape.getIdentifier(), layer, 0,0);
++		name = new FSFrameLabel(label);
++		remove = new FSRemoveObject2(layer);
++		
++		actions = new ArrayList();
++		actions.add(new FSPush(&quot;label&quot;));
++		actions.add(new FSGotoFrame2(true));
++
++		doAction = new FSDoAction(actions);		
++	}
++	
++	public void testFramesFromMovie()
++	{
++		movie.add(shape);
++		movie.add(place);
++		movie.add(name);
++		movie.add(new FSShowFrame());
++		movie.add(remove);
++		movie.add(doAction);
++		movie.add(new FSShowFrame());
++
++		ArrayList frames = FSFrame.framesFromMovie(movie);
++		
++		assertEquals(frames.size(), 2);
++		
++		FSFrame one = (FSFrame)frames.get(0);
++		assertEquals(one.getNumber(), 1);
++		assertEquals(one.getLabel(), label);
++		assertEquals(one.getDefinitions().size(), 1);
++		assertEquals(one.getCommands().size(), 2);
++		assertEquals(one.getActions().size(), 0);
++		
++		FSFrame two = (FSFrame)frames.get(1);
++		assertEquals(two.getNumber(), 2);
++		assertEquals(two.getLabel(), null);
++		assertEquals(two.getDefinitions().size(), 0);
++		assertEquals(two.getCommands().size(), 1);
++		assertEquals(two.getActions(), actions);		
++	}
++
++	public void testAddToMovie()
++	{
++		FSFrame frame; 
++		
++		frame = new FSFrame(1);
++		frame.setLabel(label);
++		frame.addDefinition(shape);
++		frame.addCommand(place);
++		frame.addToMovie(movie);
++		
++		frame = new FSFrame(2);
++		frame.addCommand(remove);
++		frame.setActions(actions);
++		frame.addToMovie(movie);
++		
++		ArrayList frames = FSFrame.framesFromMovie(movie);
++		
++		assertEquals(frames.size(), 2);
++		
++		FSFrame one = (FSFrame)frames.get(0);
++		assertEquals(one.getNumber(), 1);
++		assertEquals(one.getLabel(), label);
++		assertEquals(one.getDefinitions().size(), 1);
++		assertEquals(one.getCommands().size(), 2);
++		assertEquals(one.getActions().size(), 0);
++		
++		FSFrame two = (FSFrame)frames.get(1);
++		assertEquals(two.getNumber(), 2);
++		assertEquals(two.getLabel(), null);
++		assertEquals(two.getDefinitions().size(), 0);
++		assertEquals(two.getCommands().size(), 1);
++		assertEquals(two.getActions(), actions);		
++	}
++}
++
+
+Added: trunk/src/com/flagstone/transform/test/FSHeaderTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSHeaderTest.java	2008-01-28 11:37:00 UTC (rev 291)
++++ trunk/src/com/flagstone/transform/test/FSHeaderTest.java	2008-01-30 11:53:28 UTC (rev 292)
+@@ -0,0 +1,198 @@
++/*
++ * FSHeaderTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.io.File;
++import java.util.Iterator;
++
++import com.flagstone.transform.FSHeader;
++import com.flagstone.transform.FSMovie;
++import com.flagstone.transform.FSMovieObject;
++import com.flagstone.transform.FSBounds;
++import com.flagstone.transform.FSShowFrame;
++
++import junit.framework.TestCase;
++
++public class FSHeaderTest extends TestCase
++{
++    public void testData()
++    {
++    	try
++    	{
++	    	FSMovie movie = new FSMovie();
++	    	movie.setSignature(&quot;FWS&quot;);
++	    	movie.setVersion(4);
++	    	movie.setFrameSize(new FSBounds(100,200,1000,2000));
++	    	movie.setFrameRate(12.0f);
++	    	movie.add(new FSShowFrame());
++	    	
++	    	FSHeader header = new FSHeader(movie.encode());
++	    	compare(header, movie);
++	    	
++	    	movie.setVersion(5);
++	    	movie.setFrameSize(new FSBounds(150,250,1500,2500));
++	    	movie.setFrameRate(24.0f);
++	    	movie.add(new FSShowFrame());
++	    	
++	    	header.decodeFromData(movie.encode());
++	    	compare(header, movie);
++    	}
++    	catch (Exception e)
++    	{
++    		fail();
++    	}   	
++    }
++    
++    public void testCompressedData()
++    {
++    	try
++    	{
++	    	FSMovie movie = new FSMovie();
++	    	movie.setSignature(&quot;CWS&quot;);
++	    	movie.setVersion(6);
++	    	movie.setFrameSize(new FSBounds(100,200,1000,2000));
++	    	movie.setFrameRate(14.0f);
++	    	movie.add(new FSShowFrame());
++	    	
++	    	FSHeader header = new FSHeader(movie.encode());
++	    	compare(header, movie);
++	    	
++	    	movie.setVersion(5);
++	    	movie.setFrameSize(new FSBounds(150,250,1500,2500));
++	    	movie.setFrameRate(24.0f);
++	    	movie.add(new FSShowFrame());
++	    	
++	    	header.decodeFromData(movie.encode());
++	    	compare(header, movie);
++    	}
++    	catch (Exception e)
++    	{
++    		fail();
++    	}   	
++    }
++
++    public void testPath()
++    {
++    	try
++    	{
++	    	File destDir = new File(&quot;test/results/FSHeader&quot;);
++	    	File destFile = new File(destDir, &quot;movie.swf&quot;);
++	    	
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create directory: &quot;+destDir, destDir.mkdirs());
++
++            FSMovie movie = new FSMovie();
++	    	movie.setSignature(&quot;FWS&quot;);
++	    	movie.setVersion(4);
++	    	movie.setFrameSize(new FSBounds(100,200,1000,2000));
++	    	movie.setFrameRate(12.0f);
++	    	movie.add(new FSShowFrame());
++	    	movie.encodeToFile(destFile.getPath());
++	    	
++	    	FSHeader header = new FSHeader(destFile.getPath());
++	    	compare(header, movie);
++	    	
++	    	movie.setVersion(5);
++	    	movie.setFrameSize(new FSBounds(150,250,1500,2500));
++	    	movie.setFrameRate(24.0f);
++	    	movie.add(new FSShowFrame());
++	    	movie.encodeToFile(destFile.getPath());
++	    	
++	    	header.decodeFromFile(destFile.getPath());
++	    	compare(header, movie);
++    	}
++    	catch (Exception e)
++    	{
++    		fail();
++    	}   	
++    }
++
++    public void testFile()
++    {
++    	try
++    	{
++	    	File destDir = new File(&quot;test/results/FSHeader&quot;);
++	    	File destFile = new File(destDir, &quot;movie.swf&quot;);
++	    	
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create directory: &quot;+destDir, destDir.mkdirs());
++
++            FSMovie movie = new FSMovie();
++	    	movie.setSignature(&quot;FWS&quot;);
++	    	movie.setVersion(4);
++	    	movie.setFrameSize(new FSBounds(100,200,1000,2000));
++	    	movie.setFrameRate(12.0f);
++	    	movie.add(new FSShowFrame());
++	    	movie.encodeToFile(destFile.getPath());
++	    	
++	    	FSHeader header = new FSHeader(destFile);
++	    	compare(header, movie);
++	    	
++	    	movie.setVersion(5);
++	    	movie.setFrameSize(new FSBounds(150,250,1500,2500));
++	    	movie.setFrameRate(24.0f);
++	    	movie.add(new FSShowFrame());
++	    	movie.encodeToFile(destFile.getPath());
++	    	
++	    	header.decodeFromFile(destFile);
++	    	compare(header, movie);
++    	}
++    	catch (Exception e)
++    	{
++    		fail();
++    	}   	
++    }
++    
++    private void compare(FSHeader header, FSMovie movie)
++    {
++    	FSBounds bounds = movie.getFrameSize();
++    	
++    	int frames = 0;
++    	
++    	for (Iterator i=movie.getObjects().iterator(); i.hasNext();)
++    	{
++    		FSMovieObject object = (FSMovieObject)i.next();
++    		
++    		if (object.getType() == FSMovieObject.ShowFrame) {
++    			frames++;
++    		}
++    	}
++    	
++    	assertEquals(header.getSignature(), movie.getSignature());
++    	assertEquals(header.getVersion(), movie.getVersion());
++    	assertEquals(header.getMinX(), bounds.getMinX());
++    	assertEquals(header.getMinY(), bounds.getMinY());
++    	assertEquals(header.getMaxX(), bounds.getMaxX());
++    	assertEquals(header.getMaxY(), bounds.getMaxY());
++    	assertEquals(header.getFrameRate(), movie.getFrameRate(), 0.0f);
++    	assertEquals(header.getNumberOfFrames(), frames);
++    }
++}
++
+
+Added: trunk/src/com/flagstone/transform/test/FSLayerTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSLayerTest.java	2008-01-28 11:37:00 UTC (rev 291)
++++ trunk/src/com/flagstone/transform/test/FSLayerTest.java	2008-01-30 11:53:28 UTC (rev 292)
+@@ -0,0 +1,305 @@
++/*
++ * FSLayerTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.util.ArrayList;
++
++import com.flagstone.transform.FSLayer;
++import com.flagstone.transform.FSMovie;
++import com.flagstone.transform.FSBounds;
++import com.flagstone.transform.FSColorTransform;
++import com.flagstone.transform.FSCoordTransform;
++import com.flagstone.transform.FSDefineShape;
++import com.flagstone.transform.FSPlaceObject2;
++import com.flagstone.transform.FSRemoveObject2;
++import com.flagstone.transform.FSShowFrame;
++import com.flagstone.transform.FSShape;
++
++import junit.framework.TestCase;
++
++public class FSLayerTest extends TestCase
++{
++	private FSDefineShape shape;
++	
++	protected void setUp()
++	{
++		shape = new FSDefineShape(1, new FSBounds(0,0,0,0), new ArrayList(), new ArrayList(), new FSShape());	
++	}
++	
++	public void testMerge()
++	{
++		ArrayList layers = new ArrayList();
++		
++		FSLayer one = new FSLayer(1);
++		one.select(1);
++		one.move(1, 1);
++		one.show();
++
++		FSLayer two = new FSLayer(2);	
++		two.select(2);
++		two.move(2, 2);
++		two.show();
++		two.move(3, 3);
++		two.show();
++		
++		layers.add(two);
++		
++		FSLayer three = new FSLayer(3);	
++		three.select(3);
++		three.move(3, 3);
++		three.show();
++		three.move(4, 4);
++		three.show();
++		three.move(5, 5);
++		three.show();
++		
++		layers.add(three);
++		
++		FSMovie movie = new FSMovie();
++		movie.add(new FSPlaceObject2(1, 1, 1, 3));
++		movie.add(new FSPlaceObject2(2, 2, 2, 2));
++		movie.add(new FSPlaceObject2(3, 3, 3, 3));
++		movie.add(new FSShowFrame());
++		movie.add(new FSPlaceObject2(2, 3, 3));
++		movie.add(new FSPlaceObject2(3, 4, 4));
++		movie.add(new FSShowFrame());
++		movie.add(new FSPlaceObject2(3, 5, 5));
++		movie.add(new FSShowFrame());
++				
++		assertEquals(FSLayer.merge(layers), movie.getObjects());
++	}
++	
++	public void testCreate()
++	{
++		int number = 1;
++		
++		FSLayer layer = new FSLayer(number);
++		
++	    assertEquals(layer.getLayer(), number);
++	    assertEquals(layer.getIdentifier(), 0);
++	    assertEquals(layer.getObjects().size(), 0);
++	}
++	
++	public void testAdd()
++	{
++		int number = 1;
++		
++		FSLayer layer = new FSLayer(number);
++		layer.add(shape);
++		
++	    assertEquals(layer.getIdentifier(), 0);
++	    assertEquals(layer.getObjects().size(), 1);
++	}
++	
++	public void testSelectIdentifier()
++	{
++		int number = 1;
++		
++		FSLayer layer = new FSLayer(number);	
++		layer.add(shape);
++		layer.select(shape.getIdentifier());
++		
++	    assertEquals(layer.getIdentifier(), shape.getIdentifier());
++	    assertEquals(layer.getObjects().size(), 2);
++	}
++	
++	public void testSelectObject()
++	{
++		int number = 1;
++		
++		FSLayer layer = new FSLayer(number);	
++		layer.select(shape);
++		
++	    assertEquals(layer.getIdentifier(), shape.getIdentifier());
++	    assertEquals(layer.getObjects().size(), 2);
++	}
++	
++	public void testNew()
++	{
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		
++		ArrayList array = layer.getObjects();
++		FSPlaceObject2 place = (FSPlaceObject2)array.get(1);
++
++	    assertEquals(place.getPlaceType(), FSPlaceObject2.New);
++	}
++	
++	public void testModify()
++	{
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.show();
++		layer.move(10, 10);
++		
++		ArrayList array = layer.getObjects();
++		FSPlaceObject2 place = (FSPlaceObject2)array.get(4);
++		
++	    assertEquals(place.getPlaceType(), FSPlaceObject2.Modify);
++	}
++	
++	public void testReplace()
++	{
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.show();
++		layer.move(10, 10);
++		layer.replace(shape.getIdentifier());
++		
++		ArrayList array = layer.getObjects();
++		FSPlaceObject2 place = (FSPlaceObject2)array.get(4);
++		
++	    assertEquals(place.getPlaceType(), FSPlaceObject2.Replace);
++	}
++	
++	public void testRemove()
++	{
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.show();
++		layer.remove();
++		
++	    assertEquals(layer.getObjects().get(4), new FSRemoveObject2(layer.getLayer()));
++	}
++	
++	public void testShow()
++	{
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.show();
++		
++	    assertEquals(layer.getObjects().size(), 3);
++	    assertEquals(layer.getObjects().get(2), new FSShowFrame());
++	    
++	    layer.show(5);
++		
++	    assertEquals(layer.getObjects().size(), 8);
++	}
++	
++	public void testMove()
++	{
++		int x = 10;
++		int y = 10;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.move(-x,-y);
++		layer.move(x,y);
++	    
++	    assertEquals(layer.getObjects().get(1), new FSPlaceObject2(shape.getIdentifier(), layer.getLayer(), x, y));
++	}
++	
++	public void testColor()
++	{
++		int r = 0x33;
++		int g = 0x66;
++		int b = 0x99;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.color(r,g,b);
++	    
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getColorTransform(), new FSColorTransform(r,g,b));
++	}
++	
++	public void testTransparentColor()
++	{
++		int r = 0x33;
++		int g = 0x66;
++		int b = 0x99;
++		int a = 0xCC;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.color(r,g,b,a);
++	    
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getColorTransform(), new FSColorTransform(r,g,b,a));
++	}
++	
++	public void testClip()
++	{
++		int depth = 1;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.clip(depth);
++
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getClippingDepth(), depth);
++	}
++	
++	public void testMorph()
++	{
++		float ratio = 0.25f;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.morph(ratio);
++
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getRatio(), ratio, 0.0f);
++	}
++	
++	public void testName()
++	{
++		String label = &quot;test&quot;;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.name(label);
++
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getName(), label);
++	}
++	
++	public void testChangeColor()
++	{
++		int r = 0x33;
++		int g = 0x66;
++		int b = 0x99;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.change(new FSColorTransform(r,g,b));
++	    
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getColorTransform(), new FSColorTransform(r,g,b));
++	}
++	
++	public void testChangeLocation()
++	{
++		int x = 10;
++		int y = 10;
++		
++		FSLayer layer = new FSLayer(1);	
++		layer.select(shape);
++		layer.change(new FSCoordTransform(x,y));
++	    
++	    assertEquals(((FSPlaceObject2)layer.getObjects().get(1)).getTransform(), new FSCoordTransform(x,y));
++	}
++	
++}
++
+
+Added: trunk/src/com/flagstone/transform/test/UtilityTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/UtilityTests.java	2008-01-28 11:37:00 UTC (rev 291)
++++ trunk/src/com/flagstone/transform/test/UtilityTests.java	2008-01-30 11:53:28 UTC (rev 292)
+@@ -0,0 +1,14 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class UtilityTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSHeaderTest.class);
++        return suite;
++    }
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000227.html">[Transform-svn] r291 - trunk/doc/releases
+</A></li>
+	<LI>Next message: <A HREF="000229.html">[Transform-svn] r293 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#230">[ date ]</a>
+              <a href="thread.html#230">[ thread ]</a>
+              <a href="subject.html#230">[ subject ]</a>
+              <a href="author.html#230">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r445 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r445%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804092115.m39LFR8v014061%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000380.html">
+   <LINK REL="Next"  HREF="000382.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r445 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r445%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804092115.m39LFR8v014061%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r445 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  9 23:15:27 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000380.html">[Transform-svn] r444 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000382.html">[Transform-svn] r446 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#381">[ date ]</a>
+              <a href="thread.html#381">[ thread ]</a>
+              <a href="subject.html#381">[ subject ]</a>
+              <a href="author.html#381">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-09 23:15:25 +0200 (Wed, 09 Apr 2008)
+New Revision: 445
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSColor.java
+Log:
+Added two methods to return the colour as an integer.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSColor.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSColor.java	2008-04-09 21:14:46 UTC (rev 444)
++++ dev/dev-3-0/src/com/flagstone/transform/FSColor.java	2008-04-09 21:15:25 UTC (rev 445)
+@@ -251,6 +251,16 @@
+ 		return alpha;
+ 	}
+ 
++	public int getRGB()
++	{
++    	return (red &lt;&lt; 16) + (green &lt;&lt; 8) + blue;
++	}
++
++	public int getRGBA()
++	{
++    	return (red &lt;&lt; 24) + (green &lt;&lt; 16) + (blue &lt;&lt; 8) + alpha;
++	}
++
+ 	/**
+ 	 * Set the value for the red colour channel.
+ 	 * 
+@@ -352,7 +362,22 @@
+ 		setBlue(b);
+ 		setAlpha(a);
+ 	}
++	
++	public void setRGB(int rgb)
++	{
++		red = (rgb &gt;&gt; 16) &amp; 0x00FF;
++		green = (rgb &gt;&gt; 8) &amp; 0x00FF;
++		blue = rgb &amp; 0x00FF;
++	}
+ 
++	public void setRGBA(int rgba)
++	{
++		red = (rgba &gt;&gt; 24) &amp; 0x00FF;
++		green = (rgba &gt;&gt; 16) &amp; 0x00FF;
++		blue = (rgba &gt;&gt; 16) &amp; 0x00FF;
++		alpha = rgba &amp; 0x00FF;
++	}
++	
+ 	/**
+ 	 * Returns true if anObject is equal to this one. Objects are considered
+ 	 * equal if they would generate identical binary data when they are encoded
+@@ -418,7 +443,7 @@
+ 
+ 		return buffer.toString();
+ 	}
+-
++	
+ 	public int length(FSContext context)
+ 	{
+ 		return (context.transparent) ? 4 : 3;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000380.html">[Transform-svn] r444 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000382.html">[Transform-svn] r446 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#381">[ date ]</a>
+              <a href="thread.html#381">[ thread ]</a>
+              <a href="subject.html#381">[ subject ]</a>
+              <a href="author.html#381">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r285 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r285%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200801281112.m0SBCpis018018%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000222.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r285 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r285%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200801281112.m0SBCpis018018%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r285 - trunk/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Mon Jan 28 12:12:51 CET 2008</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000222.html">[Transform-svn] r286 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#221">[ date ]</a>
+              <a href="thread.html#221">[ thread ]</a>
+              <a href="subject.html#221">[ subject ]</a>
+              <a href="author.html#221">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-28 12:12:48 +0100 (Mon, 28 Jan 2008)
+New Revision: 285
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+Log:
+polygon how uses absolute coordinates. rpolygon was added to draw shapes using relative coordinates.
+
+Modified: trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2007-12-31 14:58:06 UTC (rev 284)
++++ trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2008-01-28 11:12:48 UTC (rev 285)
+@@ -984,7 +984,7 @@
+      * @param points and array of coordinate pairs. The first pair of points defines the coordinates
+      * of a move operation, successive pairs define the coordinates for relative lines.
+      */
+-    public void polygon(int[] points)
++    public void rpolygon(int[] points)
+     {
+         int i;
+         int length = points.length;
+@@ -999,7 +999,35 @@
+             
+         closePath();
+     }
++    /**
++     * Create a closed shape with vertices defines by pairs of coordinates from the array argument.
++     * The first pair of points in the array specifies a move. Line segments a drawn using 
++     * abolute coordinates. The current point which is updated after each segment is drawn.
++     * 
++     * If the number of points is an odd number then the last point will be ignored.
++     * 
++     * If the COORDINATES_ARE_PIXELS attribute is true then the coordinates are specified in pixels,
++     * otherwise the coordinates are specified in twips.
++     * 
++     * @param points and array of coordinate pairs. The first pair of points defines the coordinates
++     * of a move operation, successive pairs define the coordinates of the lines.
++     */
++    public void polygon(int[] points)
++    {
++        int i;
++        int length = points.length;
++        
++        if (length % 2 == 1)
++            length -= 1;
++        
++        move(points[0], points[1]);
+ 
++        for (i=2; i&lt;length; i+=2)
++            line(points[i], points[i+1]);
++            
++        closePath();
++    }
++
+     private void setInitial(int x, int y)
+     {
+         initialX = x;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000222.html">[Transform-svn] r286 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#221">[ date ]</a>
+              <a href="thread.html#221">[ thread ]</a>
+              <a href="subject.html#221">[ subject ]</a>
+              <a href="author.html#221">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

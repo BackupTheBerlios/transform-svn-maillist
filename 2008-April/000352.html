@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r416 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r416%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011531.m31FV5wT011930%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000351.html">
+   <LINK REL="Next"  HREF="000353.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r416 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r416%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011531.m31FV5wT011930%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r416 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 17:31:05 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000351.html">[Transform-svn] r415 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000353.html">[Transform-svn] r417 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#352">[ date ]</a>
+              <a href="thread.html#352">[ thread ]</a>
+              <a href="subject.html#352">[ subject ]</a>
+              <a href="author.html#352">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 17:31:03 +0200 (Tue, 01 Apr 2008)
+New Revision: 416
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java
+Log:
+Array of image blocks is now correctly typed.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-04-01 15:28:43 UTC (rev 415)
++++ dev/dev-3-0/src/com/flagstone/transform/FSScreenVideoPacket.java	2008-04-01 15:31:03 UTC (rev 416)
+@@ -51,7 +51,7 @@
+ 
+ 	private int imageHeight;
+ 
+-	private ArrayList imageBlocks;
++	private ArrayList&lt;FSImageBlock&gt; imageBlocks;
+ 
+ 	public FSScreenVideoPacket(byte[] data)
+ 	{
+@@ -60,7 +60,7 @@
+ 
+ 	public FSScreenVideoPacket(boolean key, int codec, int imageWidth,
+ 								int imageHeight, int blockWidth,
+-								int blockHeight, ArrayList blocks)
++								int blockHeight, ArrayList&lt;FSImageBlock&gt; blocks)
+ 	{
+ 		setKeyFrame(key);
+ 		setCodec(codec);
+@@ -136,14 +136,14 @@
+ 		blockHeight = height;
+ 	}
+ 
+-	public ArrayList getImageBlocks()
++	public ArrayList&lt;FSImageBlock&gt; getImageBlocks()
+ 	{
+ 		return imageBlocks;
+ 	}
+ 
+-	public void setImageBlocks(ArrayList blocks)
++	public void setImageBlocks(ArrayList&lt;FSImageBlock&gt; blocks)
+ 	{
+-		imageBlocks = new ArrayList(blocks);
++		imageBlocks = new ArrayList&lt;FSImageBlock&gt;(blocks);
+ 	}
+ 
+ 	public Object clone()
+@@ -154,11 +154,12 @@
+ 		{
+ 			anObject = (FSScreenVideoPacket) super.clone();
+ 
+-			anObject.imageBlocks = new ArrayList();
++			anObject.imageBlocks = new ArrayList&lt;FSImageBlock&gt;();
+ 
+-			for (Iterator i = imageBlocks.iterator(); i.hasNext();)
+-				anObject.imageBlocks.add(((FSImageBlock) i.next()).clone());
+-		} catch (CloneNotSupportedException e)
++			for (Iterator&lt;FSImageBlock&gt; i = imageBlocks.iterator(); i.hasNext();)
++				anObject.imageBlocks.add((FSImageBlock) i.next().clone());
++		} 
++		catch (CloneNotSupportedException e)
+ 		{
+ 			throw new InternalError();
+ 		}
+@@ -190,9 +191,9 @@
+ 
+ 		FSImageBlock block;
+ 
+-		for (Iterator i = imageBlocks.iterator(); i.hasNext();)
++		for (Iterator&lt;FSImageBlock&gt; i = imageBlocks.iterator(); i.hasNext();)
+ 		{
+-			block = (FSImageBlock) i.next();
++			block = i.next();
+ 
+ 			length += 2;
+ 
+@@ -221,9 +222,9 @@
+ 		FSImageBlock block;
+ 		byte[] blockData;
+ 
+-		for (Iterator i = imageBlocks.iterator(); i.hasNext();)
++		for (Iterator&lt;FSImageBlock&gt; i = imageBlocks.iterator(); i.hasNext();)
+ 		{
+-			block = (FSImageBlock) i.next();
++			block = i.next();
+ 
+ 			if (block.isEmpty())
+ 			{
+@@ -259,7 +260,7 @@
+ 		int height = imageHeight;
+ 		int width = imageWidth;
+ 
+-		imageBlocks = new ArrayList(rows * columns);
++		imageBlocks = new ArrayList&lt;FSImageBlock&gt;(rows * columns);
+ 		FSImageBlock block;
+ 
+ 		for (int i = 0; i &lt; rows; i++, height -= blockHeight)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000351.html">[Transform-svn] r415 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000353.html">[Transform-svn] r417 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#352">[ date ]</a>
+              <a href="thread.html#352">[ thread ]</a>
+              <a href="subject.html#352">[ subject ]</a>
+              <a href="author.html#352">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r142 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r142%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200603311324.k2VDO6fB027908%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000081.html">
+   <LINK REL="Next"  HREF="000083.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r142 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r142%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200603311324.k2VDO6fB027908%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r142 - trunk/src/com/flagstone/transform/test">smackay at berlios.de
+       </A><BR>
+    <I>Fri Mar 31 15:24:06 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000081.html">[Transform-svn] r141 - trunk/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000083.html">[Transform-svn] r143 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-31 15:24:00 +0200 (Fri, 31 Mar 2006)
+New Revision: 142
+
+Modified:
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+Log:
+Added test and code to existing tests to draw a rectangle 
+tracing the bounding box for characters and text blocks. 
+
+Modified: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-03-31 13:22:05 UTC (rev 141)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-03-31 13:24:00 UTC (rev 142)
+@@ -99,6 +99,28 @@
+     /**
+      * @testng.test dataProvider=&quot;locales&quot;
+      */
++    public void boundedCharacters(Locale locale, String name)
++    {
++        try 
++        {
++            File destFile = new File(destDir, name+&quot;.swf&quot;);
++            
++            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++         
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            encodeBoundedCharacterSet(textGenerator, 
++                FSCharacterTable.characterSetForLocale(locale), destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
++     * @testng.test dataProvider=&quot;locales&quot;
++     */
+     public void displayLocales(Locale locale, String name)
+     {
+         try 
+@@ -268,8 +290,84 @@
+         movie.add(font);
+         movie.add(text);
+         movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++
++        FSShapeConstructor path = new FSShapeConstructor();
++        int textWidth = text.getBounds().getWidth();
++        int textHeight = text.getBounds().getHeight();
++        int shapeId = movie.newIdentifier();
++
++        path.add(new FSSolidLine(1, FSColorTable.darkblue()));
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++                        textWidth, textHeight);
++        
++        movie.add(path.defineShape(shapeId));
++        movie.add(new FSPlaceObject2(shapeId, 2, margin+textWidth/2, margin+textHeight/2));
+         movie.add(new FSShowFrame());
+ 
+         movie.encodeToFile(file.getPath());
+     }
++    private void encodeBoundedCharacterSet(FSTextConstructor textGenerator, char[] chars, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;        
++        int margin = fontSize;
++        int charsPerLine = 32;
++        int layer = 1;
++                
++        FSMovie movie = new FSMovie();
++        FSShapeConstructor path = new FSShapeConstructor();
++         
++        textGenerator.willDisplay(chars);
++        
++        int maxWidth = 0;                        
++        int x = margin;
++        int y = margin;
++
++        int fontId = movie.newIdentifier();
++        FSDefineFont2 font = textGenerator.defineFont();
++        font.setIdentifier(fontId);        
++
++        movie.setFrameSize(new FSBounds(0, 0, 0, 0));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(font);
++
++        for (int i=0; i&lt;chars.length; i++)
++        {
++            FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), String.valueOf(chars[i]), fontSize, FSColorTable.black());        
++
++            int textWidth = text.getBounds().getWidth();
++            int textHeight = text.getBounds().getHeight();
++            int advance = textGenerator.advanceForChar(chars[i], fontSize) + 40;
++                
++            int shapeId = movie.newIdentifier();
++            
++            path.newPath();
++            path.add(new FSSolidLine(1, FSColorTable.darkblue()));
++            path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++                            textWidth, textHeight);
++            
++            movie.add(path.defineShape(shapeId));
++            movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));        
++             
++            movie.add(text);
++            movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
++
++            if (i % charsPerLine == charsPerLine-1)
++            {
++                maxWidth = x+advance+margin &gt; maxWidth ? x+advance+margin : maxWidth;
++                
++                x = margin;
++                y += lineSpacing;
++            }
++            else
++            {
++                x += advance;
++            }
++        }
++        movie.setFrameSize(new FSBounds(0, 0, maxWidth, y+margin));
++
++        movie.add(new FSShowFrame());
++        movie.encodeToFile(file.getPath());
++    }
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000081.html">[Transform-svn] r141 - trunk/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000083.html">[Transform-svn] r143 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

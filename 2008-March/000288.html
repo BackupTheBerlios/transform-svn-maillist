@@ -1,0 +1,3993 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r352 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r352%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181356.m2IDu9xe023466%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000287.html">
+   <LINK REL="Next"  HREF="000289.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r352 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r352%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181356.m2IDu9xe023466%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r352 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 14:56:09 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000287.html">[Transform-svn] r351 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000289.html">[Transform-svn] r353 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#288">[ date ]</a>
+              <a href="thread.html#288">[ thread ]</a>
+              <a href="subject.html#288">[ subject ]</a>
+              <a href="author.html#288">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 14:55:59 +0100 (Tue, 18 Mar 2008)
+New Revision: 352
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSBitmapFill.java
+   dev/dev-2-4/src/com/flagstone/transform/FSGradient.java
+   dev/dev-2-4/src/com/flagstone/transform/FSGradientFill.java
+   dev/dev-2-4/src/com/flagstone/transform/FSMorphBitmapFill.java
+   dev/dev-2-4/src/com/flagstone/transform/FSMorphGradient.java
+   dev/dev-2-4/src/com/flagstone/transform/FSMorphGradientFill.java
+   dev/dev-2-4/src/com/flagstone/transform/FSMorphSolidFill.java
+   dev/dev-2-4/src/com/flagstone/transform/FSSolidFill.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSBitmapFill.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSBitmapFill.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSBitmapFill.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -31,232 +31,296 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSBitmapFill class is used to fill a shape with an image. 
+- 
+-&lt;p&gt;Two types of bitmap fill are supported:&lt;/p&gt;
++ * The FSBitmapFill class is used to fill a shape with an image.
++ * 
++ * &lt;p&gt;
++ * Two types of bitmap fill are supported:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Clipped&lt;/td&gt;
++ * &lt;td&gt;If the area to be filled is larger than the image then the colour at the
++ * edge of the image is used to fill the remainder of the shape.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Tiled&lt;/td&gt;
++ * &lt;td&gt;If the area to be filled is larger than the image then the image is
++ * tiled across the area to be filled.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Unsmoothed Clipped&lt;/td&gt;
++ * &lt;td&gt;If the area to be filled is larger than the image then the colour at the
++ * edge of the image is used to fill the remainder of the shape.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Unsmoothed Tiled&lt;/td&gt;
++ * &lt;td&gt;If the area to be filled is larger than the image then the image is
++ * tiled without smoothing to fill the area.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * &lt;!-- Blank paragraph to provide spacing between tables --&gt;
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;The type of bitmap fill, either FSFillStyle.Tiled or
++ * FSFillStyle.Clipped.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;identifier&lt;/td&gt;
++ * &lt;td&gt;The identifier, in the range 1..65535, of the object that contains the
++ * image that will be displayed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;transform&lt;/td&gt;
++ * &lt;td&gt;An FSCoordTransform object that defines the coordinate transformation
++ * that will be applied to the image, to change its size, location relative to
++ * the origin of the shape, orientation, etc., when it is displayed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The type attribute may be used when iterating through an array of fill style
++ * objects to identify the type of fill style without using run-time type
++ * checking.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * When an image is loaded its width and height default to twips rather than
++ * pixels. An image 300 x 200 pixels will be displayed as 300 x 200 twips (15 x
++ * 10 pixels). Scaling the image by 20 (20 twips = 1 pixel) using the
++ * FSCoordTransform object will restore it to its original size.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The image is drawn with the top left corner placed at the origin (0, 0) of
++ * the shape being filled. Depending on how the shape is drawn the coordinate
++ * transform may also need to specify a translation to place the image at the
++ * desired location.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;When To Use&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * In addition to filling shapes with images that represent textures or complex
++ * fill patterns the FSBitmapFill class is required to display any image in a
++ * Flash file - image can only be displayed in Flash inside a shape definition.
++ * The classes that define images only contain the image data, not how it is
++ * displayed. To simply display an image, the selected line style of a shape may
++ * be set to zero so that the image is displayed without a border.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The following code fragment centres the image in the centre of the shape -
++ * assuming the shape is drawn with the origin at the centre. The transform
++ * constructor allows the translation and scaling transform to be specified in a
++ * single step rather than compositing the transforms.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSCoordTransform composite = new FSCoordTransform(-imageWidth / 2,
++ * 				-imageHeight / 2, 20.0, 20.0);
++ * 
++ * fillStyles.add(new FSBitmapFill(FSFillStyle.Clipped, imageId, composite));
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSBitmapFill class represents the FillStyle structure from the Macromedia
++ * Flash (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSBitmapFill extends FSFillStyle
++{
++	private int identifier;
++	private FSCoordTransform transform;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSBitmapFill object an initialise it with values decoded
++	 * from an encoded FSBitmapFill object.
++	 * 
++	 * @param coder
++	 *            an FSCoder object containing an FSBitmapFill encoded as binary
++	 *            data.
++	 */
++	public FSBitmapFill(FSCoder coder)
++	{
++		super(0);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;Clipped&lt;/td&gt;
+-&lt;td&gt;If the area to be filled is larger than the image then the colour at the edge 
+-of the image is used to fill the remainder of the shape.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSBitmapFill object, specifying whether the image is tiled
++	 * or clipped within the shape, the identifier of the object containing the
++	 * image data and the coordinate transform used to change the appearance of
++	 * the image and place it relative to the origin of the shape.
++	 * 
++	 * @param aType
++	 *            the type of bitmap fill, FSFillStyle.Clipped or
++	 *            FSFillStyle.Tiled.
++	 * 
++	 * @param anIdentifier
++	 *            the identifier of the object containing the image to be
++	 *            displayed.
++	 * 
++	 * @param aTransform
++	 *            an FSCoordTransform object that changes the appearance of the
++	 *            image.
++	 */
++	public FSBitmapFill(int aType, int anIdentifier, FSCoordTransform aTransform)
++	{
++		super(aType);
++		setIdentifier(anIdentifier);
++		setTransform(aTransform);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;Tiled&lt;/td&gt;
+-&lt;td&gt;If the area to be filled is larger than the image then the image is tiled 
+-across the area to be filled.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Construct an FSBitmapFill object by copying an existing object.
++	 * 
++	 * @param obj
++	 *            an FSBitmapFill object.
++	 */
++	public FSBitmapFill(FSBitmapFill obj)
++	{
++		super(obj.type);
++		identifier = obj.identifier;
++		transform = new FSCoordTransform(obj.transform);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td valign=&quot;top&quot;&gt;Unsmoothed Clipped&lt;/td&gt;
+-&lt;td&gt;If the area to be filled is larger than the image then the colour at the edge 
+-of the image is used to fill the remainder of the shape.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the identifier of the object containing the image to be displayed.
++	 * 
++	 * @return the identifier of the image object to be displayed.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td valign=&quot;top&quot;&gt;Unsmoothed Tiled&lt;/td&gt;
+-&lt;td&gt;If the area to be filled is larger than the image then the image is tiled 
+-without smoothing to fill the area.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Sets the identifier of the object containing the image to be displayed.
++	 * 
++	 * @param anIdentifier
++	 *            the identifier of the object containing the image to be
++	 *            displayed.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 1..65535.
++	 */
++	public void setIdentifier(int anIdentifier)
++	{
++		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
++		}
++		identifier = anIdentifier;
++	}
+ 
++	/**
++	 * Gets the coordinate transform applied to the image.
++	 * 
++	 * @return the transform that will be applied to the image when it is
++	 *         displayed.
++	 */
++	public FSCoordTransform getTransform()
++	{
++		return transform;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Sets the coordinate transform applied to the image to display it inside
++	 * the shape.
++	 * 
++	 * @param aTransform
++	 *            an FSCoordTransform object that changes the appearance and
++	 *            location of the image inside the shape.
++	 *          
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform cannot be null.&quot;);
++		}
++		transform = aTransform;
++	}
+ 
+-&lt;p&gt;&lt;!-- Blank paragraph to provide spacing between tables --&gt;&lt;/p&gt;
++	public Object clone()
++	{
++		FSBitmapFill obj = (FSBitmapFill)super.clone();
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++		obj.transform = (FSCoordTransform)transform.clone();
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++		return obj;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBitmapFill_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The type of bitmap fill, either FSFillStyle.Tiled or FSFillStyle.Clipped.&lt;/td&gt;
+-&lt;/tr&gt;
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBitmapFill_1&quot;&gt;identifier&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The identifier, in the range 1..65535, of the object that contains the image that will be displayed.&lt;/td&gt;
+-&lt;/tr&gt;
++		if (super.equals(obj))
++		{
++			FSBitmapFill fill = (FSBitmapFill)obj;
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBitmapFill_2&quot;&gt;transform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An FSCoordTransform object that defines the coordinate transformation that will be applied to the image, to change its size, location relative to the origin of the shape, orientation, etc., when it is displayed.&lt;/td&gt;
+-&lt;/tr&gt;
++			result = identifier == fill.identifier;
++			result = result &amp;&amp; transform.equals(fill.transform);
++		}
++		return result;
++	}
+ 
+-&lt;/table&gt;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-&lt;p&gt;The type attribute may be used when iterating through an array of fill style objects to identify the type of fill style without using run-time type checking.&lt;/p&gt;
++		buffer.append(&quot;FSBitmapFill: { &quot;);
++		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
++		buffer.append(&quot;transform = &quot;).append(transform.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++		
++		return buffer.toString();
++	}
+ 
+-&lt;p&gt;When an image is loaded its width and height default to twips rather than pixels. An image 300 x 200 pixels will be displayed as 300 x 200 twips (15 x 10 pixels). Scaling the image by 20 (20 twips = 1 pixel) using the FSCoordTransform object will restore it to its original size.&lt;/p&gt;
++	public int length(FSCoder coder)
++	{
++		int length = super.length(coder);
+ 
+-&lt;p&gt;The image is drawn with the top left corner placed at the origin (0, 0) of the shape being filled. Depending on how the shape is drawn the coordinate transform may also need to specify a translation to place the image at the desired location.&lt;/p&gt;
++		length += 2 + transform.length(coder);
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;When To Use&lt;/h1&gt;
++		return length;
++	}
+ 
+-&lt;p&gt;In addition to filling shapes with images that represent textures or complex fill patterns the FSBitmapFill class is required to display any image in a Flash file - image can only be displayed in Flash inside a shape definition. The classes that define images only contain the image data, not how it is displayed. To simply display an image, the selected line style of a shape may be set to zero so that the image is displayed without a border.&lt;/p&gt;
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++		coder.writeWord(identifier, 2);
++		transform.encode(coder);
++	}
+ 
+-&lt;p&gt;The following code fragment centres the image in the centre of the shape - assuming  the shape is drawn with the origin at the centre. The transform constructor allows the translation and scaling transform to be specified in a single step rather than compositing the transforms.&lt;/p&gt;
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
+ 
+-&lt;pre&gt;
+-FSCoordTransform composite = new FSCoordTransform(-imageWidth/2, -imageHeight/2, 20.0, 20.0);
+-
+-fillStyles.add(new FSBitmapFill(FSFillStyle.Clipped, imageId, composite));
+-&lt;/pre&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSBitmapFill class represents the FillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSBitmapFill extends FSFillStyle
+-{
+-    private int identifier = 0;
+-    private FSCoordTransform transform = null;
+-    
+-    /**
+-     * Construct an FSBitmapFill object an initialize it with values decoded 
+-     * from an encoded FSBitmapFill object.
+-     * 
+-     * @param coder an FSCoder object containing an FSBitmapFill encoded as 
+-     * binary data.
+-     */
+-    public FSBitmapFill(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** 
+-     * Constructs an FSBitmapFill object, specifying whether the image is tiled
+-     * or clipped within the shape, the identifier of the object containing the
+-     * image data and the coordinate transform used to change the appearance of
+-     * the image and place it relative to the origin of the shape.
+- 
+-        @param aType the type of bitmap fill, FSFillStyle.Clipped or FSFillStyle.Tiled.
+-
+-        @param anIdentifier the identifier of the object containing the image to 
+-        be displayed.
+-        
+-        @param aTransform an FSCoordTransform object that changes the appearance 
+-        of the image.
+-        */
+-    public FSBitmapFill(int aType, int anIdentifier, FSCoordTransform aTransform)
+-    {
+-        super(aType);
+-        
+-        setType(aType);
+-        setIdentifier(anIdentifier);
+-        setTransform(aTransform);
+-    }
+-    /**
+-     * Construct an FSBitmapFill object by copying an existing object.
+-     * 
+-     * @param obj an FSBitmapFill object. 
+-     */
+-    public FSBitmapFill(FSBitmapFill obj)
+-    {
+-        identifier = obj.identifier;
+-        transform = new FSCoordTransform(obj.transform);
+-    }   
+-
+-    /** Gets the identifier of the object containing the image to be displayed.
+-
+-        @return the identifier of the image object to be displayed.
+-        */
+-    public int getIdentifier() { return identifier; }
+-
+-    /** Sets the identifier of the object containing the image  to be displayed. 
+-
+-        @param anIdentifier the identifier of the object containing the image to 
+-        be displayed.
+-        */
+-    public void setIdentifier(int anIdentifier)
+-    {
+-        identifier = anIdentifier;
+-    }
+-
+-    /** Gets the coordinate transform applied to the image.
+-
+-        @return the transform that will be applied to the image when it is displayed.
+-        */
+-    public FSCoordTransform getTransform() { return transform; }
+-
+-    /** 
+-     * Sets the coordinate transform applied to the image to display it inside 
+-     * the shape.
+-
+-        @param aTransform an FSCoordTransform object that changes the appearance 
+-        and location of the image inside the shape.
+-        */
+-    public void setTransform(FSCoordTransform aTransform)
+-    {
+-        transform = aTransform;
+-    }
+-
+-    public Object clone()
+-    {
+-        FSBitmapFill anObject = (FSBitmapFill)(super.clone());
+-        
+-        anObject.transform = (transform != null) ? (FSCoordTransform)(transform.clone()) : null;
+-        
+-        return anObject;
+-    }
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSBitmapFill typedObject = (FSBitmapFill)anObject;
+-            
+-            result = identifier == typedObject.identifier;
+-
+-            if (transform != null)
+-                result = result &amp;&amp; transform.equals(typedObject.transform);
+-            else
+-                result = result &amp;&amp; transform == typedObject.transform;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;identifier&quot;, identifier);
+-            Transform.append(buffer, &quot;transform&quot;, transform, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = super.length(coder);
+-
+-        length += 2;
+-        length += transform.length(coder);
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-
+-        coder.writeWord(identifier, 2);
+-        transform.encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-
+-        identifier = coder.readWord(2, false);
+-        transform = new FSCoordTransform(coder);
+-    }
++		identifier = coder.readWord(2, false);
++		transform = new FSCoordTransform(coder);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSGradient.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSGradient.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSGradient.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -31,169 +31,237 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSGradient defines a control point that is used to specify how a gradient colour is displayed. 
++ * FSGradient defines a control point that is used to specify how a gradient
++ * colour is displayed.
++ * 
++ * &lt;p&gt;
++ * Two or more control points are used to define how the colour changes across
++ * the gradient square. Each control point specifies:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;ratio&lt;/td&gt;
++ * &lt;td&gt;The location of the control point across the gradient square.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;color&lt;/td&gt;
++ * &lt;td&gt;The colour displayed at the control point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The location of the control point is defined by a ratio - a number between 0
++ * and 255 - that specifies the relative location in the square. For Linear
++ * Gradient Fills a ratio of zero is mapped to the left side of the gradient
++ * square and 255 is mapped to the right side of the square. For Radial Gradient
++ * Fills a ratio of zero is mapped to the centre of the gradient square and 255
++ * is mapped to the edge of the largest circle that fits inside the gradient
++ * square. A ratio is used rather than specifying coordinates within the
++ * gradient square as the coordinate space is transformed to fit the shape that
++ * the gradient is being displayed in.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Note that the object used to create the shape definition determines whether
++ * the alpha channel is encoded in the gradient colours. Simply specifying the
++ * level of transparency in the FSColor object is not sufficient.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSGradient class represents the GradientRecord structure from the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 1.
++ * &lt;/p&gt;
++ */
++public class FSGradient implements Cloneable, Codeable
++{
++	private int ratio;
++	private FSColor color;
+ 
+-&lt;p&gt;Two or more control points are used to define how the colour changes across the gradient square. Each control point specifies:&lt;/p&gt;
++	/**
++	 * Construct an FSGradient object, initalizing it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSGradient(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSGradient object with the specified ratio and color.
++	 * 
++	 * @param aRatio
++	 *            the ratio along the gradient square.
++	 * @param aColor
++	 *            the color at the control point.
++	 */
++	public FSGradient(int aRatio, FSColor aColor)
++	{
++		setRatio(aRatio);
++		setColor(aColor);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSGradient object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSGradient object.
++	 */
++	public FSGradient(FSGradient obj)
++	{
++		ratio = obj.ratio;
++		color = new FSColor(obj.color);
++	}
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSGradient_0&quot;&gt;ratio&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The location of the control point across the gradient square.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the ratio that defines the relative point across the gradient
++	 * square.
++	 * 
++	 * @return the ratio where the control point is located.
++	 */
++	public int getRatio()
++	{
++		return ratio;
++	}
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSGradient_1&quot;&gt;color&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The colour displayed at the control point.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Gets the colour that is displayed at the control point across the
++	 * gradient square defined by the ratio.
++	 * 
++	 * @return the color at the control point.
++	 */
++	public FSColor getColor()
++	{
++		return color;
++	}
+ 
+-&lt;p&gt;The location of the control point is defined by a ratio - a number between 0 and 255 - that specifies the relative location in the square. For Linear Gradient Fills a ratio of zero is mapped to the left side of the gradient square and 255 is mapped to the right side of the square. For Radial Gradient Fills a ratio of zero is mapped to the centre of the gradient square and 255 is mapped to the edge of the largest circle that fits inside the gradient square. A ratio is used rather than specifying coordinates within the gradient square as the coordinate space is transformed to fit the shape that the gradient is being displayed in.&lt;/p&gt;
++	/**
++	 * Sets the ratio that defines the control point across the gradient square.
++	 * 
++	 * @param aNumber
++	 *            the ratio along the gradient square in the range 0..255.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 0..255.
++	 */
++	public void setRatio(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 255) {
++			throw new IllegalArgumentException(&quot;Ratio must be in the range: 0..255.&quot;);
++		}
++		ratio = aNumber;
++	}
+ 
+-&lt;p&gt;Note that the object used to create the shape definition determines whether the alpha channel is encoded in the gradient colours. Simply specifying the level of transparency in the FSColor object is not sufficient.&lt;/p&gt;
++	/**
++	 * Sets the colour that is displayed at the control point across the
++	 * gradient square.
++	 * 
++	 * @param aColor
++	 *            the color at the control point.
++	 *            
++	 * @throws NullPointerException if the colour object is null.
++	 */
++	public void setColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null.&quot;);
++		}
++		color = aColor;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Creates a deep copy of the entire object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		FSGradient obj = null;
+ 
+-&lt;p&gt;The FSGradient class represents the GradientRecord structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSGradient extends FSTransformObject
+-{
+-    private int ratio = 0;
+-    private FSColor color = null;
+-    
+-    /**
+-     * Construct an FSGradient object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSGradient(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSGradient object with the specified ratio and color.
++		try {
++			obj = (FSGradient)super.clone();
++			obj.color = (FSColor)color.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return obj;
++	}
+ 
+-        @param aRatio the ratio along the gradient square.
+-        @param aColor the color at the control point.
+-        */
+-    public FSGradient(int aRatio, FSColor aColor)
+-    {
+-        setRatio(aRatio);
+-        setColor(aColor);
+-    }
+-    /**
+-     * Constructs an FSGradient object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSGradient object.
+-     */
+-    public FSGradient(FSGradient obj)
+-    {
+-        ratio = obj.ratio;
+-        color = new FSColor(obj.color);
+-    }    
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-    /** Gets the ratio that defines the relative point across the gradient square.
++		if (obj == null) {
++			return false;
++		}
+ 
+-        @return the ratio where the control point is located.
+-        */
+-    public int getRatio() 
+-    {
+-        return ratio;
+-    }
++		if (obj == this) {
++			return true;
++		}
+ 
+-    /** Gets the colour that is displayed at the control point across the gradient square defined by the ratio.
++		if (obj instanceof FSGradient)
++		{
++			FSGradient gradient = (FSGradient) obj;
+ 
+-        @return the color at the control point.
+-        */
+-    public FSColor getColor() 
+-    {
+-        return color;
+-    }
++			result = ratio == gradient.ratio;
++			result = result &amp;&amp; color.equals(gradient.color);
++		}
++		return result;
++	}
+ 
+-    /** Sets the ratio that defines the control point across the gradient square.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @param aNumber the ratio along the gradient square.
+-        */
+-    public void setRatio(int aNumber)
+-    {
+-        ratio = aNumber;
+-    }
++		buffer.append(&quot;FSGradient: { &quot;);
++		buffer.append(&quot;ratio = &quot;).append(ratio).append(&quot;; &quot;);
++		buffer.append(&quot;color = &quot;).append(color.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++		
++		return buffer.toString();
++	}
+ 
+-    /** Sets the colour that is displayed at the control point across the gradient square.
++	public int length(FSCoder coder)
++	{
++		int length = 1;
+ 
+-        @param aColor the color at the control point.
+-        */
+-    public void setColor(FSColor aColor)
+-    {
+-        color = aColor;
+-    }
++		length += color.length(coder);
+ 
+-    public Object clone()
+-    {
+-        FSGradient anObject = (FSGradient)super.clone();
+-        
+-        anObject.color = (color != null) ? (FSColor)color.clone() : null;
++		return length;
++	}
+ 
+-        return anObject;
+-    }
++	public void encode(FSCoder coder)
++	{
++		coder.writeByte(ratio);
++		color.encode(coder);
++	}
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSGradient typedObject = (FSGradient)anObject;
+-            
+-            result = ratio == typedObject.ratio;
+-
+-            if (color != null)
+-                result = result &amp;&amp; color.equals(typedObject.color);
+-            else
+-                result = result &amp;&amp; color == typedObject.color;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;ratio&quot;, ratio);
+-            Transform.append(buffer, &quot;color&quot;, color, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = 1;
+-    
+-        length += color.length(coder);
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        coder.writeWord(ratio, 1);
+-        color.encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        ratio = coder.readWord(1, false);
+-        color = new FSColor(coder);
+-    }
++	public void decode(FSCoder coder)
++	{
++		ratio = coder.readByte();
++		color = new FSColor(coder);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSGradientFill.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSGradientFill.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -33,270 +33,355 @@
+ import java.util.*;
+ 
+ /**
+-FSGradientFill defines how a colour changes across an area to be filled with colour. 
+- 
+-&lt;p&gt;Two types of gradient fill are supported:&lt;/p&gt;
++ * FSGradientFill defines how a colour changes across an area to be filled with
++ * colour.
++ * 
++ * &lt;p&gt;
++ * Two types of gradient fill are supported:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Linear&lt;/td&gt;
++ * &lt;td&gt;The gradient changes in one direction across the area to be filled.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Radial&lt;/td&gt;
++ * &lt;td&gt;The gradient changes radially from the centre of the area to be filled.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Gradients are defined in terms of a standard space called the gradient
++ * square, centred at (0,0) and extending from (-16384, -16384) to (16384,
++ * 16384).
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;doc-files/gradientSquare.gif&quot;&gt;
++ * 
++ * &lt;p&gt;
++ * A coordinate transform is required to map the gradient square to the
++ * coordinates of the filled area. The transformation is applied in two steps.
++ * First the gradient square is scaled so the colour covers the shape followed
++ * by a translation to map the gradient square coordinates to the coordinate
++ * range of the shape.
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;gradientMapping.gif&quot;&gt;
++ * 
++ * &lt;p&gt;
++ * A series of control points is used to control how the colour displayed
++ * changes across the gradient. At least two control points are required to
++ * define a gradient - one for the starting colour and one for the final colour.
++ * Up to eight control points may be specified to generate complex colour
++ * transitions. When the Flash Player displays the control points they are
++ * sorted by the ratio defined in each FSGradient object, with the smallest
++ * ratio value displayed first.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;The type of gradient fill, either FSFillStyle.Linear or
++ * FSFillStyle.Radial.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;transform&lt;/td&gt;
++ * &lt;td&gt;A coordinate transformation used to map the gradient square into the
++ * coordinates of the area to be filled.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;gradients&lt;/td&gt;
++ * &lt;td&gt;An array of up to eight FSGradient objects that define the control
++ * points across the gradient square that control the colour transitions. The
++ * Flash Player performs the interpolation of the colour values between the
++ * control points.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * In addition to specifying the type of gradient fill that will be displayed
++ * the type attribute may be used when iterating through an array of fill style
++ * objects to identify the type of fill style without using run-time type
++ * checking.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * For the coordinate transformation, the scaling factor is calculated by diving
++ * the width of the gradient square by the width of the shape:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * float gradientSquareWidth = 32768.0f;
++ * 
++ * float scale = gradientSquareWidth / shapeWidth;
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The translation is defined by calculating the difference between the minimum
++ * coordinates of the &lt;em&gt;scaled&lt;/em&gt; gradient square and the minimum
++ * coordinates of the shape:
++ * 
++ * &lt;pre&gt;
++ * int gradientX = -16384; // minimum x coordinate of the gradient square.
++ * 
++ * int gradientY = -16384; // minimum y coordinate of the gradient square.
++ * 
++ * // Get the minimum coordinates of the shape being filled;
++ * int shapeX = shape.getBounds().getMinX();
++ * 
++ * int shapeY = shape.getBounds().getMinY();
++ * 
++ * // Now calculate the translation
++ * int translateX = shapeX - (gradientX / scale);
++ * 
++ * int translateY = shapeY - (gradientY / scale);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The FSCoordTransform has a convenient constructor to create the two-step
++ * transformation:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSCoordTransform composite = new FSCoordTransform(translateX, translateY,
++ * 				scale, scale);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The transform is independent of any transformation defined for the parent
++ * shape in which the gradient is displayed. The gradient will be displayed
++ * correctly if the shape is scaled, rotated, etc., when it is added to the
++ * display list.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSGradientFill class represents the FillStyle structure from the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 1.
++ * &lt;/p&gt;
++ */
++public class FSGradientFill extends FSFillStyle
++{
++	private FSCoordTransform transform;
++	private ArrayList&lt;FSGradient&gt; gradients;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSGradientFill object, initialising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSGradientFill(FSCoder coder)
++	{
++		super(0);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;Linear&lt;/td&gt;
+-&lt;td&gt;The gradient changes in one direction across the area to be filled.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSGradientFill object specifying the type, coordinate
++	 * transform and array of gradient records.
++	 * 
++	 * @param aType
++	 *            the type of gradient fill, either FSFillStyle.Linear or
++	 *            FSFillStyle.Radial.
++	 * @param aTransform
++	 *            the coordinate transform mapping the gradient square onto
++	 *            physical coordinates.
++	 * @param anArray
++	 *            an array of up to eight FSGradient objects defining the
++	 *            control points for the gradient.
++	 */
++	public FSGradientFill(int aType, FSCoordTransform aTransform, ArrayList&lt;FSGradient&gt; anArray)
++	{
++		super(aType);
++		setTransform(aTransform);
++		setGradients(anArray);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;Radial&lt;/td&gt;
+-&lt;td&gt;The gradient changes radially from the centre of the area to be filled.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSGradientFill object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSGradientFill object.
++	 */
++	public FSGradientFill(FSGradientFill obj)
++	{
++		super(obj.type);
++		
++		transform = new FSCoordTransform(obj.transform);
++		gradients = new ArrayList&lt;FSGradient&gt;(obj.gradients.size());
+ 
+-&lt;/table&gt;
++		for (Iterator&lt;FSGradient&gt; i = obj.gradients.iterator(); i.hasNext();)
++			gradients.add(new FSGradient(i.next()));
++	}
+ 
+-&lt;p&gt;Gradients are defined in terms of a  standard space called the gradient square, centred at (0,0) and extending from (-16384, -16384) to (16384, 16384).&lt;/p&gt;
++	/**
++	 * Add a FSGradient object to the array of gradient objects.
++	 * 
++	 * @param aGradient
++	 *            an FSGradient object.
++	 */
++	public void add(FSGradient aGradient)
++	{
++		gradients.add(aGradient);
++	}
+ 
+-&lt;img src=&quot;doc-files/gradientSquare.gif&quot;&gt;
++	/**
++	 * Gets the coordinate transform mapping the gradient square onto physical
++	 * coordinates.
++	 * 
++	 * @return the coordinate transform.
++	 */
++	public FSCoordTransform getTransform()
++	{
++		return transform;
++	}
+ 
+-&lt;p&gt;A coordinate transform is required to map the gradient square to the coordinates of the filled area. The transformation is applied in two steps. First the gradient square is scaled so the colour covers the shape followed by a translation to map the gradient square coordinates to the coordinate range of the shape.&lt;/p&gt;
++	/**
++	 * Gets the array of up to eight FSGradient objects defining the control
++	 * points for the gradient.
++	 * 
++	 * @return the array of control points.
++	 */
++	public ArrayList&lt;FSGradient&gt; getGradients()
++	{
++		return gradients;
++	}
+ 
+-&lt;img src=&quot;gradientMapping.gif&quot;&gt;
++	/**
++	 * Sets the coordinate transform mapping the gradient square onto physical
++	 * coordinates.
++	 * 
++	 * @param aTransform
++	 *            the coordinate transform.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform cannot be null.&quot;);
++		}
++		transform = aTransform;
++	}
+ 
+-&lt;p&gt;A series of control points is used to control how the colour displayed changes across the gradient. At least two control points are required to define a gradient - one for the starting colour and one for the final colour. Up to eight control points may be specified to generate complex colour transitions. When the Flash Player displays the control points they are sorted by the ratio defined in each FSGradient object, with the smallest ratio value displayed first.
+-&lt;/p&gt;
++	/**
++	 * Sets the array of control points that define the gradient.
++	 * 
++	 * @param anArray
++	 *            an array of up to eight FSGradient objects.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setGradients(ArrayList&lt;FSGradient&gt; anArray)
++	{
++		if (anArray == null) {
++			throw new NullPointerException(&quot;Gradient array cannot be null.&quot;);
++		}
++		gradients = anArray;
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	public Object clone()
++	{
++		FSGradientFill fill = (FSGradientFill)super.clone();
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++		fill.transform = new FSCoordTransform(transform);
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSGradientFill_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The type of gradient fill, either FSFillStyle.Linear or FSFillStyle.Radial.&lt;/td&gt;
+-&lt;/tr&gt;
++		fill.gradients = new ArrayList&lt;FSGradient&gt;(gradients.size());
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSGradientFill_1&quot;&gt;transform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;A coordinate transformation used to map the gradient square into the coordinates of the area to be filled.&lt;/td&gt;
+-&lt;/tr&gt;
++		for (Iterator&lt;FSGradient&gt; i = gradients.iterator(); i.hasNext();)
++			fill.gradients.add(new FSGradient(i.next()));
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSGradientFill_2&quot;&gt;gradients&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of up to eight FSGradient objects that define the control points across the gradient square that control the colour transitions. The Flash Player performs the interpolation of the colour values between the control points.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++		return fill;
++	}
+ 
+-&lt;p&gt;In addition to specifying the type of gradient fill that will be displayed the type attribute may be used when iterating through an array of fill style objects to identify the type of fill style without using run-time type checking.&lt;/p&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++		if (super.equals(anObject))
++		{
++			FSGradientFill fill = (FSGradientFill) anObject;
++			result = transform.equals(fill.transform);
++			result = result &amp;&amp; gradients.equals(fill.gradients);
++		}
+ 
+-&lt;p&gt;For the coordinate transformation, the scaling factor is calculated by diving the width of the gradient square by the width of the shape:&lt;/p&gt;
++		return result;
++	}
+ 
+-&lt;pre&gt;
+-float gradientSquareWidth = 32768.0f;
+-float scale = gradientSquareWidth / shapeWidth; 
+-&lt;/pre&gt;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-&lt;p&gt;The translation is defined by calculating the difference between the minimum coordinates of the &lt;em&gt;scaled&lt;/em&gt; gradient square and the minimum coordinates of the shape:
++		buffer.append(&quot;FSGradientFill: { &quot;);
++		buffer.append(&quot;transform = &quot;).append(transform.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;gradients = &quot;).append(gradients.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-&lt;pre&gt;
+-int gradientX = -16384; // minimum x coordinate of the gradient square.
+-int gradientY = -16384; // minimum y coordinate of the gradient square.
++		return buffer.toString();
++	}
+ 
+-// Get the minimum coordinates of the shape being filled;
+-int shapeX = shape.getBounds().getMinX();
+-int shapeY = shape.getBounds().getMinY();
++	public int length(FSCoder coder)
++	{
++		int length = super.length(coder);
+ 
+-// Now calculate the translation
+-int translateX = shapeX - (gradientX / scale);
+-int translateY = shapeY - (gradientY / scale);
+-&lt;/pre&gt;
++		length += transform.length(coder);
++		length += 1;
+ 
+-&lt;p&gt;The FSCoordTransform has a convenient constructor to create the two-step transformation:&lt;/p&gt;
++		for (Iterator&lt;FSGradient&gt;i=gradients.iterator(); i.hasNext();)
++			length += i.next().length(coder);
+ 
+-&lt;pre&gt;
+-FSCoordTransform composite = new FSCoordTransform(translateX, translateY, scale, scale);
+-&lt;/pre&gt;
++		return length;
++	}
+ 
+-&lt;p&gt;The transform is independent of any transformation defined for the parent shape in which the gradient is displayed. The gradient will be displayed correctly if the shape is scaled, rotated, etc., when it is added to the display list.&lt;/p&gt;
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		transform.encode(coder);
++		coder.writeWord(gradients.size(), 1);
+ 
+-&lt;p&gt;The FSGradientFill class represents the FillStyle structure from the Macromedia Flash 
+-(SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSGradientFill extends FSFillStyle
+-{
+-    private FSCoordTransform transform = null;
+-    private ArrayList gradients = null;
+-    
+-    /**
+-     * Construct an FSGradientFill object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSGradientFill(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /**  Constructs an FSGradientFill object specifying the type, coordinate transform and array of gradient records.
++		for (Iterator&lt;FSGradient&gt; i = gradients.iterator(); i.hasNext();)
++			i.next().encode(coder);
++	}
+ 
+-        @param aType the type of gradient fill, either FSFillStyle.Linear or FSFillStyle.Radial.
+-        @param aTransform the coordinate transform mapping the gradient square onto physical coordinates.
+-        @param anArray an array of up to eight FSGradient objects defining the control points for the gradient.
+-        */
+-    public FSGradientFill(int aType, FSCoordTransform aTransform, ArrayList anArray)
+-    {
+-        super(aType);
+-        setTransform(aTransform);
+-        setGradients(anArray);
+-    }
+-    /**
+-     * Constructs an FSGradientFill object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSGradientFill object.
+-     */
+-    public FSGradientFill(FSGradientFill obj)
+-    {
+-        super(obj);
+-        transform = new FSCoordTransform(obj.transform);
+-        
+-        gradients = new ArrayList(obj.gradients.size());
+-        
+-        for (Iterator i = obj.gradients.iterator(); i.hasNext();)
+-            gradients.add(((FSGradient)i.next()).clone());
+-    }    
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
+ 
+-    /** Add a FSGradient object to the array of gradient objects.
++		transform = new FSCoordTransform(coder);
+ 
+-        @param aGradient an FSGradient object.
+-        */
+-    public void add(FSGradient aGradient) { gradients.add(aGradient); }
+-    
+-    /** Gets the coordinate transform mapping the gradient square onto physical coordinates.
++		/*
++		 * A maximum of 8 gradients can be defined. A mask is applied to the
++		 * upper 4 bits as they are set in some files. The count is also limited
++		 * to 8 just in case there is an attempt at obfuscation.
++		 */
+ 
+-        @return the coordinate transform.
+-        */
+-    public FSCoordTransform getTransform() { return transform; }
++		int count = coder.readByte() &amp; 0x0F;
+ 
+-    /** Gets the array of up to eight FSGradient objects defining the control points for the gradient.
++		if (count &gt; 8)
++			count -= 8;
+ 
+-        @return the array of control points.
+-        */
+-    public ArrayList getGradients()
+-    {
+-        return gradients;
+-    }
+-    
+-    /** Sets the coordinate transform mapping the gradient square onto physical coordinates.
++		gradients = new ArrayList&lt;FSGradient&gt;(count);
+ 
+-        @param aTransform the coordinate transform.
+-        */
+-    public void setTransform(FSCoordTransform aTransform)
+-    {
+-        transform = aTransform;
+-    }
+-
+-    /** Sets the array of control points that define the gradient.
+-
+-        @param anArray an array of up to eight FSGradient objects.
+-        */
+-    public void setGradients(ArrayList anArray)
+-    {
+-        gradients = anArray;
+-    }
+-
+-    public Object clone()
+-    {
+-        FSGradientFill anObject = (FSGradientFill)super.clone();
+-        
+-        anObject.transform = (transform != null) ? (FSCoordTransform)transform.clone() : null;
+-         
+-        anObject.gradients = new ArrayList();
+-            
+-        for (Iterator i = gradients.iterator(); i.hasNext();)
+-            anObject.gradients.add(((FSGradient)i.next()).clone());
+-
+-        return anObject;
+-    }
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSGradientFill typedObject = (FSGradientFill)anObject;
+-            
+-            if (transform != null)
+-                result = transform.equals(typedObject.transform);
+-            else
+-                result = transform == typedObject.transform;
+-
+-            if (gradients != null)
+-                result = result &amp;&amp; gradients.equals(typedObject.gradients);
+-            else
+-                result = result &amp;&amp; gradients == typedObject.gradients;
+-        }
+-        
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;transform&quot;, transform, depth);
+-            Transform.append(buffer, &quot;gradients&quot;, gradients, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = super.length(coder);
+-    
+-        length += transform.length(coder);
+-        length += 1;
+-    
+-        for (Iterator gradientIterator = gradients.iterator(); gradientIterator.hasNext();) 
+-            length += ((FSTransformObject)gradientIterator.next()).length(coder);
+-
+-         return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        
+-        transform.encode(coder);
+-        coder.writeWord(gradients.size(), 1);
+-    
+-        for (Iterator gradientIterator = gradients.iterator(); gradientIterator.hasNext();) 
+-            ((FSTransformObject)gradientIterator.next()).encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        int count = 0;
+-        
+-        super.decode(coder);
+-
+-        transform = new FSCoordTransform(coder);
+-        
+-        /* 
+-         * A maximum of 8 gradients can be defined. A mask is applied to the 
+-         * upper 4 bits as they are set in some files. The count is also limited
+-         * to 8 just in case there is an attempt at obfuscation.
+-         */
+-         
+-        count = coder.readWord(1, false) &amp; 0x0F;
+-        
+-        if (count &gt; 8)
+-            count -= 8;
+-        
+-        gradients = new ArrayList(count);
+-
+-        for (int i=0; i&lt;count; i++)
+-            gradients.add(new FSGradient(coder));
+-    }
++		for (int i = 0; i &lt; count; i++)
++			gradients.add(new FSGradient(coder));
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMorphBitmapFill.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMorphBitmapFill.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMorphBitmapFill.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -31,211 +31,281 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSMorphBitmapFill uses a bitmap image to fill an area of a morphing shape. 
+-
+-&lt;p&gt;Two types of bitmap fill are supported:&lt;/p&gt;
+-
+-&lt;ul&gt;
+-&lt;li&gt;Clipped - the image is placed in the middle of the area to be filled. If the area to be filled is larger
+-than the image then the colour at the edge of the image is used to fill the remaining area.&lt;/li&gt;
+-&lt;li&gt;Tiled - the image is tiled across the area to be filled.&lt;/li&gt;
+-&lt;/ul&gt;
+-
+-&lt;table class=&quot;datasheet&quot;&gt;
+-
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphBitmapFill_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The type of bitmap fill, either FSFillStyle.Tiled or FSFillStyle.Clipped.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphBitmapFill_1&quot;&gt;identifier&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The identifier of the image that will be displayed.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphBitmapFill_2&quot;&gt;startTransform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An optional FSCoordTransform object that will be applied to the image, to change its origin, orientation, etc., at the start of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphBitmapFill_3&quot;&gt;endTransform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An optional FSCoordTransform object that will be applied to the image, to change its origin, orientation, etc., at the end of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;/table&gt;
+-
+-&lt;p&gt;The bitmap is referenced using the identifier obtains from an instance of an FSDefineJPEGImage, FSDefineJPEGImage2, FSDefineJPEGImage3, FSDefineImage or FSDefineImage2 object. Only one image can be displayed throughout the morphing process.&lt;/p&gt;
+-
+-&lt;p&gt;When an image is loaded its width and height default to twips rather than pixels. An image 300 x 200 pixels will be displayed as 300 x 200 twips (15 x 10 pixels). Scaling the image by 20 (20 twips = 1 pixel) would restore it to its original size. The FSCoordTransform attribute in the FSBitmapFill object can be used to scale the image to its original size.&lt;/p&gt;
+-
+-&lt;p&gt;The image is drawn with the top left corner at the origin of the shape being filled so the scaling transform must be composited with the translation transform that places the image at the desired location within the shape.&lt;/p&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSMorphBitmapFill class represents the MorphFillStyle structure from the Macromedia Flash (SWF) File Format Specification. Shape morphing was introduced in Flash 3.&lt;/P&gt;
+- */  
++ * FSMorphBitmapFill uses a bitmap image to fill an area of a morphing shape.
++ * 
++ * &lt;p&gt;
++ * Two types of bitmap fill are supported:
++ * &lt;/p&gt;
++ * 
++ * &lt;ul&gt;
++ * &lt;li&gt;Clipped - the image is placed in the middle of the area to be filled. If
++ * the area to be filled is larger than the image then the colour at the edge of
++ * the image is used to fill the remaining area.&lt;/li&gt;
++ * &lt;li&gt;Tiled - the image is tiled across the area to be filled.&lt;/li&gt;
++ * &lt;/ul&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;The type of bitmap fill, either FSFillStyle.Tiled or
++ * FSFillStyle.Clipped.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;identifier&lt;/td&gt;
++ * &lt;td&gt;The identifier of the image that will be displayed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;start&lt;/td&gt;
++ * &lt;td&gt;An optional FSCoordTransform object that will be applied to the image,
++ * to change its origin, orientation, etc., at the start of the morphing
++ * process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;end&lt;/td&gt;
++ * &lt;td&gt;An optional FSCoordTransform object that will be applied to the image,
++ * to change its origin, orientation, etc., at the end of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The bitmap is referenced using the identifier obtains from an instance of an
++ * FSDefineJPEGImage, FSDefineJPEGImage2, FSDefineJPEGImage3, FSDefineImage or
++ * FSDefineImage2 object. Only one image can be displayed throughout the
++ * morphing process.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * When an image is loaded its width and height default to twips rather than
++ * pixels. An image 300 x 200 pixels will be displayed as 300 x 200 twips (15 x
++ * 10 pixels). Scaling the image by 20 (20 twips = 1 pixel) would restore it to
++ * its original size. The FSCoordTransform attribute in the FSBitmapFill object
++ * can be used to scale the image to its original size.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The image is drawn with the top left corner at the origin of the shape being
++ * filled so the scaling transform must be composited with the translation
++ * transform that places the image at the desired location within the shape.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSMorphBitmapFill class represents the MorphFillStyle structure from the
++ * Macromedia Flash (SWF) File Format Specification. Shape morphing was
++ * introduced in Flash 3.
++ * &lt;/P&gt;
++ */
+ public class FSMorphBitmapFill extends FSFillStyle
+ {
+-    private int identifier = 0;
+-    private FSCoordTransform startTransform = new FSCoordTransform(0,0);
+-    private FSCoordTransform endTransform = new FSCoordTransform(0,0);
++	private int identifier;
++	private FSCoordTransform start;
++	private FSCoordTransform end;
+ 
+-    /**
+-     * Construct an FSMorphBitmapFill object an initialize it with values 
+-     * decoded from an encoded FSMorphBitmapFill object.
+-     * 
+-     * @param coder an FSCoder object containing an FSMorphBitmapFill encoded 
+-     * as binary data.
+-     */
+-    public FSMorphBitmapFill(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSMorphBitmapFill specifying the type, bitmap image and coordinated transforms for the image at the start and end of the morphing process.
++	/**
++	 * Construct an FSMorphBitmapFill object an initialise it with values
++	 * decoded from an encoded FSMorphBitmapFill object.
++	 * 
++	 * @param coder
++	 *            an FSCoder object containing an FSMorphBitmapFill encoded as
++	 *            binary data.
++	 */
++	public FSMorphBitmapFill(FSCoder coder)
++	{
++		super(0);
++		decode(coder);
++	}
+ 
+-        @param aType the type of fill either FSFillStyle.Tiled or FSFillStyle.Clipped.
+-        @param anIdentifier the identifier for the bitmap image.
+-        @param aStartTransform the transform applied to the image at the start of the morphing process.
+-        @param anEndTransform the transform applied to the image at the end of the morphing process.
+-        */
+-    public FSMorphBitmapFill(int aType, int anIdentifier, FSCoordTransform aStartTransform, FSCoordTransform anEndTransform)
+-    {
+-        super(aType);
+-        setIdentifier(anIdentifier);
+-        setStartTransform(aStartTransform);
+-        setEndTransform(anEndTransform);
+-    }
+-    /**
+-     * Construct an FSMorphBitmapFill object by copying an existing object.
+-     * 
+-     * @param obj an FSMorphBitmapFill object. 
+-     */
+-    public FSMorphBitmapFill(FSMorphBitmapFill obj)
+-    {
+-        identifier = obj.identifier;
+-        startTransform = new FSCoordTransform(obj.startTransform);
+-        endTransform = new FSCoordTransform(obj.endTransform);
+-    }   
++	/**
++	 * Constructs an FSMorphBitmapFill specifying the type, bitmap image and
++	 * coordinated transforms for the image at the start and end of the morphing
++	 * process.
++	 * 
++	 * @param aType
++	 *            the type of fill either FSFillStyle.Tiled or
++	 *            FSFillStyle.Clipped.
++	 * @param anIdentifier
++	 *            the identifier for the bitmap image.
++	 * @param start
++	 *            the transform applied to the image at the start of the
++	 *            morphing process.
++	 * @param end
++	 *            the transform applied to the image at the end of the morphing
++	 *            process.
++	 */
++	public FSMorphBitmapFill(int aType, int anIdentifier, FSCoordTransform start, FSCoordTransform end)
++	{
++		super(aType);
++		setIdentifier(anIdentifier);
++		setStartTransform(start);
++		setEndTransform(end);
++	}
+ 
+-    /** Gets the identifier of the bitmap image.
++	/**
++	 * Construct an FSMorphBitmapFill object by copying an existing object.
++	 * 
++	 * @param obj
++	 *            an FSMorphBitmapFill object.
++	 */
++	public FSMorphBitmapFill(FSMorphBitmapFill obj)
++	{
++		super(obj.type);
++		identifier = obj.identifier;
++		start = new FSCoordTransform(obj.start);
++		end = new FSCoordTransform(obj.end);
++	}
+ 
+-        @return the image's identifier.
+-        */
+-    public int getIdentifier() { return identifier; }
++	/**
++	 * Gets the identifier of the bitmap image.
++	 * 
++	 * @return the image's identifier.
++	 */
++	public int getIdentifier()
++	{
++		return identifier;
++	}
+ 
+-    /** Gets the starting coordinate transform for the image.
++	/**
++	 * Gets the starting coordinate transform for the image.
++	 * 
++	 * @return the starting coordinate transform.
++	 */
++	public FSCoordTransform getStartTransform()
++	{
++		return start;
++	}
+ 
+-        @return the starting coordinate transform.
+-        */
+-    public FSCoordTransform getStartTransform() { return startTransform; }
++	/**
++	 * Gets the ending coordinate transform for the image.
++	 * 
++	 * @return the ending coordinate transform.
++	 */
++	public FSCoordTransform getEndTransform()
++	{
++		return end;
++	}
+ 
+-    /** Gets the ending coordinate transform for the image.
++	/**
++	 * Sets the identifier of the bitmap image to be used in the morphing
++	 * process.
++	 * 
++	 * @param anIdentifier
++	 *            the identifier of the bitmap image.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 1..65535.
++	 */
++	public void setIdentifier(int anIdentifier)
++	{
++		if (anIdentifier &lt; 1 || anIdentifier &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Identifier must be in the range 1..65535.&quot;);
++		}
++		identifier = anIdentifier;
++	}
+ 
+-        @return the ending coordinate transform.
+-        */
+-    public FSCoordTransform getEndTransform() { return endTransform; }
++	/**
++	 * Sets the coordinate transform for the image at the start of the morphing
++	 * process.
++	 * 
++	 * @param aTransform
++	 *            the starting coordinate transform.
++	 *          
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setStartTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform cannot be null.&quot;);
++		}
++		start = aTransform;
++	}
+ 
+-    /** Sets the identifier of the bitmap image to be used in the morphing process.
++	/**
++	 * Sets the coordinate transform for the image at the end of the morphing
++	 * process.
++	 * 
++	 * @param aTransform
++	 *            the ending coordinate transform.
++	 *          
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setEndTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform cannot be null.&quot;);
++		}
++		end = aTransform;
++	}
+ 
+-        @param anIdentifier the identifier of the bitmap image.
+-        */
+-    public void setIdentifier(int anIdentifier)
+-    {
+-        identifier= anIdentifier;
+-    }
++	public Object clone()
++	{
++		FSMorphBitmapFill fill = (FSMorphBitmapFill) super.clone();
++		fill.start = new FSCoordTransform(start);
++		fill.end = new FSCoordTransform(end);
+ 
+-    /** Sets the coordinate transform for the image at the start of the morphing process.
++		return fill;
++	}
+ 
+-        @param aTransform the starting coordinate transform.
+-        */
+-    public void setStartTransform(FSCoordTransform aTransform)
+-    {
+-        startTransform = aTransform;
+-    }
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-    /** Sets the coordinate transform for the image at the end of the morphing process.
++		if (super.equals(anObject))
++		{
++			FSMorphBitmapFill fill = (FSMorphBitmapFill) anObject;
+ 
+-        @param aTransform the ending coordinate transform.
+-        */
+-    public void setEndTransform(FSCoordTransform aTransform)
+-    {
+-        endTransform = aTransform;
+-    }
++			result = identifier == fill.identifier;
++			result = result &amp;&amp; start.equals(fill.start);
++			result = result &amp;&amp; end.equals(fill.end);
++		}
++		return result;
++	}
+ 
+-    public Object clone()
+-    {
+-        FSMorphBitmapFill anObject = (FSMorphBitmapFill)super.clone();
+-        
+-        anObject.startTransform = (startTransform != null) ? (FSCoordTransform)startTransform.clone() : null;
+-        anObject.endTransform = (endTransform != null) ? (FSCoordTransform)endTransform.clone() : null;
+-        
+-        return anObject;
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSMorphBitmapFill typedObject = (FSMorphBitmapFill)anObject;
+-            
+-            result = identifier == typedObject.identifier;
++		buffer.append(&quot;FSMorphBitmapFill: { &quot;);
++		buffer.append(&quot;identifier = &quot;).append(identifier).append(&quot;; &quot;);
++		buffer.append(&quot;start = &quot;).append(start.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;end = &quot;).append(end.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-            if (startTransform != null)
+-                result = result &amp;&amp; startTransform.equals(typedObject.startTransform);
+-            else
+-                result = result &amp;&amp; startTransform == typedObject.startTransform;
++		return buffer.toString();
++	}
+ 
+-            if (endTransform != null)
+-                result = result &amp;&amp; endTransform.equals(typedObject.endTransform);
+-            else
+-                result = result &amp;&amp; endTransform == typedObject.endTransform;
+-        }
+-        return result;
+-    }
++	public int length(FSCoder coder)
++	{
++		int length = super.length(coder);
+ 
+-     public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;identifier&quot;, identifier);
+-            Transform.append(buffer, &quot;startTransform&quot;, startTransform, depth);
+-            Transform.append(buffer, &quot;endTransform&quot;, endTransform, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		length += 2;
++		length += start.length(coder);
++		length += end.length(coder);
+ 
+-    public int length(FSCoder coder)
+-    {
+-        int length = super.length(coder);
++		return length;
++	}
+ 
+-        length += 2;
+-        length += startTransform.length(coder);
+-        length += endTransform.length(coder);
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeWord(identifier, 2);
+-        startTransform.encode(coder);
+-        endTransform.encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        identifier= coder.readWord(2, false);
+-        startTransform.decode(coder);
+-        endTransform.decode(coder);
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeWord(identifier, 2);
++		start.encode(coder);
++		end.encode(coder);
++	}
++
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		identifier = coder.readWord(2, false);
++		start.decode(coder);
++		end.decode(coder);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMorphGradient.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMorphGradient.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMorphGradient.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -31,230 +31,323 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSMorphGradient defines the control points that is used to specify how a gradient fill is 
+-displayed at the start and end of the shape morphing process. 
+- 
+-&lt;p&gt;Two or more control points are used to define how the colour changes across the gradient square.&lt;/p&gt;
++ * FSMorphGradient defines the control points that is used to specify how a
++ * gradient fill is displayed at the start and end of the shape morphing
++ * process.
++ * 
++ * &lt;p&gt;
++ * Two or more control points are used to define how the colour changes across
++ * the gradient square.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;startRatio&lt;/td&gt;
++ * &lt;td&gt;The location of the control point across the gradient square at the
++ * start of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;endRatio&lt;/td&gt;
++ * &lt;td&gt;The location of the control point across the gradient square at the end
++ * of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;startColor&lt;/td&gt;
++ * &lt;td&gt;The colour at the control point at the start of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;startColor&lt;/td&gt;
++ * &lt;td&gt;The colour at the control point at the end of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The location of the control point is defined by a ratio - a number between 0
++ * and 255 that specifies the relative location in the square. For Linear
++ * Gradient Fills a ratio of zero is mapped to the left side of the gradient
++ * square and 255 is mapped to the right side of the square. For Radial Gradient
++ * Fills a ratio of zero is mapped to the centre of the gradient square and 255
++ * is mapped to the edge of the largest circle that fits inside the gradient
++ * square.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * FSMorphGradients are only used in FSDefineMorphShape objects which support
++ * transparent colours so values for all the colour channels must be specified
++ * in the FSColor objects.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * When the Flash Player displays the gradient control points they are sorted by
++ * the ratio with the FSGradient object with the smallest ratio value displayed
++ * first.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSMorphGradient class represents the MorphGradientRecord structure from
++ * the Macromedia Flash (SWF) File Format Specification. Shape morphing was
++ * introduced in Flash 3.
++ * &lt;/p&gt;
++ */
++public class FSMorphGradient implements Cloneable, Codeable
++{
++	private int startRatio;
++	private int endRatio;
++	private FSColor startColor;
++	private FSColor endColor;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSMorphGradient object, initialising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSMorphGradient(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSMorphGradient object specifying the starting and ending
++	 * ratios and colours.
++	 * 
++	 * @param startRatio
++	 *            the ratio along the gradient square at the start of the
++	 *            morphing process.
++	 * @param endRatio
++	 *            the ratio along the gradient square at the end of the morphing
++	 *            process.
++	 * @param startColor
++	 *            the colour at the starting control point.
++	 * @param endColor
++	 *            the colour at the ending control point.
++	 */
++	public FSMorphGradient(int startRatio, int endRatio, FSColor startColor, FSColor endColor)
++	{
++		setStartRatio(startRatio);
++		setEndRatio(endRatio);
++		setStartColor(startColor);
++		setEndColor(endColor);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradient_0&quot;&gt;startRatio&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The location of the control point across the gradient square at the start of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSMorphGradient object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSMorphGradient object.
++	 */
++	public FSMorphGradient(FSMorphGradient obj)
++	{
++		startRatio = obj.startRatio;
++		endRatio = obj.endRatio;
++		startColor = new FSColor(obj.startColor);
++		endColor = new FSColor(obj.endColor);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradient_1&quot;&gt;endRatio&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The location of the control point across the gradient square at the end of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the ratio at the start of the morphing process.
++	 * 
++	 * @return the start ratio.
++	 */
++	public int getStartRatio()
++	{
++		return startRatio;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradient_2&quot;&gt;startColor&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The colour at the control point at the start of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the ratio at the end of the morphing process.
++	 * 
++	 * @return the end ratio.
++	 */
++	public int getEndRatio()
++	{
++		return endRatio;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradient_3&quot;&gt;startColor&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The colour at the control point at the end of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Gets the colour at the start of the morphing process.
++	 * 
++	 * @return the start colour.
++	 */
++	public FSColor getStartColor()
++	{
++		return startColor;
++	}
+ 
+-&lt;p&gt;The location of the control point is defined by a ratio - a number between 0 and 255 that specifies the relative location in the square. For Linear Gradient Fills a ratio of zero is mapped to the left side of the gradient square and 255 is mapped to the right side of the square. For Radial Gradient Fills a ratio of zero is mapped to the centre of the gradient square and 255 is mapped to the edge of the largest circle that fits inside the gradient square.&lt;/p&gt;
++	/**
++	 * Gets the colour at the end of the morphing process.
++	 * 
++	 * @return the end colour.
++	 */
++	public FSColor getEndColor()
++	{
++		return endColor;
++	}
+ 
+-&lt;p&gt;FSMorphGradients are only used in FSDefineMorphShape objects which support transparent colours so values for all the colour channels must be specified in the FSColor objects.&lt;/p&gt;
++	/**
++	 * Sets the ratio along the gradient square at the start of the morphing
++	 * process.
++	 * 
++	 * @param aNumber
++	 *            the starting ratio.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 0..255.
++	 */
++	public void setStartRatio(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 255) {
++			throw new IllegalArgumentException(&quot;Ratio must be in the range: 0..255.&quot;);
++		}
++		startRatio = aNumber;
++	}
+ 
+-&lt;p&gt;When the Flash Player displays the gradient control points they are sorted by the ratio with the FSGradient object with the smallest ratio value displayed first.&lt;/p&gt;
++	/**
++	 * Sets the ratio along the gradient square at the end of the morphing
++	 * process.
++	 * 
++	 * @param aNumber
++	 *            the ending ratio.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 0..255.
++	 */
++	public void setEndRatio(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 255) {
++			throw new IllegalArgumentException(&quot;Ratio must be in the range: 0..255.&quot;);
++		}
++		endRatio = aNumber;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Sets the colour at the start of the morphing process.
++	 * 
++	 * @param aColor
++	 *            the start colour.
++	 *            
++	 * @throws NullPointerException if the colour object is null.
++	 */
++	public void setStartColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null.&quot;);
++		}
++		startColor = aColor;
++	}
+ 
+-&lt;p&gt;The FSMorphGradient class represents the MorphGradientRecord structure from the Macromedia Flash (SWF) File Format Specification. Shape morphing was introduced in Flash 3.&lt;/p&gt;
+- */  
+-public class FSMorphGradient extends FSTransformObject
+-{
+-    private int startRatio = 0;
+-    private int endRatio = 0;
+-    private FSColor startColor = null;
+-    private FSColor endColor = null;
+-    
+-    /**
+-     * Construct an FSMorphGradient object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSMorphGradient(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSMorphGradient object specifying the starting and ending ratios and colours.
++	/**
++	 * Sets the colour at the end of the morphing process.
++	 * 
++	 * @param aColor
++	 *            the end colour.
++	 *            
++	 * @throws NullPointerException if the colour object is null.
++	 */
++	public void setEndColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null.&quot;);
++		}
++		endColor = aColor;
++	}
+ 
+-        @param aStartRatio the ratio along the gradient square at the start of the morphing process.
+-        @param anEndRatio the ratio along the gradient square at the end of the morphing process.
+-        @param aStartColor the colour at the starting control point.
+-        @param anEndColor the colour at the ending control point.
+-        */
+-    public FSMorphGradient(int aStartRatio, int anEndRatio, FSColor aStartColor, FSColor anEndColor)
+-    {
+-        setStartRatio(aStartRatio);
+-        setEndRatio(anEndRatio);
+-        setStartColor(aStartColor);
+-        setEndColor(anEndColor);
+-    }
+-    /**
+-     * Constructs an FSMorphGradient object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSMorphGradient object.
+-     */
+-    public FSMorphGradient(FSMorphGradient obj)
+-    {
+-        startRatio = obj.startRatio;
+-        endRatio = obj.endRatio;
+-        startColor = new FSColor(obj.startColor);
+-        endColor = new FSColor(obj.endColor);
+-    }    
++	public Object clone()
++	{
++		FSMorphGradient obj = null;
+ 
+-    /** Gets the ratio at the start of the morphing process.
++		try {
++			obj = (FSMorphGradient)super.clone();
++			obj.startColor = (FSColor)startColor.clone();
++			obj.endColor = (FSColor)endColor.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return obj;
++	}
+ 
+-        @return the start ratio.
+-        */
+-    public int getStartRatio() { return startRatio; }
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-    /** Gets the ratio at the end of the morphing process.
++		if (obj == null) {
++			return false;
++		}
+ 
+-        @return the end ratio.
+-        */
+-    public int getEndRatio() { return endRatio; }
++		if (obj == this) {
++			return true;
++		}
+ 
+-    /** Gets the colour at the start of the morphing process.
++		if (obj instanceof FSMorphGradient)
++		{
++			FSMorphGradient gradient = (FSMorphGradient)obj;
+ 
+-        @return the start colour.
+-        */
+-    public FSColor getStartColor() { return startColor; }
++			result = startRatio == gradient.startRatio;
++			result = result &amp;&amp; endRatio == gradient.endRatio;
++			result = result &amp;&amp; startColor.equals(gradient.startColor);
++			result = result &amp;&amp; endColor.equals(gradient.endColor);
++		}
++		return result;
++	}
+ 
+-    /** Gets the colour at the end of the morphing process.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @return the end colour.
+-        */
+-    public FSColor getEndColor() { return endColor; }
++		buffer.append(&quot;FSMorphGradient: { &quot;);
++		buffer.append(&quot;startRatio = &quot;).append(startRatio).append(&quot;; &quot;);
++		buffer.append(&quot;endRatio = &quot;).append(endRatio).append(&quot;; &quot;);
++		buffer.append(&quot;startColor = &quot;).append(startColor.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;endColor = &quot;).append(endColor.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Sets the ratio along the gradient square at the start of the morphing process.
++		return buffer.toString();
++	}
+ 
+-        @param aNumber the starting ratio.
+-        */
+-    public void setStartRatio(int aNumber)
+-    {
+-        startRatio = aNumber;
+-    }
++	public int length(FSCoder coder)
++	{
++		int length = 2;
+ 
+-    /** Sets the ratio along the gradient square at the end of the morphing process.
++		length += startColor.length(coder);
++		length += endColor.length(coder);
+ 
+-        @param aNumber the ending ratio.
+-        */
+-    public void setEndRatio(int aNumber)
+-    {
+-        endRatio = aNumber;
+-    }
++		return length;
++	}
+ 
+-    /** Sets the colour at the start of the morphing process.
++	public void encode(FSCoder coder)
++	{
++		coder.writeWord(startRatio, 1);
++		startColor.encode(coder);
++		coder.writeWord(endRatio, 1);
++		endColor.encode(coder);
++	}
+ 
+-        @param aColor the start colour.
+-        */
+-    public void setStartColor(FSColor aColor)
+-    {
+-        startColor = aColor;
+-    }
+-
+-    /** Sets the colour at the end of the morphing process.
+-
+-        @param aColor the end colour.
+-        */
+-    public void setEndColor(FSColor aColor)
+-    {
+-        endColor = aColor;
+-    }
+-
+-    public Object clone()
+-    {
+-        FSMorphGradient anObject = (FSMorphGradient)super.clone();
+-        
+-        anObject.startColor = (startColor != null) ? (FSColor)startColor.clone() : null;
+-        anObject.endColor = (endColor != null) ? (FSColor)endColor.clone() : null;
+-
+-        return anObject;
+-    }
+-
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSMorphGradient typedObject = (FSMorphGradient)anObject;
+-            
+-            result = startRatio == typedObject.startRatio;
+-            result = result &amp;&amp; endRatio == typedObject.endRatio;
+-
+-            if (startColor != null)
+-                result = result &amp;&amp; startColor.equals(typedObject.startColor);
+-            else
+-                result = result &amp;&amp; startColor == typedObject.startColor;
+-
+-            if (endColor != null)
+-                result = result &amp;&amp; endColor.equals(typedObject.endColor);
+-            else
+-                result = result &amp;&amp; endColor == typedObject.endColor;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;startRatio&quot;, startRatio);
+-            Transform.append(buffer, &quot;endRatio&quot;, endRatio);
+-            Transform.append(buffer, &quot;startColor&quot;, startColor, depth);
+-            Transform.append(buffer, &quot;endColor&quot;, endColor, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = 2;
+-    
+-        length += startColor.length(coder);
+-        length += endColor.length(coder);
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        coder.writeWord(startRatio, 1);
+-        startColor.encode(coder);
+-        coder.writeWord(endRatio, 1);
+-        endColor.encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        startRatio = coder.readWord(1, false);
+-        startColor = new FSColor(coder);
+-        endRatio = coder.readWord(1, false);
+-        endColor = new FSColor(coder);
+-    }
++	public void decode(FSCoder coder)
++	{
++		startRatio = coder.readByte();
++		startColor = new FSColor(coder);
++		endRatio = coder.readByte();
++		endColor = new FSColor(coder);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMorphGradientFill.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMorphGradientFill.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMorphGradientFill.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -33,298 +33,406 @@
+ import java.util.*;
+ 
+ /**
+-FSMorphGradientFill defines how a colour changes across an area filled in a morphing shape. 
+- 
+-&lt;p&gt;Two type of gradient fill are supported:&lt;/p&gt;
++ * FSMorphGradientFill defines how a colour changes across an area filled in a
++ * morphing shape.
++ * 
++ * &lt;p&gt;
++ * Two type of gradient fill are supported:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Linear&lt;/td&gt;
++ * &lt;td&gt;The gradient changes in one direction across the area to be filled.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;Radial&lt;/td&gt;
++ * &lt;td&gt;The gradient changes radially from the centre of the area to be filled.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Gradients are defined in terms of a standard space called the gradient
++ * square, centred at (0,0) and extending from (-16384, -16384) to (16384,
++ * 16384).
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;doc-files/gradientSquare.gif&quot;&gt;
++ * 
++ * &lt;p&gt;
++ * A coordinate transform is required to map the gradient square to the
++ * coordinates of the filled area. The transformation is applied in two steps.
++ * First the gradient square is scaled so the colour covers the shape followed
++ * by a translation to map the gradient square coordinates to the coordinate
++ * range of the shape.
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;gradientMapping.gif&quot;&gt;
++ * 
++ * &lt;p&gt;
++ * A series of control points is used to control how the colour displayed
++ * changes across the gradient. At least two control points are required to
++ * define a gradient - one for the starting colour and one for the final colour.
++ * Up to eight control points may be specified to generate complex colour
++ * transitions. When the Flash Player displays the control points they are
++ * sorted by the ratio defined in each FSGradient object, with the smallest
++ * ratio value displayed first.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;The type of gradient fill, either FSFillStyle.Linear or
++ * FSFillStyle.Radial.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;startTransform&lt;/td&gt;
++ * &lt;td&gt;The coordinate transform used to map the logical coordinates of the
++ * gradient square on to a set of physical coordinates at the start of the
++ * morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;endTransform&lt;/td&gt;
++ * &lt;td&gt;The coordinate transform used to map the logical coordinates of the
++ * gradient square on to a set of physical coordinates at the end of the
++ * morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;gradients&lt;/td&gt;
++ * &lt;td&gt;An array of up to eight FSGradient objects that define the control
++ * points across the gradient square that control the colour transitions. The
++ * Flash Player performs the interpolation of the colour values between the
++ * control points. Alpha channel (defining transparency) must be defined for the
++ * colour in each control point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * In addition to specifying the type of gradient fill that will be displayed
++ * the type attribute may be used when iterating through an array of fill style
++ * objects to identify the type of fill style without using run-time type
++ * checking.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * For the coordinate transformation, the scaling factor is calculated by diving
++ * the width of the gradient square by the width of the shape:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * float gradientSquareWidth = 32768.0f;
++ * 
++ * float scale = gradientSquareWidth / shapeWidth;
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The translation is defined by calculating the difference between the minimum
++ * coordinates of the &lt;em&gt;scaled&lt;/em&gt; gradient square and the minimum
++ * coordinates of the shape:
++ * 
++ * &lt;pre&gt;
++ * int gradientX = -16384; // minimum x coordinate of the gradient square.
++ * 
++ * int gradientY = -16384; // minimum y coordinate of the gradient square.
++ * 
++ * // Get the minimum coordinates of the shape being filled;
++ * int shapeX = shape.getBounds().getMinX();
++ * 
++ * int shapeY = shape.getBounds().getMinY();
++ * 
++ * // Now calculate the translation
++ * int translateX = shapeX - (gradientX / scale);
++ * 
++ * int translateY = shapeY - (gradientY / scale);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The FSCoordTransform has a convenient constructor to create the two-step
++ * transformation:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSCoordTransform composite = new FSCoordTransform(translateX, translateY,
++ * 				scale, scale);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * The transform is independent of any transformation defined for the parent
++ * shape in which the gradient is displayed. The gradient will be displayed
++ * correctly if the shape is scaled, rotated, etc. when it is added to the
++ * display list.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The above process is repeated to calculate the transform for the gradient
++ * fill at the end of the morphing process. The transforms are independent of
++ * any transformation defined for the parent morphing shape in which the
++ * gradients are displayed.
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSMorphGradientFill class represents the MorphFillStyle structure from
++ * the Macromedia Flash (SWF) File Format Specification. It was introduced in
++ * Flash 3.
++ * &lt;/p&gt;
++ */
++public class FSMorphGradientFill extends FSFillStyle
++{
++	private FSCoordTransform start;
++	private FSCoordTransform end;
++	private ArrayList&lt;FSMorphGradient&gt; gradients;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSMorphGradientFill object, initialising it with values
++	 * decoded from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSMorphGradientFill(FSCoder coder)
++	{
++		super(0);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;Linear&lt;/td&gt;
+-&lt;td&gt;The gradient changes in one direction across the area to be filled.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSMorphGradientFill object specifying the type of fill,
++	 * starting and ending coordinate transforms and the array of gradient
++	 * records.
++	 * 
++	 * @param aType
++	 *            the type of gradient fill, either FSFillStyle.Linear or
++	 *            FSFillStyle.Radial.
++	 * @param start
++	 *            the coordinate transform mapping the gradient square onto
++	 *            physical coordinates at the start of the morphing process.
++	 * @param end
++	 *            the coordinate transform mapping the gradient square onto
++	 *            physical coordinates at the end of the morphing process.
++	 * @param gradients
++	 *            an array of up to eight FSMorphGradient objects defining the
++	 *            control points for the gradient.
++	 */
++	public FSMorphGradientFill(int aType, FSCoordTransform start, FSCoordTransform end, ArrayList&lt;FSMorphGradient&gt; gradients)
++	{
++		super(aType);
++		setStartTransform(start);
++		setEndTransform(end);
++		setGradients(gradients);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;Radial&lt;/td&gt;
+-&lt;td&gt;The gradient changes radially from the centre of the area to be filled.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSMorphGradientFill object by copying values from an
++	 * existing object.
++	 * 
++	 * @param obj
++	 *            an FSMorphGradientFill object.
++	 */
++	public FSMorphGradientFill(FSMorphGradientFill obj)
++	{
++		super(obj.type);
++		
++		start = new FSCoordTransform(obj.start);
++		end = new FSCoordTransform(obj.end);
++		
++		gradients = new ArrayList&lt;FSMorphGradient&gt;(obj.gradients.size());
+ 
+-&lt;/table&gt;
++		for (Iterator&lt;FSMorphGradient&gt; i = obj.gradients.iterator(); i.hasNext();)
++			gradients.add((FSMorphGradient)i.next().clone());
++	}
+ 
+-&lt;p&gt;Gradients are defined in terms of a  standard space called the gradient square, centred at (0,0) and extending from (-16384, -16384) to (16384, 16384).&lt;/p&gt;
++	/**
++	 * Add a FSMorphGradient object to the array of gradient objects.
++	 * 
++	 * @param aGradient
++	 *            an FSMorphGradient object.
++	 */
++	public void add(FSMorphGradient aGradient)
++	{
++		gradients.add(aGradient);
++	}
+ 
+-&lt;img src=&quot;doc-files/gradientSquare.gif&quot;&gt;
++	/**
++	 * Gets the coordinate transform mapping the gradient square onto physical
++	 * coordinates at the start of the morphing process.
++	 * 
++	 * @return the starting coordinate transform.
++	 */
++	public FSCoordTransform getStartTransform()
++	{
++		return start;
++	}
+ 
+-&lt;p&gt;A coordinate transform is required to map the gradient square to the coordinates of the filled area. The transformation is applied in two steps. First the gradient square is scaled so the colour covers the shape followed by a translation to map the gradient square coordinates to the coordinate range of the shape.&lt;/p&gt;
++	/**
++	 * Gets the coordinate transform mapping the gradient square onto physical
++	 * coordinates at the end of the morphing process.
++	 * 
++	 * @return the ending coordinate transform.
++	 */
++	public FSCoordTransform getEndTransform()
++	{
++		return end;
++	}
+ 
+-&lt;img src=&quot;gradientMapping.gif&quot;&gt;
++	/**
++	 * Gets the array of up to eight FSMorphGradient objects defining the
++	 * control points for the gradient.
++	 * 
++	 * @return the array of control points.
++	 */
++	public ArrayList&lt;FSMorphGradient&gt; getGradients()
++	{
++		return gradients;
++	}
+ 
+-&lt;p&gt;A series of control points is used to control how the colour displayed changes across the gradient. At least two control points are required to define a gradient - one for the starting colour and one for the final colour. Up to eight control points may be specified to generate complex colour transitions. When the Flash Player displays the control points they are sorted by the ratio defined in each FSGradient object, with the smallest ratio value displayed first.
+-&lt;/p&gt;
++	/**
++	 * Sets the coordinate transform mapping the gradient square onto physical
++	 * coordinates at the start of the morphing process.
++	 * 
++	 * @param aTransform
++	 *            the starting coordinate transform.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setStartTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform cannot be null.&quot;);
++		}
++		start = aTransform;
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Sets the coordinate transform mapping the gradient square onto physical
++	 * coordinates at the end of the morphing process.
++	 * 
++	 * @param aTransform
++	 *            the ending coordinate transform.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setEndTransform(FSCoordTransform aTransform)
++	{
++		if (aTransform == null) {
++			throw new NullPointerException(&quot;Coordinate transform cannot be null.&quot;);
++		}
++		end = aTransform;
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Sets the array of control points that define the gradient.
++	 * 
++	 * @param anArray
++	 *            an array of up to eight FSMorphGradient objects.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setGradients(ArrayList&lt;FSMorphGradient&gt; anArray)
++	{
++		if (anArray == null) {
++			throw new NullPointerException(&quot;Gradient array cannot be null.&quot;);
++		}
++		gradients = anArray;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradientFill_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The type of gradient fill, either FSFillStyle.Linear or FSFillStyle.Radial.&lt;/td&gt;
+-&lt;/tr&gt;
++	public Object clone()
++	{
++		FSMorphGradientFill fill = (FSMorphGradientFill) super.clone();
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradientFill_1&quot;&gt;startTransform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The coordinate transform used to map the logical coordinates of the gradient square on to a set of physical coordinates at the start of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++		fill.start = new FSCoordTransform(start);
++		fill.end = new FSCoordTransform(end);
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradientFill_1&quot;&gt;endTransform&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The coordinate transform used to map the logical coordinates of the gradient square on to a set of physical coordinates at the end of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++		fill.gradients = new ArrayList&lt;FSMorphGradient&gt;(gradients.size());
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphGradientFill_2&quot;&gt;gradients&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of up to eight FSGradient objects that define the control points across the gradient square that control the colour transitions. The Flash Player performs the interpolation of the colour values between the control points. Alpha channel (defining transparency) must be defined for the colour in each control point.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++		for (Iterator&lt;FSMorphGradient&gt; i = gradients.iterator(); i.hasNext();)
++			fill.gradients.add((FSMorphGradient) i.next().clone());
+ 
+-&lt;p&gt;In addition to specifying the type of gradient fill that will be displayed the type attribute may be used when iterating through an array of fill style objects to identify the type of fill style without using run-time type checking.&lt;/p&gt;
++		return fill;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;p&gt;For the coordinate transformation, the scaling factor is calculated by diving the width of the gradient square by the width of the shape:&lt;/p&gt;
++		if (super.equals(anObject))
++		{
++			FSMorphGradientFill typedObject = (FSMorphGradientFill) anObject;
+ 
+-&lt;pre&gt;
+-float gradientSquareWidth = 32768.0f;
+-float scale = gradientSquareWidth / shapeWidth; 
+-&lt;/pre&gt;
++			result = start.equals(typedObject.start);
++			result = result &amp;&amp; end.equals(typedObject.end);
++			result = result &amp;&amp; gradients.equals(typedObject.gradients);
++		}
+ 
+-&lt;p&gt;The translation is defined by calculating the difference between the minimum coordinates of the &lt;em&gt;scaled&lt;/em&gt; gradient square and the minimum coordinates of the shape:
++		return result;
++	}
+ 
+-&lt;pre&gt;
+-int gradientX = -16384; // minimum x coordinate of the gradient square.
+-int gradientY = -16384; // minimum y coordinate of the gradient square.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-// Get the minimum coordinates of the shape being filled;
+-int shapeX = shape.getBounds().getMinX();
+-int shapeY = shape.getBounds().getMinY();
++		buffer.append(&quot;FSMorphGradientFill: { &quot;);
++		buffer.append(&quot;start = &quot;).append(start.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;end = &quot;).append(end.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;gradients = &quot;).append(gradients.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-// Now calculate the translation
+-int translateX = shapeX - (gradientX / scale);
+-int translateY = shapeY - (gradientY / scale);
+-&lt;/pre&gt;
++		return buffer.toString();
++	}
+ 
+-&lt;p&gt;The FSCoordTransform has a convenient constructor to create the two-step transformation:&lt;/p&gt;
++	public int length(FSCoder coder)
++	{
++		int length = super.length(coder);
+ 
+-&lt;pre&gt;
+-FSCoordTransform composite = new FSCoordTransform(translateX, translateY, scale, scale);
+-&lt;/pre&gt;
++		length += start.length(coder);
++		length += end.length(coder);
++		length += 1;
+ 
+-&lt;p&gt;The transform is independent of any transformation defined for the parent shape in which the gradient is displayed. The gradient will be displayed correctly if the shape is scaled, rotated, etc. when it is added to the display list.&lt;/p&gt;
++		for (Iterator&lt;FSMorphGradient&gt; i = gradients.iterator(); i.hasNext();)
++			length += i.next().length(coder);
+ 
+-&lt;p&gt;The above process is repeated to calculate the transform for the gradient fill at the end of the morphing process. The transforms are independent of any transformation defined for the parent morphing shape in which the gradients are displayed.
++		return length;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		
++		start.encode(coder);
++		end.encode(coder);
++		
++		coder.writeByte(gradients.size());
+ 
+-&lt;p&gt;The FSMorphGradientFill class represents the MorphFillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+- */  
+-public class FSMorphGradientFill extends FSFillStyle
+-{
+-    private FSCoordTransform startTransform = null;
+-    private FSCoordTransform endTransform = null;
+-    private ArrayList gradients = null;
+-    
+-    /**
+-     * Construct an FSMorphGradientFill object, initalizing it with values 
+-     * decoded from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSMorphGradientFill(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSMorphGradientFill object specifying the type of fill, starting and ending coordinate transforms and the array of gradient records.
++		for (Iterator&lt;FSMorphGradient&gt; i = gradients.iterator(); i.hasNext();)
++			i.next().encode(coder);
++	}
+ 
+-        @param aType the type of gradient fill, either FSFillStyle.Linear or FSFillStyle.Radial.
+-        @param aStartTransform the coordinate transform mapping the gradient square onto physical coordinates at the start of the morphing process.
+-        @param anEndTransform the coordinate transform mapping the gradient square onto physical coordinates at the end of the morphing process.
+-        @param anArray an array of up to eight FSMorphGradient objects defining the control points for the gradient.
+-        */
+-    public FSMorphGradientFill(int aType, FSCoordTransform aStartTransform, FSCoordTransform anEndTransform, ArrayList anArray)
+-    {
+-        super(aType);
+-        setStartTransform(aStartTransform);
+-        setEndTransform(anEndTransform);
+-        setGradients(anArray);
+-    }
+-    /**
+-     * Constructs an FSMorphGradientFill object by copying values from an 
+-     * existing object.
+-     *
+-     * @param obj an FSMorphGradientFill object.
+-     */
+-    public FSMorphGradientFill(FSMorphGradientFill obj)
+-    {
+-        super(obj);
+-        startTransform = new FSCoordTransform(obj.startTransform);
+-        endTransform = new FSCoordTransform(obj.endTransform);
+-        
+-        gradients = new ArrayList(obj.gradients.size());
+-        
+-        for (Iterator i = obj.gradients.iterator(); i.hasNext();)
+-            gradients.add(((FSGradient)i.next()).clone());
+-    }    
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
+ 
+-    /** Add a FSMorphGradient object to the array of gradient objects.
++		start = new FSCoordTransform(coder);
++		end = new FSCoordTransform(coder);
+ 
+-        @param aGradient an FSMorphGradient object.
+-        */
+-    public void add(FSMorphGradient aGradient) { gradients.add(aGradient); }
++		int count = coder.readByte();
+ 
+-    /** Gets the coordinate transform mapping the gradient square onto physical coordinates at the start of the morphing process.
++		gradients = new ArrayList&lt;FSMorphGradient&gt;(count);
+ 
+-        @return the starting coordinate transform.
+-        */
+-    public FSCoordTransform getStartTransform() { return startTransform; }
+-
+-    /** Gets the coordinate transform mapping the gradient square onto physical coordinates at the end of the morphing process.
+-
+-        @return the ending coordinate transform.
+-        */
+-    public FSCoordTransform getEndTransform() { return endTransform; }
+-
+-    /** Gets the array of up to eight FSMorphGradient objects defining the control points for the gradient.
+-
+-        @return the array of control points.
+-        */
+-    public ArrayList getGradients() 
+-    { 
+-        return gradients;
+-    }
+-    
+-    /** Sets the coordinate transform mapping the gradient square onto physical coordinates at the start of the morphing process.
+-
+-        @param aTransform the starting coordinate transform.
+-        */
+-    public void setStartTransform(FSCoordTransform aTransform)
+-    {
+-        startTransform = aTransform;
+-    }
+-
+-    /** Sets the coordinate transform mapping the gradient square onto physical coordinates at the end of the morphing process.
+-
+-        @param aTransform the ending coordinate transform.
+-        */
+-    public void setEndTransform(FSCoordTransform aTransform)
+-    {
+-        endTransform = aTransform;
+-    }
+-
+-    /** Sets the array of control points that define the gradient.
+-
+-        @param anArray an array of up to eight FSMorphGradient objects.
+-        */
+-    public void setGradients(ArrayList anArray)
+-    {
+-        gradients = anArray;
+-    }
+-
+-    public Object clone()
+-    {
+-        FSMorphGradientFill anObject = (FSMorphGradientFill)super.clone();
+-        
+-        anObject.startTransform = (startTransform != null) ? (FSCoordTransform)startTransform.clone() : null;
+-        anObject.endTransform = (endTransform != null) ? (FSCoordTransform)endTransform.clone() : null;
+-        
+-        anObject.gradients = new ArrayList();
+-            
+-        for (Iterator i = gradients.iterator(); i.hasNext();)
+-            anObject.gradients.add(((FSMorphGradient)i.next()).clone());
+-
+-        return anObject;
+-    }
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSMorphGradientFill typedObject = (FSMorphGradientFill)anObject;
+-            
+-            if (startTransform != null)
+-                result = startTransform.equals(typedObject.startTransform);
+-            else
+-                result = startTransform == typedObject.startTransform;
+-
+-            if (endTransform != null)
+-                result = result &amp;&amp; endTransform.equals(typedObject.endTransform);
+-            else
+-                result = result &amp;&amp; endTransform == typedObject.endTransform;
+-
+-            if (gradients != null)
+-                result = result &amp;&amp; gradients.equals(typedObject.gradients);
+-            else
+-                result = result &amp;&amp; gradients == typedObject.gradients;
+-        }
+-        
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;startTransform&quot;, startTransform, depth);
+-            Transform.append(buffer, &quot;endTransform&quot;, endTransform, depth);
+-            Transform.append(buffer, &quot;gradients&quot;, gradients, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = super.length(coder);
+-    
+-        length += startTransform.length(coder);
+-        length += endTransform.length(coder);
+-        length += 1;
+-    
+-        for (Iterator gradientIterator = gradients.iterator(); gradientIterator.hasNext();) 
+-            length += ((FSTransformObject)gradientIterator.next()).length(coder);
+-
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        startTransform.encode(coder);
+-        endTransform.encode(coder);
+-        coder.writeWord(gradients.size(), 1);
+-    
+-        for (Iterator gradientIterator = gradients.iterator(); gradientIterator.hasNext();) 
+-            ((FSTransformObject)gradientIterator.next()).encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-
+-        startTransform = new FSCoordTransform(coder);
+-        endTransform = new FSCoordTransform(coder);
+-        
+-        int count = coder.readWord(1, false);
+-                            
+-        gradients = new ArrayList(count);
+-
+-        for (int i=0; i&lt;count; i++)
+-        {
+-            FSMorphGradient aGradient = new FSMorphGradient(coder);
+-            gradients.add(aGradient);
+-        }
+-    }
++		for (int i=0; i&lt;count; i++) {
++			gradients.add(new FSMorphGradient(coder));
++		}
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMorphSolidFill.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMorphSolidFill.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMorphSolidFill.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -31,178 +31,216 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSMorphSolidFill defines the solid colours that are used to fill a morphing shape at 
+-the start and end of the morphing process.
+- 
+-&lt;table class=&quot;datasheet&quot;&gt;
++ * FSMorphSolidFill defines the solid colours that are used to fill a morphing
++ * shape at the start and end of the morphing process.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;start&lt;/td&gt;
++ * &lt;td&gt;The colour applied to the shape at the start of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;end&lt;/td&gt;
++ * &lt;td&gt;The colour applied to the shape at the end of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The parent class, FSFillStyle allows the type to be set. This should only be
++ * used for manipulating bitmap and gradient fill styles.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The FSMorphSolidFill object is added to a FSDefineMorphShape so both the
++ * start colour and end colour should have a value specified for the alpha
++ * channel that defines how transparent the colour is.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSColor red = new FSColor(255, 0, 0, 128);
++ * 
++ * FSColor green = new FSColor(0, 255, 0, 128);
++ * 
++ * FSMorphSolidFill fill = new FSMorphSolidFill(red, green);
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSMorphSolidFill class represents the MorphFillStyle structure from the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 3.
++ * &lt;/p&gt;
++ */
++public class FSMorphSolidFill extends FSFillStyle
++{
++	private FSColor start = null;
++	private FSColor end = null;
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Construct an FSMorphSolidFill object, initalizing it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSMorphSolidFill(FSCoder coder)
++	{
++		super(Solid);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphSolidFill_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSMorphSolidFill object specifying the starting and ending
++	 * colours.
++	 * 
++	 * @param start
++	 *            the colour at the start of the morphing process.
++	 * @param end
++	 *            the colour at the end of the morphing process.
++	 */
++	public FSMorphSolidFill(FSColor start, FSColor end)
++	{
++		super(Solid);
++		setStartColor(start);
++		setEndColor(end);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphSolidFill_1&quot;&gt;startColor&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The colour applied to the shape at the start of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSMorphSolidFill object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSMorphSolidFill object.
++	 */
++	public FSMorphSolidFill(FSMorphSolidFill obj)
++	{
++		super(obj.type);
++		start = new FSColor(obj.start);
++		end = new FSColor(obj.end);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSMorphSolidFill_2&quot;&gt;startColor&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The colour applied to the shape at the end of the morphing process.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the colour at the start of the morphing process.
++	 * 
++	 * @return the starting colour.
++	 */
++	public FSColor getStartColor()
++	{
++		return start;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Gets the colour at the end of the morphing process.
++	 * 
++	 * @return the end colour.
++	 */
++	public FSColor getEndColor()
++	{
++		return end;
++	}
+ 
+-&lt;p&gt;The parent class, FSFillStyle allows the type to be set. This should only be used for manipulating bitmap and gradient fill styles.&lt;/p&gt; 
++	/**
++	 * Sets the colour at the start of the morphing process.
++	 * 
++	 * @param aColor
++	 *            the start colour.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setStartColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null.&quot;);
++		}
++		start = aColor;
++	}
+ 
+-&lt;p&gt;The FSMorphSolidFill object is added to a FSDefineMorphShape so both the start colour and end colour should have a value specified for the alpha channel that defines how transparent the colour is.&lt;/p&gt;
++	/**
++	 * Sets the colour at the end of the morphing process.
++	 * 
++	 * @param aColor
++	 *            the end colour.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setEndColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null.&quot;);
++		}
++		end = aColor;
++	}
+ 
+-&lt;pre&gt;
+-FSColor red = new FSColor(255, 0, 0, 128);
+-FSColor green = new FSColor(0, 255, 0, 128);
+-FSMorphSolidFill fill = new FSMorphSolidFill(red, green);
+-&lt;/pre&gt;
++	public Object clone()
++	{
++		FSMorphSolidFill fill = (FSMorphSolidFill) super.clone();
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		fill.start = new FSColor(start);
++		fill.end = new FSColor(end);
+ 
+-&lt;p&gt;The FSMorphSolidFill class represents the MorphFillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+- */  
+-public class FSMorphSolidFill extends FSFillStyle
+-{
+-    private FSColor startColor = null;
+-    private FSColor endColor = null;
+-    
+-    /**
+-     * Construct an FSMorphSolidFill object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSMorphSolidFill(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSMorphSolidFill object specifying the starting and ending colours.
++		return fill;
++	}
+ 
+-        @param aStartColor the colour at the start of the morphing process.
+-        @param anEndColor the colour at the end of the morphing process.
+-        */
+-    public FSMorphSolidFill(FSColor aStartColor, FSColor anEndColor)
+-    {
+-        super(Solid);
+-        setStartColor(aStartColor);
+-        setEndColor(anEndColor);
+-    }
+-    /**
+-     * Constructs an FSMorphSolidFill object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSMorphSolidFill object.
+-     */
+-    public FSMorphSolidFill(FSMorphSolidFill obj)
+-    {
+-        super(obj);
+-        startColor = new FSColor(obj.startColor);
+-        endColor = new FSColor(obj.endColor);
+-    }    
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-    /** Gets the colour at the start of the morphing process.
++		if (super.equals(obj))
++		{
++			FSMorphSolidFill fill = (FSMorphSolidFill) obj;
+ 
+-        @return the starting colour.
+-        */
+-    public FSColor getStartColor() { return startColor; }
++			result = start.equals(fill.start);
++			result = result &amp;&amp; end.equals(fill.end);
++		}
++		return result;
++	}
+ 
+-    /** Gets the colour at the end of the morphing process.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @return the end colour.
+-        */
+-    public FSColor getEndColor() { return endColor; }
++		buffer.append(&quot;FSMorphSolidFill: { &quot;);
++		buffer.append(&quot;start = &quot;).append(start.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;end = &quot;).append(end.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++		
++		return buffer.toString();
++	}
+ 
+-    /** Sets the colour at the start of the morphing process.
++	public int length(FSCoder coder)
++	{
++		int length = super.length(coder);
+ 
+-        @param aColor the start colour.
+-        */
+-    public void setStartColor(FSColor aColor)
+-    {
+-        startColor = aColor;
+-    }
++		length += start.length(coder);
++		length += end.length(coder);
+ 
+-    /** Sets the colour at the end of the morphing process.
++		return length;
++	}
+ 
+-        @param aColor the end colour.
+-        */
+-    public void setEndColor(FSColor aColor)
+-    {
+-        endColor = aColor;
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		start.encode(coder);
++		end.encode(coder);
++	}
+ 
+-    public Object clone()
+-    {
+-        FSMorphSolidFill anObject = (FSMorphSolidFill)super.clone();
+-        
+-        anObject.startColor = (startColor != null) ? (FSColor)startColor.clone() : null;
+-        anObject.endColor = (endColor != null) ? (FSColor)endColor.clone() : null;
+-        
+-        return anObject;
+-    }
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSMorphSolidFill typedObject = (FSMorphSolidFill)anObject;
+-            
+-            if (startColor != null)
+-                result = startColor.equals(typedObject.startColor);
+-            else
+-                result = startColor == typedObject.startColor;
+-
+-            if (endColor != null)
+-                result = result &amp;&amp; endColor.equals(typedObject.endColor);
+-            else
+-                result = result &amp;&amp; endColor == typedObject.endColor;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;startColor&quot;, startColor, depth);
+-            Transform.append(buffer, &quot;endColor&quot;, endColor, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = super.length(coder);
+-    
+-        length += startColor.length(coder);
+-        length += endColor.length(coder);
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        startColor.encode(coder);
+-        endColor.encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        startColor = new FSColor(coder);
+-        endColor = new FSColor(coder);
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		start = new FSColor(coder);
++		end = new FSColor(coder);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSSolidFill.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSSolidFill.java	2008-03-18 12:32:49 UTC (rev 351)
++++ dev/dev-2-4/src/com/flagstone/transform/FSSolidFill.java	2008-03-18 13:55:59 UTC (rev 352)
+@@ -31,175 +31,217 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSSolidFill defines a solid colour that is used to fill an enclosed area in a shape.
++ * FSSolidFill defines a solid colour that is used to fill an enclosed area in a
++ * shape.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;color&lt;/td&gt;
++ * &lt;td&gt;The colour used to fill the area of the shape.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The parent class, FSFillStyle allows the type to be set. This should only be
++ * used for manipulating bitmap and gradient fill styles.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Fill styles are selected using the FSShapeStyle class and are referenced by
++ * their ordinal position in the array of available styles. The ordinal position
++ * in the array is used rather than the index (which starts at 0). An index of 0
++ * is used to specify that a fill style is not selected.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * An FSSolidFill object is created by specifying the colour to fill the shape:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSColor red = new FSColor(255, 0, 0);
++ * 
++ * FSSolidFill fill = new FSSolidFill(red);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Shapes can be filled with transparent colours - rather than specifying that
++ * the entire shape is transparent when adding it to the display list using the
++ * FSPlaceObject2 class:
++ * 
++ * &lt;pre&gt;
++ * FSColor transparentRed = new FSColor(255, 0, 0, 128);
++ * 
++ * FSSolidFill transparentFill = new FSSolidFill(transparentRed);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Note however that the object used to create the shape definition determines
++ * whether the alpha channel is encoded. Simply specifying the level of
++ * transparency in the FSColor object is not sufficient. Transparent colours are
++ * only supports in Flash 3 onwards.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * To reference different colours to fill a shape use the ordinal position of
++ * the FSSolidFill object in the array of fill styles defined in the shape:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * ArrayList fillStyles = new ArrayList();
++ * fillStyles.add(new FSSolidFill(new FSColor(255, 0, 0))); // red 
++ * fillStyles.add(new FSSolidFill(new FSColor(0, 255, 0))); // green
++ * 
++ * FSShape shape = new FSShape(); \n&quot;; 
++ * 
++ * // The fill styles are referenced by their ordinal position in the 
++ * // array of styles.
++ * int redStyle = 1; 
++ * int greenStyle = 2; 
++ * 
++ * // fill the enclosed area with red.
++ * shape.add(new FSShapeStyle(0, redStyle, 0));
++ * ...
++ * // now fill the remaining area with green.
++ * shape.add(new FSShapeStyle(0, greenStyle, 0));
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;
++ * History
++ * &lt;/h1&gt;
++ * &lt;p&gt;
++ * The FSSolidFill class represents the FillStyle structure from the 
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in 
++ * Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSSolidFill extends FSFillStyle
++{
++	private FSColor color;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSSolidFill object, initialising it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSSolidFill(FSCoder coder)
++	{
++		super(FSFillStyle.Solid);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSSolidFill object of the specified colour.
++	 * 
++	 * @param aColor
++	 *            an FSColor object that defines the colour that the area will
++	 *            be filled with.
++	 */
++	public FSSolidFill(FSColor aColor)
++	{
++		super(FSFillStyle.Solid);
++		setColor(aColor);
++	}
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSSolidFill_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSSolidFill object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSSolidFill object.
++	 */
++	public FSSolidFill(FSSolidFill obj)
++	{
++		super(obj.type);
++		color = new FSColor(obj.color);
++	}
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSSolidFill_1&quot;&gt;color&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The colour used to fill the area of the shape.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the colour of the fill style.
++	 * 
++	 * @return the colour defined for the solid fill.
++	 */
++	public FSColor getColor()
++	{
++		return color;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Sets the colour of the fill style.
++	 * 
++	 * @param aColor
++	 *            an FSColor object that defines the colour that the area will
++	 *            be filled with.
++	 * 
++	 * @throws NullPointerException if the argument is null.
++	 */
++	public void setColor(FSColor aColor)
++	{
++		if (aColor == null) {
++			throw new NullPointerException(&quot;Colour cannot be null.&quot;);
++		}
++		color = aColor;
++	}
+ 
+-&lt;p&gt;The parent class, FSFillStyle allows the type to be set. This should only be used for manipulating bitmap and gradient fill styles.&lt;/p&gt; 
++	public Object clone()
++	{
++		FSSolidFill fill = (FSSolidFill)super.clone();
++		fill.color = new FSColor(color);
++		return fill;
++	}
+ 
+-&lt;p&gt;Fill styles are selected using the FSShapeStyle class and are referenced by their ordinal position in the array of available styles. The ordinal position in the array is used rather than the index (which starts at 0). An index of 0 is used to specify that a fill style is not selected.&lt;/p&gt;
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++		if (super.equals(obj))
++		{
++			FSSolidFill fill = (FSSolidFill) obj;
++			result = color.equals(fill.color);
++		}
++		return result;
++	}
+ 
+-&lt;p&gt;An FSSolidFill object is created by specifying the colour to fill the shape:&lt;/p&gt;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-&lt;pre&gt;
+-FSColor red = new FSColor(255, 0, 0);
+-FSSolidFill fill = new FSSolidFill(red);
+-&lt;/pre&gt;
++		buffer.append(&quot;FSSolidFill : {&quot;);
++		buffer.append(&quot;color = &quot;).append(color.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-&lt;p&gt;Shapes can be filled with transparent colours - rather than specifying that the entire shape is transparent when adding it to the display list using the FSPlaceObject2 class:
++		return buffer.toString();
++	}
+ 
+-&lt;pre&gt;
+-FSColor transparentRed = new FSColor(255, 0, 0, 128);
+-FSSolidFill transparentFill = new FSSolidFill(transparentRed);
+-&lt;/pre&gt;
++	public int length(FSCoder coder)
++	{
++		int length = super.length(coder);
++		length += color.length(coder);
++		return length;
++	}
+ 
+-&lt;p&gt;Note however that the object used to create the shape definition determines whether the alpha channel is encoded. Simply specifying the level of transparency in the FSColor object is not sufficient. Transparent colours are only supports in Flash 3 onwards.&lt;/p&gt;
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		color.encode(coder);
++	}
+ 
+-&lt;p&gt;To reference different colours to fill a shape use the ordinal position of the FSSolidFill object in the array of fill styles defined in the shape:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-ArrayList fillStyles = new ArrayList();
+-
+-fillStyles.add(new FSSolidFill(new FSColor(255, 0, 0))); // red 
+-fillStyles.add(new FSSolidFill(new FSColor(0, 255, 0))); // green
+-
+-FSShape shape = new FSShape(); \n&quot;; 
+-
+-// The fill styles are referenced by their ordinal position in the 
+-// array of styles.
+-
+-int redStyle = 1; 
+-int greenStyle = 2; 
+-
+-// fill the enclosed area with red.
+-shape.add(new FSShapeStyle(0, redStyle, 0));
+-...
+-// now fill the remaining area with green.
+-shape.add(new FSShapeStyle(0, greenStyle, 0));
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSSolidFill class represents the FillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSSolidFill extends FSFillStyle
+-{
+-    private FSColor color = null;
+-    
+-    /**
+-     * Construct an FSSolidFill object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSSolidFill(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /**    Constructs an FSSolidFill object of the specified colour.
+-
+-        @param aColor an FSColor object that defines the colour that the area will be filled with.
+-        */
+-    public FSSolidFill(FSColor aColor)
+-    {
+-        super(FSFillStyle.Solid);
+-        setColor(aColor);
+-    }
+-    /**
+-     * Constructs an FSSolidFill object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSSolidFill object.
+-     */
+-    public FSSolidFill(FSSolidFill obj)
+-    {
+-        super(obj);
+-        color = new FSColor(obj.color);
+-    }    
+-
+-    /** Gets the colour of the fill style.
+-
+-        @return the colour defined for the solid fill.
+-        */
+-    public FSColor getColor() { return color; }
+-
+-    /** Sets the colour of the fill style.
+-
+-        @param aColor an FSColor object that defines the colour that the area will be filled with.
+-        */
+-    public void setColor(FSColor aColor)
+-    {
+-        color = aColor;
+-    }
+-
+-    public Object clone()
+-    {
+-        FSSolidFill anObject = (FSSolidFill)super.clone();
+-        
+-        anObject.color = (color != null) ? (FSColor)color.clone() : null;
+-        
+-        return anObject;
+-    }
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSSolidFill typedObject = (FSSolidFill)anObject;
+-            
+-            if (color != null)
+-                result = color.equals(typedObject.color);
+-            else
+-                result = color == typedObject.color;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;color&quot;, color, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int length = super.length(coder);
+-    
+-        length += color.length(coder);
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        color.encode(coder);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        color = new FSColor(coder);
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		color = new FSColor(coder);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000287.html">[Transform-svn] r351 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000289.html">[Transform-svn] r353 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#288">[ date ]</a>
+              <a href="thread.html#288">[ thread ]</a>
+              <a href="subject.html#288">[ subject ]</a>
+              <a href="author.html#288">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

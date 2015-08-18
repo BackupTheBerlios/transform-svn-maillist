@@ -1,0 +1,664 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r381%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182230.m2IMUmvP012269%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000316.html">
+   <LINK REL="Next"  HREF="000318.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r381%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182230.m2IMUmvP012269%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 23:30:48 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000316.html">[Transform-svn] r380 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000318.html">[Transform-svn] r382 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#317">[ date ]</a>
+              <a href="thread.html#317">[ thread ]</a>
+              <a href="subject.html#317">[ subject ]</a>
+              <a href="author.html#317">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 23:30:44 +0100 (Tue, 18 Mar 2008)
+New Revision: 381
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSIf.java
+   dev/dev-2-4/src/com/flagstone/transform/FSJump.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSIf.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSIf.java	2008-03-18 22:20:54 UTC (rev 380)
++++ dev/dev-2-4/src/com/flagstone/transform/FSIf.java	2008-03-18 22:30:44 UTC (rev 381)
+@@ -31,138 +31,185 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSIf action is used to perform a conditional branch to control the actions executed 
+-by the Flash Player. 
+- 
+-&lt;p&gt;When executed, the FSIf action pops a value from the stack and evaluates it to see whether it evaluates as true or false. If the boolean value is true the offset attribute of the FSIf action is added to the Flash Player's instruction pointer and execution of the stream of actions continues from that location. If the boolean value is false then no branch is taken.&lt;/p&gt;
++ * The FSIf action is used to perform a conditional branch to control the
++ * actions executed by the Flash Player.
++ * 
++ * &lt;p&gt;
++ * When executed, the FSIf action pops a value from the stack and evaluates it
++ * to see whether it evaluates as true or false. If the boolean value is true
++ * the offset attribute of the FSIf action is added to the Flash Player's
++ * instruction pointer and execution of the stream of actions continues from
++ * that location. If the boolean value is false then no branch is taken.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Although the Flash Player contains an instruction pointer it does not support
++ * an explicit address space. The instruction pointer is used to reference
++ * actions within the current stream of actions being executed whether they are
++ * associated with a given frame, button or movie clip. The value contained in
++ * the instruction pointer is the address relative to the start of the current
++ * stream.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;offset&lt;/td&gt;
++ * &lt;td&gt;The offset, relative to the current instruction pointer, to jump to if
++ * the value on the Stack evaluates to true.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The offset is a signed number, allowing branches up to -32768 to 32767 bytes.
++ * The instruction pointer points to the next instruction in the stream of
++ * actions being executed so specifying an offset of zero will have no effect on
++ * the sequence of instructions executed.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * If the value popped off the stack is a number it is evaluated as true if it
++ * is non-zero. If the value is a string it is evaluated to true if it is not an
++ * empty string (&quot;&quot;) or the strings &quot;0&quot; or &quot;false&quot;.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSDoAction actions = new FSDoAction();
++ * 
++ * actions.add(new FSPush(&quot;a&quot;));
++ * actions.add(FSAction.GetVariable());
++ * actions.add(new FSPush(3));
++ * actions.add(FSAction.Equals());
++ * actions.add(new FSIf(32));
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSIf class represents the ActionIf action of the Macromedia Flash (SWF)
++ * File Format Specification. It was introduced in Flash 4.
++ * &lt;/p&gt;
++ */
++public class FSIf extends FSActionObject
++{
++	private int offset;
+ 
+-&lt;p&gt;Although the Flash Player contains an instruction pointer it does not support an explicit address space. The instruction pointer is used to reference actions within the current stream of actions being executed whether they are associated with a given frame, button or movie clip. The value contained in the instruction pointer is the address relative to the start of the current stream.&lt;/p&gt;
++	/**
++	 * Construct an FSIf object, initializing it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSIf(FSCoder coder)
++	{
++		super(If);
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an if action with the specified offset. The offset must be in
++	 * the range -32768..32767.
++	 * 
++	 * @param anOffset
++	 *            the number of bytes to add to the instruction pointer if the
++	 *            value popped off the stack evaluates to true.
++	 */
++	public FSIf(int anOffset)
++	{
++		super(If);
++		setOffset(anOffset);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSIf object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSIf object.
++	 */
++	public FSIf(FSIf obj)
++	{
++		super(obj);
++		offset = obj.offset;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSIf_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the offset that will be added to the instruction pointer if the
++	 * value at the top of the stack evaluates to true (non-zero).
++	 * 
++	 * @return the number of bytes representing the offset.
++	 */
++	public int getOffset()
++	{
++		return offset;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSIf_1&quot;&gt;offset&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The offset, relative to the current instruction pointer, to jump to if the value on the Stack evaluates to true.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Sets the offset to add to the instruction pointer if the value at the top
++	 * of the stack evaluates to true (non-zero). The offset must be in the
++	 * range -32768..32767.
++	 * 
++	 * @param aNumber
++	 *            the number of bytes to add to the instruction pointer.
++	 *            
++	 * @throws IllegalArgumentException if the offset is not in the range -32768..32767.
++	 */
++	public void setOffset(int aNumber)
++	{
++		if (aNumber &lt; -32768 || aNumber &gt; 32767) {
++			throw new IllegalArgumentException(&quot;Offset must be in range -32768..32767.&quot;);
++		}
++		offset = aNumber;
++	}
+ 
+-&lt;p&gt;The offset is a signed number, allowing branches up to -32768 to 32767 bytes. The instruction pointer points to the next instruction in the stream of actions being executed so specifying an offset of zero will have no effect on the sequence of instructions executed.&lt;/p&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;p&gt;If the value popped off the stack is a number it is evaluated as true if it is non-zero. If the value is a string it is evaluated to true if it is not an empty string (&quot;&quot;) or the strings &quot;0&quot; or &quot;false&quot;.&lt;/p&gt;
++		if (super.equals(anObject))
++			result = offset == ((FSIf) anObject).getOffset();
+ 
+-&lt;pre&gt;
+-FSDoAction actions = new FSDoAction();
++		return result;
++	}
+ 
+-actions.add(new FSPush(&quot;a&quot;));
+-actions.add(FSAction.GetVariable());
+-actions.add(new FSPush(3));
+-actions.add(FSAction.Equals());
+-actions.add(new FSIf(32));
+-&lt;/pre&gt;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		buffer.append(&quot;FSIf: { &quot;);
++		buffer.append(&quot;offset = &quot;).append(offset).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-&lt;p&gt;The FSIf class represents the ActionIf action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+- */  
+-public class FSIf extends FSActionObject
+-{
+-    private int offset = 0;
++		return buffer.toString();
++	}
+ 
+-    /**
+-     * Construct an FSIf object, initalizing it with values decoded from an 
+-     * encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSIf(FSCoder coder)
+-    {
+-        super(If);
+-        decode(coder);
+-    }
+-    /** Constructs an if action with the specified offset. The offset must be in the range  -32768..32767.
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-        @param anOffset the number of bytes to add to the instruction pointer if the value popped off the stack evaluates to true.
+-        */    
+-    public FSIf(int anOffset)
+-    {
+-        super(If);
+-        setOffset(anOffset);
+-    }
+-    /**
+-     * Constructs an FSIf object by copying values from an existing object.
+-     *
+-     * @param obj an FSIf object.
+-     */
+-    public FSIf(FSIf obj)
+-    {
+-        super(obj);
+-        offset = obj.offset;
+-    }    
++		length += 2;
+ 
+-    /** Gets the offset that will be added to the instruction pointer if the value at the top of the stack evaluates to true (non-zero).
++		return length;
++	}
+ 
+-        @return the number of bytes representing the offset.
+-        */
+-    public int getOffset() { return offset; }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeWord(offset, 2);
++	}
+ 
+-    /** Sets the offset to add to the instruction pointer if the value at the top of the stack evaluates to true (non-zero). The offset must be in the range  -32768..32767.
+-
+-        @param aNumber the number of bytes to add to the instruction pointer.
+-        */
+-    public void setOffset(int aNumber)
+-    {
+-        offset = aNumber;
+-    } 
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = offset == ((FSIf)anObject).getOffset();
+-
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;offset&quot;, offset);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        length += 2;
+-        
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeWord(offset, 2);
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        offset = coder.readWord(2, true);
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		offset = coder.readWord(2, true);
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSJump.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSJump.java	2008-03-18 22:20:54 UTC (rev 380)
++++ dev/dev-2-4/src/com/flagstone/transform/FSJump.java	2008-03-18 22:30:44 UTC (rev 381)
+@@ -31,131 +31,167 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSJump action performs an unconditional branch to control the actions executed by the Flash Player. 
+- 
+-&lt;p&gt;When executed the FSJump action adds an offset to the instruction pointer and execution of the stream of actions continues from that address.&lt;/p&gt;
++ * The FSJump action performs an unconditional branch to control the actions
++ * executed by the Flash Player.
++ * 
++ * &lt;p&gt;
++ * When executed the FSJump action adds an offset to the instruction pointer and
++ * execution of the stream of actions continues from that address.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Although the Flash Player contains an instruction pointer it does not support
++ * an explicit address space. The instruction pointer is used to reference
++ * actions within the current stream of actions being executed whether they are
++ * associated with a given frame, button or movie clip. The value contained in
++ * the instruction pointer is the address relative to the start of the current
++ * stream.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;offset&lt;/td&gt;
++ * &lt;td&gt;The offset, relative to the current instruction pointer, to jump to.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The offset is a signed number allowing branches up to -32768 to 32767 bytes.
++ * The instruction pointer points to the next instruction so specifying an
++ * offset of zero will have no effect on the sequence of instructions executed.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSDoAction actions = new FSDoAction();
++ * 
++ * actions.add(new FSJump(32));
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSJump class represents the ActionJump action of the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 4.
++ * &lt;/p&gt;
++ */
++public class FSJump extends FSActionObject
++{
++	private int offset;
+ 
+-&lt;p&gt;Although the Flash Player contains an instruction pointer it does not support an explicit address space. The instruction pointer is used to reference actions within the current stream of actions being executed whether they are associated with a given frame, button or movie clip. The value contained in the instruction pointer is the address relative to the start of the current stream.&lt;/p&gt;
++	/**
++	 * Construct an FSJump object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSJump(FSCoder coder)
++	{
++		super(Jump);
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSJump action with the specified offset. The offset must be
++	 * in the range -32768..32767.
++	 * 
++	 * @param anOffset
++	 *            the number of bytes to add to the instruction pointer.
++	 */
++	public FSJump(int anOffset)
++	{
++		super(Jump);
++		setOffset(anOffset);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSJump object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSJump object.
++	 */
++	public FSJump(FSJump obj)
++	{
++		super(obj);
++		offset = obj.offset;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSJump_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the offset that will be added to the instruction pointer.
++	 * 
++	 * @return the number of bytes to add to the instruction pointer.
++	 */
++	public int getOffset()
++	{
++		return offset;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSJump_1&quot;&gt;offset&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The offset, relative to the current instruction pointer, to jump to.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Sets the offset to add to the instruction pointer. The offset must be in
++	 * the range -32768..32767.
++	 * 
++	 * @param anOffset
++	 *            the number of bytes to add to the instruction pointer.
++	 *            
++	 * @throws IllegalArgumentException if the offset is not in the range -32768..32767.
++	 */
++	public void setOffset(int anOffset)
++	{
++		if (anOffset &lt; -32768 || anOffset &gt; 32767) {
++			throw new IllegalArgumentException(&quot;Offset must be in range -32768..32767.&quot;);
++		}
++		offset = anOffset;
++	}
+ 
+-&lt;p&gt;The offset is a signed number allowing branches up to -32768 to 32767 bytes. The instruction pointer points to the next instruction so specifying an offset of zero will have no effect on the sequence of instructions executed.&lt;/p&gt;
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-&lt;pre&gt;
+-FSDoAction actions = new FSDoAction();
++		if (super.equals(anObject))
++			result = offset == ((FSJump) anObject).getOffset();
+ 
+-actions.add(new FSJump(32));
+-&lt;/pre&gt;
++		return result;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-&lt;p&gt;The FSJump class represents the ActionJump action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+- */  
+-public class FSJump extends FSActionObject
+-{
+-    private int offset = 0;
++		buffer.append(&quot;FSJump: { &quot;);
++		buffer.append(&quot;offset = &quot;).append(offset).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /**
+-     * Construct an FSJump object, initalizing it with values decoded from an 
+-     * encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSJump(FSCoder coder)
+-    {
+-        super(Jump);
+-        decode(coder);
+-    }
+-    /** Constructs an FSJump action with the specified offset. The offset must be in the range -32768..32767.
++		return buffer.toString();
++	}
+ 
+-        @param anOffset the number of bytes to add to the instruction pointer.
+-        */
+-    public FSJump(int anOffset)
+-    {
+-        super(Jump);
+-        setOffset(anOffset);
+-    }
+-    /**
+-     * Constructs an FSJump object by copying values from an existing object.
+-     *
+-     * @param obj an FSJump object.
+-     */
+-    public FSJump(FSJump obj)
+-    {
+-        super(obj);
+-        offset = obj.offset;
+-    }    
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-    /** Gets the offset that will be added to the instruction pointer.
++		length += 2;
+ 
+-        @return the number of bytes to add to the instruction pointer.
+-        */
+-    public int getOffset() { return offset; }
++		return length;
++	}
+ 
+-    /** Sets the offset to add to the instruction pointer. The offset must be in the range -32768..32767.
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeWord(offset, 2);
++	}
+ 
+-        @param anOffset the number of bytes to add to the instruction pointer.
+-        */
+-    public void setOffset(int anOffset)
+-    {
+-        offset = anOffset;
+-    } 
+-
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = offset == ((FSJump)anObject).getOffset();
+-
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;offset&quot;, offset);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        length += 2;
+-        
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeWord(offset, 2);
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        offset = coder.readWord(2, true);
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		offset = coder.readWord(2, true);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000316.html">[Transform-svn] r380 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000318.html">[Transform-svn] r382 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#317">[ date ]</a>
+              <a href="thread.html#317">[ thread ]</a>
+              <a href="subject.html#317">[ subject ]</a>
+              <a href="author.html#317">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

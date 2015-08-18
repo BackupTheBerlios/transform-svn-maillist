@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r73 - in trunk: src/com/flagstone/transform/test test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r73%20-%20in%20trunk%3A%20src/com/flagstone/transform/test%20test/suites&In-Reply-To=%3C200602211822.k1LIMBqR008563%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000013.html">
+   <LINK REL="Next"  HREF="000015.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r73 - in trunk: src/com/flagstone/transform/test test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r73%20-%20in%20trunk%3A%20src/com/flagstone/transform/test%20test/suites&In-Reply-To=%3C200602211822.k1LIMBqR008563%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r73 - in trunk: src/com/flagstone/transform/test test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 19:22:11 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000013.html">[Transform-svn] r72 - trunk/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000015.html">[Transform-svn] r74 - in trunk: . doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#14">[ date ]</a>
+              <a href="thread.html#14">[ thread ]</a>
+              <a href="subject.html#14">[ subject ]</a>
+              <a href="author.html#14">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 19:22:03 +0100 (Tue, 21 Feb 2006)
+New Revision: 73
+
+Added:
+   trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java
+   trunk/test/suites/FSShapeConstructor.xml
+Log:
+Added a test for FSShapeConstructor.
+
+Added: trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2006-02-21 18:11:53 UTC (rev 72)
++++ trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2006-02-21 18:22:03 UTC (rev 73)
+@@ -0,0 +1,146 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class FSShapeConstructorTest
++{
++    private File destDir = null;
++    
++    public FSShapeConstructorTest()
++    {
++    }
++    /**
++     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
++     * @testng.parameters value = &quot;dstDir&quot;
++     */
++    public void configure(String dstDir)
++    {
++        destDir = new File(dstDir);
++    }
++	/**
++     * @testng.test
++	 */
++    public void basicShapes()
++    {
++        try 
++        {
++            File dstFile = new File(destDir, &quot;BasicShapes.swf&quot;);
++            
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++
++            FSShapeConstructor path = new FSShapeConstructor();
++            FSMovie movie = new FSMovie();
++            
++            path.COORDINATES_ARE_PIXELS = true;
++            
++            int width = 150;
++            int height = 100;
++            int cornerRadius = 10;
++            
++            int identifier = 0;
++            
++            path.add(new FSSolidLine(20, FSColorTable.black()));
++            path.add(new FSSolidFill(FSColorTable.red()));
++            
++            movie.setFrameRate(1.0f);
++            movie.setFrameSize(new FSBounds(-4000, -4000, 4000, 4000));
++            movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++            
++            identifier = movie.newIdentifier();
++            
++            path.selectStyle(0, 0);
++            path.rect(width/2, -height/2, width, height);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++            
++            /*
++             * Draw a rectangle with rounded corners
++             */
++            identifier = movie.newIdentifier();
++
++            path.newPath();
++            path.selectStyle(0, 0);
++            path.rect(width/2, height/2, width, height, cornerRadius);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1));
++            movie.add(new FSShowFrame());
++
++            /*
++             * Draw a circle
++             */
++            identifier = movie.newIdentifier();
++
++            path.newPath();
++            path.selectStyle(0, 0);
++            path.circle(-width/2, height/2, height/2);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1));
++            movie.add(new FSShowFrame());
++            
++            /*
++             * Draw a elipse
++             */
++            identifier = movie.newIdentifier();
++
++            path.newPath();
++            path.selectStyle(0, 0);
++            path.ellipse(-width/2, -height/2, width/2, height/2);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1));
++            movie.add(new FSShowFrame());
++            
++            /*
++             * Draw a polyline
++             */
++            identifier = movie.newIdentifier();
++
++            int[] points = new int[] { 
++                0, -100, 
++                10, 0, 
++                0, 90, 
++                90, 0, 
++                0, 20,
++                -90, 0,
++                0, 90,
++                -20, 0,
++                0, -90,
++                -90, 0,
++                0, -20,
++                90, 0,
++                0, -90,
++                10, 0
++            };
++
++            path.newPath();
++            path.selectStyle(0, 0);
++            path.polygon(points);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1));
++            movie.add(new FSShowFrame());
++            
++            /*
++             * Draw a cubic bezier curve
++             */
++            identifier = movie.newIdentifier();
++
++            path.newPath();
++            path.selectStyle(0, 0);
++            path.curve(0, -100, 150, -100, 150, 0);
++            path.closePath();
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1));
++            movie.add(new FSShowFrame());
++    
++            movie.encodeToFile(dstFile.getPath());
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++}
+
+Added: trunk/test/suites/FSShapeConstructor.xml
+===================================================================
+--- trunk/test/suites/FSShapeConstructor.xml	2006-02-21 18:11:53 UTC (rev 72)
++++ trunk/test/suites/FSShapeConstructor.xml	2006-02-21 18:22:03 UTC (rev 73)
+@@ -0,0 +1,15 @@
++&lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
++  
++&lt;suite name=&quot;FSShapeConstructorTest&quot;&gt;
++
++	&lt;parameter name=&quot;dstDir&quot; value=&quot;&quot;/&gt;
++
++    &lt;test name=&quot;Basic Shapes&quot;&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSShapeConstructor&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSShapeConstructorTest&quot;/&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
++&lt;/suite&gt;
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000013.html">[Transform-svn] r72 - trunk/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000015.html">[Transform-svn] r74 - in trunk: . doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#14">[ date ]</a>
+              <a href="thread.html#14">[ thread ]</a>
+              <a href="subject.html#14">[ subject ]</a>
+              <a href="author.html#14">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

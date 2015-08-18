@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r332 - dev/dev-2-3/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r332%20-%20dev/dev-2-3/src/com/flagstone/transform/util&In-Reply-To=%3C200803141354.m2EDsrum009540%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000267.html">
+   <LINK REL="Next"  HREF="000270.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r332 - dev/dev-2-3/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r332%20-%20dev/dev-2-3/src/com/flagstone/transform/util&In-Reply-To=%3C200803141354.m2EDsrum009540%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r332 - dev/dev-2-3/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 14 14:54:53 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000267.html">[Transform-svn] r331 - dev/dev-2-3/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000270.html">[Transform-svn] r333 - dev/dev-2-3/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#268">[ date ]</a>
+              <a href="thread.html#268">[ thread ]</a>
+              <a href="subject.html#268">[ subject ]</a>
+              <a href="author.html#268">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-14 14:54:50 +0100 (Fri, 14 Mar 2008)
+New Revision: 332
+
+Modified:
+   dev/dev-2-3/src/com/flagstone/transform/util/FSImageConstructor.java
+Log:
+Added a method to return an image as an array of FSImageBlock objects.
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/util/FSImageConstructor.java	2008-03-14 13:54:15 UTC (rev 331)
++++ dev/dev-2-3/src/com/flagstone/transform/util/FSImageConstructor.java	2008-03-14 13:54:50 UTC (rev 332)
+@@ -41,6 +41,7 @@
+ import com.flagstone.transform.FSDefineShape3;
+ 
+ import com.flagstone.transform.FSCoder;
++import com.flagstone.transform.FSImageBlock;
+ import com.flagstone.transform.FSShape;
+ import com.flagstone.transform.FSCoordTransform;
+ import com.flagstone.transform.FSBounds;
+@@ -551,7 +552,112 @@
+         }
+         return image;
+     }
++    
+     /**
++     * Return the image as an array of FSImageBlock objects that can be used
++     * when creating ScreenVideo streams.
++     * 
++     * The image is divided by tiling blocks of the specified width and height 
++     * across the image. For blocks at the right and bottom edges the size of 
++     * the block may be reduced so that it fits the image exactly. In other 
++     * words the blocks are not padded with extra pixel information.
++     * 
++     * @param blockWidth the width of a block in pixels.
++     * @param blockHeight the height of a block in pixels
++     * @return an array of FMImageBlock objects.
++     */   
++	public ArrayList getImageAsBlocks(int blockWidth, int blockHeight)
++	{
++        int row = 0;
++        int col = 0;
++        int index = 0;
++
++        byte[] formattedImage = new byte[width*height*3];
++        
++        switch (format)
++        {
++            case IDX8:
++            case IDXA: 
++                for (row=height-1; row&gt;=0; row--)
++                {
++                    for (col=0; col&lt;width; col++) 
++                    {                  	
++                        formattedImage[index++] = colourTable[indexedImage[row][col]][2];
++                        formattedImage[index++] = colourTable[indexedImage[row][col]][1];
++                        formattedImage[index++] = colourTable[indexedImage[row][col]][0];                    	
++                    }
++                }
++                break;
++            case RGB5: 
++            case RGB8: 
++            case RGBA: 
++                for (row=height-1; row&gt;=0; row--)
++                {
++                    for (col=0; col&lt;width; col++)
++                    {
++                        formattedImage[index++] = colorImage[row][col][2];
++                        formattedImage[index++] = colorImage[row][col][1];
++                        formattedImage[index++] = colorImage[row][col][0];
++                    }
++                }
++                break;
++        }
++
++		int columns = (width+blockWidth-1)/blockWidth;
++		int rows = (height+blockHeight-1)/blockHeight;
++		
++		ArrayList blocks = new ArrayList(rows*columns);
++		byte[] blockData = new byte[blockHeight*blockWidth*3];
++		
++		for (int i=0; i&lt;rows; i++)
++		{
++			for (int j=0; j&lt;columns; j++)
++			{
++				int xOffset = j*blockWidth;
++				int yOffset = i*blockHeight;
++				
++				int xSpan = (width-xOffset &gt; blockWidth) ? blockWidth : width-xOffset;
++				int ySpan = (height-yOffset &gt; blockHeight) ? blockHeight : height-yOffset;
++				int offset = 0;
++				
++				int idx;
++				
++				for (int k=0; k&lt;ySpan; k++) 
++				{
++					for (int l=0; l&lt;xSpan; l++, offset+=3) 
++					{
++						idx = (yOffset+k)*(width*3)+(xOffset+l)*3;
++						
++						blockData[offset] = formattedImage[idx];					
++						blockData[offset+1] = formattedImage[idx+1];					
++						blockData[offset+2] = formattedImage[idx+2];					
++					}
++				}
++				
++				blocks.add(new FSImageBlock(xSpan, ySpan, zip(blockData, offset)));
++			}
++		}
++		return blocks;
++	}
++	
++	private static byte[] zip(byte[] image, int length)
++	{
++		Deflater deflater = new Deflater();
++		deflater.setInput(image, 0, length);
++		deflater.finish();
++
++		byte[] compressedData = new byte[image.length];
++		int bytesCompressed = deflater.deflate(compressedData);
++
++		byte[] newData = new byte[bytesCompressed];
++
++		for (int i = 0; i &lt; bytesCompressed; i++)
++			newData[i] = compressedData[i];
++
++		return newData;
++	}
++    
++    /**
+      * Sets the image data for an indexed image.
+      * 
+      * @param encoding the format for the encoded image, either IDX8, or IDXA.
+@@ -682,7 +788,7 @@
+         return object;
+     }
+ 
+-    private byte[] getImage()
++    byte[] getImage()
+     {
+         int row = 0;
+         int col = 0;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000267.html">[Transform-svn] r331 - dev/dev-2-3/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000270.html">[Transform-svn] r333 - dev/dev-2-3/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#268">[ date ]</a>
+              <a href="thread.html#268">[ thread ]</a>
+              <a href="subject.html#268">[ subject ]</a>
+              <a href="author.html#268">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

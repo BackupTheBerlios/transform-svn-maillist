@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r159 - trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r159%20-%20trunk&In-Reply-To=%3C200604131625.k3DGPqWc028684%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000097.html">
+   <LINK REL="Next"  HREF="000099.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r159 - trunk</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r159%20-%20trunk&In-Reply-To=%3C200604131625.k3DGPqWc028684%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r159 - trunk">smackay at berlios.de
+       </A><BR>
+    <I>Thu Apr 13 18:25:52 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000097.html">[Transform-svn] r158 - trunk
+</A></li>
+        <LI>Next message: <A HREF="000099.html">[Transform-svn] r160 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#98">[ date ]</a>
+              <a href="thread.html#98">[ thread ]</a>
+              <a href="subject.html#98">[ subject ]</a>
+              <a href="author.html#98">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-04-13 18:25:49 +0200 (Thu, 13 Apr 2006)
+New Revision: 159
+
+Modified:
+   trunk/developer.xml
+Log:
+Removed the &quot;patch&quot; target. The release process is now smooth enough 
+so that bug releases can be distributed easily and so a path is 
+not needed.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2006-04-13 16:20:48 UTC (rev 158)
++++ trunk/developer.xml	2006-04-13 16:25:49 UTC (rev 159)
+@@ -117,49 +117,5 @@
+         &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;true&quot; 
+             message=&quot;gpg --local-user support --armor --detach-sign --output ${dist.name}.zip.asc ${dist.name}.zip&quot;/&gt;
+     &lt;/target&gt;
+-
+-    &lt;target name=&quot;patch&quot; description=&quot;Release source code for classes in advance of a release&quot;&gt;
+-        
+-        &lt;mkdir dir=&quot;${dist.dir}&quot;/&gt;
+-            
+-        &lt;copy todir=&quot;${patch.dir}/src&quot; overwrite=&quot;true&quot;&gt;
+-            &lt;fileset dir=&quot;${src.dir}&quot;&gt;
+-                &lt;include name=&quot;${package.dir}/FSPush.java&quot; /&gt;
+-                &lt;include name=&quot;${package.dir}/FSProperty.java&quot; /&gt;
+-                &lt;include name=&quot;${package.dir}/FSDefineJPEGImage2.java&quot; /&gt;
+-                &lt;include name=&quot;${package.dir}/FSDefineJPEGImage3.java&quot; /&gt;
+-            &lt;/fileset&gt;
+-        &lt;/copy&gt;
+-
+-        &lt;copy todir=&quot;${dist.dir}/doc&quot; overwrite=&quot;true&quot;&gt;
+-            &lt;fileset dir=&quot;doc&quot;/&gt;
+-        &lt;/copy&gt;
+-
+-        &lt;tar destfile=&quot;${dist.root.dir}/${patch.name}.tar.gz&quot;
+-             basedir=&quot;${patch.dir}&quot;
+-             compression=&quot;gzip&quot;
+-        /&gt;
+-        
+-        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5&quot;&gt;
+-            &lt;arg value=&quot;-n&quot; /&gt;
+-            &lt;arg value=&quot;-o${patch.name}.tar.md5&quot; /&gt;
+-            &lt;arg value=&quot;${patch.name}.tar.gz&quot; /&gt;
+-        &lt;/exec&gt;
+-        
+-        &lt;zip destfile=&quot;${dist.root.dir}/${patch.name}.zip&quot;
+-             basedir=&quot;${patch.dir}&quot;
+-        /&gt;
+-
+-        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5&quot;&gt;
+-            &lt;arg value=&quot;-n&quot; /&gt;
+-            &lt;arg value=&quot;-o${patch.name}.zip.md5&quot; /&gt;
+-            &lt;arg value=&quot;${patch.name}.zip&quot; /&gt;
+-        &lt;/exec&gt;
+-        
+-        &lt;echo file=&quot;${dist.root.dir}/${patch.name}-gpg.txt&quot; append=&quot;false&quot; 
+-            message=&quot;gpg --local-user support --armor --detach-sign --output ${patch.name}.tar.asc ${patch.name}.tar.gz${line.separator}&quot;/&gt;
+-        &lt;echo file=&quot;${dist.root.dir}/${patch.name}-gpg.txt&quot; append=&quot;true&quot; 
+-            message=&quot;gpg --local-user support --armor --detach-sign --output ${patch.name}.zip.asc ${patch.name}.zip&quot;/&gt;
+-    &lt;/target&gt;
+  
+ &lt;/project&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000097.html">[Transform-svn] r158 - trunk
+</A></li>
+	<LI>Next message: <A HREF="000099.html">[Transform-svn] r160 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#98">[ date ]</a>
+              <a href="thread.html#98">[ thread ]</a>
+              <a href="subject.html#98">[ subject ]</a>
+              <a href="author.html#98">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

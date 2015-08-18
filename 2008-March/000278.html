@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r342 - dev/dev-2-3/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r342%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803151451.m2FEpUE1022161%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000277.html">
+   <LINK REL="Next"  HREF="000279.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r342 - dev/dev-2-3/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r342%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803151451.m2FEpUE1022161%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r342 - dev/dev-2-3/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Mar 15 15:51:30 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000277.html">[Transform-svn] r341 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000279.html">[Transform-svn] r343 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#278">[ date ]</a>
+              <a href="thread.html#278">[ thread ]</a>
+              <a href="subject.html#278">[ subject ]</a>
+              <a href="author.html#278">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-15 15:51:28 +0100 (Sat, 15 Mar 2008)
+New Revision: 342
+
+Modified:
+   dev/dev-2-3/src/com/flagstone/transform/FSShapeStyle.java
+Log:
+Empty style arrays are now encoded.
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSShapeStyle.java	2008-03-15 14:51:09 UTC (rev 341)
++++ dev/dev-2-3/src/com/flagstone/transform/FSShapeStyle.java	2008-03-15 14:51:28 UTC (rev 342)
+@@ -661,6 +661,14 @@
+         {
+             boolean countExtended = coder.context[FSCoder.ArrayCountExtended] != 0;
+             
++            if (lineStyles == null) {
++            	lineStyles = new ArrayList();
++            }
++            
++            if (fillStyles == null) {
++            	fillStyles = new ArrayList();
++            }
++
+             coder.alignToByte();
+         
+             if (countExtended &amp;&amp; fillStyles.size() &gt;= 255)
+@@ -674,8 +682,8 @@
+             }
+     
+             for (Iterator styleIterator = fillStyles.iterator(); styleIterator.hasNext();) 
+-                ((FSTransformObject)styleIterator.next()).encode(coder);
+-    
++                ((FSTransformObject)styleIterator.next()).encode(coder);           	
++     
+             if (countExtended &amp;&amp; lineStyles.size() &gt;= 255)
+             {
+                 coder.writeBits(0xFF, 8);
+@@ -688,7 +696,7 @@
+     
+             for (Iterator styleIterator = lineStyles.iterator(); styleIterator.hasNext();) 
+                 ((FSTransformObject)styleIterator.next()).encode(coder);
+-    
++            	    
+             numberOfFillBits = FSCoder.size(fillStyles.size(), false);
+             numberOfLineBits = FSCoder.size(lineStyles.size(), false);
+         
+@@ -797,7 +805,7 @@
+ 
+     private boolean containsStyles()
+     {
+-        return (lineStyles != null &amp;&amp; lineStyles.size() &gt; 0) || (fillStyles != null &amp;&amp; fillStyles.size() &gt; 0);
++        return lineStyles != null || fillStyles != null;
+     }
+ 
+     private boolean containsLineStyle()
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000277.html">[Transform-svn] r341 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000279.html">[Transform-svn] r343 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#278">[ date ]</a>
+              <a href="thread.html#278">[ thread ]</a>
+              <a href="subject.html#278">[ subject ]</a>
+              <a href="author.html#278">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

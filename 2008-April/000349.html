@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r413 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r413%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011512.m31FCXPc010322%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000348.html">
+   <LINK REL="Next"  HREF="000350.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r413 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r413%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011512.m31FCXPc010322%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r413 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 17:12:33 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000348.html">[Transform-svn] r412 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000350.html">[Transform-svn] r414 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#349">[ date ]</a>
+              <a href="thread.html#349">[ thread ]</a>
+              <a href="subject.html#349">[ subject ]</a>
+              <a href="author.html#349">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 17:12:30 +0200 (Tue, 01 Apr 2008)
+New Revision: 413
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+Log:
+all attributes are now correctly initialized.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-01 15:10:55 UTC (rev 412)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-01 15:12:30 UTC (rev 413)
+@@ -652,6 +652,8 @@
+ 	protected FSMovieObject(int aType)
+ 	{
+ 		type = aType;
++		length = 0;
++		extendLength = false;
+ 	}
+ 
+ 	/**
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000348.html">[Transform-svn] r412 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000350.html">[Transform-svn] r414 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#349">[ date ]</a>
+              <a href="thread.html#349">[ thread ]</a>
+              <a href="subject.html#349">[ subject ]</a>
+              <a href="author.html#349">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

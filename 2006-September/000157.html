@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r219 - in trunk: doc	src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r219%20-%20in%20trunk%3A%20doc%0A%09src/com/flagstone/transform/util&In-Reply-To=%3C200609121817.k8CIHkRS023948%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000156.html">
+   <LINK REL="Next"  HREF="000158.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r219 - in trunk: doc	src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r219%20-%20in%20trunk%3A%20doc%0A%09src/com/flagstone/transform/util&In-Reply-To=%3C200609121817.k8CIHkRS023948%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r219 - in trunk: doc	src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Sep 12 20:17:46 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000156.html">[Transform-svn] r218 - in trunk/doc: releases web
+</A></li>
+        <LI>Next message: <A HREF="000158.html">[Transform-svn] r220 - in trunk/doc: . releases web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-12 20:17:42 +0200 (Tue, 12 Sep 2006)
+New Revision: 219
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+Log:
+Indexed PNG images with alpha are now displayed correctly.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-09-10 17:45:45 UTC (rev 218)
++++ trunk/doc/CHANGES.txt	2006-09-12 18:17:42 UTC (rev 219)
+@@ -1,3 +1,9 @@
++2006-09-12 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Transparent colours in indexed PNG images are now displayed correctly.
++      The colour channels must be set to zero otherwise the colour will be 
++      displayed opaque.
++
+ 2006-09-10 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * updated docs on latest bugs and next release.
+
+Modified: trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-09-10 17:45:45 UTC (rev 218)
++++ trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2006-09-12 18:17:42 UTC (rev 219)
+@@ -1289,8 +1289,15 @@
+                 break;
+             case INDEXED_COLOUR:
+                 format = IDXA;
+-                for (int i=0; i&lt;length; i++) {
++                for (int i=0; i&lt;length; i++) 
++                {
+                     colourTable[i][3] = (byte)coder.readWord(1, false);
++
++                    if (colourTable[i][3] == 0) {
++                        colourTable[i][0] = 0;
++                        colourTable[i][1] = 0;
++                        colourTable[i][2] = 0;
++                    }
+                 }
+                 break;
+             default:
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000156.html">[Transform-svn] r218 - in trunk/doc: releases web
+</A></li>
+	<LI>Next message: <A HREF="000158.html">[Transform-svn] r220 - in trunk/doc: . releases web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#157">[ date ]</a>
+              <a href="thread.html#157">[ thread ]</a>
+              <a href="subject.html#157">[ subject ]</a>
+              <a href="author.html#157">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

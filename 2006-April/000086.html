@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r146 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r146%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/test%20src/com/flagstone/transform/util%20test/suites&In-Reply-To=%3C200604010857.k318v5Q6013693%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000087.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r146 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r146%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/test%20src/com/flagstone/transform/util%20test/suites&In-Reply-To=%3C200604010857.k318v5Q6013693%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r146 - in trunk: doc src/com/flagstone/transform/test src/com/flagstone/transform/util test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Sat Apr  1 10:57:05 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000087.html">[Transform-svn] r147 - /
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-04-01 10:56:46 +0200 (Sat, 01 Apr 2006)
+New Revision: 146
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+   trunk/test/suites/FSTextConstructor.xml
+Log:
+Fixed a bug in FSTextConstructor.defineFont() where the character code was
+being set to the index of a glyph on the array rather than the actual
+character code. Added new test to check this.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/doc/CHANGES.txt	2006-04-01 08:56:46 UTC (rev 146)
+@@ -1,3 +1,9 @@
++2006-04-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Fixed a bug in FSTextConstructor.defineFont() where the character code was
++      being set to the index of a glyph on the array rather than the actual
++      character code.
++      
+ 2006-03-31 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Added advanceForChar(char, int) method to FSTextConstrutor so individual
+
+Modified: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-04-01 08:56:46 UTC (rev 146)
+@@ -141,6 +141,27 @@
+         }
+     }
+     /**
++     * @testng.test dataProvider=&quot;strings&quot;
++     */
++    public void displayStrings(String str, String title)
++    {
++        try 
++        {
++            File destFile = new File(destDir, title+&quot;.swf&quot;);
++            
++            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++         
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            encodeString(textGenerator, str, destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
+      * @testng.data-provider name=&quot;files&quot;
+      */
+     public Object[][] findFiles()
+@@ -201,7 +222,21 @@
+         
+         return parameters;
+     }
+-      
++    /**
++     * @testng.data-provider name=&quot;strings&quot;
++     */
++    public Object[][] strings()
++    {
++        Object[][] parameters = new Object[][] {
++            new Object[] { &quot;The quick brown, fox jumped over the lazy dog.&quot;, &quot;atoz&quot; },                       
++            new Object[] { &quot;This line contains the same no. of characters.&quot;, &quot;fixed&quot; },                       
++            new Object[] { &quot;Lorem ipsum dolor sit amet, consectetuer elit.&quot;, &quot;latin&quot; },                       
++            new Object[] { &quot;Rato roeu a rolha da garrafa do rei da Russia.&quot;, &quot;rhyme&quot; },                       
++        };
++        
++        return parameters;
++    }
++    
+     private void encodeFontToFile(FSTextConstructor textGenerator, File file) throws Exception
+     {
+         int fontSize = 280;
+@@ -370,4 +405,46 @@
+         movie.add(new FSShowFrame());
+         movie.encodeToFile(file.getPath());
+     }
++    private void encodeString(FSTextConstructor textGenerator, String str, File file) throws Exception
++    {
++        int fontSize = 280;
++        int margin = fontSize;
++        int layer = 1;
++        int x = margin;
++        int y = margin;
++                
++        FSMovie movie = new FSMovie();
++        FSShapeConstructor path = new FSShapeConstructor();
++         
++        textGenerator.willDisplay(str.toCharArray());
++        
++        int fontId = movie.newIdentifier();
++        FSDefineFont2 font = textGenerator.defineFont();
++        font.setIdentifier(fontId);        
++
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(font);
++
++        FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), str, fontSize, FSColorTable.black());        
++
++        int textWidth = text.getBounds().getWidth();
++        int textHeight = text.getBounds().getHeight();            
++        int shapeId = movie.newIdentifier();
++        
++        path.newPath();
++        path.add(new FSSolidLine(1, FSColorTable.darkblue()));
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++                        textWidth, textHeight);
++        
++        movie.add(path.defineShape(shapeId));
++        movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));        
++         
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
++        movie.add(new FSShowFrame());
++
++        movie.setFrameSize(new FSBounds(0, 0, textWidth+2*margin, textHeight+2*margin));
++        movie.encodeToFile(file.getPath());
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-04-01 08:56:46 UTC (rev 146)
+@@ -485,7 +485,7 @@
+             while (characterTable[character] != glyphIndex) character++;
+  
+             glyphsArray.add(glyphTable[glyphIndex].shape);
+-            codesArray.add(new Integer(i));
++            codesArray.add(new Integer(character));
+             advancesArray.add(new Integer(glyphTable[glyphIndex].advance));
+             boundsArray.add(glyphTable[glyphIndex].bounds);
+         }
+
+Modified: trunk/test/suites/FSTextConstructor.xml
+===================================================================
+--- trunk/test/suites/FSTextConstructor.xml	2006-03-31 13:35:31 UTC (rev 145)
++++ trunk/test/suites/FSTextConstructor.xml	2006-04-01 08:56:46 UTC (rev 146)
+@@ -89,5 +89,16 @@
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
++    &lt;test name=&quot;Strings&quot;&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/strings&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayStrings&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
+ &lt;/suite&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000087.html">[Transform-svn] r147 - /
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

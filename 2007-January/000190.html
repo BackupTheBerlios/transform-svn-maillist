@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r254 - dev/dev-2-2
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r254%20-%20dev/dev-2-2&In-Reply-To=%3C200701031540.l03FesQk002893%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000189.html">
+   <LINK REL="Next"  HREF="000191.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r254 - dev/dev-2-2</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r254%20-%20dev/dev-2-2&In-Reply-To=%3C200701031540.l03FesQk002893%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r254 - dev/dev-2-2">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Jan  3 16:40:54 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000189.html">[Transform-svn] r253 - dev/dev-2-2/doc
+</A></li>
+        <LI>Next message: <A HREF="000191.html">[Transform-svn] r255 - trunk/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#190">[ date ]</a>
+              <a href="thread.html#190">[ thread ]</a>
+              <a href="subject.html#190">[ subject ]</a>
+              <a href="author.html#190">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-01-03 16:40:51 +0100 (Wed, 03 Jan 2007)
+New Revision: 254
+
+Modified:
+   dev/dev-2-2/build.xml
+   dev/dev-2-2/developer.xml
+Log:
+Merged in changes from trunk.
+
+Modified: dev/dev-2-2/build.xml
+===================================================================
+--- dev/dev-2-2/build.xml	2007-01-03 15:40:07 UTC (rev 253)
++++ dev/dev-2-2/build.xml	2007-01-03 15:40:51 UTC (rev 254)
+@@ -37,7 +37,7 @@
+ 
+     &lt;/description&gt;
+ 
+-    &lt;property name=&quot;version&quot; value=&quot;2.1.4&quot;/&gt;
++    &lt;property name=&quot;version&quot; value=&quot;2.2.0&quot;/&gt;
+     
+     &lt;property name=&quot;src.dir&quot; location=&quot;src&quot;/&gt;
+     &lt;property name=&quot;lib.dir&quot; location=&quot;lib&quot;/&gt;
+
+Modified: dev/dev-2-2/developer.xml
+===================================================================
+--- dev/dev-2-2/developer.xml	2007-01-03 15:40:07 UTC (rev 253)
++++ dev/dev-2-2/developer.xml	2007-01-03 15:40:51 UTC (rev 254)
+@@ -107,9 +107,9 @@
+              compression=&quot;gzip&quot;
+         /&gt;
+         
+-        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5&quot;&gt;
++        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5sums&quot; output=&quot;${dist.root.dir}/${dist.name}.tar.md5&quot;&gt;
+             &lt;arg value=&quot;-n&quot; /&gt;
+-            &lt;arg value=&quot;-o${dist.name}.tar.md5&quot; /&gt;
++            &lt;arg value=&quot;-b&quot; /&gt;
+             &lt;arg value=&quot;${dist.name}.tar.gz&quot; /&gt;
+         &lt;/exec&gt;
+         
+@@ -117,9 +117,9 @@
+              basedir=&quot;${dist.dir}&quot;
+         /&gt;
+ 
+-        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5&quot;&gt;
+-            &lt;arg value=&quot;-n&quot; /&gt;
+-            &lt;arg value=&quot;-o${dist.name}.zip.md5&quot; /&gt;
++        &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5sums&quot; output=&quot;${dist.root.dir}/${dist.name}.zip.md5&quot;&gt;
++            &lt;arg value=&quot;-n&quot; /&gt;
++            &lt;arg value=&quot;-b&quot; /&gt;
+             &lt;arg value=&quot;${dist.name}.zip&quot; /&gt;
+         &lt;/exec&gt;
+         
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000189.html">[Transform-svn] r253 - dev/dev-2-2/doc
+</A></li>
+	<LI>Next message: <A HREF="000191.html">[Transform-svn] r255 - trunk/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#190">[ date ]</a>
+              <a href="thread.html#190">[ thread ]</a>
+              <a href="subject.html#190">[ subject ]</a>
+              <a href="author.html#190">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

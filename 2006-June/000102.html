@@ -1,0 +1,1749 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r163 - in dev/dev-2-2/src/com/flagstone/transform: . util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r163%20-%20in%20dev/dev-2-2/src/com/flagstone/transform%3A%20.%20util&In-Reply-To=%3C200606111249.k5BCnvAO022700%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000101.html">
+   <LINK REL="Next"  HREF="000103.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r163 - in dev/dev-2-2/src/com/flagstone/transform: . util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r163%20-%20in%20dev/dev-2-2/src/com/flagstone/transform%3A%20.%20util&In-Reply-To=%3C200606111249.k5BCnvAO022700%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r163 - in dev/dev-2-2/src/com/flagstone/transform: . util">smackay at berlios.de
+       </A><BR>
+    <I>Sun Jun 11 14:49:57 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000101.html">[Transform-svn] r162 - in trunk: doc src/com/flagstone/transform/tools
+</A></li>
+        <LI>Next message: <A HREF="000103.html">[Transform-svn] r164 - in trunk: doc src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#102">[ date ]</a>
+              <a href="thread.html#102">[ thread ]</a>
+              <a href="subject.html#102">[ subject ]</a>
+              <a href="author.html#102">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-11 14:48:29 +0200 (Sun, 11 Jun 2006)
+New Revision: 163
+
+Modified:
+   dev/dev-2-2/src/com/flagstone/transform/FSAction.java
+   dev/dev-2-2/src/com/flagstone/transform/FSBitmapFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSBounds.java
+   dev/dev-2-2/src/com/flagstone/transform/FSButton.java
+   dev/dev-2-2/src/com/flagstone/transform/FSButtonColorTransform.java
+   dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java
+   dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java
+   dev/dev-2-2/src/com/flagstone/transform/FSCall.java
+   dev/dev-2-2/src/com/flagstone/transform/FSCharacter.java
+   dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java
+   dev/dev-2-2/src/com/flagstone/transform/FSCoder.java
+   dev/dev-2-2/src/com/flagstone/transform/FSColor.java
+   dev/dev-2-2/src/com/flagstone/transform/FSColorTable.java
+   dev/dev-2-2/src/com/flagstone/transform/FSColorTransform.java
+   dev/dev-2-2/src/com/flagstone/transform/FSCoordTransform.java
+   dev/dev-2-2/src/com/flagstone/transform/FSCurve.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineFont.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineFont2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineImage.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineImage2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineMorphShape.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineMovieClip.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineShape.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineShape2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineShape3.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineSound.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineText.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineText2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDefineVideo.java
+   dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java
+   dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger.java
+   dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSEnvelope.java
+   dev/dev-2-2/src/com/flagstone/transform/FSExceptionHandler.java
+   dev/dev-2-2/src/com/flagstone/transform/FSExport.java
+   dev/dev-2-2/src/com/flagstone/transform/FSFontInfo.java
+   dev/dev-2-2/src/com/flagstone/transform/FSFontInfo2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSFrameLabel.java
+   dev/dev-2-2/src/com/flagstone/transform/FSFree.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGetUrl.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGetUrl2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGotoLabel.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGradient.java
+   dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSIf.java
+   dev/dev-2-2/src/com/flagstone/transform/FSImport.java
+   dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java
+   dev/dev-2-2/src/com/flagstone/transform/FSJPEGEncodingTable.java
+   dev/dev-2-2/src/com/flagstone/transform/FSJump.java
+   dev/dev-2-2/src/com/flagstone/transform/FSKerning.java
+   dev/dev-2-2/src/com/flagstone/transform/FSLimitScript.java
+   dev/dev-2-2/src/com/flagstone/transform/FSLine.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMorphBitmapFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMorphGradient.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMorphGradientFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidLine.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMovie.java
+   dev/dev-2-2/src/com/flagstone/transform/FSMovieEvent.java
+   dev/dev-2-2/src/com/flagstone/transform/FSNewFunction.java
+   dev/dev-2-2/src/com/flagstone/transform/FSNewFunction2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSNull.java
+   dev/dev-2-2/src/com/flagstone/transform/FSPathsArePostscript.java
+   dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject.java
+   dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSPointer.java
+   dev/dev-2-2/src/com/flagstone/transform/FSProperty.java
+   dev/dev-2-2/src/com/flagstone/transform/FSProtect.java
+   dev/dev-2-2/src/com/flagstone/transform/FSPush.java
+   dev/dev-2-2/src/com/flagstone/transform/FSQuicktimeMovie.java
+   dev/dev-2-2/src/com/flagstone/transform/FSRegisterCopy.java
+   dev/dev-2-2/src/com/flagstone/transform/FSRegisterIndex.java
+   dev/dev-2-2/src/com/flagstone/transform/FSRegisterVariable.java
+   dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject.java
+   dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSerialNumber.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSetBackgroundColor.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSetTarget.java
+   dev/dev-2-2/src/com/flagstone/transform/FSShape.java
+   dev/dev-2-2/src/com/flagstone/transform/FSShapeStyle.java
+   dev/dev-2-2/src/com/flagstone/transform/FSShowFrame.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSolidFill.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSolidLine.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSound.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamBlock.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java
+   dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSStartSound.java
+   dev/dev-2-2/src/com/flagstone/transform/FSTabOrder.java
+   dev/dev-2-2/src/com/flagstone/transform/FSTable.java
+   dev/dev-2-2/src/com/flagstone/transform/FSTableIndex.java
+   dev/dev-2-2/src/com/flagstone/transform/FSText.java
+   dev/dev-2-2/src/com/flagstone/transform/FSUnknownAction.java
+   dev/dev-2-2/src/com/flagstone/transform/FSUnknownObject.java
+   dev/dev-2-2/src/com/flagstone/transform/FSVideoFrame.java
+   dev/dev-2-2/src/com/flagstone/transform/FSVoid.java
+   dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame.java
+   dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame2.java
+   dev/dev-2-2/src/com/flagstone/transform/FSWith.java
+   dev/dev-2-2/src/com/flagstone/transform/util/FSCodec.java
+   dev/dev-2-2/src/com/flagstone/transform/util/FSImageConstructor.java
+   dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java
+   dev/dev-2-2/src/com/flagstone/transform/util/FSSoundConstructor.java
+   dev/dev-2-2/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Relaxed final clause on classes to allow sub-classing.
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSAction.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSAction.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSAction.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -549,7 +549,7 @@
+ &lt;p&gt;Note: The FSPush class allows more than one value to be pushed onto the stack at a time. In the above examples separate FSPush objects are created to make the code a little more readable.&lt;/p&gt;
+ 
+ */  
+-public final class FSAction extends FSActionObject
++public class FSAction extends FSActionObject
+ {
+     /** Type identifying a NextFrame stack-based action. */
+     public static final int NextFrame        = 4;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSBitmapFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSBitmapFill.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSBitmapFill.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -111,7 +111,7 @@
+ 
+ &lt;p&gt;The FSBitmapFill class represents the FillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSBitmapFill extends FSFillStyle
++public class FSBitmapFill extends FSFillStyle
+ {
+     private int identifier = 0;
+     private FSCoordTransform transform = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSBounds.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSBounds.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSBounds.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -100,7 +100,7 @@
+ &lt;p&gt;The FSBounds class corresponds to the RECT data type, in the Macromedia Flash 
+ (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSBounds extends FSTransformObject
++public class FSBounds extends FSTransformObject
+ {
+     private int minX = 0;
+     private int minY = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSButton.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSButton.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSButton.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -85,7 +85,7 @@
+ &lt;p&gt;The FSButton class represents the ButtonRecord structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+ 
+  */  
+-public final class FSButton extends FSTransformObject
++public class FSButton extends FSTransformObject
+ {
+     /** Code for the button in the up state. */
+     public static final int Up = 1;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSButtonColorTransform.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSButtonColorTransform.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSButtonColorTransform.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -61,7 +61,7 @@
+ 
+ &lt;p&gt;The FSButtonColorTransform class represents the DefineButtonCXForm structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+  */
+-public final class FSButtonColorTransform extends FSMovieObject
++public class FSButtonColorTransform extends FSMovieObject
+ {
+     private int identifier = 0;
+     private FSColorTransform colorTransform = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSButtonEvent.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -117,7 +117,7 @@
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+ &lt;p&gt;The FSButtonEvent class represents the ButtonCondAction data structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt; */  
+-public final class FSButtonEvent extends FSTransformObject
++public class FSButtonEvent extends FSTransformObject
+ {
+     /** Defines the button event that occurs when the mouse cursor moves over the active area of a button. */
+     public static final int RollOver = 1;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSButtonSound.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -84,7 +84,7 @@
+ 
+ &lt;p&gt;The FSButtonSound class represents the DefineButtonSound structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+  */
+-public final class FSButtonSound extends FSMovieObject
++public class FSButtonSound extends FSMovieObject
+ {
+     private int identifier = 0;
+     private FSSound[] sound = new FSSound[] {null, null, null, null};
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSCall.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSCall.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSCall.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -66,7 +66,7 @@
+ 
+ &lt;p&gt;The FSCall class represents the ActionCall action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+  */  
+-public final class FSCall extends FSActionObject
++public class FSCall extends FSActionObject
+ {
+     private static final FSCall instance = new FSCall();
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSCharacter.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSCharacter.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSCharacter.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -101,7 +101,7 @@
+ 
+ &lt;p&gt;The FSCharacter class represents the GlyphEntry structure from Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSCharacter extends FSTransformObject
++public class FSCharacter extends FSTransformObject
+ {
+     private int glyphIndex = 0;
+     private int advance = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSClipEvent.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -168,7 +168,7 @@
+ The event model was extended in Flash 6 to support the set of events that Buttons 
+ respond to. In Flash 7 the Construct event was added.&lt;/p&gt;
+  */  
+-public final class FSClipEvent extends FSTransformObject
++public class FSClipEvent extends FSTransformObject
+ {
+ /** Code for a load event.*/
+     public static final int Load = 1;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSCoder.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSCoder.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -49,7 +49,7 @@
+  * an exception. The eof() method can be used to determine whether the end of 
+  * the buffer has been reached.
+  */
+-public final class FSCoder 
++public class FSCoder 
+ {
+     /** 
+      * Identifies that multibyte words are stored in little-endian format with 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSColor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSColor.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSColor.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -85,7 +85,7 @@
+ 
+ &lt;p&gt;FSColor class represents the colour data types, RGB and RGBA in the Macromedia Flash (SWF) File Format Specification. The colour data structure was available was introduced in Flash 1 and transparent colours were introduced in Flash 3.&lt;/p&gt;
+  */
+-public final class FSColor extends FSTransformObject
++public class FSColor extends FSTransformObject
+ {
+     private int red = 0;
+     private int green = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSColorTable.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSColorTable.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSColorTable.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -288,7 +288,7 @@
+ \endhtmlonly
+ 
+ */
+-public final class FSColorTable
++public class FSColorTable
+ {
+     /** Definition of the color, aliceblue from the Netscape color table. */
+     public static FSColor aliceblue() { return new FSColor(0xF0, 0xF8, 0xFF, 0xFF); }
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSColorTransform.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSColorTransform.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -164,7 +164,7 @@
+ 
+ &lt;p&gt;The FSCoordTransform class represents the CXForm and CXFormWithAlpha data structures from the Macromedia Flash (SWF) File Format Specification. They were introduced in Flash 1 and Flash 3 respectively.&lt;/P&gt;
+  */
+-public final class FSColorTransform extends FSTransformObject
++public class FSColorTransform extends FSTransformObject
+ {
+     private float multiplyRed = 1.0f;
+     private float multiplyGreen = 1.0f;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSCoordTransform.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSCoordTransform.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSCoordTransform.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -151,7 +151,7 @@
+ 
+ &lt;p&gt;The FSCoordTransform class represents the Matrix data structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSCoordTransform extends FSTransformObject
++public class FSCoordTransform extends FSTransformObject
+ {
+     private float[][] matrix = new float[][] { 
+         {1.0f, 0.0f, 0.0f}, 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSCurve.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSCurve.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSCurve.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -74,7 +74,7 @@
+ &lt;p&gt;The FSCurve class represents the CurvedEdge record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+ 
+  */
+-public final class FSCurve extends FSTransformObject
++public class FSCurve extends FSTransformObject
+ {
+     private int controlX = 0;
+     private int controlY = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineButton.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -142,7 +142,7 @@
+ 
+ &lt;p&gt;The FSDefineButton class represents the DefineButton structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSDefineButton extends FSDefineObject
++public class FSDefineButton extends FSDefineObject
+ {
+     private ArrayList buttonRecords = null;
+     private ArrayList actions = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineButton2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -117,7 +117,7 @@
+ 
+ &lt;p&gt;The FSDefineButton2 class represents the DefineButton2 structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineButton2 extends FSDefineObject
++public class FSDefineButton2 extends FSDefineObject
+ {
+ /** Defines whether a FSDefineButton2 object is configured as a momentary, push button. */
+     public static final int Push = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineFont.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineFont.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -63,7 +63,7 @@
+ 
+ &lt;p&gt;The FSDefineFont class represents the DefineFont structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSDefineFont extends FSDefineObject
++public class FSDefineFont extends FSDefineObject
+ {
+     private ArrayList shapes = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineFont2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineFont2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -151,7 +151,7 @@
+ spoken languages was added in Flash 6. Support for small point size fonts was 
+ added in Flash 7.&lt;/p&gt;
+  */
+-public final class FSDefineFont2 extends FSDefineObject
++public class FSDefineFont2 extends FSDefineObject
+ {
+     private int encoding = FSText.Unicode;
+     private boolean small = false;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineImage.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineImage.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -96,7 +96,7 @@
+ 
+ &lt;p&gt;The FSDefineImage class represents the DefineBitsLossless tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+  */
+-public final class FSDefineImage extends FSDefineObject
++public class FSDefineImage extends FSDefineObject
+ {
+     private int width = 0;
+     private int height = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineImage2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineImage2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -86,7 +86,7 @@
+ 
+ &lt;p&gt;The FSDefineImage2 class represents the DefineBitsLossless2 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineImage2 extends FSDefineObject
++public class FSDefineImage2 extends FSDefineObject
+ {
+     private int width = 0;
+     private int height = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -89,7 +89,7 @@
+ 
+ &lt;p&gt;The FSDefineJPEGImage class represents the DefineBits data structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSDefineJPEGImage extends FSDefineObject
++public class FSDefineJPEGImage extends FSDefineObject
+ {
+     private byte[] image = null;
+     private int width;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -90,7 +90,7 @@
+ 
+ &lt;p&gt;The FSDefineJPEGImage2 class represents the DefineBitsJPEG2 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+  */
+-public final class FSDefineJPEGImage2 extends FSDefineObject
++public class FSDefineJPEGImage2 extends FSDefineObject
+ {
+     private int width;
+     private int height;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -114,7 +114,7 @@
+ 
+ &lt;p&gt;The FSDefineJPEGImage3 class represents the DefineBitsJPEG3 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineJPEGImage3 extends FSDefineObject
++public class FSDefineJPEGImage3 extends FSDefineObject
+ {
+     private int width;
+     private int height;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineMorphShape.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineMorphShape.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -155,7 +155,7 @@
+ 
+ &lt;p&gt;The FSDefineMorphShape class represents the DefineMorphShape tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineMorphShape extends FSDefineObject
++public class FSDefineMorphShape extends FSDefineObject
+ {
+     private FSBounds startBounds = null;
+     private FSBounds endBounds = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineMovieClip.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineMovieClip.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -65,7 +65,7 @@
+ 
+ &lt;p&gt;The FSDefineMovieClip class represents the DefineSprite tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineMovieClip extends FSDefineObject
++public class FSDefineMovieClip extends FSDefineObject
+ {
+     private ArrayList objects = null;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineShape.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineShape.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -116,7 +116,7 @@
+ 
+ &lt;p&gt;The FSDefineShape class represents the DefineShape tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSDefineShape extends FSDefineObject
++public class FSDefineShape extends FSDefineObject
+ {
+     private FSBounds bounds = null;
+     private ArrayList fillStyles = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineShape2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineShape2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -117,7 +117,7 @@
+ 
+ &lt;p&gt;The FSDefineShape2 class represents the DefineShape2 data structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+  */
+-public final class FSDefineShape2 extends FSDefineObject
++public class FSDefineShape2 extends FSDefineObject
+ {
+     private FSBounds bounds = null;
+     private ArrayList fillStyles = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineShape3.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineShape3.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -110,7 +110,7 @@
+ 
+ &lt;p&gt;The FSDefineShape3 class represents the DefineShape3 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineShape3 extends FSDefineObject
++public class FSDefineShape3 extends FSDefineObject
+ {
+     private FSBounds bounds = null;
+     private ArrayList fillStyles = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineSound.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineSound.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineSound.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -117,7 +117,7 @@
+ Flash (SWF) File Format Specification. It was introduced in Flash 1. Flash 3 added 
+ support for MP3 and the Nellymoser Asao format was added in Flash 6.&lt;/p&gt;
+  */  
+-public final class FSDefineSound extends FSDefineObject
++public class FSDefineSound extends FSDefineObject
+ {
+     private int format = 0;
+     private int playbackRate = 5512;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineText.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineText.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -118,7 +118,7 @@
+ 
+ &lt;p&gt;The FSDefineText class represents the DefineText tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSDefineText extends FSDefineObject
++public class FSDefineText extends FSDefineObject
+ {
+     private FSBounds bounds = null;
+     private FSCoordTransform transform = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineText2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineText2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -117,7 +117,7 @@
+ 
+ &lt;p&gt;The FSDefineText2 class represents the DefineText2 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSDefineText2 extends FSDefineObject
++public class FSDefineText2 extends FSDefineObject
+ {
+     private FSBounds bounds = null;
+     private FSCoordTransform transform = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineTextField.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineTextField.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -224,7 +224,7 @@
+ 
+ &lt;p&gt;FSDefineTextField class represents the DefineTextField from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+  */  
+-public final class FSDefineTextField extends FSDefineObject
++public class FSDefineTextField extends FSDefineObject
+ {
+ /** Key used to identify the wordWrapped attribute. */
+     public static final String WordWrapped = &quot;WordWrapped&quot;;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDefineVideo.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDefineVideo.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -100,7 +100,7 @@
+ File Format Specification. It was introduced in Flash 6. The ScreenVideo format 
+ was introduced in Flash 7.&lt;/p&gt;
+  */  
+-public final class FSDefineVideo extends FSDefineObject
++public class FSDefineVideo extends FSDefineObject
+ {
+     /// The video data was encoded using the Sorenson modified H263 format.
+     public static final int H263 = 2;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSDoAction.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -78,7 +78,7 @@
+ 
+ &lt;p&gt;The FSDoAction class represents the DoAction tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSDoAction extends FSMovieObject
++public class FSDoAction extends FSMovieObject
+ {
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -59,7 +59,7 @@
+ 
+ &lt;p&gt;The FSEnableDebugger class represents the EnableDebugger data structure of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+  */  
+-public final class FSEnableDebugger extends FSMovieObject
++public class FSEnableDebugger extends FSMovieObject
+ {
+     private String password = null;
+         
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSEnableDebugger2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -56,7 +56,7 @@
+ 
+ &lt;p&gt;The FSEnableDebugger2 class represents the EnableDebugger2 data structure introduced in Flash 6. It replaced EnableDebugger in Flash 5 with a different format to support internal changes in the Flash Player. The functionality was not changed.&lt;/p&gt;
+  */  
+-public final class FSEnableDebugger2 extends FSMovieObject
++public class FSEnableDebugger2 extends FSMovieObject
+ {
+     private String password = null;
+         
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSEnvelope.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSEnvelope.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSEnvelope.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -67,7 +67,7 @@
+ 
+ &lt;p&gt;The FSEnvelope class represents the SoundEnvelope structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSEnvelope extends FSTransformObject
++public class FSEnvelope extends FSTransformObject
+ {
+     private int mark = 0;
+     private int left = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSExceptionHandler.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSExceptionHandler.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -84,7 +84,7 @@
+ 
+ &lt;p&gt;The FSExceptionHandler represents the Try action introduced in Flash 7 and is used to directly support the exception handling syntax defined in ActionScript 2.0.&lt;/p&gt;
+  */  
+-public final class FSExceptionHandler extends FSActionObject
++public class FSExceptionHandler extends FSActionObject
+ {
+     private int register = 0;
+     private String variable = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSExport.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSExport.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSExport.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -74,7 +74,7 @@
+ 
+ &lt;p&gt;The FSExport class represents the ExportAssets tag in the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+  */  
+-public final class FSExport extends FSMovieObject
++public class FSExport extends FSMovieObject
+ {
+     private Hashtable objects = new Hashtable();
+         
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSFontInfo.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSFontInfo.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSFontInfo.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -111,7 +111,7 @@
+ Flash specification. It was introduced in Flash 1. Support for small fonts was 
+ added in Flash 7.&lt;/p&gt;
+  */
+-public final class FSFontInfo extends FSMovieObject
++public class FSFontInfo extends FSMovieObject
+ {
+     private int identifier = 0;
+     private String name = &quot;&quot;;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSFontInfo2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSFontInfo2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSFontInfo2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -68,7 +68,7 @@
+ &lt;p&gt;The FSFontInfo2 class supports the DefineFontInfo2 data structure introduced 
+ in Flash 6. Support for small fonts was added in Flash 7.&lt;/p&gt;
+  */  
+-public final class FSFontInfo2 extends FSMovieObject
++public class FSFontInfo2 extends FSMovieObject
+ {
+     private int identifier = 0;
+     private String name = &quot;&quot;;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSFrameLabel.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSFrameLabel.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSFrameLabel.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -150,7 +150,7 @@
+ 
+ &lt;p&gt;The FSFrameLabel class represents the FrameLabel tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3. In Flash 6 the label can support named anchors which allows a frame to be specified as the starting point when displaying a Flash movie in a web browser.&lt;/p&gt;
+  */  
+-public final class FSFrameLabel extends FSMovieObject
++public class FSFrameLabel extends FSMovieObject
+ {
+     private String label = null;
+ // Flash 6
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSFree.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSFree.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSFree.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -53,7 +53,7 @@
+ 
+ &lt;p&gt;The FSFree class represents the FreeCharacter tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSFree extends FSMovieObject
++public class FSFree extends FSMovieObject
+ {
+     private int identifier = 0;
+         
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGetUrl.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGetUrl.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGetUrl.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -126,7 +126,7 @@
+ 
+ &lt;p&gt;The FSGetUrl is a class for representing the ActionGetUrl action of the Macromedia Flash (SWF) File Format Specification. It was introduced in  Flash 1.&lt;/p&gt;
+  */
+-public final class FSGetUrl extends FSActionObject
++public class FSGetUrl extends FSActionObject
+ {
+     private String url = null;
+     private String target = &quot;&quot;;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGetUrl2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGetUrl2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGetUrl2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -146,7 +146,7 @@
+ 
+ &lt;p&gt;The FSGetUrl2 is a class for representing the ActionGetUrl2 action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+  */  
+-public final class FSGetUrl2 extends FSActionObject
++public class FSGetUrl2 extends FSActionObject
+ {
+     /** Load a movie without submitting the movie variables. */
+     public static final int MovieToLevel = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -79,7 +79,7 @@
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+ &lt;p&gt;The FSGotoFrame represents the ActionGotoFrame action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3. This class is now superseded by the FSGotoFrame2 action which allows either the name of a frame or a number of be specified.&lt;/p&gt; */
+-public final class FSGotoFrame extends FSActionObject
++public class FSGotoFrame extends FSActionObject
+ {
+     private int frameNumber = 1;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGotoFrame2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -139,7 +139,7 @@
+ action. In Flash 5 the frameOffset attribute was added which allows movies to be divided into a 
+ series of 'pages'.&lt;/p&gt;
+  */  
+-public final class FSGotoFrame2 extends FSActionObject
++public class FSGotoFrame2 extends FSActionObject
+ {
+     private boolean playFrame = false;
+     private int frameOffset = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGotoLabel.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGotoLabel.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGotoLabel.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -81,7 +81,7 @@
+ &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+ 
+ &lt;p&gt;FSGotoLabel represents the ActionGotoLabel action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt; */  
+-public final class FSGotoLabel extends FSActionObject
++public class FSGotoLabel extends FSActionObject
+ {
+     private String label = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGradient.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGradient.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGradient.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -56,7 +56,7 @@
+ 
+ &lt;p&gt;The FSGradient class represents the GradientRecord structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSGradient extends FSTransformObject
++public class FSGradient extends FSTransformObject
+ {
+     private int ratio = 0;
+     private FSColor color = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSGradientFill.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -119,7 +119,7 @@
+ &lt;p&gt;The FSGradientFill class represents the FillStyle structure from the Macromedia Flash 
+ (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSGradientFill extends FSFillStyle
++public class FSGradientFill extends FSFillStyle
+ {
+     private FSCoordTransform transform = null;
+     private ArrayList gradients = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSIf.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSIf.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSIf.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -71,7 +71,7 @@
+ 
+ &lt;p&gt;The FSIf class represents the ActionIf action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+  */  
+-public final class FSIf extends FSActionObject
++public class FSIf extends FSActionObject
+ {
+     private int offset = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSImport.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSImport.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSImport.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -84,7 +84,7 @@
+ 
+ &lt;p&gt;The FSImport class represents the ImportAssets data structure in the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+  */  
+-public final class FSImport extends FSMovieObject
++public class FSImport extends FSMovieObject
+ {
+     private String url = null;
+     private Hashtable objects = new Hashtable();
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSInitialize.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -85,7 +85,7 @@
+ 
+ @see FSDoAction
+  */  
+-public final class FSInitialize extends FSMovieObject
++public class FSInitialize extends FSMovieObject
+ {
+     private int identifier = 0;
+     private ArrayList actions = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSJPEGEncodingTable.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSJPEGEncodingTable.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSJPEGEncodingTable.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -80,7 +80,7 @@
+ 
+ &lt;p&gt;The FSJPEGEncodingTable class represents the JPEGEncodingTable tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSJPEGEncodingTable extends FSMovieObject
++public class FSJPEGEncodingTable extends FSMovieObject
+ {
+     private byte[] encodingTable = null;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSJump.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSJump.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSJump.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -64,7 +64,7 @@
+ 
+ &lt;p&gt;The FSJump class represents the ActionJump action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+  */  
+-public final class FSJump extends FSActionObject
++public class FSJump extends FSActionObject
+ {
+     private int offset = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSKerning.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSKerning.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSKerning.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -62,7 +62,7 @@
+ 
+ &lt;p&gt;FSKerning class represents the KerningRecord from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+  */
+-public final class FSKerning extends FSTransformObject
++public class FSKerning extends FSTransformObject
+ {
+     private int leftGlyphIndex = 0;
+     private int rightGlyphIndex = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSLimitScript.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSLimitScript.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSLimitScript.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -61,7 +61,7 @@
+ 
+ &lt;p&gt;The FSLimitScript represents the ScriptLimits tag in the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 7.&lt;/p&gt;
+  */  
+-public final class FSLimitScript extends FSMovieObject
++public class FSLimitScript extends FSMovieObject
+ {
+     private int depth = 0; 
+     private int timeout = 0; 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSLine.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSLine.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSLine.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -59,7 +59,7 @@
+ 
+ &lt;p&gt;The FSLine class represents the StraightEdge record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSLine extends FSTransformObject
++public class FSLine extends FSTransformObject
+ {
+     private int x = 0;
+     private int y = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMorphBitmapFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -77,7 +77,7 @@
+ 
+ &lt;p&gt;The FSMorphBitmapFill class represents the MorphFillStyle structure from the Macromedia Flash (SWF) File Format Specification. Shape morphing was introduced in Flash 3.&lt;/P&gt;
+  */  
+-public final class FSMorphBitmapFill extends FSFillStyle
++public class FSMorphBitmapFill extends FSFillStyle
+ {
+     private int identifier = 0;
+     private FSCoordTransform startTransform = new FSCoordTransform(0,0);
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMorphGradient.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMorphGradient.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMorphGradient.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -71,7 +71,7 @@
+ 
+ &lt;p&gt;The FSMorphGradient class represents the MorphGradientRecord structure from the Macromedia Flash (SWF) File Format Specification. Shape morphing was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSMorphGradient extends FSTransformObject
++public class FSMorphGradient extends FSTransformObject
+ {
+     private int startRatio = 0;
+     private int endRatio = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMorphGradientFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMorphGradientFill.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMorphGradientFill.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -127,7 +127,7 @@
+ 
+ &lt;p&gt;The FSMorphGradientFill class represents the MorphFillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSMorphGradientFill extends FSFillStyle
++public class FSMorphGradientFill extends FSFillStyle
+ {
+     private FSCoordTransform startTransform = null;
+     private FSCoordTransform endTransform = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidFill.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidFill.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -69,7 +69,7 @@
+ 
+ &lt;p&gt;The FSMorphSolidFill class represents the MorphFillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSMorphSolidFill extends FSFillStyle
++public class FSMorphSolidFill extends FSFillStyle
+ {
+     private FSColor startColor = null;
+     private FSColor endColor = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidLine.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidLine.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMorphSolidLine.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -66,7 +66,7 @@
+ 
+ &lt;p&gt;The FSMorphSolidLine class represents the MorphLineStyle structure from the Macromedia Flash (SWF) File Format Specification. Shape morphing was introduced in Flash 3.&lt;/P&gt;
+  */  
+-public final class FSMorphSolidLine extends FSLineStyle
++public class FSMorphSolidLine extends FSLineStyle
+ {
+     private int startWidth = 0;
+     private int endWidth = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMovie.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMovie.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -158,7 +158,7 @@
+ Flash the encoding attribute may be set to match the character set of the application 
+ used to encoded the Flash file.&lt;/p&gt;';
+ */  
+-public final class FSMovie implements Cloneable
++public class FSMovie implements Cloneable
+ {
+     static void encodeObjects(FSCoder coder, ArrayList array)
+     {
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSMovieEvent.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSMovieEvent.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSMovieEvent.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -41,7 +41,7 @@
+  * while a movie is being encoded or decoded.
+  *
+  */
+-public final class FSMovieEvent
++public class FSMovieEvent
+ {
+     /** Identifies an event generated while a movie is being encoded. */
+     public static final int Encode = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSNewFunction.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSNewFunction.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -141,7 +141,7 @@
+ 
+ &lt;p&gt;The FSNewFunction class represents the ActionDefineFunction action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+  */  
+-public final class FSNewFunction extends FSActionObject
++public class FSNewFunction extends FSActionObject
+ {
+     private String name = null;
+     private ArrayList arguments = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSNewFunction2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSNewFunction2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -200,7 +200,7 @@
+ &lt;p&gt;The FSNewFunction class represents the ActionDefineFunction2 action of the 
+ Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 7.&lt;/p&gt;
+  */  
+-public final class FSNewFunction2 extends FSActionObject
++public class FSNewFunction2 extends FSActionObject
+ {
+ /** Create and initialized the predefined variable, &lt;em&gt;super&lt;/em&gt;. */
+     public static final int CreateSuper = 4;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSNull.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSNull.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSNull.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -39,7 +39,7 @@
+ &lt;p&gt;The FSNull class represents the Null data type from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+ 
+  */  
+-public final class FSNull extends FSTransformObject
++public class FSNull extends FSTransformObject
+ {
+     private static final FSNull instance = new FSNull();
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSPathsArePostscript.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSPathsArePostscript.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -61,7 +61,7 @@
+ Macromedia Flash (SWF) File Format Specification. It is not documented in later 
+ editions of the specification. It is not known when this tag was added.&lt;/p&gt;
+  */  
+-public final class FSPathsArePostscript extends FSMovieObject
++public class FSPathsArePostscript extends FSMovieObject
+ {
+     private static final FSPathsArePostscript instance = new FSPathsArePostscript();
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -116,7 +116,7 @@
+ 
+ &lt;p&gt;The FSPlaceObject class represents the PlaceObject tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1 and is superseded by the PlaceObject2 tag which was added in Flash 3.&lt;/p&gt;
+  */
+-public final class FSPlaceObject extends FSMovieObject
++public class FSPlaceObject extends FSMovieObject
+ {
+     private int identifier = 0;
+     private int layer = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSPlaceObject2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -248,7 +248,7 @@
+ 
+ &lt;p&gt;The FSPlaceObject2 class represents the PlaceObject2 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */  
+-public final class FSPlaceObject2 extends FSMovieObject
++public class FSPlaceObject2 extends FSMovieObject
+ {
+     /* Update an existing object on the display list */
+     public static final int Modify = 1;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSPointer.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSPointer.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSPointer.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -57,7 +57,7 @@
+ (SWF) File Format Specification. It is not documented in later editions of the 
+ specification. It is not known when this tag was added.&lt;/p&gt;
+  */  
+-public final class FSPointer extends FSMovieObject
++public class FSPointer extends FSMovieObject
+ {
+     private int pointer = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSProperty.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSProperty.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSProperty.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -36,7 +36,7 @@
+  * 
+  * See FSPush for a list of available properties.
+  */
+-public final class FSProperty extends FSTransformObject
++public class FSProperty extends FSTransformObject
+ {
+     private int value = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSProtect.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSProtect.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -59,7 +59,7 @@
+ 
+ &lt;p&gt;The FSProtect class represents the Protect tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2. The password attribute was added in Flash 5.&lt;/p&gt;
+  */
+-public final class FSProtect extends FSMovieObject
++public class FSProtect extends FSMovieObject
+ {
+     private String password = null;
+         
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSPush.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSPush.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -135,7 +135,7 @@
+ 
+ &lt;p&gt;FSPush is a class for representing the Push action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4 and contained either an integer or string argument. It was extended in Flash 5 to support a number of different data types and allow more than one value to be added in a single action.&lt;/p&gt;
+  */  
+-public final class FSPush extends FSActionObject
++public class FSPush extends FSActionObject
+ {
+ /** The x-origin of the movie clip relative to the parent clip.*/
+     public static final int _x = (Transform.VERSION &lt; 5) ? 0x00000000 : 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSQuicktimeMovie.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -55,7 +55,7 @@
+ 
+ &lt;p&gt;The FSQuicktimeMovie class represents the QuicktimeMovie structure from the Macromedia Flash (SWF) File Format Specification. This structure is undocumented in later versions of the specification. It is not known when it was introduced.&lt;/p&gt;
+  */ 
+-public final class FSQuicktimeMovie extends FSMovieObject
++public class FSQuicktimeMovie extends FSMovieObject
+ {
+     private String name = null;
+         
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSRegisterCopy.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSRegisterCopy.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSRegisterCopy.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -68,7 +68,7 @@
+ Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5 
+ and expanded in Flash 7 to support up to 256 registers.&lt;/p&gt;
+  */  
+-public final class FSRegisterCopy extends FSActionObject
++public class FSRegisterCopy extends FSActionObject
+ {
+     private int registerNumber = 0;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSRegisterIndex.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSRegisterIndex.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSRegisterIndex.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -61,7 +61,7 @@
+ 
+ &lt;p&gt;The RegisterCopy action and access to the Flash Player's internal registers was introduced in Flash 5. The number of registers supported was expanded in Flash 7 to 256.&lt;/p&gt;
+  */  
+-public final class FSRegisterIndex extends FSTransformObject
++public class FSRegisterIndex extends FSTransformObject
+ {
+     private int index = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSRegisterVariable.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSRegisterVariable.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSRegisterVariable.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -37,7 +37,7 @@
+ &lt;p&gt;Register numbers up to 255 may be specified. If the number is zero then the 
+ argument is defined as a local variable.&lt;/p&gt;
+  */  
+-public final class FSRegisterVariable extends FSTransformObject
++public class FSRegisterVariable extends FSTransformObject
+ {
+     private int index = 0;
+     private String name = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -90,7 +90,7 @@
+ 
+ &lt;p&gt;The FSRemoveObject class represents the RemoveObject tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1 and is superseded by the RemoveObject2 tag which was added in Flash 3.&lt;/p&gt;
+  */
+-public final class FSRemoveObject extends FSMovieObject
++public class FSRemoveObject extends FSMovieObject
+ {
+     private int identifier = 0;
+     private int layer = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSRemoveObject2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -55,7 +55,7 @@
+ 
+ &lt;p&gt;The FSRemoveObject2 class represents the RemoveObject2 tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash in Flash 3.&lt;/p&gt;
+  */ 
+-public final class FSRemoveObject2 extends FSMovieObject
++public class FSRemoveObject2 extends FSMovieObject
+ {
+     private int layer = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSerialNumber.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSerialNumber.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSerialNumber.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -60,7 +60,7 @@
+ 
+ &lt;p&gt;The FSSerialNumber represents the SerialNumber tag in the Macromedia Flash (SWF) File Format Specification. It is not known when this tag was introduced.&lt;/p&gt;
+  */  
+-public final class FSSerialNumber extends FSMovieObject
++public class FSSerialNumber extends FSMovieObject
+ {
+     private String serialNumber = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSetBackgroundColor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSetBackgroundColor.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSetBackgroundColor.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -64,7 +64,7 @@
+ 
+ &lt;p&gt;The FSSetBackgroundColor class represents the SetBackgroundColor tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSSetBackgroundColor extends FSMovieObject
++public class FSSetBackgroundColor extends FSMovieObject
+ {
+     private FSColor color = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSetTarget.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSetTarget.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSetTarget.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -71,7 +71,7 @@
+ 
+ &lt;p&gt;The FSSetTarget class represents the SetTarget action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */ 
+-public final class FSSetTarget extends FSActionObject
++public class FSSetTarget extends FSActionObject
+ {
+     private String target = &quot;&quot;;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSShape.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSShape.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -53,7 +53,7 @@
+ 
+ &lt;p&gt;The FSShape class represents the Shape record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSShape extends FSTransformObject
++public class FSShape extends FSTransformObject
+ {
+     private ArrayList objects = null;
+     private byte[] encodedObjects = null; 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSShapeStyle.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSShapeStyle.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -211,7 +211,7 @@
+ 
+ &lt;p&gt;The FSShapeStyle class represents the StyleChange record from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSShapeStyle extends FSTransformObject
++public class FSShapeStyle extends FSTransformObject
+ {
+     private int moveX = Transform.VALUE_NOT_SET;
+     private int moveY = Transform.VALUE_NOT_SET;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSShowFrame.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSShowFrame.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSShowFrame.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -93,7 +93,7 @@
+ 
+ &lt;p&gt;The FSShowFrame class represents the ShowFrame data structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSShowFrame extends FSMovieObject
++public class FSShowFrame extends FSMovieObject
+ {
+     private static final FSShowFrame instance = new FSShowFrame();
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSolidFill.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSolidFill.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSolidFill.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -95,7 +95,7 @@
+ 
+ &lt;p&gt;The FSSolidFill class represents the FillStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSSolidFill extends FSFillStyle
++public class FSSolidFill extends FSFillStyle
+ {
+     private FSColor color = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSolidLine.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSolidLine.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSolidLine.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -89,7 +89,7 @@
+ 
+ &lt;p&gt;The FSSolidLine class represents the LineStyle structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1. Support for transparent colours was added in Flash 3.&lt;/p&gt;
+  */
+-public final class FSSolidLine extends FSLineStyle
++public class FSSolidLine extends FSLineStyle
+ {
+     private int width = 0;
+     private FSColor color = null;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSound.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSound.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSound.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -82,7 +82,7 @@
+ 
+ &lt;p&gt;The FSSound class is based on the SoundInfo data structure from the Macromedia Flash (SWF) File Format Specification. However it also contains the identifier for the sound which is a separate attribute in the data structures defined in the specification that contain SoundInfo data.&lt;/p&gt;
+  */
+-public final class FSSound extends FSTransformObject
++public class FSSound extends FSTransformObject
+ {
+     /** Identifies an uncompressed pulse code modulated sound. The byte-order for 16-bit sound samples
+      is dependent on the host platform on which the sound is played. */
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamBlock.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamBlock.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamBlock.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -66,7 +66,7 @@
+ compressed ADPCM format. Support for MP3 was added in Flash 3. The Nellymoser Asao
+ format was added in Flash 6.&lt;/p&gt;
+  */
+-public final class FSSoundStreamBlock extends FSMovieObject
++public class FSSoundStreamBlock extends FSMovieObject
+ {
+     private byte[] soundData = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -116,7 +116,7 @@
+ &lt;p&gt;The FSSoundStreamHead class represents the SoundStreamHead structure from the 
+ Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+  */
+-public final class FSSoundStreamHead extends FSMovieObject
++public class FSSoundStreamHead extends FSMovieObject
+ {
+     private int format = FSSound.ADPCM;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -115,7 +115,7 @@
+ Flash specification. It was introduced in Flash 3. Support for the Nellymoser Asao
+ format was added in Flash 6.&lt;/p&gt;
+  */
+-public final class FSSoundStreamHead2 extends FSMovieObject
++public class FSSoundStreamHead2 extends FSMovieObject
+ {
+     private int format = FSSound.ADPCM;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSStartSound.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSStartSound.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSStartSound.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -52,7 +52,7 @@
+ 
+ &lt;p&gt;The FSStartSound class represents the StartSound tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1. In the Macromedia Flash (SWF) File Format Specification the StartSound tag contains an identifier and an FSSoundInfo structure. The Transform FSSound object simply combines both to simplify the design of other sound classes. The information encoded is identical.&lt;/p&gt;
+  */
+-public final class FSStartSound extends FSMovieObject
++public class FSStartSound extends FSMovieObject
+ {
+     private FSSound sound = null;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSTabOrder.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSTabOrder.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSTabOrder.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -59,7 +59,7 @@
+ 
+ &lt;p&gt;The FSTabOrder object represents the SetTabIndex tag in the Flash file specification . It was introduced in Flash 7.&lt;/p&gt;
+  */  
+-public final class FSTabOrder extends FSMovieObject
++public class FSTabOrder extends FSMovieObject
+ {
+     private int layer = 0; 
+     private int index = 0; 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSTable.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSTable.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -101,7 +101,7 @@
+ File Format Specification. It was introduced in Flash 5. It was extended in Flash 
+ 6 to support tables of up to 65536 strings.&lt;/p&gt;
+  */  
+-public final class FSTable extends FSActionObject
++public class FSTable extends FSActionObject
+ {
+     private ArrayList values = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSTableIndex.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSTableIndex.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSTableIndex.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -68,7 +68,7 @@
+ &lt;p&gt;The string literal table was introduced in Flash 5. It was extended in Flash 
+ 6 to support tables of up to 65536 strings.&lt;/p&gt;
+  */  
+-public final class FSTableIndex extends FSTransformObject
++public class FSTableIndex extends FSTransformObject
+ {
+     private int index = 0;
+ 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSText.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSText.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSText.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -188,7 +188,7 @@
+ structures from the Macromedia Flash (SWF) File Format Specification. It was 
+ introduced in Flash 1.&lt;/p&gt; 
+  */
+-public final class FSText extends FSTransformObject
++public class FSText extends FSTransformObject
+ {
+     /** Defines that the font character set is based on the Unicode standard. */
+     public static final int Unicode = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSUnknownAction.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSUnknownAction.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSUnknownAction.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -53,7 +53,7 @@
+ 
+ &lt;p&gt;The object provides direct access to the encoded data of the action offering the possibility to encode and decode actions that are not directly supported in the current release of the framework. However a detailed knowledge of how the action is encoded and decoded is required.&lt;/p&gt;
+  */
+-public final class FSUnknownAction extends FSActionObject
++public class FSUnknownAction extends FSActionObject
+ {
+     private byte[] data = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSUnknownObject.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSUnknownObject.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSUnknownObject.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -53,7 +53,7 @@
+ 
+ &lt;p&gt;The object provides direct access to the encoded data of the data structure offering the possibility for Transform to encode and decode tags that are not directly supported in the current release of the package. However a detailed knowledge of how the data structure is encoded and decoded is required.&lt;/p&gt;
+  */
+-public final class FSUnknownObject extends FSMovieObject
++public class FSUnknownObject extends FSMovieObject
+ {
+     private byte[] data = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSVideoFrame.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSVideoFrame.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSVideoFrame.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -65,7 +65,7 @@
+ 
+ &lt;p&gt;The FSVideoFrame class represents the VideoFrame data structure in the Macromedia Flash (SWF) File Format Specification. It was added in Flash 6 with support for the Sorenson modified H263 format. Support for Macromedia's Screen Video format was added in Flash 7.&lt;/p&gt;
+  */  
+-public final class FSVideoFrame extends FSMovieObject
++public class FSVideoFrame extends FSMovieObject
+ {
+     private int identifier = 0;
+     private int frameNumber = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSVoid.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSVoid.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSVoid.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -39,7 +39,7 @@
+ &lt;p&gt;The FSVoid class represents the Void data type from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+ 
+  */  
+-public final class FSVoid extends FSTransformObject
++public class FSVoid extends FSTransformObject
+ {
+     private static final FSVoid instance = new FSVoid();
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -84,7 +84,7 @@
+ 
+ &lt;p&gt;The FSWaitForFrame class represents the ActionWaitForFrame action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 3.&lt;/p&gt;
+  */
+-public final class FSWaitForFrame extends FSActionObject
++public class FSWaitForFrame extends FSActionObject
+ {
+     private int frameNumber = 1;
+     private int actionCount = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame2.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame2.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSWaitForFrame2.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -82,7 +82,7 @@
+ 
+ &lt;p&gt;The FSWaitForFrame2 class represents the ActionWaitForFrame2 action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4.&lt;/p&gt;
+  */  
+-public final class FSWaitForFrame2 extends FSActionObject
++public class FSWaitForFrame2 extends FSActionObject
+ {
+     private int actionCount = 0;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/FSWith.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/FSWith.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -82,7 +82,7 @@
+ 
+ &lt;p&gt;The FSWith class represents the ActionWith action in the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5. FSWith supersedes the FSSetTarget action.&lt;/p&gt;
+  */  
+-public final class FSWith extends FSActionObject
++public class FSWith extends FSActionObject
+ {
+     private ArrayList actions = null;
+     
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/util/FSCodec.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/util/FSCodec.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/util/FSCodec.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -52,7 +52,7 @@
+  * that overflowed will be set to zero, rather than throwing an exception. The eof() method 
+  * can be used to determine whether the end of the buffer has been reached.
+  */
+-public final class FSCodec
++public class FSCodec
+ {
+     /** 
+      * Identifies that multibyte words are stored in little-endian format with the least
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/util/FSImageConstructor.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/util/FSImageConstructor.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -195,7 +195,7 @@
+  *     imageConstructor.setJPEGImage(imageWidth, imageHeight, image);
+  * &lt;/pre&gt;
+  */
+-public final class FSImageConstructor
++public class FSImageConstructor
+ {
+     /** Format for JPEG encoded images */
+     public static final int JPEG = 0;
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/util/FSShapeConstructor.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -139,7 +139,7 @@
+  *&lt;/pre&gt;
+  *
+  */
+-public final class FSShapeConstructor
++public class FSShapeConstructor
+ {
+     private double flattenLimit = 0.25;
+    /** 
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/util/FSSoundConstructor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -122,7 +122,7 @@
+  * &lt;/pre&gt;
+  *
+  */
+-public final class FSSoundConstructor
++public class FSSoundConstructor
+ {
+     private static final int[] riffSignature = { 82, 73, 70, 70 };
+     private static final int[] wavSignature = { 87, 65, 86, 69 };
+
+Modified: dev/dev-2-2/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- dev/dev-2-2/src/com/flagstone/transform/util/FSTextConstructor.java	2006-06-05 15:48:40 UTC (rev 162)
++++ dev/dev-2-2/src/com/flagstone/transform/util/FSTextConstructor.java	2006-06-11 12:48:29 UTC (rev 163)
+@@ -186,7 +186,7 @@
+  * that cannot be displayed (the missing glyph will be displayed instead) or -1 
+  * if all the characters are represented in the font.&lt;/P&gt;
+  */
+-public final class FSTextConstructor
++public class FSTextConstructor
+ {
+     private static final int OS_2 = 0x4F532F32;
+     private static final int HEAD = 0x68656164;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000101.html">[Transform-svn] r162 - in trunk: doc src/com/flagstone/transform/tools
+</A></li>
+	<LI>Next message: <A HREF="000103.html">[Transform-svn] r164 - in trunk: doc src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#102">[ date ]</a>
+              <a href="thread.html#102">[ thread ]</a>
+              <a href="subject.html#102">[ subject ]</a>
+              <a href="author.html#102">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

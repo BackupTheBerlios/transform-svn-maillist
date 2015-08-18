@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r162 - in trunk: doc src/com/flagstone/transform/tools
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r162%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/tools&In-Reply-To=%3C200606051548.k55FmlGe014001%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000102.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r162 - in trunk: doc src/com/flagstone/transform/tools</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r162%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform/tools&In-Reply-To=%3C200606051548.k55FmlGe014001%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r162 - in trunk: doc src/com/flagstone/transform/tools">smackay at berlios.de
+       </A><BR>
+    <I>Mon Jun  5 17:48:47 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000102.html">[Transform-svn] r163 - in dev/dev-2-2/src/com/flagstone/transform: . util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#101">[ date ]</a>
+              <a href="thread.html#101">[ thread ]</a>
+              <a href="subject.html#101">[ subject ]</a>
+              <a href="author.html#101">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-05 17:48:40 +0200 (Mon, 05 Jun 2006)
+New Revision: 162
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/tools/TextDump.java
+Log:
+Fixed bug in TextDump which was not including the actions which 
+make up the body of the function definition.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-04-14 09:01:52 UTC (rev 161)
++++ trunk/doc/CHANGES.txt	2006-06-05 15:48:40 UTC (rev 162)
+@@ -1,3 +1,8 @@
++2006-06-05 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Fixed bug in TextDump which was not including the actions which make up
++      the body of the function definition.
++
+ 2006-04-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">denis at fireflydesign.com</A>
+ 
+     * Always use 6 byte header for DefineLosslessImage2 (FSDefineImage2) because
+
+Modified: trunk/src/com/flagstone/transform/tools/TextDump.java
+===================================================================
+--- trunk/src/com/flagstone/transform/tools/TextDump.java	2006-04-14 09:01:52 UTC (rev 161)
++++ trunk/src/com/flagstone/transform/tools/TextDump.java	2006-06-05 15:48:40 UTC (rev 162)
+@@ -1575,7 +1575,7 @@
+                     decoded = true;
+                     break;
+                 case NewFunction2:
+-                    decodeNewFunction2(coder);
++                    length = decodeNewFunction2(coder);
+                     next = start + (length &lt;&lt; 3);
+                     decoded = true;
+                     break;
+@@ -2392,6 +2392,8 @@
+                 
+             int actionsLength = coder.readWord(&quot;actionsLength&quot;, 2, false);
+             
++            length += actionsLength;
++            
+             coder.beginArray(&quot;actions&quot;);
+ 
+             while (actionsLength &gt; 0)
+@@ -2400,7 +2402,7 @@
+             coder.endObject();
+             coder.endObject();
+             
+-            return length + actionsLength;
++            return length;
+         }
+         
+         int decodeNewFunction2(SWFDecoder coder)
+@@ -2422,6 +2424,8 @@
+                 
+             int actionsLength = coder.readWord(&quot;actionsLength&quot;, 2, false);
+             
++            length += actionsLength;
++            
+             coder.beginArray(&quot;actions&quot;);
+ 
+             while (actionsLength &gt; 0)
+@@ -2430,7 +2434,7 @@
+             coder.endObject();
+             coder.endObject();
+             
+-            return length + actionsLength;
++            return length;
+         }
+ 
+         void decodePush(SWFDecoder coder)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000102.html">[Transform-svn] r163 - in dev/dev-2-2/src/com/flagstone/transform: . util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#101">[ date ]</a>
+              <a href="thread.html#101">[ thread ]</a>
+              <a href="subject.html#101">[ subject ]</a>
+              <a href="author.html#101">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

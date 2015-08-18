@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r290 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r290%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801281132.m0SBWMHS023833%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000225.html">
+   <LINK REL="Next"  HREF="000227.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r290 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r290%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801281132.m0SBWMHS023833%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r290 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Mon Jan 28 12:32:22 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000225.html">[Transform-svn] r289 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000227.html">[Transform-svn] r291 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#226">[ date ]</a>
+              <a href="thread.html#226">[ thread ]</a>
+              <a href="subject.html#226">[ subject ]</a>
+              <a href="author.html#226">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-28 12:32:14 +0100 (Mon, 28 Jan 2008)
+New Revision: 290
+
+Modified:
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+Log:
+Updated the way actions are encoded to improve reliability.
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2008-01-28 11:31:27 UTC (rev 289)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2008-01-28 11:32:14 UTC (rev 290)
+@@ -396,7 +396,7 @@
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+             
+-            if (currentAction.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (currentAction.getType() != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -404,7 +404,7 @@
+         {
+             length += encodedActions.length;
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+             	length += 1;
+             }
+         }        
+@@ -443,7 +443,7 @@
+                 }
+             }
+             
+-            if (action.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (action.getType() != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+@@ -451,7 +451,7 @@
+         {
+             coder.writeBytes(encodedActions);
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2008-01-28 11:31:27 UTC (rev 289)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2008-01-28 11:32:14 UTC (rev 290)
+@@ -492,7 +492,7 @@
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+             
+-            if (currentAction.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (currentAction.getType() != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -500,7 +500,7 @@
+         {
+             length += encodedActions.length;
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -525,7 +525,7 @@
+                 offset += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+             
+-            if (currentAction.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (currentAction.getType() != FSAction.End)) {
+             	offset += 1;
+             }
+         }
+@@ -533,7 +533,7 @@
+         {
+             offset += encodedActions.length;
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+             	offset += 1;
+             }
+         }
+@@ -578,7 +578,7 @@
+                 }
+             }
+             
+-            if (action.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (action.getType() != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+@@ -586,7 +586,7 @@
+         {
+            coder.writeBytes(encodedActions);
+ 
+-           if (encodedActions[encodedActions.length-1] != FSAction.End) {
++           if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+                coder.writeWord(0, 1);
+            }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2008-01-28 11:31:27 UTC (rev 289)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2008-01-28 11:32:14 UTC (rev 290)
+@@ -383,7 +383,7 @@
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+             
+-            if (currentAction.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (currentAction.getType() != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -391,7 +391,7 @@
+         {
+             length += encodedActions.length;
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -435,7 +435,7 @@
+                 }
+             }
+             
+-            if (action.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (action.getType() != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+@@ -443,7 +443,7 @@
+         {
+             coder.writeBytes(encodedActions);
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2008-01-28 11:31:27 UTC (rev 289)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2008-01-28 11:32:14 UTC (rev 290)
+@@ -276,8 +276,9 @@
+         if (actions != null)
+         {
+         	FSActionObject currentAction = null;
++        	int count = actions.size();
+         	
+-            for (int i=0; i&lt;actions.size(); i++)
++            for (int i=0; i&lt;count; i++)
+             {
+                 currentAction = (FSActionObject)actions.get(i);
+             
+@@ -285,7 +286,7 @@
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+             
+-            if (currentAction.getType() != FSAction.End) {
++            if (count == 0 || (currentAction.getType() != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -293,7 +294,7 @@
+         {
+             length += encodedActions.length;
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -331,7 +332,7 @@
+                 coder.setPointer(next);
+             }
+             
+-            if (action.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (action.getType() != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+@@ -339,7 +340,7 @@
+         {
+             coder.writeBytes(encodedActions);
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2008-01-28 11:31:27 UTC (rev 289)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2008-01-28 11:32:14 UTC (rev 290)
+@@ -305,7 +305,7 @@
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+             
+-            if (currentAction.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (currentAction.getType() != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -313,7 +313,7 @@
+         {
+             length += encodedActions.length;
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+             	length += 1;
+             }
+         }
+@@ -354,7 +354,7 @@
+                 }
+             }
+             
+-            if (action.getType() != FSAction.End) {
++            if ((actions.size() == 0) || (action.getType() != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+@@ -362,7 +362,7 @@
+         {
+             coder.writeBytes(encodedActions);
+ 
+-            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            if ((encodedActions.length == 0) || (encodedActions[encodedActions.length-1] != FSAction.End)) {
+                 coder.writeWord(0, 1);
+             }
+         }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000225.html">[Transform-svn] r289 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000227.html">[Transform-svn] r291 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#226">[ date ]</a>
+              <a href="thread.html#226">[ thread ]</a>
+              <a href="subject.html#226">[ subject ]</a>
+              <a href="author.html#226">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

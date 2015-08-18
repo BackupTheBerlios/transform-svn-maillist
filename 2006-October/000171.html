@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r234 - trunk/doc/web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-October/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r234%20-%20trunk/doc/web&In-Reply-To=%3C200610011618.k91GIXTm019997%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000170.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r234 - trunk/doc/web</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r234%20-%20trunk/doc/web&In-Reply-To=%3C200610011618.k91GIXTm019997%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r234 - trunk/doc/web">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sun Oct  1 18:18:33 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000170.html">[Transform-svn] r233 - trunk/doc/web
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#171">[ date ]</a>
+              <a href="thread.html#171">[ thread ]</a>
+              <a href="subject.html#171">[ subject ]</a>
+              <a href="author.html#171">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-10-01 18:18:31 +0200 (Sun, 01 Oct 2006)
+New Revision: 234
+
+Modified:
+   trunk/doc/web/issues.html
+Log:
+Added details of bug 8752 when handling fonts on a Macintosh.
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-10-01 14:59:45 UTC (rev 233)
++++ trunk/doc/web/issues.html	2006-10-01 16:18:31 UTC (rev 234)
+@@ -30,7 +30,7 @@
+ &lt;div class=&quot;content&quot;&gt;
+ 
+ &lt;H1&gt;Transform SWF: Known Issues &amp; Bugs&lt;/H1&gt;
+-&lt;P&gt;Version: 2.1.4&lt;BR/&gt;Updated: 30th September 2006&lt;/P&gt;
++&lt;P&gt;Version: 2.1.4&lt;BR/&gt;Updated: 1st October 2006&lt;/P&gt;
+ 
+ &lt;TABLE width=&quot;100%&quot;&gt;
+ 
+@@ -52,6 +52,13 @@
+ &lt;TD&gt;Open&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
++&lt;TR&gt;
++&lt;TD&gt;8752&lt;/TD&gt;
++&lt;TD&gt;Fonts do not decode on Macintosh.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;/TR&gt;
++
+ &lt;/TBODY&gt;
+ &lt;/TABLE&gt;
+ 
+@@ -160,6 +167,39 @@
+ conversion between the way the font is encoded. This option is planned for 
+ release in the next version of Transform Utilities.&lt;/P&gt;
+ 
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
++&lt;H3&gt;8752. Fonts do not decode on Macintosh.&lt;/H3&gt;
++
++&lt;P&gt;When decoding an an AWT Font object to create glyphs the first set of 
++coordinates returned are a relative move. When using Windows or Linux the 
++relative move is small and falls within the bounding box for the glyph. However 
++under Mac OS X the relative move is large and falls outside the bounding box 
++for the glyph.&lt;/P&gt;
++
++&lt;p&gt;The result is that text is displaced. If the text is not animated the 
++characters are displayed correctly however in order to place the text correctly 
++the relative move must be corrected for - which means checking the glyph 
++information to find the coordinates and then correctly for the selected font 
++size - not very practical.&lt;/p&gt;
++
++&lt;H4&gt;Root Cause&lt;/H4&gt;
++
++&lt;P&gt;The exact cause is unknown. The TrueType (OpenType) font format is complex 
++and it is possible that the problem is a bug in the JDK, though this seems 
++unlikely. Most probably the information returned when running on OS X is 
++simply different and the FSTextConstructor must take account of this platform
++dependency.&lt;/P&gt;
++
++&lt;H4&gt;Workaround?&lt;/H4&gt;
++
++&lt;P&gt;No workaround is currently available.&lt;/P&gt;
++
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
++
++&lt;P&gt;No date set, pending a review of several minor implementation issues in the 
++FSTextConstructor class.&lt;/P&gt;
++
+ &lt;br/&gt;
+ 
+ &lt;H2&gt;Recently Fixed&lt;/H2&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000170.html">[Transform-svn] r233 - trunk/doc/web
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#171">[ date ]</a>
+              <a href="thread.html#171">[ thread ]</a>
+              <a href="subject.html#171">[ subject ]</a>
+              <a href="author.html#171">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

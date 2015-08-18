@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r361%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181615.m2IGF5up006461%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000296.html">
+   <LINK REL="Next"  HREF="000298.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r361%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181615.m2IGF5up006461%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r361 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:15:05 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000296.html">[Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000298.html">[Transform-svn] r362 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#297">[ date ]</a>
+              <a href="thread.html#297">[ thread ]</a>
+              <a href="subject.html#297">[ subject ]</a>
+              <a href="author.html#297">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:15:01 +0100 (Tue, 18 Mar 2008)
+New Revision: 361
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/FSMorphLineStyle.java
+Log:
+Renamed FSMorphSolidFill to FSMorphLineStyle to complement renaming of FSSolidLine to FSLineStyle. added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/FSMorphLineStyle.java (from rev 344, dev/dev-2-4/src/com/flagstone/transform/FSMorphSolidLine.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMorphSolidLine.java	2008-03-16 08:53:49 UTC (rev 344)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMorphLineStyle.java	2008-03-18 16:15:01 UTC (rev 361)
+@@ -0,0 +1,328 @@
++/*
++ * FSMorphSolidLine.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++package com.flagstone.transform;
++
++/**
++ * FSMorphSolidLine defines the width and colour of a line drawn for a morphing
++ * shape.
++ * 
++ * &lt;p&gt;
++ * It specifies the width and colour of the line at the start and end of the
++ * morphing process. The transparency value for the colour should also be
++ * specified. As with the FSLineStyle class all lines are drawn with rounded
++ * corners and end caps. Different join and line end styles can be created by
++ * drawing very narrow shapes.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;startWidth&lt;/td&gt;
++ * &lt;td&gt;The width of the line at the start of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;startColor&lt;/td&gt;
++ * &lt;td&gt;The colour applied to the line at the start of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;endWidth&lt;/td&gt;
++ * &lt;td&gt;The width of the line at the end of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;endColor&lt;/td&gt;
++ * &lt;td&gt;The colour applied to the line at the end of the morphing process.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The FSDefineMorphShape object support transparent colours so alpha channel
++ * information must be specified in the colour objects.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSMorphSolidLine class represents the MorphLineStyle structure from the
++ * Macromedia Flash (SWF) File Format Specification. Shape morphing was
++ * introduced in Flash 3.
++ * &lt;/P&gt;
++ */
++public class FSMorphLineStyle implements Cloneable, Codeable
++{
++	private int startWidth;
++	private int endWidth;
++	private FSColor startColor;
++	private FSColor endColor;
++
++	/**
++	 * Construct an FSMorphSolidLine object, initializing it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSMorphLineStyle(FSCoder coder)
++	{
++		decode(coder);
++	}
++
++	/**
++	 * Constructs an FSMorphLineStyle object specifying the starting and ending
++	 * widths and colours.
++	 * 
++	 * @param aStartWidth
++	 *            the width of the line at the start of the morphing process.
++	 * @param anEndWidth
++	 *            the width of the line at the end of the morphing process.
++	 * @param aStartColor
++	 *            the colour of the line at the start of the morphing process.
++	 * @param anEndColor
++	 *            the colour of the line at the end of the morphing process.
++	 */
++	public FSMorphLineStyle(int aStartWidth, int anEndWidth,
++							FSColor aStartColor, FSColor anEndColor)
++	{
++		setStartWidth(aStartWidth);
++		setEndWidth(anEndWidth);
++		setStartColor(aStartColor);
++		setEndColor(anEndColor);
++	}
++
++	/**
++	 * Constructs an FSMorphSolidLine object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSMorphSolidLine object.
++	 */
++	public FSMorphLineStyle(FSMorphLineStyle obj)
++	{
++		startWidth = obj.startWidth;
++		endWidth = obj.endWidth;
++		startColor = new FSColor(obj.startColor);
++		endColor = new FSColor(obj.endColor);
++	}
++
++	/**
++	 * Gets the width of the line at the start of the morphing process.
++	 * 
++	 * @return the starting width of the line.
++	 */
++	public int getStartWidth()
++	{
++		return startWidth;
++	}
++
++	/**
++	 * Gets the width of the line at the end of the morphing process.
++	 * 
++	 * @return the ending width of the line.
++	 */
++	public int getEndWidth()
++	{
++		return endWidth;
++	}
++
++	/**
++	 * Gets the colour of the line at the start of the morphing process.
++	 * 
++	 * @return the starting colour of the line.
++	 */
++	public FSColor getStartColor()
++	{
++		return startColor;
++	}
++
++	/**
++	 * Gets the colour of the line at the end of the morphing process.
++	 * 
++	 * @return the ending colour of the line.
++	 */
++	public FSColor getEndColor()
++	{
++		return endColor;
++	}
++
++	/**
++	 * Sets the width of the line at the start of the morphing process.
++	 * 
++	 * @param aNumber
++	 *            the starting width of the line.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 0..65535.
++	 */
++	public void setStartWidth(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Line width must be in range 0..65535.&quot;);
++		}
++		startWidth = aNumber;
++	}
++
++	/**
++	 * Sets the width of the line at the end of the morphing process.
++	 * 
++	 * @param aNumber
++	 *            the ending width of the line.
++	 *            
++	 * @throws IllegalArgumentException if the argument is not in the range 0..65535.
++	 */
++	public void setEndWidth(int aNumber)
++	{
++		if (aNumber &lt; 0 || aNumber &gt; 65535) {
++			throw new IllegalArgumentException(&quot;Line width must be in range 0..65535.&quot;);
++		}
++		endWidth = aNumber;
++	}
++
++	/**
++	 * Gets the colour of the line at the start of the morphing process.
++	 * 
++	 * @param aColor
++	 *            the starting colour of the line.
++	 * 
++	 * @throws NullPointerException if the argument is null,
++	 */
++	public void setStartColor(FSColor aColor)
++	{
++		startColor = aColor;
++	}
++
++	/**
++	 * Sets the colour of the line at the end of the morphing process.
++	 * 
++	 * @param aColor
++	 *            the ending colour of the line.
++	 * 
++	 * @throws NullPointerException if the argument is null,
++	 */
++	public void setEndColor(FSColor aColor)
++	{
++		endColor = aColor;
++	}
++
++	public Object clone()
++	{
++		FSMorphLineStyle obj = null;
++
++		try
++		{
++			obj = (FSMorphLineStyle) super.clone();
++			obj.startColor = (FSColor) startColor.clone();
++			obj.endColor = (FSColor) endColor.clone();
++		} 
++		catch (CloneNotSupportedException e)
++		{
++			throw new InternalError();
++		}
++		return obj;
++	}
++
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
++
++		if (obj == null)
++		{
++			return false;
++		}
++
++		if (obj == this)
++		{
++			return true;
++		}
++
++		if (obj instanceof FSMorphLineStyle)
++		{
++			FSMorphLineStyle style = (FSMorphLineStyle) obj;
++
++			result = startWidth == style.startWidth;
++			result = result &amp;&amp; endWidth == style.endWidth;
++			result = result &amp;&amp; startColor.equals(style.startColor);
++			result = result &amp;&amp; endColor.equals(style.endColor);
++		}
++		return result;
++	}
++
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSMorphSolidLine: { &quot;);
++		buffer.append(&quot;startWidth = &quot;).append(startWidth).append(&quot;; &quot;);
++		buffer.append(&quot;endWidth = &quot;).append(endWidth).append(&quot;; &quot;);
++		buffer.append(&quot;startColor = &quot;).append(startColor.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;endColor = &quot;).append(endColor.toString()).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++
++		return buffer.toString();
++	}
++
++	public int length(FSCoder coder)
++	{
++		int length = 4;
++
++		length += startColor.length(coder);
++		length += endColor.length(coder);
++
++		return length;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		coder.writeWord(startWidth, 2);
++		coder.writeWord(endWidth, 2);
++		startColor.encode(coder);
++		endColor.encode(coder);
++	}
++
++	public void decode(FSCoder coder)
++	{
++		startWidth = coder.readWord(2, false);
++		endWidth = coder.readWord(2, false);
++		startColor = new FSColor(coder);
++		endColor = new FSColor(coder);
++	}
++}
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000296.html">[Transform-svn] r360 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000298.html">[Transform-svn] r362 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#297">[ date ]</a>
+              <a href="thread.html#297">[ thread ]</a>
+              <a href="subject.html#297">[ subject ]</a>
+              <a href="author.html#297">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

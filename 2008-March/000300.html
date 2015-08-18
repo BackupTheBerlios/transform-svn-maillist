@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r364 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r364%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181622.m2IGMobg007350%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000299.html">
+   <LINK REL="Next"  HREF="000301.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r364 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r364%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181622.m2IGMobg007350%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r364 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:22:50 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000299.html">[Transform-svn] r363 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000301.html">[Transform-svn] r365 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#300">[ date ]</a>
+              <a href="thread.html#300">[ thread ]</a>
+              <a href="subject.html#300">[ subject ]</a>
+              <a href="author.html#300">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:22:47 +0100 (Tue, 18 Mar 2008)
+New Revision: 364
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSShowFrame.java
+Log:
+Tidied up documentation and removed methods that did not need to be overridden from FSMovieObject.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSShowFrame.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSShowFrame.java	2008-03-18 16:19:45 UTC (rev 363)
++++ dev/dev-2-4/src/com/flagstone/transform/FSShowFrame.java	2008-03-18 16:22:47 UTC (rev 364)
+@@ -31,131 +31,145 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSShowFrame is used to instruct the Flash Player to display a single frame in a movie or 
+-movie clip. 
+- 
+-&lt;p&gt;When a frame is displayed the Flash Player performs the following:&lt;/p&gt;
+-
+-&lt;ul&gt;
+-&lt;li&gt;The contents of the Flash Player's display list are drawn on the screen.&lt;/li&gt;
+-&lt;li&gt;Any actions defined using a FSDoAction object are executed.&lt;/li&gt;
+-&lt;/ul&gt;
+-
+-&lt;table class=&quot;datasheet&quot;&gt;
+-
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
+-
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSShowFrame_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;/table&gt;
+-
+-&lt;p&gt;Objects are placed in the display list using the FSPlaceObject and FSPlaceObject2 classes and removed using the FSRemoveObject and FSRemoveObject2 classes. An object which has been added to the display list will be displayed in each frame until it is explicitly removed. There is no need to repeatedly add it to the display list.&lt;/p&gt;
+-
+-&lt;p&gt;The scope of a frame is delineated by successive FSShowFrame objects. All the commands that affect change the state of the display list or define actions to be executed take effect when the Flash Player displays the frame. All the objects displayed in a frame must be defined before they can be displayed. The movie is displayed as it is downloaded so displaying objects that are defined later in a movie is not allowed.&lt;/p&gt;
+-
+-&lt;pre&gt;
+-FSMovie movie = new FSMovie();
+-
+-// Frame 1 - starts from the beginning of the file.
+-...
+-movie.add(new FSShowFrame());
+-
+-// Frame 2 - starts when the previous frame is displayed.
+-
+-// All displayable objects are referenced using unique identifier.
+-
+-int identifier = movie.newIdentifier();
+-
+-// Define a shape to be displayed.
+-
+-movie.add(new FSDefineShape(identifier, ......));
+-
+-// Add the shape to the display list - on layer 1 at coordinates (400, 400)
+-
+-movie.add(new FSPlaceObject(FSPlaceObject.New, identifier, 1, 400, 400));
+-
+-// Add some actions
+-
+-FSDoAction frameActions = new FSDoAction(); 
+-
+-frameActions.add(anAction);
+-frameActions.add(anotherAction);
+-
+-movie.add(frameActions);
+-
+-// The shape is displayed and the actions executed when the FSShowFrame command is executed.
+-
+-movie.add(new FSShowFrame());
+-&lt;/pre&gt;
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSShowFrame class represents the ShowFrame data structure from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
++ * FSShowFrame is used to instruct the Flash Player to display a single frame in
++ * a movie or movie clip.
++ * 
++ * &lt;p&gt;
++ * When a frame is displayed the Flash Player performs the following:
++ * &lt;/p&gt;
++ * 
++ * &lt;ul&gt;
++ * &lt;li&gt;The contents of the Flash Player's display list are drawn on the screen.&lt;/li&gt;
++ * &lt;li&gt;Any actions defined using a FSDoAction object are executed.&lt;/li&gt;
++ * &lt;/ul&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Objects are placed in the display list using the FSPlaceObject and
++ * FSPlaceObject2 classes and removed using the FSRemoveObject and
++ * FSRemoveObject2 classes. An object which has been added to the display list
++ * will be displayed in each frame until it is explicitly removed. There is no
++ * need to repeatedly add it to the display list.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The scope of a frame is delineated by successive FSShowFrame objects. All the
++ * commands that affect change the state of the display list or define actions
++ * to be executed take effect when the Flash Player displays the frame. All the
++ * objects displayed in a frame must be defined before they can be displayed.
++ * The movie is displayed as it is downloaded so displaying objects that are
++ * defined later in a movie is not allowed.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  FSMovie movie = new FSMovie();
++ * 
++ *  // Frame 1 - starts from the beginning of the file.
++ *  ...
++ *  movie.add(new FSShowFrame());
++ * 
++ *  // Frame 2 - starts when the previous frame is displayed.
++ * 
++ *  // All displayable objects are referenced using unique identifier.
++ * 
++ *  int identifier = movie.newIdentifier();
++ * 
++ *  // Define a shape to be displayed.
++ * 
++ *  movie.add(new FSDefineShape(identifier, ......));
++ * 
++ *  // Add the shape to the display list - on layer 1 at coordinates (400, 400)
++ * 
++ *  movie.add(new FSPlaceObject(FSPlaceObject.New, identifier, 1, 400, 400));
++ * 
++ *  // Add some actions
++ * 
++ *  FSDoAction frameActions = new FSDoAction(); 
++ * 
++ *  frameActions.add(anAction);
++ *  frameActions.add(anotherAction);
++ * 
++ *  movie.add(frameActions);
++ * 
++ *  // The shape is displayed and the actions executed when the FSShowFrame command is executed.
++ * 
++ *  movie.add(new FSShowFrame());
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSShowFrame class represents the ShowFrame data structure from the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 1.
++ * &lt;/p&gt;
+  */
+ public class FSShowFrame extends FSMovieObject
+ {
+-    private static final FSShowFrame instance = new FSShowFrame();
+-    
+-    /**
+-     * Returns a canonical FSShowFrame object.
+-     * 
+-     * @return an object that can safely be shared among objects.
+-     */
+-    public static FSShowFrame getInstance()
+-    {
+-        return instance;
+-    }
+-    /**
+-     * Construct an FSShowFrame object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSShowFrame(FSCoder coder)
+-    {
+-        super(FSMovieObject.ShowFrame);
+-        decode(coder);
+-    }
+-    /** Constructs an FSShowFrame object. */
+-    public FSShowFrame()
+-    {
+-        super(FSMovieObject.ShowFrame);
+-    }
+-    /**
+-     * Constructs an FSShowFrame object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSShowFrame object.
+-     */
+-    public FSShowFrame(FSShowFrame obj)
+-    {
+-        super(obj);
+-    }    
++	private static final FSShowFrame instance = new FSShowFrame();
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
++	/**
++	 * Returns a canonical FSShowFrame object.
++	 * 
++	 * @return an object that can safely be shared among objects.
++	 */
++	public static FSShowFrame getInstance()
++	{
++		return instance;
++	}
+ 
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
++	/**
++	 * Construct an FSShowFrame object, initalizing it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSShowFrame(FSCoder coder)
++	{
++		super(FSMovieObject.ShowFrame);
++		decode(coder);
++	}
+ 
+-        return length;
+-    }    
++	/** Constructs an FSShowFrame object. */
++	public FSShowFrame()
++	{
++		super(FSMovieObject.ShowFrame);
++	}
+ 
+-    public void encode(FSCoder coder)
+-    {
+-        coder.context[FSCoder.Empty] = 1;
+-        super.encode(coder);
+-        coder.context[FSCoder.Empty] = 0;
+-        coder.endObject(name());
+-    }
++	/**
++	 * Constructs an FSShowFrame object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSShowFrame object.
++	 */
++	public FSShowFrame(FSShowFrame obj)
++	{
++		super(obj);
++	}
+ 
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        coder.endObject(name());
+-    }
++	public String toString()
++	{
++		return &quot;FSShowFrame&quot;;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		coder.context[FSCoder.Empty] = 1;
++		super.encode(coder);
++		coder.context[FSCoder.Empty] = 0;
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000299.html">[Transform-svn] r363 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000301.html">[Transform-svn] r365 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#300">[ date ]</a>
+              <a href="thread.html#300">[ thread ]</a>
+              <a href="subject.html#300">[ subject ]</a>
+              <a href="author.html#300">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r80 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r80%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200602231231.k1NCVTNM016697%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000020.html">
+   <LINK REL="Next"  HREF="000021.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r80 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r80%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200602231231.k1NCVTNM016697%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r80 - trunk/src/com/flagstone/transform/test">smackay at berlios.de
+       </A><BR>
+    <I>Thu Feb 23 13:31:29 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000020.html">[Transform-svn] r79 - trunk/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000021.html">[Transform-svn] r81 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-23 13:31:20 +0100 (Thu, 23 Feb 2006)
+New Revision: 80
+
+Modified:
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+Log:
+Fixed an error is FSMovieTest so exceptions thrown when encoding or 
+decoding files are now triggering assertions.
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-02-23 11:27:20 UTC (rev 79)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2006-02-23 12:31:20 UTC (rev 80)
+@@ -30,7 +30,6 @@
+ package com.flagstone.transform.test;
+ 
+ import java.io.*;
+-import java.util.zip.*;
+ 
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.tools.*;
+@@ -62,14 +61,10 @@
+         {
+             new FSMovie(new File(sourceDir, file).getPath());
+         }
+-        catch (DataFormatException e)
++        catch (Exception e)
+         {
+-            assert true;
++            assert false : file+&quot;: &quot;+e.toString();
+         }
+-        catch (IOException e)
+-        {
+-            assert true : e.getMessage();
+-        }
+     }
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+@@ -87,13 +82,9 @@
+             FSMovie movie = new FSMovie(srcFile.getPath());
+             movie.encodeToFile(destFile.getPath());
+         }
+-        catch (DataFormatException e)
+-        {
+-            assert false;
+-        }
+         catch (Exception e)
+         {
+-            assert false : e.getMessage();
++            assert false : file+&quot;: &quot;+e.toString();
+         }
+     }
+     /**
+@@ -114,14 +105,10 @@
+             FSMovie clone = (FSMovie)movie.clone();
+             clone.encodeToFile(destFile.getPath());
+         }
+-        catch (DataFormatException e)
++        catch (Exception e)
+         {
+-            assert false;
++            assert false : file+&quot;: &quot;+e.toString();
+         }
+-        catch (IOException e)
+-        {
+-            assert false : e.getMessage();
+-        }
+     }
+     /**
+      * @testng.test dataProvider=&quot;files&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000020.html">[Transform-svn] r79 - trunk/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000021.html">[Transform-svn] r81 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

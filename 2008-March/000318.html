@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r382 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r382%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182234.m2IMYcxA012386%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000317.html">
+   <LINK REL="Next"  HREF="000319.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r382 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r382%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182234.m2IMYcxA012386%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r382 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 23:34:38 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000317.html">[Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000319.html">[Transform-svn] r383 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#318">[ date ]</a>
+              <a href="thread.html#318">[ thread ]</a>
+              <a href="subject.html#318">[ subject ]</a>
+              <a href="author.html#318">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 23:34:36 +0100 (Tue, 18 Mar 2008)
+New Revision: 382
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSRegisterCopy.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSRegisterCopy.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSRegisterCopy.java	2008-03-18 22:30:44 UTC (rev 381)
++++ dev/dev-2-4/src/com/flagstone/transform/FSRegisterCopy.java	2008-03-18 22:34:36 UTC (rev 382)
+@@ -31,137 +31,156 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSRegisterCopy is used to copy the item at the top of the stack to one of the Flash Player's
+-internal registers. 
+- 
+-&lt;p&gt;The value is not removed from the stack. The number of registers supported was 
+-expanded in Flash 7 to 256.&lt;/p&gt;
++ * FSRegisterCopy is used to copy the item at the top of the stack to one of the
++ * Flash Player's internal registers.
++ * 
++ * &lt;p&gt;
++ * The value is not removed from the stack. The number of registers supported
++ * was expanded in Flash 7 to 256.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The Flash Player uses a stack to store values when executing the actions
++ * associated with a button being pushed, frame being played, etc. If a value is
++ * used repeatedly in a calculation, it must be pushed onto the stack each time
++ * using an FSPush action. To speed up the execution of the calculation and
++ * reduce the amount of code required the value can be saved to one of the
++ * internal registers of the Flash Player using the FSRegisterCopy action. This
++ * copies the value currently at the top of the stack into the specified
++ * register. Pushing an FSRegisterIndex object onto the stack creates a
++ * reference to the register so the Flash Player uses the value directly rather
++ * than pushing the value onto the stack then immediately popping to use the
++ * value in a calculation.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * To copy a value from the top of the stack to a register, specify the number
++ * of the register, 0..255, in the constructor:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * // Copy a useful value into one of the Flash Player's registers
++ * 
++ * actions.add(new FSPush(3.1415296));
++ * actions.add(new FSRegisterCopy(0));
++ * 
++ * // Use a FSRegisterIndex to look it up later
++ * 
++ * actions.add(new FSPush(FSRegisterIndex(0)));
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSRegisterCopy action represents the ActionStoreRegister action in the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 5 and expanded in Flash 7 to support up to 256 registers.
++ * &lt;/p&gt;
++ */
++public class FSRegisterCopy extends FSActionObject
++{
++	private int registerNumber;
+ 
+-&lt;p&gt;The Flash Player uses a stack to store values when executing the actions 
+-associated with a button being  pushed, frame being played, etc. If a value is 
+-used repeatedly in a calculation, it must be pushed onto the stack each time using 
+-an FSPush action. To speed up the execution of the calculation and reduce the 
+-amount of code required the value can be saved to one of the internal registers 
+-of the Flash Player using the FSRegisterCopy action. This copies the value 
+-currently at the top of the stack into the specified register. Pushing an 
+-FSRegisterIndex object onto the stack creates a reference to the register so the 
+-Flash Player uses the value directly rather than pushing the value onto the stack 
+-then immediately popping to use the value in a calculation.&lt;/p&gt;
++	/**
++	 * Construct an FSRegisterCopy object, initialising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSRegisterCopy(FSCoder coder)
++	{
++		super(RegisterCopy);
++		decode(coder);
++	}
+ 
+-&lt;p&gt;To copy a value from the top of the stack to a register, specify the number 
+-of the register, 0..255, in the constructor:&lt;/p&gt;
++	/**
++	 * Constructs an FSRegisterCopy object with the register number.
++	 * 
++	 * @param anIndex
++	 *            the number of one of the Flash Player's internal registers.
++	 */
++	public FSRegisterCopy(int anIndex)
++	{
++		super(RegisterCopy);
++		setRegisterNumber(anIndex);
++	}
+ 
+-&lt;pre&gt;
+-// Copy a useful value into one of the Flash Player's registers
++	/**
++	 * Constructs an FSRegisterCopy object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSRegisterCopy object.
++	 */
++	public FSRegisterCopy(FSRegisterCopy obj)
++	{
++		super(obj);
++		registerNumber = obj.registerNumber;
++	}
+ 
+-actions.add(new FSPush(3.1415296));
+-actions.add(new FSRegisterCopy(0));
++	/**
++	 * Gets the number of the Player register that the value on the stack will
++	 * be copied to.
++	 * 
++	 * @return the register number in the range 0..3 up to flash 7 then 256 from
++	 * version 7 onwards.
++	 */
++	public int getRegisterNumber()
++	{
++		return registerNumber;
++	}
+ 
+-// Use a FSRegisterIndex to look it up later
++	/**
++	 * Gets the number of the Player register that the value on the stack will
++	 * be copied to.
++	 * 
++	 * @param anIndex
++	 *            the number of one of the Flash Player's internal registers.
++	 */
++	public void setRegisterNumber(int anIndex)
++	{
++		registerNumber = anIndex;
++	}
+ 
+-actions.add(new FSPush(FSRegisterIndex(0)));
+-&lt;/pre&gt;
++	public boolean equals(Object obj)
++	{
++		boolean result = super.equals(obj);
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		result = result &amp;&amp; registerNumber == ((FSRegisterCopy)obj).registerNumber;
+ 
+-&lt;p&gt;The FSRegisterCopy action represents the ActionStoreRegister action in the 
+-Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5 
+-and expanded in Flash 7 to support up to 256 registers.&lt;/p&gt;
+- */  
+-public class FSRegisterCopy extends FSActionObject
+-{
+-    private int registerNumber = 0;
+-    
+-    /**
+-     * Construct an FSRegisterCopy object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSRegisterCopy(FSCoder coder)
+-    {
+-        super(RegisterCopy);
+-        decode(coder);
+-    }
+-    /** Constructs an FSRegisterCopy object with the register number.
++		return result;
++	}
+ 
+-        @param anIndex the number of one of the Flash Player's internal registers.
+-        */
+-    public FSRegisterCopy(int anIndex)
+-    {
+-        super(RegisterCopy);
+-        setRegisterNumber(anIndex);
+-    }
+-    /**
+-     * Constructs an FSRegisterCopy object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSRegisterCopy object.
+-     */
+-    public FSRegisterCopy(FSRegisterCopy obj)
+-    {
+-        super(obj);
+-        registerNumber = obj.registerNumber;
+-    }    
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Gets the number of the Player register that the value on the stack will be copied to.
++		buffer.append(&quot;FSRegisterCopy: { &quot;);
++		buffer.append(&quot;registerNumber = &quot;).append(registerNumber).append(&quot;;&quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @return the register number in the range 0..3.
+-        */
+-    public int getRegisterNumber() 
+-    {
+-        return registerNumber;
+-    }
++		return buffer.toString();
++	}
+ 
+-    /** Gets the number of the Player register that the value on the stack will be copied to.
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-        @param anIndex the number of one of the Flash Player's internal registers.
+-        */
+-    public void setRegisterNumber(int anIndex) 
+-    {
+-        registerNumber = anIndex;
+-    }
++		length += 1;
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = registerNumber == ((FSRegisterCopy)anObject).getRegisterNumber();
++		return length;
++	}
+ 
+-        return result;
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeWord(registerNumber, 1);
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;registerNumber&quot;, registerNumber);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        length += 1;
+-        
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeWord(registerNumber, 1);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        registerNumber = coder.readWord(1, false);
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		registerNumber = coder.readByte();
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000317.html">[Transform-svn] r381 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000319.html">[Transform-svn] r383 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#318">[ date ]</a>
+              <a href="thread.html#318">[ thread ]</a>
+              <a href="subject.html#318">[ subject ]</a>
+              <a href="author.html#318">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r180 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r180%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200606271034.k5RAY4xO012728%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000118.html">
+   <LINK REL="Next"  HREF="000120.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r180 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r180%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200606271034.k5RAY4xO012728%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r180 - trunk/src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Tue Jun 27 12:34:04 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000118.html">[Transform-svn] r179 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000120.html">[Transform-svn] r181 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#119">[ date ]</a>
+              <a href="thread.html#119">[ thread ]</a>
+              <a href="subject.html#119">[ subject ]</a>
+              <a href="author.html#119">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-27 12:34:01 +0200 (Tue, 27 Jun 2006)
+New Revision: 180
+
+Modified:
+   trunk/src/com/flagstone/transform/FSProtect.java
+Log:
+Fixed bug in copy constructor where passsword would be set to null.
+
+Modified: trunk/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProtect.java	2006-06-27 10:32:36 UTC (rev 179)
++++ trunk/src/com/flagstone/transform/FSProtect.java	2006-06-27 10:34:01 UTC (rev 180)
+@@ -95,7 +95,11 @@
+     public FSProtect(FSProtect obj)
+     {
+         super(obj);
+-        password = new String(obj.password);
++        
++        if (obj.password != null)
++            password = new String(obj.password);
++        else
++            password = obj.password;
+     }    
+ 
+     /** Gets the MD5 encrypted password.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000118.html">[Transform-svn] r179 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000120.html">[Transform-svn] r181 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#119">[ date ]</a>
+              <a href="thread.html#119">[ thread ]</a>
+              <a href="subject.html#119">[ subject ]</a>
+              <a href="author.html#119">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

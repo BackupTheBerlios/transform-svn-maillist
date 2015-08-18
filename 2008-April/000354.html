@@ -1,0 +1,620 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r418 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r418%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011552.m31FqE9u013694%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000353.html">
+   <LINK REL="Next"  HREF="000355.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r418 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r418%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011552.m31FqE9u013694%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r418 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 17:52:14 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000353.html">[Transform-svn] r417 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000355.html">[Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#354">[ date ]</a>
+              <a href="thread.html#354">[ thread ]</a>
+              <a href="subject.html#354">[ subject ]</a>
+              <a href="author.html#354">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 17:52:02 +0200 (Tue, 01 Apr 2008)
+New Revision: 418
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java
+   dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java
+   dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java
+   dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java
+   dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java
+   dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSWith.java
+Log:
+Replaced ArrayList&lt;FSActionObject&gt; with List&lt;ActionObject&gt; to expose the interface just in case a more efficient list comes along.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -31,7 +31,9 @@
+ package com.flagstone.transform;
+ 
+ import java.util.ArrayList;
++import java.util.List;
+ import java.util.HashMap;
++import java.util.Map;
+ import java.util.Iterator;
+ 
+ /**
+@@ -502,7 +504,7 @@
+ 	 * @param array the array to be copied.
+ 	 * @return a copy of the array.
+ 	 */
+-	public static ArrayList&lt;FSActionObject&gt; copy(ArrayList&lt;FSActionObject&gt; array)
++	public static List&lt;FSActionObject&gt; copy(List&lt;FSActionObject&gt; array)
+ 	{
+ 		if (array == null) {
+ 			return null;
+@@ -530,7 +532,7 @@
+ 	 * 
+ 	 * @return the length in bytes of the encoded binary data.
+ 	 */
+-	public static int length(FSContext context, ArrayList&lt;FSActionObject&gt; array)
++	public static int length(FSContext context, List&lt;FSActionObject&gt; array)
+ 	{
+ 		if (array == null) {
+ 			return 0;
+@@ -573,7 +575,7 @@
+ 	 * 
+ 	 * @param array the array of actions to encode.
+ 	 */
+-	public static void encode(FSCoder coder, FSContext context, ArrayList&lt;FSActionObject&gt; array)
++	public static void encode(FSCoder coder, FSContext context, List&lt;FSActionObject&gt; array)
+ 	{
+ 		if (array == null) {
+ 			return;
+@@ -799,7 +801,7 @@
+ 	 * 
+ 	 * @param length the number of bytes to decode.
+ 	 */
+-	public static ArrayList&lt;FSActionObject&gt; decodeActions(FSCoder coder, FSContext context, int length)
++	public static List&lt;FSActionObject&gt; decodeActions(FSCoder coder, FSContext context, int length)
+ 	{
+ 		ArrayList&lt;FSActionObject&gt; array = new ArrayList&lt;FSActionObject&gt;();
+ 		int start;
+@@ -828,12 +830,12 @@
+ 	 * 
+ 	 * @return an array containing the decoded action objects.
+ 	 */
+-	public static ArrayList&lt;FSActionObject&gt; decodeActions(byte[] data)
++	public static List&lt;FSActionObject&gt; decodeActions(byte[] data)
+ 	{
+ 		return decodeActions(new FSCoder(data), new FSContext(), data.length);
+ 	}
+ 
+-	private static HashMap&lt;Integer, Class&lt;FSActionObject&gt;&gt; table = 
++	private static Map&lt;Integer, Class&lt;FSActionObject&gt;&gt; table = 
+ 		new HashMap&lt;Integer, Class&lt;FSActionObject&gt;&gt;();
+ 
+ 	/**
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSButtonEvent.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -393,7 +393,7 @@
+ 	}
+ 
+ 	private int event = 0;
+-	private ArrayList&lt;FSActionObject&gt; actions = null;
++	private List&lt;FSActionObject&gt; actions = null;
+ 
+ 	private int length = 0;
+ 	private byte[] data = null;
+@@ -427,7 +427,7 @@
+ 	 * @throws IllegalArgumentException if the event code is outside the range 1..65535.
+ 	 * @throws NullPointerexception if the array of actions is null.
+ 	 */
+-	public FSButtonEvent(int aNumber, ArrayList&lt;FSActionObject&gt; anArray)
++	public FSButtonEvent(int aNumber, List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		setEvent(aNumber);
+ 		setActions(anArray);
+@@ -507,7 +507,7 @@
+ 	 * @return the array of action objects that will be executed when the
+ 	 *         specified event(s) occur.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		if (data != null)
+ 		{
+@@ -555,7 +555,7 @@
+ 	 *          
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSClipEvent.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -373,7 +373,7 @@
+ 
+ 	private int event;
+ 	private int keyCode; // Flash 6+
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;FSActionObject&gt; actions;
+ 	private byte[] data = null;
+ 	private int offset;
+ 
+@@ -576,7 +576,7 @@
+ 	 * @return the array of actions that will be executed when the specified
+ 	 *         event occurs.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		if (data != null)
+ 		{
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineButton.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -183,8 +183,8 @@
+  */
+ public class FSDefineButton extends Definition
+ {
+-	private ArrayList&lt;FSButtonShape&gt; buttonRecords;
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;FSButtonShape&gt; buttonRecords;
++	private List&lt;FSActionObject&gt; actions;
+ 	private byte[] encodedActions;
+ 
+ 	/**
+@@ -215,7 +215,7 @@
+ 	 * @throws NullPointerException if the array of FSButton objects is null.
+ 	 * @throws NullPointerException if the array of actions is null.
+ 	 */
+-	public FSDefineButton(int anIdentifier, ArrayList&lt;FSButtonShape&gt; buttons, ArrayList&lt;FSActionObject&gt; actions)
++	public FSDefineButton(int anIdentifier, List&lt;FSButtonShape&gt; buttons, List&lt;FSActionObject&gt; actions)
+ 	{
+ 		super(DefineButton, anIdentifier);
+ 		setButtonRecords(buttons);
+@@ -263,7 +263,7 @@
+ 	 * @throws NullPointerException if the array of FSButton objects is null.
+ 	 * @throws NullPointerException if the encoded actions is null.
+ 	 */
+-	public FSDefineButton(int anIdentifier, ArrayList&lt;FSButtonShape&gt; buttons, byte[] bytes)
++	public FSDefineButton(int anIdentifier, List&lt;FSButtonShape&gt; buttons, byte[] bytes)
+ 	{
+ 		super(DefineButton, anIdentifier);
+ 		setButtonRecords(buttons);
+@@ -302,7 +302,7 @@
+ 	 * 
+ 	 * @return the array of FSButton objects defined for this button.
+ 	 */
+-	public ArrayList&lt;FSButtonShape&gt; getButtonRecords()
++	public List&lt;FSButtonShape&gt; getButtonRecords()
+ 	{
+ 		return buttonRecords;
+ 	}
+@@ -313,7 +313,7 @@
+ 	 * 
+ 	 * @return the array of action objects defined for this button.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		if (encodedActions != null)
+ 		{
+@@ -331,7 +331,7 @@
+ 	 *           
+ 	 * @throws NullPointerException if the array of button records is null.
+ 	 */
+-	public void setButtonRecords(ArrayList&lt;FSButtonShape&gt; anArray)
++	public void setButtonRecords(List&lt;FSButtonShape&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of button records cannot be null.&quot;);
+@@ -348,7 +348,7 @@
+ 	 *           
+ 	 * @throws NullPointerException if the array of actions is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDoAction.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -105,7 +105,7 @@
+  */
+ public class FSDoAction extends FSMovieObject
+ {
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;FSActionObject&gt; actions;
+ 
+ 	private byte[] encodedActions = null;
+ 
+@@ -202,7 +202,7 @@
+ 	 * 
+ 	 * @return the array of action objects.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		if (encodedActions != null)
+ 		{
+@@ -222,7 +222,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSExceptionHandler.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -118,9 +118,9 @@
+ {
+ 	private int register;
+ 	private String variable;
+-	private ArrayList&lt;FSActionObject&gt; tryActions;
+-	private ArrayList&lt;FSActionObject&gt; catchActions;
+-	private ArrayList&lt;FSActionObject&gt; finalActions;
++	private List&lt;FSActionObject&gt; tryActions;
++	private List&lt;FSActionObject&gt; catchActions;
++	private List&lt;FSActionObject&gt; finalActions;
+ 	
+ 	private int tryLength;
+ 	private int catchLength;
+@@ -199,9 +199,9 @@
+ 	 * @throws IllegalArgumentexception is the register number is not in the range 0..255
+ 	 * @throws NullPointerException if the array of actions for the try block are null.
+ 	 */
+-	public FSExceptionHandler(int index, ArrayList&lt;FSActionObject&gt; tryArray,
+-								ArrayList&lt;FSActionObject&gt; catchArray,
+-								ArrayList&lt;FSActionObject&gt; finallyArray)
++	public FSExceptionHandler(int index, List&lt;FSActionObject&gt; tryArray,
++								List&lt;FSActionObject&gt; catchArray,
++								List&lt;FSActionObject&gt; finallyArray)
+ 	{
+ 		super(ExceptionHandler);
+ 
+@@ -359,7 +359,7 @@
+ 	 * 
+ 	 * @return the array of actions for the try block.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getTryActions()
++	public List&lt;FSActionObject&gt; getTryActions()
+ 	{
+ 		return tryActions;
+ 	}
+@@ -370,7 +370,7 @@
+ 	 * @param array
+ 	 *            the array of actions for the try block.
+ 	 */
+-	public void setTryActions(ArrayList&lt;FSActionObject&gt; array)
++	public void setTryActions(List&lt;FSActionObject&gt; array)
+ 	{
+ 		tryActions = array;
+ 	}
+@@ -380,7 +380,7 @@
+ 	 * 
+ 	 * @return the array of actions for the catch block.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getCatchActions()
++	public List&lt;FSActionObject&gt; getCatchActions()
+ 	{
+ 		return catchActions;
+ 	}
+@@ -391,7 +391,7 @@
+ 	 * @param array
+ 	 *            the array of actions for the catch block.
+ 	 */
+-	public void setCatchActions(ArrayList&lt;FSActionObject&gt; array)
++	public void setCatchActions(List&lt;FSActionObject&gt; array)
+ 	{
+ 		catchActions = array;
+ 	}
+@@ -401,7 +401,7 @@
+ 	 * 
+ 	 * @return the array of actions for the finally block.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getFinalActions()
++	public List&lt;FSActionObject&gt; getFinalActions()
+ 	{
+ 		return finalActions;
+ 	}
+@@ -412,7 +412,7 @@
+ 	 * @param array
+ 	 *            the array of actions for the final block.
+ 	 */
+-	public void setFinalActions(ArrayList&lt;FSActionObject&gt; array)
++	public void setFinalActions(List&lt;FSActionObject&gt; array)
+ 	{
+ 		finalActions = array;
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -103,7 +103,7 @@
+ public class FSInitialize extends FSMovieObject
+ {
+ 	private int identifier;
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;FSActionObject&gt; actions;
+ 	private byte[] encodedActions;
+ 
+ 	/**
+@@ -131,7 +131,7 @@
+ 	 * @throws IllegalArgumentException if the identifier is not in the range 1..65535.
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSInitialize(int anIdentifier, ArrayList&lt;FSActionObject&gt; anArray)
++	public FSInitialize(int anIdentifier, List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		super(Initialize);
+ 		setIdentifier(anIdentifier);
+@@ -235,7 +235,7 @@
+ 	 * 
+ 	 * @return the array of action objects.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		if (encodedActions != null)
+ 		{
+@@ -253,7 +253,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null.&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -176,8 +176,8 @@
+ public class FSNewFunction extends FSActionObject
+ {
+ 	private String functionName;
+-	private ArrayList&lt;String&gt; arguments;
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;String&gt; arguments;
++	private List&lt;FSActionObject&gt; actions;
+ 
+ 	private int actionsLength = 0;
+ 
+@@ -216,8 +216,8 @@
+ 	 *            
+ 	 * @throws NullPointerException if the name or either of the arrays are null.
+ 	 */
+-	public FSNewFunction(String aString, ArrayList&lt;String&gt; argumentArray,
+-							ArrayList&lt;FSActionObject&gt; actionArray)
++	public FSNewFunction(String aString, List&lt;String&gt; argumentArray,
++							List&lt;FSActionObject&gt; actionArray)
+ 	{
+ 		super(NewFunction);
+ 		setName(aString);
+@@ -238,7 +238,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if either of arrays are null.
+ 	 */
+-	public FSNewFunction(ArrayList&lt;String&gt; argumentArray, ArrayList&lt;FSActionObject&gt; actionArray)
++	public FSNewFunction(List&lt;String&gt; argumentArray, List&lt;FSActionObject&gt; actionArray)
+ 	{
+ 		super(NewFunction);
+ 		functionName = &quot;&quot;;
+@@ -321,7 +321,7 @@
+ 	 * 
+ 	 * @return the array of argument names.
+ 	 */
+-	public ArrayList&lt;String&gt; getArguments()
++	public List&lt;String&gt; getArguments()
+ 	{
+ 		return arguments;
+ 	}
+@@ -331,7 +331,7 @@
+ 	 * 
+ 	 * @return the array of actions executed.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		return actions;
+ 	}
+@@ -361,7 +361,7 @@
+      *
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setArguments(ArrayList&lt;String&gt; anArray)
++	public void setArguments(List&lt;String&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of argument names cannot be null&quot;);
+@@ -378,7 +378,7 @@
+      *
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -292,8 +292,8 @@
+ 	private int registerCount;
+ 	private int optimizations;
+ 
+-	private ArrayList&lt;FSRegisterVariable&gt; arguments;
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;FSRegisterVariable&gt; arguments;
++	private List&lt;FSActionObject&gt; actions;
+ 
+ 	/*
+ 	 * variables used to record state when encoding.
+@@ -331,7 +331,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the name or either of the arrays are null.
+ 	 */
+-	public FSNewFunction2(String name, ArrayList&lt;FSRegisterVariable&gt; arguments, ArrayList&lt;FSActionObject&gt; actions)
++	public FSNewFunction2(String name, List&lt;FSRegisterVariable&gt; arguments, List&lt;FSActionObject&gt; actions)
+ 	{
+ 		super(NewFunction2);
+ 		setName(name);
+@@ -353,7 +353,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if either of arrays are null.
+ 	 */
+-	public FSNewFunction2(ArrayList&lt;FSRegisterVariable&gt; arguments, ArrayList&lt;FSActionObject&gt; actions)
++	public FSNewFunction2(List&lt;FSRegisterVariable&gt; arguments, List&lt;FSActionObject&gt; actions)
+ 	{
+ 		super(NewFunction2);
+ 		functionName = &quot;&quot;;
+@@ -505,7 +505,7 @@
+ 	 * @return the array of FSRegisterVariables that define the functions
+ 	 *         arguments.
+ 	 */
+-	public ArrayList&lt;FSRegisterVariable&gt; getArguments()
++	public List&lt;FSRegisterVariable&gt; getArguments()
+ 	{
+ 		return arguments;
+ 	}
+@@ -520,7 +520,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setArguments(ArrayList&lt;FSRegisterVariable&gt; anArray)
++	public void setArguments(List&lt;FSRegisterVariable&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of argument names cannot be null&quot;);
+@@ -533,7 +533,7 @@
+ 	 * 
+ 	 * @return the array of actions executed.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		return actions;
+ 	}
+@@ -547,7 +547,7 @@
+      *
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of actions cannot be null&quot;);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSWith.java	2008-04-01 15:33:08 UTC (rev 417)
++++ dev/dev-3-0/src/com/flagstone/transform/FSWith.java	2008-04-01 15:52:02 UTC (rev 418)
+@@ -97,7 +97,7 @@
+  */
+ public class FSWith extends FSActionObject
+ {
+-	private ArrayList&lt;FSActionObject&gt; actions;
++	private List&lt;FSActionObject&gt; actions;
+ 
+ 	/*
+ 	 * Variables used when encoding.
+@@ -125,7 +125,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public FSWith(ArrayList&lt;FSActionObject&gt; anArray)
++	public FSWith(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		super(With);
+ 		setActions(anArray);
+@@ -168,7 +168,7 @@
+ 	 * 
+ 	 * @return the array of action objects.
+ 	 */
+-	public ArrayList&lt;FSActionObject&gt; getActions()
++	public List&lt;FSActionObject&gt; getActions()
+ 	{
+ 		return actions;
+ 	}
+@@ -181,7 +181,7 @@
+ 	 *            
+ 	 * @throws NullPointerException if the array is null.
+ 	 */
+-	public void setActions(ArrayList&lt;FSActionObject&gt; anArray)
++	public void setActions(List&lt;FSActionObject&gt; anArray)
+ 	{
+ 		actions = anArray;
+ 	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000353.html">[Transform-svn] r417 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000355.html">[Transform-svn] r419 - in dev/dev-3-0/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#354">[ date ]</a>
+              <a href="thread.html#354">[ thread ]</a>
+              <a href="subject.html#354">[ subject ]</a>
+              <a href="author.html#354">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r427 - dev/dev-3-0/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r427%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804020951.m329piZi012074%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000362.html">
+   <LINK REL="Next"  HREF="000364.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r427 - dev/dev-3-0/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r427%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804020951.m329piZi012074%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r427 - dev/dev-3-0/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  2 11:51:44 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000362.html">[Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000364.html">[Transform-svn] r428 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#363">[ date ]</a>
+              <a href="thread.html#363">[ thread ]</a>
+              <a href="subject.html#363">[ subject ]</a>
+              <a href="author.html#363">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-02 11:51:40 +0200 (Wed, 02 Apr 2008)
+New Revision: 427
+
+Removed:
+   dev/dev-3-0/src/com/flagstone/transform/test/UtilityTests.java
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java
+Log:
+Removed Utility tests - there are only two levels of test: individual classes and package level.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java	2008-04-02 09:50:00 UTC (rev 426)
++++ dev/dev-3-0/src/com/flagstone/transform/test/AllTests.java	2008-04-02 09:51:40 UTC (rev 427)
+@@ -5,11 +5,11 @@
+ 
+ @RunWith(Suite.class)
+ @Suite.SuiteClasses({
++	FSColorTest.class,
+ 	MovieObjectTests.class,
+ 	MovieTests.class,
+ 	VideoTests.class,
+ 	ConstructorTests.class,
+-	UtilityTests.class,
+         })
+ public class AllTests
+ {
+
+Deleted: dev/dev-3-0/src/com/flagstone/transform/test/UtilityTests.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/UtilityTests.java	2008-04-02 09:50:00 UTC (rev 426)
++++ dev/dev-3-0/src/com/flagstone/transform/test/UtilityTests.java	2008-04-02 09:51:40 UTC (rev 427)
+@@ -1,16 +0,0 @@
+-package com.flagstone.transform.test;
+-
+-import junit.framework.Test;
+-import junit.framework.TestSuite;
+-
+-public class UtilityTests
+-{
+-    public static Test suite()
+-    {
+-        TestSuite suite= new TestSuite();
+-        suite.addTestSuite(FSHeaderTest.class);
+-        suite.addTestSuite(FSFrameTest.class);
+-        suite.addTestSuite(FSLayerTest.class);
+-        return suite;
+-    }
+-}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000362.html">[Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000364.html">[Transform-svn] r428 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#363">[ date ]</a>
+              <a href="thread.html#363">[ thread ]</a>
+              <a href="subject.html#363">[ subject ]</a>
+              <a href="author.html#363">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

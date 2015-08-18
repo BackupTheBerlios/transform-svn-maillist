@@ -1,0 +1,909 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r370%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181649.m2IGnxQ2009795%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000305.html">
+   <LINK REL="Next"  HREF="000307.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r370%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181649.m2IGnxQ2009795%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:49:59 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000305.html">[Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000307.html">[Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#306">[ date ]</a>
+              <a href="thread.html#306">[ thread ]</a>
+              <a href="subject.html#306">[ subject ]</a>
+              <a href="author.html#306">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:49:55 +0100 (Tue, 18 Mar 2008)
+New Revision: 370
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSNull.java
+   dev/dev-2-4/src/com/flagstone/transform/FSProperty.java
+   dev/dev-2-4/src/com/flagstone/transform/FSRegisterIndex.java
+   dev/dev-2-4/src/com/flagstone/transform/FSTableIndex.java
+   dev/dev-2-4/src/com/flagstone/transform/FSVoid.java
+Log:
+No longer Codeable since they are lightweight classes - FSPush handles the encoding and decoding.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSNull.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSNull.java	2008-03-18 16:41:03 UTC (rev 369)
++++ dev/dev-2-4/src/com/flagstone/transform/FSNull.java	2008-03-18 16:49:55 UTC (rev 370)
+@@ -30,49 +30,39 @@
+ 
+ package com.flagstone.transform;
+ 
+-/** 
+-FSNull is a lightweight object that is used solely to allow null values to be pushed 
+-onto the Flash Player stack by The FSPush class.
+- 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++/**
++ * FSNull is a lightweight object that is used solely to allow null values to be
++ * pushed onto the Flash Player stack by The FSPush class.
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSNull class represents the Null data type from the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 5.
++ * &lt;/p&gt;
++ * 
++ */
++public class FSNull
++{
++	private static final FSNull instance = new FSNull();
+ 
+-&lt;p&gt;The FSNull class represents the Null data type from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
++	/**
++	 * Returns a canonical FSNull object.
++	 * 
++	 * @return an object that can safely be shared among objects.
++	 */
++	public static FSNull getInstance()
++	{
++		return instance;
++	}
+ 
+- */  
+-public class FSNull extends FSTransformObject
+-{
+-    private static final FSNull instance = new FSNull();
+-    
+-    /**
+-     * Returns a canonical FSNull object.
+-     * 
+-     * @return an object that can safely be shared among objects.
+-     */
+-    public static FSNull getInstance()
+-    {
+-        return instance;
+-    }
+-    
+-    /** Constructs an FSNull object. */     
+-    public FSNull()
+-    {
+-    }
+-    
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
++	/** Constructs an FSNull object. */
++	public FSNull()
++	{
++	}
+ 
+-    public int length(FSCoder coder) 
+-    { 
+-        return 0; 
+-    }
+-    
+-    public void encode(FSCoder coder) 
+-    {
+-    }
+-    
+-    public void decode(FSCoder coder) 
+-    {
+-    }
++	public String toString()
++	{
++		return &quot;FSNull&quot;;
++	}
+ }
+\ No newline at end of file
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSProperty.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSProperty.java	2008-03-18 16:41:03 UTC (rev 369)
++++ dev/dev-2-4/src/com/flagstone/transform/FSProperty.java	2008-03-18 16:49:55 UTC (rev 370)
+@@ -31,91 +31,66 @@
+ package com.flagstone.transform;
+ 
+ /**
+- * FSProperty is a lightweigth class used to hold codes that specify movie clip 
++ * FSProperty is a lightweigth class used to hold codes that specify movie clip
+  * and movie properties that will be pushed onto the Flash Player stack.
+  * 
+  * See FSPush for a list of available properties.
+  */
+-public class FSProperty extends FSTransformObject
++public class FSProperty
+ {
+-    private int value = 0;
++	private int value = 0;
+ 
+-    /**
+-     * Construct an FSProperty object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSProperty(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /**
+-     * Construct an FSProperty object with the proerty value.
+-     * 
+-     * @param aValue an integer representing a movie property.
+-     */
+-    public FSProperty(int aValue)
+-    {
+-        setValue(aValue);
+-    }
+-    /**
+-     * Constructs an FSProperty object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSProperty object.
+-     */
+-    public FSProperty(FSProperty obj)
+-    {
+-        value = obj.value;
+-    }    
++	/**
++	 * Construct an FSProperty object with the property value.
++	 * 
++	 * @param aValue
++	 *            an integer representing a movie property.
++	 */
++	public FSProperty(int aValue)
++	{
++		setValue(aValue);
++	}
+ 
+-    public int getValue() 
+-    {
+-        return value;
+-    }
++	/**
++	 * Constructs an FSProperty object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSProperty object.
++	 */
++	public FSProperty(FSProperty obj)
++	{
++		value = obj.value;
++	}
+ 
+-    public void setValue(int aValue) 
+-    {
+-        value = aValue;
+-    }
++	public int getValue()
++	{
++		return value;
++	}
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = value == ((FSProperty)anObject).getValue();
++	public void setValue(int aValue)
++	{
++		value = aValue;
++	}
+ 
+-        return result;
+-    }
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;value&quot;, value);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		if (super.equals(anObject))
++			result = value == ((FSProperty) anObject).getValue();
+ 
+-    public int length(FSCoder coder)
+-    { 
+-        return 5;
+-    }
+-        
+-    public void encode(FSCoder coder) 
+-    {
+-        coder.writeWord(1, 1);
+-        coder.writeWord(value, 4);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        /* type */ coder.readWord(1, false);
+-        value = coder.readWord(4, false);
+-    }
++		return result;
++	}
++
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++
++		buffer.append(&quot;FSProperty: { &quot;);
++		buffer.append(&quot;value = &quot;).append(value).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
++
++		return buffer.toString();
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSRegisterIndex.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSRegisterIndex.java	2008-03-18 16:41:03 UTC (rev 369)
++++ dev/dev-2-4/src/com/flagstone/transform/FSRegisterIndex.java	2008-03-18 16:49:55 UTC (rev 370)
+@@ -31,123 +31,129 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSRegisterIndex is used with an FSPush action to refer to one of the Flash Player's 
+-internal registers that contains a value to be used in a calculation.
+- 
+-&lt;p&gt;The number of registers in the Flash Player was increased in Flash 7 to 256.&lt;/p&gt;
+-
+-&lt;p&gt;The Flash Player uses a stack to store values when executing the actions associated with a button being  pushed, frame being played, etc. If a value is used repeatedly in a calculation, it must be pushed onto the stack each time using an FSPush action. To speed up the execution of the calculation and reduce the amount of code required the value can be saved to one of the internal registers of the Flash Player using the FSRegisterCopy action (which copies the value currently at the top of the stack into the specified register). An FSRegisterIndex creates a reference to the register so the Flash Player uses the value directly rather than popping it from the stack.&lt;/p&gt;
+-
+-&lt;p&gt;To copy a value from the top of the stack to one of the Flash Player's internal registers specify the register number in the constructor for the FSRegisterCopy class:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-ArrayList actions = new ArrayList();
+-...
+-actions.add(new FSRegisterCopy(0));
+-...
+-&lt;/pre&gt;
+-
+-&lt;p&gt;References to one of the Flash Player's internal registers are created using the FSRegisterIndex class and pushing it onto the stack using the FSPush class. When the value is used in a calculation then the value will be retrieved from the specified register.&lt;/p&gt;
+-
+-&lt;pre&gt;
+-FSPush push = new FSPush();
+-push.add(new FSRegisterIndex(0));
+-...
+-actions.add(push);
+-...
+-&lt;/pre&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The RegisterCopy action and access to the Flash Player's internal registers was introduced in Flash 5. The number of registers supported was expanded in Flash 7 to 256.&lt;/p&gt;
+- */  
+-public class FSRegisterIndex extends FSTransformObject
++ * FSRegisterIndex is used with an FSPush action to refer to one of the Flash
++ * Player's internal registers that contains a value to be used in a
++ * calculation.
++ * 
++ * &lt;p&gt;
++ * The number of registers in the Flash Player was increased in Flash 7 to 256.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The Flash Player uses a stack to store values when executing the actions
++ * associated with a button being pushed, frame being played, etc. If a value is
++ * used repeatedly in a calculation, it must be pushed onto the stack each time
++ * using an FSPush action. To speed up the execution of the calculation and
++ * reduce the amount of code required the value can be saved to one of the
++ * internal registers of the Flash Player using the FSRegisterCopy action (which
++ * copies the value currently at the top of the stack into the specified
++ * register). An FSRegisterIndex creates a reference to the register so the
++ * Flash Player uses the value directly rather than popping it from the stack.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * To copy a value from the top of the stack to one of the Flash Player's
++ * internal registers specify the register number in the constructor for the
++ * FSRegisterCopy class:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  ArrayList actions = new ArrayList();
++ *  ...
++ *  actions.add(new FSRegisterCopy(0));
++ *  ...
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * References to one of the Flash Player's internal registers are created using
++ * the FSRegisterIndex class and pushing it onto the stack using the FSPush
++ * class. When the value is used in a calculation then the value will be
++ * retrieved from the specified register.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  FSPush push = new FSPush();
++ *  push.add(new FSRegisterIndex(0));
++ *  ...
++ *  actions.add(push);
++ *  ...
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The RegisterCopy action and access to the Flash Player's internal registers
++ * was introduced in Flash 5. The number of registers supported was expanded in
++ * Flash 7 to 256.
++ * &lt;/p&gt;
++ */
++public class FSRegisterIndex
+ {
+-    private int index = 0;
++	private int index = 0;
+ 
+-    /**
+-     * Construct an FSRegisterIndex object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSRegisterIndex(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSRegisterIndex object referencing the value stored in one of the Flash Player's internal registers.
++	/**
++	 * Constructs an FSRegisterIndex object referencing the value stored in one
++	 * of the Flash Player's internal registers.
++	 * 
++	 * @param anIndex
++	 *            the register number.
++	 */
++	public FSRegisterIndex(int anIndex)
++	{
++		setIndex(anIndex);
++	}
+ 
+-        @param anIndex the register number.
+-        */
+-    public FSRegisterIndex(int anIndex)
+-    {
+-        setIndex(anIndex);
+-    }
+-    /**
+-     * Constructs an FSRegisterIndex object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSRegisterIndex object.
+-     */
+-    public FSRegisterIndex(FSRegisterIndex obj)
+-    {
+-        index = obj.index;
+-    }    
++	/**
++	 * Constructs an FSRegisterIndex object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSRegisterIndex object.
++	 */
++	public FSRegisterIndex(FSRegisterIndex obj)
++	{
++		index = obj.index;
++	}
+ 
+-    /** Gets the number of the Flash Player's internal register.
++	/**
++	 * Gets the number of the Flash Player's internal register.
++	 * 
++	 * @return the register number.
++	 */
++	public int getIndex()
++	{
++		return index;
++	}
+ 
+-        @return the register number.
+-        */
+-    public int getIndex() 
+-    {
+-        return index;
+-    }
++	/**
++	 * Sets the number of the Flash Player's internal register.
++	 * 
++	 * @param anIndex
++	 *            the register number.
++	 */
++	public void setIndex(int anIndex)
++	{
++		index = anIndex;
++	}
+ 
+-    /** Sets the number of the Flash Player's internal register.
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-        @param anIndex the register number.
+-        */
+-    public void setIndex(int anIndex) 
+-    {
+-        index = anIndex;
+-    }
++		if (super.equals(anObject))
++			result = index == ((FSRegisterIndex) anObject).getIndex();
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = index == ((FSRegisterIndex)anObject).getIndex();
++		return result;
++	}
+ 
+-        return result;
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;index&quot;, index);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		buffer.append(&quot;FSRegisterIndex: { &quot;);
++		buffer.append(&quot;index = &quot;).append(index).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    public int length(FSCoder coder)
+-    { 
+-        return 2;
+-    }
+-        
+-    public void encode(FSCoder coder) 
+-    {
+-        coder.writeWord(4, 1);
+-        coder.writeWord(index, 1);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        /* type */ coder.readWord(1, false);
+-        index = coder.readWord(1, false);
+-    }
++		return buffer.toString();
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSTableIndex.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSTableIndex.java	2008-03-18 16:41:03 UTC (rev 369)
++++ dev/dev-2-4/src/com/flagstone/transform/FSTableIndex.java	2008-03-18 16:49:55 UTC (rev 370)
+@@ -31,140 +31,137 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSTableIndex is used with an FSPush action to push a reference to an entry in a table 
+-of literals onto the stack. 
+- 
+-&lt;p&gt;The value is can then be retrieved from the table and used in a subsequent calculation. The data type was extended in Flash 6 to support tables of up to 65535 strings.&lt;/p&gt;
+-
+-&lt;p&gt;In the Macromedia Flash (SWF) File Format Specification all literals used in calculations are stored as strings. When performing a series of actions each time a literal value is used in a calculation it must be pushed onto the stack. Rather than repeatedly pushing the value explicitly using an FSPush action, all the literals are added to a table in the Flash Player's memory using the FSTable action. To retrieve a literal from the table a reference to an entry in the table is pushed onto the stack using an FSTableIndex. The reduces the number of bytes required to perform a given calculation when the values are used repeatedly.&lt;/p&gt;
+-
+-&lt;p&gt;As an example consider the code required to concatenate two strings:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-ArrayList actions = new ArrayList();
+-...
+-// Create the table of literals
+-FSTable literals = new FSTable();
+-literals.add(&quot;abc&quot;);
+-literals.add(&quot;def&quot;);
+-actions.add(literals);
+-...
+-// Create references to the string literals
+-FSPush push = new FSPush();
+-push.add(new FSTableIndex(0));
+-push.add(new FSTableIndex(1));
+-actions.add(push);
+-...
+-// concatenate the strings
+-actions.add(new FSAction(FSAction.Add));
+-&lt;/pre&gt;
+-
+-&lt;p&gt;An FSTable can store up to 65536 string literals. Using a table index rather 
+-than specifying the string literal explicitly reduces considerably the number of 
+-bytes required to represent a sequence of actions.&lt;/p&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The string literal table was introduced in Flash 5. It was extended in Flash 
+-6 to support tables of up to 65536 strings.&lt;/p&gt;
+- */  
+-public class FSTableIndex extends FSTransformObject
++ * FSTableIndex is used with an FSPush action to push a reference to an entry in
++ * a table of literals onto the stack.
++ * 
++ * &lt;p&gt;
++ * The value is can then be retrieved from the table and used in a subsequent
++ * calculation. The data type was extended in Flash 6 to support tables of up to
++ * 65535 strings.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * In the Macromedia Flash (SWF) File Format Specification all literals used in
++ * calculations are stored as strings. When performing a series of actions each
++ * time a literal value is used in a calculation it must be pushed onto the
++ * stack. Rather than repeatedly pushing the value explicitly using an FSPush
++ * action, all the literals are added to a table in the Flash Player's memory
++ * using the FSTable action. To retrieve a literal from the table a reference to
++ * an entry in the table is pushed onto the stack using an FSTableIndex. The
++ * reduces the number of bytes required to perform a given calculation when the
++ * values are used repeatedly.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * As an example consider the code required to concatenate two strings:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  ArrayList actions = new ArrayList();
++ *  ...
++ *  // Create the table of literals
++ *  FSTable literals = new FSTable();
++ *  literals.add(&quot;abc&quot;);
++ *  literals.add(&quot;def&quot;);
++ *  actions.add(literals);
++ *  ...
++ *  // Create references to the string literals
++ *  FSPush push = new FSPush();
++ *  push.add(new FSTableIndex(0));
++ *  push.add(new FSTableIndex(1));
++ *  actions.add(push);
++ *  ...
++ *  // concatenate the strings
++ *  actions.add(new FSAction(FSAction.Add));
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * An FSTable can store up to 65536 string literals. Using a table index rather
++ * than specifying the string literal explicitly reduces considerably the number
++ * of bytes required to represent a sequence of actions.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The string literal table was introduced in Flash 5. It was extended in Flash
++ * 6 to support tables of up to 65536 strings.
++ * &lt;/p&gt;
++ */
++public class FSTableIndex
+ {
+-    private int index = 0;
++	private int index = 0;
+ 
+-    /**
+-     * Construct an FSTableIndex object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSTableIndex(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSTableIndex object referencing the value stored in the literal table.
++	/**
++	 * Constructs an FSTableIndex object referencing the value stored in the
++	 * literal table.
++	 * 
++	 * @param anIndex
++	 *            the index into the literal table.
++	 */
++	public FSTableIndex(int anIndex)
++	{
++		setIndex(anIndex);
++	}
+ 
+-        @param anIndex the index into the literal table.
+-        */
+-    public FSTableIndex(int anIndex)
+-    {
+-        setIndex(anIndex);
+-    }
+-    /**
+-     * Constructs an FSTableIndex object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSTableIndex object.
+-     */
+-    public FSTableIndex(FSTableIndex obj)
+-    {
+-        index = obj.index;
+-    }    
++	/**
++	 * Constructs an FSTableIndex object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSTableIndex object.
++	 */
++	public FSTableIndex(FSTableIndex obj)
++	{
++		index = obj.index;
++	}
+ 
+-    /** Gets the index in the table of string literals.
++	/**
++	 * Gets the index in the table of string literals.
++	 * 
++	 * @return the index into the literal table.
++	 */
++	public int getIndex()
++	{
++		return index;
++	}
+ 
+-        @return the index into the literal table.
+-        */
+-    public int getIndex() 
+-    {
+-        return index;
+-    }
++	/**
++	 * Sets the index in the table of string literals.
++	 * 
++	 * @param anIndex
++	 *            the index into the literal table.
++	 */
++	public void setIndex(int anIndex)
++	{
++		index = anIndex;
++	}
+ 
+-    /** Sets the index in the table of string literals.
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-        @param anIndex the index into the literal table.
+-        */
+-    public void setIndex(int anIndex) 
+-    {
+-        index = anIndex;
+-    }
++		if (super.equals(anObject))
++			result = index == ((FSTableIndex) anObject).getIndex();
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = index == ((FSTableIndex)anObject).getIndex();
++		return result;
++	}
+ 
+-        return result;
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;index&quot;, index);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++		buffer.append(&quot;FSTableIndex: { &quot;);
++		buffer.append(&quot;index = &quot;).append(index).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    public int length(FSCoder coder)
+-    { 
+-        return index &lt; 256 ? 2 : 3;
+-    }
+-        
+-    public void encode(FSCoder coder) 
+-    {
+-        int type = index &lt; 256 ? 8 : 9;
+-        
+-        coder.writeWord(type, 1);
+-        coder.writeWord(index, type == 8 ? 1 : 2);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        int type = coder.readWord(1, false);
+-        
+-        index = coder.readWord(type == 8 ? 1 : 2, false);
+-    }
++		return buffer.toString();
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSVoid.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSVoid.java	2008-03-18 16:41:03 UTC (rev 369)
++++ dev/dev-2-4/src/com/flagstone/transform/FSVoid.java	2008-03-18 16:49:55 UTC (rev 370)
+@@ -31,50 +31,40 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSVoid is a lightweight object that is used solely to allow void values to be pushed 
+-onto the Flash Player stack by The FSPush class.
+- 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSVoid class represents the Void data type from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 5.&lt;/p&gt;
+-
+- */  
+-public class FSVoid extends FSTransformObject
++ * FSVoid is a lightweight object that is used solely to allow void values to be
++ * pushed onto the Flash Player stack by The FSPush class.
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSVoid class represents the Void data type from the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 5.
++ * &lt;/p&gt;
++ * 
++ */
++public class FSVoid
+ {
+-    private static final FSVoid instance = new FSVoid();
+-    
+-    /**
+-     * Returns a canonical FSVoid object.
+-     * 
+-     * @return an object that can safely be shared among objects.
+-     */
+-    public static FSVoid getInstance()
+-    {
+-        return instance;
+-    }
++	private static final FSVoid instance = new FSVoid();
+ 
+-    /** 
+-     * Constructs an FSVoid object. 
+-     */     
+-    public FSVoid()
+-    {
+-    }
++	/**
++	 * Returns a canonical FSVoid object.
++	 * 
++	 * @return an object that can safely be shared among objects.
++	 */
++	public static FSVoid getInstance()
++	{
++		return instance;
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
++	/**
++	 * Constructs an FSVoid object.
++	 */
++	public FSVoid()
++	{
++	}
+ 
+-    public int length(FSCoder coder) 
+-    { 
+-        return 0; 
+-    }
+-    
+-    public void encode(FSCoder coder) 
+-    {
+-    }
+-    
+-    public void decode(FSCoder coder) 
+-    {
+-    }
++	public String toString()
++	{
++		return &quot;FSVoid&quot;;
++	}
+ }
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000305.html">[Transform-svn] r369 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000307.html">[Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#306">[ date ]</a>
+              <a href="thread.html#306">[ thread ]</a>
+              <a href="subject.html#306">[ subject ]</a>
+              <a href="author.html#306">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

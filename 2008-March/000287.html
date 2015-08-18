@@ -1,0 +1,707 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r351 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r351%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181232.m2ICWqBs012968%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000286.html">
+   <LINK REL="Next"  HREF="000288.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r351 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r351%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181232.m2ICWqBs012968%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r351 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 13:32:52 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000286.html">[Transform-svn] r350 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000288.html">[Transform-svn] r352 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#287">[ date ]</a>
+              <a href="thread.html#287">[ thread ]</a>
+              <a href="subject.html#287">[ subject ]</a>
+              <a href="author.html#287">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 13:32:49 +0100 (Tue, 18 Mar 2008)
+New Revision: 351
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSUnknownAction.java
+   dev/dev-2-4/src/com/flagstone/transform/FSUnknownObject.java
+Log:
+data attribute may now be null
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSUnknownAction.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSUnknownAction.java	2008-03-18 11:33:47 UTC (rev 350)
++++ dev/dev-2-4/src/com/flagstone/transform/FSUnknownAction.java	2008-03-18 12:32:49 UTC (rev 351)
+@@ -31,140 +31,195 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSUnknownAction class is used to represent any action decoded from a Flash file that 
+- is currently not supported by the framework. 
+- 
+-&lt;p&gt;This allows Flash files to be parsed, processed and encoded without affecting any of the actions not directly supported.&lt;/p&gt;
++ * FSUnknownAction class is used to represent any action decoded from a Flash
++ * file that is currently not supported by the framework.
++ * 
++ * &lt;p&gt;
++ * This allows Flash files to be parsed, processed and encoded without affecting
++ * any of the actions not directly supported.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;The value used to identify the type of action. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;data&lt;/td&gt;
++ * &lt;td&gt;The encoded bytes that make up the body of the action's data structure.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The object provides direct access to the encoded data of the action offering
++ * the possibility to encode and decode actions that are not directly supported
++ * in the current release of the framework. However a detailed knowledge of how
++ * the action is encoded and decoded is required.
++ * &lt;/p&gt;
++ */
++public class FSUnknownAction extends FSActionObject
++{
++	private byte[] data;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSUnknownAction object, initalising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSUnknownAction(FSCoder coder)
++	{
++		super(0);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSUnknownAction object of the specified type with the
++	 * encoded Flash data.
++	 * 
++	 * @param aType
++	 *            the code identifying the action type.
++	 * @param bytes
++	 *            the encoded data for the action.
++	 */
++	public FSUnknownAction(int aType, byte[] bytes)
++	{
++		super(aType);
++		data = bytes;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSUnknownAction_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The value used to identify the type of action. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSUnknownAction object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSUnknownAction object.
++	 */
++	public FSUnknownAction(FSUnknownAction obj)
++	{
++		super(obj.type);
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSUnknownAction_1&quot;&gt;data&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The encoded bytes that make up the body of the action's data structure.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++		if (obj.data != null) 
++		{
++			data = new byte[obj.data.length];
++			
++			for (int i=0; i&lt;data.length; i++) {
++				data[i] = obj.data[i];
++			}
++		}
++	}
+ 
+-&lt;p&gt;The object provides direct access to the encoded data of the action offering the possibility to encode and decode actions that are not directly supported in the current release of the framework. However a detailed knowledge of how the action is encoded and decoded is required.&lt;/p&gt;
+- */
+-public class FSUnknownAction extends FSActionObject
+-{
+-    private byte[] data = null;
+-    
+-    /**
+-     * Construct an FSUnknownAction object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSUnknownAction(FSCoder coder)
+-    {
+-        super(0);
+-        decode(coder);
+-    }
+-    /** Constructs an FSUnknownAction object of the specified type with the encoded Flash data.
++	/**
++	 * Gets the encoded data for the action.
++	 * 
++	 * @return an array of bytes representing the action data when encoded to a
++	 *         Flash file.
++	 */
++	public byte[] getData()
++	{
++		return data;
++	}
+ 
+-        @param aType the code identifying the action type.
+-        @param bytes the encoded data for the action.
+-        */
+-    public FSUnknownAction(int aType, byte[] bytes)
+-    {
+-        super(aType);
+-        data = bytes;
+-    }
+-    /**
+-     * Constructs an FSUnknownAction object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSUnknownAction object.
+-     */
+-    public FSUnknownAction(FSUnknownAction obj)
+-    {
+-        super(obj);
+-        
+-        if (obj.data != null)
+-            data = Transform.clone(obj.data);
+-    }    
++	/**
++	 * Sets the encoded data for the action.
++	 * 
++	 * @param bytes
++	 *            the encoded data for the action.
++	 */
++	public void setData(byte[] bytes)
++	{
++		data = bytes;
++	}
+ 
+-    /** Gets the encoded data for the action.
++	public Object clone()
++	{
++		FSUnknownAction obj = (FSUnknownAction) super.clone();
+ 
+-        @return an array of bytes representing the action data when encoded to a Flash file.
+-        */
+-    public byte[] getData()
+-    {
+-        return data;
+-    }
++		if (data != null) 
++		{
++			obj.data = new byte[data.length];
++			
++			for (int i=0; i&lt;data.length; i++) {
++				obj.data[i] = data[i];
++			}
++		}
++		return obj;
++	}
+ 
+-    /** Sets the encoded data for the action.
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-        @param bytes the encoded data for the action.
+-        */
+-    public void setData(byte[] bytes)
+-    {
+-        data = bytes;
+-    }
++		if (super.equals(obj))
++		{
++			FSUnknownAction action = (FSUnknownAction)obj;
+ 
+-    public Object clone()
+-    {
+-        FSUnknownAction anObject = (FSUnknownAction)super.clone();
+-        
+-        anObject.data = Transform.clone(data);
+-    
+-        return anObject;
+-    }
++			if (data == null &amp;&amp; action.data == null)
++				return true;
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSUnknownAction typedObject = (FSUnknownAction)anObject;
+-            
+-            result = Transform.equals(data, typedObject.data);
+-        }
+-        return result;
+-    }
++			if (data != null &amp;&amp; action.data != null)
++			{
++				result = data.length == action.data.length;
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
++				if (result)
++					for (int i=0; i&lt;data.length; i++)
++						if (data[i] != action.data[i])
++							result = false;
++			}
++		}
++		return result;
++	}
+ 
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        length += data.length;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++		
++		buffer.append(&quot;FSUnknownAction: { &quot;);
++		buffer.append(&quot;type = &quot;).append(type).append(&quot;; &quot;);
++		
++		if (data != null &amp;&amp; data.length &gt; 0) {
++			buffer.append(&quot;data = &lt;data&gt;;&quot;);
++		}
++		
++		buffer.append(&quot;}&quot;);
++		
++		return buffer.toString();
++	}
+ 
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeBytes(data);
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        
+-        if (length &gt; 0)
+-        {
+-            data = new byte[length];
+-            coder.readBytes(data);
+-        }
+-        else
+-            data = new byte[] {};
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-        coder.endObject(name());
+-    }
++		if (data != null) {
++			length += data.length;
++		}
++		return length;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		
++		if (data != null) {
++			coder.writeBytes(data);
++		}
++	}
++
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++
++		if (length &gt; 0)
++		{
++			data = new byte[length];
++			coder.readBytes(data);
++		}
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSUnknownObject.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSUnknownObject.java	2008-03-18 11:33:47 UTC (rev 350)
++++ dev/dev-2-4/src/com/flagstone/transform/FSUnknownObject.java	2008-03-18 12:32:49 UTC (rev 351)
+@@ -31,133 +31,195 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSUnknownObject is used to represent any data structure decoded from a Flash file that 
+- is currently not supported by the framework.
+- 
+-&lt;p&gt;This allows Flash files to be parsed, processed and encoded without affecting any of the data structures not directly supported.&lt;/p&gt;
++ * FSUnknownObject is used to represent any data structure decoded from a Flash
++ * file that is currently not supported by the framework.
++ * 
++ * &lt;p&gt;
++ * This allows Flash files to be parsed, processed and encoded without affecting
++ * any of the data structures not directly supported.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;data&lt;/td&gt;
++ * &lt;td&gt;The encoded bytes that make up the body of the data structure.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The object provides direct access to the encoded data of the data structure
++ * offering the possibility for Transform to encode and decode tags that are not
++ * directly supported in the current release of the package. However a detailed
++ * knowledge of how the data structure is encoded and decoded is required.
++ * &lt;/p&gt;
++ */
++public class FSUnknownObject extends FSMovieObject
++{
++	private byte[] data;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSUnknownObject object, initalising it with values decoded
++	 * from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSUnknownObject(FSCoder coder)
++	{
++		super(0);
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSUnknownObject object of the specified type with the
++	 * encoded Flash data.
++	 * 
++	 * @param aType
++	 *            the code identifying the tag type.
++	 * @param bytes
++	 *            the encoded data for the tag.
++	 */
++	public FSUnknownObject(int aType, byte[] bytes)
++	{
++		super(aType);
++		setData(bytes);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSUnknownObject_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSUnknownObject object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSUnknownObject object.
++	 */
++	public FSUnknownObject(FSUnknownObject obj)
++	{
++		super(obj.type);
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSUnknownObject_1&quot;&gt;data&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The encoded bytes that make up the body of the data structure.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++		if (obj.data != null)
++		{
++			data = new byte[obj.data.length];
++		
++			for (int i=0; i&lt;data.length; i++) {
++				data[i] = obj.data[i];
++			}
++		}
++	}
+ 
+-&lt;p&gt;The object provides direct access to the encoded data of the data structure offering the possibility for Transform to encode and decode tags that are not directly supported in the current release of the package. However a detailed knowledge of how the data structure is encoded and decoded is required.&lt;/p&gt;
+- */
+-public class FSUnknownObject extends FSMovieObject
+-{
+-    private byte[] data = null;
+-    
+-    /**
+-     * Construct an FSUnknownObject object, initalizing it with values decoded 
+-     * from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSUnknownObject(FSCoder coder)
+-    {
+-        super(0);
+-        decode(coder);
+-    }
+-    /** Constructs an FSUnknownObject object of the specified type with the encoded Flash data.
++	/**
++	 * Gets the encoded data for the tag.
++	 * 
++	 * @return an array of bytes representing the tag data when encoded to a
++	 *         Flash file.
++	 */
++	public byte[] getData()
++	{
++		return data;
++	}
+ 
+-        @param aType the code identifying the tag type.
+-        @param bytes the encoded data for the tag.
+-        */
+-    public FSUnknownObject(int aType, byte[] bytes)
+-    {
+-        super(aType);
+-        setData(bytes);
+-    }
+-    /**
+-     * Constructs an FSUnknownObject object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSUnknownObject object.
+-     */
+-    public FSUnknownObject(FSUnknownObject obj)
+-    {
+-        super(obj);
+-        
+-        if (obj.data != null)
+-            data = Transform.clone(obj.data);
+-    }    
++	/**
++	 * Sets the encoded data for the tag.
++	 * 
++	 * @param bytes
++	 *            the encoded data for the tag.
++	 */
++	public void setData(byte[] bytes)
++	{
++		data = bytes;
++	}
+ 
+-    /** Gets the encoded data for the tag.
++	public Object clone()
++	{
++		FSUnknownObject obj = (FSUnknownObject) super.clone();
+ 
+-        @return an array of bytes representing the tag data when encoded to a Flash file.
+-        */
+-    public byte[] getData()
+-    {
+-        return data;
+-    }
++		if (data != null) 
++		{
++			obj.data = new byte[data.length];
++			
++			for (int i=0; i&lt;data.length; i++) {
++				obj.data[i] = data[i];
++			}
++		}
++		return obj;
++	}
+ 
+-    /** Sets the encoded data for the tag.
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-        @param bytes the encoded data for the tag.
+-        */
+-    public void setData(byte[] bytes)
+-    {
+-        data = bytes;
+-    }
++		if (super.equals(obj))
++		{
++			FSUnknownObject object = (FSUnknownObject)obj;
+ 
+-    public Object clone()
+-    {
+-        FSUnknownObject anObject = (FSUnknownObject)super.clone();
+-        
+-        anObject.data = Transform.clone(data);
++			if (data == null &amp;&amp; object.data == null)
++				return true;
+ 
+-        return anObject;
+-    }
++			if (data != null &amp;&amp; object.data != null)
++			{
++				result = data.length == object.data.length;
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSUnknownObject typedObject = (FSUnknownObject)anObject;
+-            
+-            result = Transform.equals(data, typedObject.data);
+-        }
+-        return result;
+-    }
++				if (result)
++					for (int i=0; i&lt;data.length; i++)
++						if (data[i] != object.data[i])
++							result = false;
++			}
++		}
++		return result;
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-    }
+-    
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        length += data.length;
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
++		
++		buffer.append(&quot;FSUnknownObject: { &quot;);
++		buffer.append(&quot;type = &quot;).append(type).append(&quot;; &quot;);
++		
++		if (data != null &amp;&amp; data.length &gt; 0) {
++			buffer.append(&quot;data = &lt;data&gt;;&quot;);
++		}
++		
++		buffer.append(&quot;}&quot;);
++		
++		return buffer.toString();
++	}
+ 
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        coder.writeBytes(data);
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        data = new byte[length];
+-        coder.readBytes(data);
+-        coder.endObject(name());
+-    }
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
++
++		if (data != null) {
++			length += data.length;
++		}
++		return length;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		
++		if (data != null) {
++			coder.writeBytes(data);
++		}
++	}
++
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++
++		if (length &gt; 0)
++		{
++			data = new byte[length];
++			coder.readBytes(data);
++		}
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000286.html">[Transform-svn] r350 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000288.html">[Transform-svn] r352 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#287">[ date ]</a>
+              <a href="thread.html#287">[ thread ]</a>
+              <a href="subject.html#287">[ subject ]</a>
+              <a href="author.html#287">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

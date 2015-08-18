@@ -1,0 +1,564 @@
+From smackay at mail.berlios.de  Fri Dec 15 12:51:25 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Fri, 15 Dec 2006 12:51:25 +0100
+Subject: [Transform-svn] r237 - trunk/src/com/flagstone/transform/util
+Message-ID: <200612151151.kBFBpPic021499@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-12-15 12:51:22 +0100 (Fri, 15 Dec 2006)
+New Revision: 237
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+Log:
+Fixed bug in ellipse when drawing small shapes.
+
+Modified: trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2006-11-30 15:35:47 UTC (rev 236)
++++ trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2006-12-15 11:51:22 UTC (rev 237)
+@@ -880,6 +880,19 @@
+      */
+     public void ellipse(int x, int y, int rx, int ry)
+     {
++        boolean wasInPixels = false;
++
++        if (COORDINATES_ARE_PIXELS)
++        {
++            COORDINATES_ARE_PIXELS = false;
++            wasInPixels = true;
++            
++            x *= 20;
++            y *= 20;
++            rx *= 20;
++            ry *= 20;
++        }
++
+         int startX = (int) (0.707 * rx) + x;
+         int startY = (int) (0.707 * ry) + y;
+ 
+@@ -900,6 +913,11 @@
+         rcurve(ax, ay, 0, cy);
+         rcurve(0, cy, -ax, ay);
+         closePath();
++        
++        if (wasInPixels)
++        {
++            COORDINATES_ARE_PIXELS = true;
++        }
+     }
+ 
+     /**
+
+
+
+From smackay at mail.berlios.de  Fri Dec 15 12:52:29 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Fri, 15 Dec 2006 12:52:29 +0100
+Subject: [Transform-svn] r238 - trunk/src/com/flagstone/transform
+Message-ID: <200612151152.kBFBqTNx022597@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-12-15 12:52:25 +0100 (Fri, 15 Dec 2006)
+New Revision: 238
+
+Modified:
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Fixed bug when encountering more than one Start of Image tag in the JPEG image data without a corresponding End of Image tag 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-12-15 11:51:22 UTC (rev 237)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-12-15 11:52:25 UTC (rev 238)
+@@ -255,23 +255,16 @@
+     {
+         byte bytes[] = null;
+ 
+-        int soi = 0xFFD8;
+-        int eoi = 0xFFD9;
+-        
++        int eoi = 0xFFD9;        
+         int start = coder.getPointer();
+-        int end = start + ((length-2) << 3);
+-        
++        int end = start + ((length-2) << 3);        
+         int word = 0;
+  
+         do {
+             word = coder.scanBits(16, false);
+             
+-            if (word == soi) 
++            if (word == eoi) 
+             {
+-                start = coder.getPointer();
+-            }
+-            else if (word == eoi) 
+-            {
+                 end = coder.getPointer()+16;
+                 break;
+             }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-12-15 11:51:22 UTC (rev 237)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-12-15 11:52:25 UTC (rev 238)
+@@ -306,23 +306,16 @@
+     {
+         byte bytes[] = null;
+ 
+-        int soi = 0xFFD8;
+-        int eoi = 0xFFD9;
+-        
++        int eoi = 0xFFD9;        
+         int start = coder.getPointer();
+-        int end = start + ((length-2) << 3);
+-        
++        int end = start + ((length-2) << 3);        
+         int word = 0;
+- 
++
+         do {
+             word = coder.scanBits(16, false);
+             
+-            if (word == soi) 
++            if (word == eoi) 
+             {
+-                start = coder.getPointer();
+-            }
+-            else if (word == eoi) 
+-            {
+                 end = coder.getPointer()+16;
+                 break;
+             }
+
+
+
+From smackay at mail.berlios.de  Fri Dec 15 12:53:28 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Fri, 15 Dec 2006 12:53:28 +0100
+Subject: [Transform-svn] r239 - trunk/src/com/flagstone/transform
+Message-ID: <200612151153.kBFBrSq7023867@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-12-15 12:53:25 +0100 (Fri, 15 Dec 2006)
+New Revision: 239
+
+Modified:
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+Log:
+fixed errors in documentation.
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-12-15 11:52:25 UTC (rev 238)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-12-15 11:53:25 UTC (rev 239)
+@@ -423,7 +423,7 @@
+     }
+     
+     /*
+-     * Methods for adjusting the locaion from where data is read or written
++     * Methods for adjusting the location from where data is read or written
+      */
+     /**
+      * Returns the offset, in bits, from the start of the buffer where the next 
+@@ -820,7 +820,6 @@
+      * 
+      * @return the value.
+      */
+-
+     public double readDouble()
+     {
+         int upperInt = readWord(4, false);
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-12-15 11:52:25 UTC (rev 238)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-12-15 11:53:25 UTC (rev 239)
+@@ -1241,9 +1241,9 @@
+      *
+      * @param fileName the path to the Flash file that the movie will be encoded to.
+      *
+-     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws FileNotFoundException - if an error occurs while opening the file.
+      * @throws FSCoderException - if an error occurs while encoding the file.
+-     * @throws IOException - if an I/O error occurs while reading the file.
++     * @throws IOException - if an I/O error occurs while writing the file.
+      */
+     public void encodeToFile(String fileName) throws FileNotFoundException, IOException
+     {
+
+
+
+From smackay at mail.berlios.de  Fri Dec 15 12:54:02 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Fri, 15 Dec 2006 12:54:02 +0100
+Subject: [Transform-svn] r240 - in trunk/doc: . releases web
+Message-ID: <200612151154.kBFBs2lT025095@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-12-15 12:53:57 +0100 (Fri, 15 Dec 2006)
+New Revision: 240
+
+Added:
+   trunk/doc/releases/transform-pre-2.1.5.txt
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/doc/web/issues.html
+   trunk/doc/web/planned.html
+Log:
+Updated bug list and changes made.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-12-15 11:53:25 UTC (rev 239)
++++ trunk/doc/CHANGES.txt	2006-12-15 11:53:57 UTC (rev 240)
+@@ -1,3 +1,16 @@
++2006-12-14 - smackay at flagstonesoftware.com
++
++    * FSDefineJPEGImage2, FSDefineJPEGImage3: fixed a bug where JPEG images 
++      contain multiple start of image tags.
++      
++      Updated bug list (#9717), reporting the error.
++      
++    * FSShapeConstructor: fixed a bug where drawing ellipses using pixels resulted
++      in distorted shapes.
++      
++      Updated bug list (#9718), reporting the error.
++      
++
+ 2006-09-28 - smackay at flagstonesoftware.com
+   
+     * Released version 2.1.4.
+
+Added: trunk/doc/releases/transform-pre-2.1.5.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.5.txt	2006-12-15 11:53:25 UTC (rev 239)
++++ trunk/doc/releases/transform-pre-2.1.5.txt	2006-12-15 11:53:57 UTC (rev 240)
+@@ -0,0 +1,57 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.1.5.
++------------------------------------------------------------
++
++The release will improve the test coverage by adding more TestNG suites and 
++unit test classes.
++
++
++Bug Fixes
++    9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.
++    9718. FSShapeConstructor cannot draw small circles in pixels.
++    
++
++Class Changes
++    None scheduled
++    
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.
++
++The classes FSDefineJPEGImage2 and FSDefineJPEGImage3 contain an encoding 
++table. The readJPEGStream method in each class is used to search for the 
++Start of Image and End of Image tags that delimit the table. When it detects a 
++start of image tag it marks the position as the start of the encoding table. A 
++second Start of Image causes the start position to advance. However the size of 
++the image is calculated from the encoded length - the size of the encoding 
++table. This caused the decoding to overflow and an exception was thrown.
++
++9718. FSShapeConstructor cannot draw small circles in pixels.
++
++The FSShapeConstructor allows drawing to be performed using coordinates and 
++sizes specified in pixels rather than twips. A bug in the method that draws 
++ellipses resulted in distorted shapes when specifying values in pixels. The 
++problem was caused by rounding errors in the equations for calculating the 
++curves to draw. This is now fixed.
++
++-----------------
++  Class Changes  
++-----------------
++
++-------------------
++  Testing Changes  
++-------------------
++
++-------------------
++  Package Changes  
++-------------------
++
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-12-15 11:53:25 UTC (rev 239)
++++ trunk/doc/web/issues.html	2006-12-15 11:53:57 UTC (rev 240)
+@@ -30,7 +30,7 @@
+ <div class="content">
+ 
+ <H1>Transform SWF: Known Issues &amp; Bugs</H1>
+-<P>Version: 2.1.4<BR/>Updated: 1st October 2006</P>
++<P>Version: 2.1.4<BR/>Updated: 14th December 2006</P>
+ 
+ <TABLE width="100%">
+ 
+@@ -59,6 +59,20 @@
+ <TD>Open</TD>
+ </TR>
+ 
++<TR>
++<TD>9717</TD>
++<TD>FSDefineJPEGImage[2,3] does not handle multiple SOI tags.</TD>
++<TD>Open</TD>
++<TD>2.1.5</TD>
++</TR>
++
++<TR>
++<TD>9718</TD>
++<TD>FSShapeConstructor cannot draw small circles in pixels.</TD>
++<TD>Open</TD>
++<TD>2.1.5</TD>
++</TR>
++
+ </TBODY>
+ </TABLE>
+ 
+@@ -200,6 +214,152 @@
+ <P>No date set, pending a review of several minor implementation issues in the 
+ FSTextConstructor class.</P>
+ 
++<div class="hr"><hr/></div>
++
++<H3>9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.</H3>
++
++<P>The classes FSDefineJPEGImage2 and FSDefineJPEGImage3 contain an encoding 
++table. When decoding the table from the Flash file binary data the code searches 
++for a block of data delineated by Start of Image (SOI, 0xFFD8) and End of Image 
++(EOI, 0xFFD9) tags.</p>
++
++<p>From Flash 8 images have been found to contain more than one Start of Image 
++tag and this is causing the decoding of the encoding table to fail - an overflow 
++error occurs resulting in an FSCoderException being thrown.</P>
++
++<H4>Root Cause</H4>
++
++<P>The problem is in the readJPEGStream method that is used to search for the 
++Start of Image and End of Image tags. When it detects a start of image tag
++it marks the position as the start of the encoding table. A second Start of 
++Image causes the start position to advance. However the size of the image is 
++calculated from the encoded length - the size of the encoding table. This 
++causes the decoding to overflow and so the exception is thrown.</P>
++
++<H4>Workaround?</H4>
++
++<P>The only workaround is to patch the existing code. Replace the readJPEGStream
++method in FSDefineJPEGImage2 (starting at line 254) and FSDefineJPEGImage3 
++(starting at line 305) with the following code:</p>
++
++<pre>
++    private byte[] readJPEGStream(FSCoder coder)
++    {
++        byte bytes[] = null;
++
++        int eoi = 0xFFD9;        
++        int start = coder.getPointer();
++        int end = start + ((length-2) << 3);        
++        int word = 0;
++ 
++        do {
++            word = coder.scanBits(16, false);
++            
++            if (word == eoi) 
++            {
++                end = coder.getPointer()+16;
++                break;
++            }
++            coder.adjustPointer(8);
++        } 
++        while (coder.getPointer() < end);
++            
++        int len = (end-start) >>> 3; 
++        
++        coder.setPointer(start);
++        bytes = new byte[len];
++        coder.readBytes(bytes);
++
++        return bytes;
++    }
++</pre>
++
++<H4>When will it be fixed?</H4>
++
++<P>The code has been committed to the repository and release 2.1.5 is due at 
++the end of December.</P>
++
++<div class="hr"><hr/></div>
++
++<H3>9718. FSShapeConstructor cannot draw small circles in pixels.</H3>
++
++<P>The FSShapeConstructor allows drawing to be performed using coordinates and 
++sizes specified in pixels rather than twips. There is a bug in the method that 
++draws ellipses that results in distorted shapes when specifying values in 
++pixels.</p>
++
++<H4>Root Cause</H4>
++
++<p>The root cause is in the public void ellipse(int x, int y, int rx, int ry) 
++method. When values are expressed in pixels the expressions:</p>
++
++<pre>
++int startX = (int) (0.707 * rx) + x;
++int startY = (int) (0.707 * ry) + y;
++
++int ax = (int) (0.293 * rx);
++int ay = (int) (0.293 * ry);
++int cx = (int) (0.414 * rx);
++int cy = (int) (0.414 * ry);
++</pre>
++
++<p>cause enormous rounding errors.</p>
++
++<H4>Workaround?</H4>
++
++<P>The only workaround is to patch the existing code. Replace the 
++ellipse(int x, int y, int rx, int ry) method in FSShapeConstructor (starting
++at line 922) with the following code:</p>
++
++<pre>
++    public void ellipse(int x, int y, int rx, int ry)
++    {
++        boolean wasInPixels = false;
++
++        if (COORDINATES_ARE_PIXELS)
++        {
++            COORDINATES_ARE_PIXELS = false;
++            wasInPixels = true;
++            
++            x *= 20;
++            y *= 20;
++            rx *= 20;
++            ry *= 20;
++        }
++
++        int startX = (int) (0.707 * rx) + x;
++        int startY = (int) (0.707 * ry) + y;
++
++        int ax = (int) (0.293 * rx);
++        int ay = (int) (0.293 * ry);
++        int cx = (int) (0.414 * rx);
++        int cy = (int) (0.414 * ry);
++            
++        newPath();
++        selectStyle(0, 0);
++        move(startX, startY);
++        rcurve(-ax, ay, -cx, 0);
++        rcurve(-cx, 0, -ax, -ay);
++        rcurve(-ax, -ay, 0, -cy);
++        rcurve(0, -cy,  ax, -ay);
++        rcurve(ax, -ay, cx, 0);
++        rcurve(cx, 0,  ax, ay);
++        rcurve(ax, ay, 0, cy);
++        rcurve(0, cy, -ax, ay);
++        closePath();
++        
++        if (wasInPixels)
++        {
++            COORDINATES_ARE_PIXELS = true;
++        }
++    }
++</pre>
++
++<H4>When will it be fixed?</H4>
++
++<P>The code has been committed to the repository and release 2.1.5 is due at 
++the end of December.</P>
++
+ <br/>
+ 
+ <H2>Recently Fixed</H2>
+
+Modified: trunk/doc/web/planned.html
+===================================================================
+--- trunk/doc/web/planned.html	2006-12-15 11:53:25 UTC (rev 239)
++++ trunk/doc/web/planned.html	2006-12-15 11:53:57 UTC (rev 240)
+@@ -9,8 +9,8 @@
+ </tr>
+ 
+ <tr class="odd">
+-<td class="date">31st Oct 2006</td>
+-<td class="date">24th Sept 2006</td>
++<td class="date">31st Dec 2006</td>
++<td class="date">14th Dec 2006</td>
+ <td class="version">2.1.5</td>
+ <td class="description">Add more unit test suites. Bug Fixes</td>
+ <td class="release"><a href="/downloads/transform-pre-2.1.5.txt">release notes</a>
+@@ -18,8 +18,8 @@
+ </tr>
+ 
+ <tr class="even">
+-<td class="date">31st Dec 2006</td>
+-<td class="date">24th Sept 2006</td>
++<td class="date">31st Jan 2007</td>
++<td class="date">14th Dec 2006</td>
+ <td class="version">2.2.0</td>
+ <td class="description">New classes to simplify creating and organiding movies; 
+ JPEG images have width and height; Bug Fixes.</td>
+
+
+
+From smackay at mail.berlios.de  Thu Dec 21 15:42:28 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Thu, 21 Dec 2006 15:42:28 +0100
+Subject: [Transform-svn] r241 - trunk/doc
+Message-ID: <200612211442.kBLEgSUh003912@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-12-21 15:42:26 +0100 (Thu, 21 Dec 2006)
+New Revision: 241
+
+Removed:
+   trunk/doc/web/
+Log:
+Moved HTML tables containing information on bugs and releases into 
+the code for the Flagstone web site.
+
+
+
+From smackay at mail.berlios.de  Thu Dec 21 15:43:06 2006
+From: smackay at mail.berlios.de (smackay at mail.berlios.de)
+Date: Thu, 21 Dec 2006 15:43:06 +0100
+Subject: [Transform-svn] r242 - trunk/doc
+Message-ID: <200612211443.kBLEh6dn004108@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-12-21 15:43:03 +0100 (Thu, 21 Dec 2006)
+New Revision: 242
+
+Modified:
+   trunk/doc/CHANGES.txt
+Log:
+Updated
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-12-21 14:42:26 UTC (rev 241)
++++ trunk/doc/CHANGES.txt	2006-12-21 14:43:03 UTC (rev 242)
+@@ -1,3 +1,8 @@
++2006-12-21 - smackay at flagstonesoftware.com
++
++    * Moved HTML tables containing information on bugs and releases into the
++      code for the Flagstone web site.
++
+ 2006-12-14 - smackay at flagstonesoftware.com
+ 
+     * FSDefineJPEGImage2, FSDefineJPEGImage3: fixed a bug where JPEG images 
+
+
+

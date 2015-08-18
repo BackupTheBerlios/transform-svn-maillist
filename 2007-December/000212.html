@@ -1,0 +1,369 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r276 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r276%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221617.lBMGHsQt011004%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000211.html">
+   <LINK REL="Next"  HREF="000213.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r276 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r276%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221617.lBMGHsQt011004%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r276 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 22 17:17:54 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000211.html">[Transform-svn] r275 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000213.html">[Transform-svn] r277 - in trunk: . doc doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#212">[ date ]</a>
+              <a href="thread.html#212">[ thread ]</a>
+              <a href="subject.html#212">[ subject ]</a>
+              <a href="author.html#212">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-22 17:17:49 +0100 (Sat, 22 Dec 2007)
+New Revision: 276
+
+Modified:
+   trunk/src/com/flagstone/transform/FSDefineImage.java
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+Log:
+Equals on FSDefineImage and FSDefineImage2 compares uncompressed images.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage.java	2007-12-22 16:11:04 UTC (rev 275)
++++ trunk/src/com/flagstone/transform/FSDefineImage.java	2007-12-22 16:17:49 UTC (rev 276)
+@@ -1,38 +1,41 @@
+ /*
+  * FSDefineImage.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+ package com.flagstone.transform;
+ 
++import java.util.zip.DataFormatException;
++import java.util.zip.Inflater;
++
+ /**
+-FSDefineImage is used to define an image compressed using the lossless zlib compression algorithm. 
+- 
++FSDefineImage is used to define an image compressed using the lossless zlib compression algorithm.
++
+ &lt;p&gt;The class supports colour-mapped images where the image data contains an index into a colour table or images where the image data specifies the colour directly.&lt;/p&gt;
+ 
+ &lt;table class=&quot;datasheet&quot;&gt;
+@@ -103,13 +106,13 @@
+ 
+     private int pixelSize = 8;
+     private int tableSize = 0;
+-    
++
+     private byte[] compressedData = null;
+ 
+     /**
+-     * Construct an FSDefineImage object, initalizing it with values decoded 
++     * Construct an FSDefineImage object, initalizing it with values decoded
+      * from an encoded object.
+-     * 
++     *
+      * @param coder an FSCoder containing the binary data.
+      */
+     public FSDefineImage(FSCoder coder)
+@@ -119,7 +122,7 @@
+         decode(coder);
+     }
+     /** Constructs an FSDefineImage object defining a colour-mapped image.
+-        
++
+         @param anIdentifier    the unique identifier for this object
+         @param width the width of the image.
+         @param height the height of the image.
+@@ -138,7 +141,7 @@
+     }
+ 
+     /** Constructs an FSDefineImage object defining an image that specifies the colour directly.
+-        
++
+         @param anIdentifier    the unique identifier for this object
+         @param width the width of the image.
+         @param height the height of the image.
+@@ -154,9 +157,9 @@
+         setPixelSize(aPixelSize);
+         setTableSize(0);
+         setCompressedData(compressedBytes);
+-    }    
++    }
+     /**
+-     * Constructs an FSDefineImage object by copying values from an existing 
++     * Constructs an FSDefineImage object by copying values from an existing
+      * object.
+      *
+      * @param obj an FSDefineImage object.
+@@ -168,17 +171,17 @@
+         height = obj.height;
+         pixelSize = obj.pixelSize;
+         tableSize = obj.tableSize;
+-        compressedData = Transform.clone(obj.compressedData);        
+-    }    
++        compressedData = Transform.clone(obj.compressedData);
++    }
+ 
+-    /** Gets the width of the image. 
++    /** Gets the width of the image.
+ 
+         @return the width of the image.
+         */
+     public int getWidth()
+     {
+-        return width; 
+-    }    
++        return width;
++    }
+ 
+     /** Gets the height of the image.
+ 
+@@ -264,33 +267,57 @@
+     public Object clone()
+     {
+         FSDefineImage anObject = (FSDefineImage)super.clone();
+-        
++
+         anObject.compressedData = Transform.clone(compressedData);
+-        
++
+         return anObject;
+     }
+ 
+     public boolean equals(Object anObject)
+     {
+         boolean result = false;
+-        
++
+         if (super.equals(anObject))
+         {
+             FSDefineImage typedObject = (FSDefineImage)anObject;
+-            
++
+             result = pixelSize == typedObject.pixelSize;
+             result = result &amp;&amp; width == typedObject.width;
+             result = result &amp;&amp; height == typedObject.height;
+             result = result &amp;&amp; tableSize == typedObject.tableSize;
+-            result = result &amp;&amp; Transform.equals(compressedData, typedObject.compressedData);
++
++            try
++            {
++            	result = result &amp;&amp; Transform.equals(unzip(compressedData), unzip(typedObject.compressedData));
++            }
++            catch (DataFormatException e)
++            {
++            	result = false;
++            }
+         }
+         return result;
+     }
+ 
++    private byte[] unzip(byte[] bytes) throws DataFormatException
++    {
++        byte[] data = new byte[width*height*8];
++        int count = 0;
++
++        Inflater inflater = new Inflater();
++        inflater.setInput(bytes);
++        count = inflater.inflate(data);
++
++        byte[] uncompressedData = new byte[count];
++
++        System.arraycopy(data, 0, uncompressedData, 0, count);
++
++        return uncompressedData;
++    }
++
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+         buffer.append(name());
+-        
++
+         if (depth &gt; 0)
+         {
+             buffer.append(&quot;: { &quot;);
+@@ -310,10 +337,10 @@
+         length += 5;
+         length += (pixelSize == 8) ? 1 : 0;
+         length += compressedData.length;
+-        
++
+         return length;
+     }
+-    
++
+     public void encode(FSCoder coder)
+     {
+         coder.beginObject(name());
+@@ -332,21 +359,21 @@
+                 coder.writeWord(5, 1);
+                 break;
+         }
+-        
++
+         coder.writeWord(width, 2);
+         coder.writeWord(height, 2);
+ 
+         if (pixelSize == 8)
+             coder.writeWord(tableSize-1, 1);
+-        
++
+         coder.writeBytes(compressedData);
+         coder.endObject(name());
+     }
+-    
++
+     public void decode(FSCoder coder)
+     {
+         super.decode(coder);
+-        
++
+         switch (coder.readWord(1, false))
+         {
+             case 3:
+@@ -359,7 +386,7 @@
+                 pixelSize = 24;
+                 break;
+         }
+-        
++
+         width = coder.readWord(2, false);
+         height = coder.readWord(2, false);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2007-12-22 16:11:04 UTC (rev 275)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2007-12-22 16:17:49 UTC (rev 276)
+@@ -30,6 +30,9 @@
+ 
+ package com.flagstone.transform;
+ 
++import java.util.zip.DataFormatException;
++import java.util.zip.Inflater;
++
+ /**
+ FSDefineImage2 is used to define a transparent image compressed using the lossless 
+ zlib compression algorithm. 
+@@ -271,11 +274,35 @@
+             result = result &amp;&amp; width == typedObject.width;
+             result = result &amp;&amp; height == typedObject.height;
+             result = result &amp;&amp; tableSize == typedObject.tableSize;
+-            result = result &amp;&amp; Transform.equals(compressedData, typedObject.compressedData);
++
++            try
++            {
++            	result = result &amp;&amp; Transform.equals(unzip(compressedData), unzip(typedObject.compressedData));
++            }
++            catch (DataFormatException e)
++            {
++            	result = false;
++            }
+         }
+         return result;
+     }
+ 
++    private byte[] unzip(byte[] bytes) throws DataFormatException
++    {
++        byte[] data = new byte[width*height*8];
++        int count = 0;
++
++        Inflater inflater = new Inflater();
++        inflater.setInput(bytes);
++        count = inflater.inflate(data);
++
++        byte[] uncompressedData = new byte[count];
++
++        System.arraycopy(data, 0, uncompressedData, 0, count);
++
++        return uncompressedData;
++    }
++
+     public void appendDescription(StringBuffer buffer, int depth)
+     {
+         buffer.append(name());
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000211.html">[Transform-svn] r275 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000213.html">[Transform-svn] r277 - in trunk: . doc doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#212">[ date ]</a>
+              <a href="thread.html#212">[ thread ]</a>
+              <a href="subject.html#212">[ subject ]</a>
+              <a href="author.html#212">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

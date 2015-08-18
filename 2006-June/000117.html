@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r178 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r178%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200606271032.k5RAW8Yp012167%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000116.html">
+   <LINK REL="Next"  HREF="000118.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r178 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r178%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200606271032.k5RAW8Yp012167%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r178 - trunk/src/com/flagstone/transform/test">smackay at berlios.de
+       </A><BR>
+    <I>Tue Jun 27 12:32:08 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000116.html">[Transform-svn] r177 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000118.html">[Transform-svn] r179 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#117">[ date ]</a>
+              <a href="thread.html#117">[ thread ]</a>
+              <a href="subject.html#117">[ subject ]</a>
+              <a href="author.html#117">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-27 12:32:03 +0200 (Tue, 27 Jun 2006)
+New Revision: 178
+
+Modified:
+   trunk/src/com/flagstone/transform/test/FSClassTest.java
+   trunk/src/com/flagstone/transform/test/FSProtectTest.java
+   trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+Log:
+Updated methods to compare objects.
+
+Modified: trunk/src/com/flagstone/transform/test/FSClassTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSClassTest.java	2006-06-26 19:42:24 UTC (rev 177)
++++ trunk/src/com/flagstone/transform/test/FSClassTest.java	2006-06-27 10:32:03 UTC (rev 178)
+@@ -49,30 +49,30 @@
+ 
+     protected void checkNotIdentical(Object expected, Object actual)
+     {
+-        if (expected != null &amp;&amp; actual != null)
+-            assert expected != actual : &quot;References are to the same object.&quot;;    
++        assert expected != actual : &quot;References are to the same object.&quot;;    
+     }
+ 
+     protected void checkEqual(Object expected, Object actual)
+     {
+-        if (expected == null || actual == null)
+-            assert actual == expected : &quot;Objects do not match.&quot;;    
+-        
+-        if (expected != null &amp;&amp; actual != null)
++        if (expected == null &amp;&amp; actual != null)
++            assert false : &quot;Objects do not match.&quot;;    
++        else if (expected != null &amp;&amp; actual == null)
++            assert false : &quot;Objects do not match.&quot;;            
++        else if (expected != null &amp;&amp; actual != null)
+             assert actual.equals(expected) : &quot;Objects do not match.&quot;;    
+     }
+ 
+     protected void checkNotEqual(Object expected, Object actual)
+     {
+-        if (expected == null || actual == null)
+-            assert actual != expected : &quot;Objects should not match.&quot;;    
+-
+-        assert actual.equals(expected) == false : &quot;Objects should not match.&quot;;    
++        if (expected == null &amp;&amp; actual == null)
++            assert false : &quot;Objects should not match.&quot;;    
++        else if (expected != null &amp;&amp; actual != null)
++            assert actual.equals(expected) == false : &quot;Objects should not match.&quot;;    
+     }
+ 
+     protected void checkEncode(FSTransformObject obj, int[] bytes)
+     {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes.length);
+         
+         checkEncode(coder, obj, bytes);
+     }
+
+Modified: trunk/src/com/flagstone/transform/test/FSProtectTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSProtectTest.java	2006-06-26 19:42:24 UTC (rev 177)
++++ trunk/src/com/flagstone/transform/test/FSProtectTest.java	2006-06-27 10:32:03 UTC (rev 178)
+@@ -36,15 +36,17 @@
+     private static String[] passwords = new String[] {
+         null,
+         &quot;&quot;,
+-        &quot;abcd&quot;,
+-        &quot;1234 5678&quot;,
++        &quot;5F4DCC3B5AA765D61D8327DEB882CF99&quot;, // &quot;password&quot;
+     };
+            
+     private static int[][] encodedObjects = new int[][] {
+-        { 0x00, 0x06 }, 
+-        { 0x00, 0x06 }, 
+-        { 0x07, 0x06, 0x00, 0x00, 0x61, 0x62, 0x63, 0x64, 0x00 }, 
+-        { 0x0B, 0x06, 0x00, 0x00, 0x31, 0x32, 0x33, 0x34, 0x20, 0x35, 0x36, 0x37, 0x38 }, 
++        { 0x00, 0x06 },         
++        { 0x00, 0x06 },         
++        { 0x23, 0x06, 0x00, 0x00, 
++          0x35, 0x46, 0x34, 0x44, 0x43, 0x43, 0x33, 0x42, 
++          0x35, 0x41, 0x41, 0x37, 0x36, 0x35, 0x44, 0x36, 
++          0x31, 0x44, 0x38, 0x33, 0x32, 0x37, 0x44, 0x45, 
++          0x42, 0x38, 0x38, 0x32, 0x43, 0x46, 0x39, 0x39, 0x00}, 
+     };
+     
+     /**
+@@ -79,18 +81,21 @@
+      */
+     public void checkClone()
+     {
+-        FSProtect original = new FSProtect(&quot;1234&quot;);
+-        FSProtect clone = (FSProtect)original.clone();
+-        
+-        checkEqual(original, clone);
+-        checkNotIdentical(original, clone);
++        for (int i=0; i&lt;passwords.length; i++)
++        {
++            FSProtect original = new FSProtect(passwords[i]);
++            FSProtect clone = (FSProtect)original.clone();
++            
++            checkEqual(original, clone);
++            checkNotIdentical(original, clone);
++        }
+     }
+     /**
+      * @testng.test groups=&quot;setbackgroundcolor, accessors&quot;
+      */
+     public void checkAccessors()
+     {
+-        FSProtect original = new FSProtect(&quot;1234&quot;);
++        FSProtect original = new FSProtect(&quot;&quot;);
+         
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+@@ -103,12 +108,12 @@
+      */
+     public void checkEquals()
+     {
+-        FSProtect obj = new FSProtect(&quot;1234&quot;);
+-        
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+-            obj.setPassword(passwords[i]);
+-            checkEqual(passwords[i], obj.getPassword());
++            FSProtect a = new FSProtect(passwords[i]);
++            FSProtect b = new FSProtect(passwords[i]);
++            
++            checkEqual(a, b);
+         }
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2006-06-26 19:42:24 UTC (rev 177)
++++ trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2006-06-27 10:32:03 UTC (rev 178)
+@@ -122,12 +122,12 @@
+      */
+     public void checkEquals()
+     {
+-        FSSetBackgroundColor background = new FSSetBackgroundColor(new FSColor(-1, -1, -1));
+-        
+         for (int i=0; i&lt;colours.length; i++)
+         {
+-            background.setColor(colours[i]);
+-            checkEqual(colours[i], background.getColor());
++            FSSetBackgroundColor a = new FSSetBackgroundColor(colours[i]);
++            FSSetBackgroundColor b = new FSSetBackgroundColor(colours[i]);
++            
++            checkEqual(a, b);
+         }
+     }
+     /**
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000116.html">[Transform-svn] r177 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000118.html">[Transform-svn] r179 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#117">[ date ]</a>
+              <a href="thread.html#117">[ thread ]</a>
+              <a href="subject.html#117">[ subject ]</a>
+              <a href="author.html#117">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

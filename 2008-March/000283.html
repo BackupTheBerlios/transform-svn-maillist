@@ -1,0 +1,776 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r347 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r347%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181021.m2IALJkH010272%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000282.html">
+   <LINK REL="Next"  HREF="000284.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r347 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r347%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181021.m2IALJkH010272%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r347 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 11:21:19 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000282.html">[Transform-svn] r346 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000284.html">[Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#283">[ date ]</a>
+              <a href="thread.html#283">[ thread ]</a>
+              <a href="subject.html#283">[ subject ]</a>
+              <a href="author.html#283">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 11:21:14 +0100 (Tue, 18 Mar 2008)
+New Revision: 347
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSBounds.java
+Log:
+Updated to use new interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSBounds.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSBounds.java	2008-03-18 09:10:46 UTC (rev 346)
++++ dev/dev-2-4/src/com/flagstone/transform/FSBounds.java	2008-03-18 10:21:14 UTC (rev 347)
+@@ -31,321 +31,412 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSBounds class is used to define the area inside which shapes, text fields and 
+-characters are drawn.
+- 
+-&lt;p&gt;In Flash the axes are specified relative to the top left corner of the screen and the bounding area is defined by two pairs of coordinates that identify the top left and bottom right corners of a rectangle.&lt;/p&gt;
++ * The FSBounds class is used to define the area inside which shapes, text
++ * fields and characters are drawn.
++ * 
++ * &lt;p&gt;
++ * In Flash the axes are specified relative to the top left corner of the screen
++ * and the bounding area is defined by two pairs of coordinates that identify
++ * the top left and bottom right corners of a rectangle.
++ * &lt;/p&gt;
++ * 
++ * &lt;img src=&quot;doc-files/bounds.gif&quot;&gt;
++ * 
++ * &lt;P&gt;
++ * &lt;!-- blank paragraph to add space between the image and the next table --&gt;
++ * &lt;/P&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;minX&lt;/td&gt;
++ * &lt;td&gt;The x-coordinate of the upper left corner of the rectangle.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;minY&lt;/td&gt;
++ * &lt;td&gt;The y-coordinate of the upper left corner of the rectangle.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;maxX&lt;/td&gt;
++ * &lt;td&gt;The x-coordinate of the lower right corner of the rectangle.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;maxY&lt;/td&gt;
++ * &lt;td&gt;The y-coordinate of the lower right corner of the rectangle.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The coordinates for each corner also specify the coordinate range so
++ * specifying a bounding rectangle with the points (-100,-100) and (100,100)
++ * defines a rectangle 200 twips by 200 twips with the point (0,0) located in
++ * the centre. Specifying the points (0,0) and (200,200) defines a rectangle
++ * with the same size however the centre is now located at (100,100).
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * The bounding rectangle does not clip the object when it is drawn. Lines and
++ * curves drawn outside of the rectangle will still be displayed. However when
++ * the bounding rectangle is defined for an FSMovie object then this defines the
++ * size of the Flash Player screen and shapes drawn outside of the bounding
++ * rectangle will not be displayed.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * To create an FSBounds object simply specify the coordinates of the corners of
++ * the rectangle in the following order: top left x, top left y, bottom right x,
++ * bottom right y.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSBounds bounds = new FSBounds(0, 0, 100, 200);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Creates a bounding rectangle for an object which is 100 twips wide and 200
++ * twips high. The coordinate range for the object is from 0..100 along the
++ * x-axis and 0..200 along the y-axis. The origin (0,0) will be at the top left
++ * corner of the object as it is displayed on the screen.
++ * 
++ * &lt;pre&gt;
++ * FSBounds bounds = new FSBounds(-100, -200, 100, 200);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Creates a bounding rectangle for an object which is 200 twips wide and 400
++ * twips high. The coordinate range for the object is from -100..100 along the
++ * x-axis and -200..200 along the y-axis. The origin (0,0) will be in the middle
++ * of the object as it is displayed on the screen.
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSBounds class corresponds to the RECT data type, in the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSBounds implements Cloneable, Codeable
++{
++	private int minX;
++	private int minY;
++	private int maxX;
++	private int maxY;
++	private int size;
+ 
+-&lt;img src=&quot;doc-files/bounds.gif&quot;&gt;
++	/**
++	 * Construct an FSBounds object an initialise it with values decoded from a
++	 * binary encoded FSBounds object.
++	 * 
++	 * @param coder
++	 *            an FSCoder object containing an FSBounds encoded as binary
++	 *            data.
++	 */
++	public FSBounds(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;P&gt;&lt;!-- blank paragraph to add space between the image and the next table --&gt;&lt;/P&gt;
++	/**
++	 * Constructs an FSBounds object representing a rectangle with the top left
++	 * corner at (xl,yl) and bottom right corner at (xr,yr).
++	 * 
++	 * @param xl
++	 *            x-coordinate of the top left corner.
++	 * @param yl
++	 *            y-coordinate of the top left corner.
++	 * @param xr
++	 *            x-coordinate of bottom right corner.
++	 * @param yr
++	 *            y-coordinate of bottom right corner.
++	 */
++	public FSBounds(int xl, int yl, int xr, int yr)
++	{
++		minX = xl;
++		minY = yl;
++		maxX = xl;
++		maxY = yl;
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSBounds object and initialise it with value from another
++	 * FSBounds object.
++	 * 
++	 * @param obj
++	 *            an FSBounds object.
++	 */
++	public FSBounds(FSBounds obj)
++	{
++		minX = obj.minX;
++		maxX = obj.maxX;
++		minY = obj.minY;
++		maxY = obj.maxY;
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Gets the x-coordinate of the top left corner of the bounding rectangle.
++	 * 
++	 * @return the x-coordinate of the lower left corner of the bounding
++	 *         rectangle.
++	 */
++	public int getMinX()
++	{
++		return minX;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBounds_0&quot;&gt;minX&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The x-coordinate of the upper left corner of the rectangle.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the x-coordinate of the bottom right corner of the bounding
++	 * rectangle.
++	 * 
++	 * @return the x-coordinate of the bottom right corner of the bounding
++	 *         rectangle.
++	 */
++	public int getMaxX()
++	{
++		return maxX;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBounds_1&quot;&gt;minY&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The y-coordinate of the upper left corner of the rectangle.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the y-coordinate of the top left corner of the bounding rectangle.
++	 * 
++	 * @return the y-coordinate of the top left corner of the bounding
++	 *         rectangle.
++	 */
++	public int getMinY()
++	{
++		return minY;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBounds_2&quot;&gt;maxX&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The x-coordinate of the lower right corner of the rectangle.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the y-coordinate of the bottom right corner of the bounding
++	 * rectangle.
++	 * 
++	 * @return the y-coordinate of the bottom right corner of the bounding
++	 *         rectangle.
++	 */
++	public int getMaxY()
++	{
++		return maxY;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSBounds_3&quot;&gt;maxY&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The y-coordinate of the lower right corner of the rectangle.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Sets the x-coordinate of the top left corner of the bounding rectangle.
++	 * 
++	 * @param aNumber
++	 *            x-coordinate of the lower left corner of the bounding
++	 *            rectangle.
++	 */
++	public void setMinX(int aNumber)
++	{
++		minX = aNumber;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Sets the x-coordinate of the bottom right corner of the bounding
++	 * rectangle.
++	 * 
++	 * @param aNumber
++	 *            x-coordinate of the bottom right corner of the bounding
++	 *            rectangle.
++	 */
++	public void setMaxX(int aNumber)
++	{
++		maxX = aNumber;
++	}
+ 
+-&lt;p&gt;The coordinates for each corner also specify the coordinate range so specifying 
+-a bounding rectangle with the points (-100,-100) and (100,100) defines a rectangle 
+-200 twips by 200 twips with the point (0,0) located in the centre. Specifying the 
+-points (0,0) and (200,200) defines a rectangle with the same size however the centre 
+-is now located at (100,100).&lt;/p&gt;
++	/**
++	 * Sets the y-coordinate of the upper left corner of the bounding rectangle.
++	 * 
++	 * @param aNumber
++	 *            y-coordinate of the lower left corner of the bounding
++	 *            rectangle.
++	 */
++	public void setMinY(int aNumber)
++	{
++		minY = aNumber;
++	}
+ 
+-&lt;p&gt;The bounding rectangle does not clip the object when it is drawn. Lines and curves 
+-drawn outside of the rectangle will still be displayed. However when the bounding 
+-rectangle is defined for an FSMovie object then this defines the size of the Flash 
+-Player screen and shapes drawn outside of the bounding rectangle will not be displayed.&lt;/p&gt;
++	/**
++	 * Sets the y-coordinate of the bottom right corner of the bounding
++	 * rectangle.
++	 * 
++	 * @param aNumber
++	 *            x-coordinate of the bottom right corner of the bounding
++	 *            rectangle.
++	 */
++	public void setMaxY(int aNumber)
++	{
++		maxY = aNumber;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++	/**
++	 * Gets the width of the rectangle.
++	 * 
++	 * @return the width of the rectangle.
++	 */
++	public int getWidth()
++	{
++		return maxX - minX;
++	}
+ 
+-&lt;p&gt;To create an FSBounds object simply specify the coordinates of the corners of the 
+-rectangle in the following order: top left x, top left y, bottom right x, bottom 
+-right y.&lt;/p&gt;
++	/**
++	 * Gets the height of the rectangle.
++	 * 
++	 * @return the height of the rectangle.
++	 */
++	public int getHeight()
++	{
++		return maxY - minY;
++	}
+ 
+-&lt;pre&gt;
+-FSBounds bounds = new FSBounds(0, 0, 100, 200);
+-&lt;/pre&gt;
++	/**
++	 * Sets the x and y coordinates of the lower corner.
++	 * 
++	 * @param xl
++	 *            the x-coordinate of the top left corner point.
++	 * @param yl
++	 *            the y-coordinate of the top left corner point.
++	 */
++	public void setMin(int xl, int yl)
++	{
++		minX = xl;
++		minY = yl;
++	}
+ 
+-&lt;p&gt;Creates a bounding rectangle for an object which is 100 twips wide and 200 twips high. The coordinate range for the object is from 0..100 along the x-axis and 0..200 along the y-axis. The origin (0,0) will be at the top left corner of the object as it is displayed on the screen.
++	/**
++	 * Sets the x and y coordinates of the upper corner.
++	 * 
++	 * @param xr
++	 *            the x-coordinate of the bottom right corner point.
++	 * @param yr
++	 *            the y-coordinate of the bottom right corner point.
++	 */
++	public void setMax(int xr, int yr)
++	{
++		maxX = xr;
++		maxY = yr;
++	}
+ 
+-&lt;pre&gt;
+-FSBounds bounds = new FSBounds (-100, -200, 100, 200);
+-&lt;/pre&gt;
++	/**
++	 * Sets the x and y coordinates of the lower and upper corner point.
++	 * 
++	 * @param xl
++	 *            the x-coordinate of the top left corner point.
++	 * @param yl
++	 *            the y-coordinate of the top left corner point.
++	 * @param xr
++	 *            the x-coordinate of the bottom right corner point.
++	 * @param yr
++	 *            the y-coordinate of the bottom right corner point.
++	 */
++	public void setPoints(int xl, int yl, int xr, int yr)
++	{
++		minX = xl;
++		minY = yl;
++		maxX = xr;
++		maxY = yr;
++	}
+ 
+-&lt;p&gt;Creates a bounding rectangle for an object which is 200 twips wide and 400 twips high. The coordinate range for the object is from -100..100 along the x-axis and -200..200 along the y-axis. The origin (0,0) will be in the middle of the object as it is displayed on the screen.
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++		if (obj == null) {
++			return false;
++		}
+ 
+-&lt;p&gt;The FSBounds class corresponds to the RECT data type, in the Macromedia Flash 
+-(SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSBounds extends FSTransformObject
+-{
+-    private int minX = 0;
+-    private int minY = 0;
+-    private int maxX = 0;
+-    private int maxY = 0;
+-    
+-    /**
+-     * Construct an FSBounds object an initialize it with values decoded from 
+-     * a binary encoded FSBounds object.
+-     * 
+-     * @param coder an FSCoder object containing an FSBounds encoded as binary
+-     * data.
+-     */
+-    public FSBounds(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSBounds object representing a rectangle with the top left corner at (xl,yl) and bottom right corner at (xr,yr).
++		if (obj == this) {
++			return true;
++		}
+ 
+-        @param xl x-coordinate of the top left corner.
+-        @param yl y-coordinate of the top left corner.
+-        @param xr x-coordinate of bottom right corner.
+-        @param yr y-coordinate of bottom right corner.
+-        */
+-    public FSBounds(int xl, int yl, int xr, int yr)
+-    {
+-        setMinX(xl);
+-        setMinY(yl);
+-        setMaxX(xr);
+-        setMaxY(yr);
+-    }
+-    /**
+-     * Construct an FSBounds object and initialize it with value from another 
+-     * FSBounds object.
+-     * 
+-     * @param obj an FSBounds object.
+-     */
+-    public FSBounds(FSBounds obj)
+-    {
+-        minX = obj.minX;
+-        maxX = obj.maxX;
+-        minY = obj.minY;
+-        maxY = obj.maxY;
+-    }
++		if (obj instanceof FSBounds)
++		{
++			FSBounds bounds = (FSBounds)obj;
+ 
+-    /** Gets the x-coordinate of the top left corner of the bounding rectangle.
++			result = minX == bounds.minX;
++			result = result &amp;&amp; minY == bounds.minY;
++			result = result &amp;&amp; maxX == bounds.maxX;
++			result = result &amp;&amp; maxY == bounds.maxY;
++		}
++		return result;
++	}
+ 
+-        @return the x-coordinate of the lower left corner of the bounding rectangle.
+-        */
+-    public int getMinX() 
+-    {
+-        return minX;
+-    }
++	/**
++	 * Creates a copy of the entire object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
+ 
+-    /** Gets the x-coordinate of the bottom right corner of the bounding rectangle. 
+-    
+-        @return the x-coordinate of the bottom right corner of the bounding rectangle.
+-        */
+-    public int getMaxX() 
+-    {
+-        return maxX;
+-    }
++		try {
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
+ 
+-    /** Gets the y-coordinate of the top left corner of the bounding rectangle. 
+-    
+-        @return the y-coordinate of the top left corner of the bounding rectangle.
+-        */
+-    public int getMinY() 
+-    {
+-        return minY;
+-    }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Gets the y-coordinate of the bottom right corner of the bounding rectangle. 
+-    
+-        @return the y-coordinate of the bottom right corner of the bounding rectangle.
+-        */
+-    public int getMaxY()
+-    {
+-        return maxY;
+-    }
++		buffer.append(&quot;FSBounds: { &quot;);
++		buffer.append(&quot;minX = &quot;).append(minX).append(&quot;; &quot;);
++		buffer.append(&quot;minY = &quot;).append(minY).append(&quot;; &quot;);
++		buffer.append(&quot;maxX = &quot;).append(maxX).append(&quot;; &quot;);
++		buffer.append(&quot;maxY = &quot;).append(maxY).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Sets the x-coordinate of the top left corner of the bounding rectangle.
++		return buffer.toString();
++	}
+ 
+-        @param aNumber x-coordinate of the lower left corner of the bounding rectangle.
+-        */
+-    public void setMinX(int aNumber) 
+-    {
+-        minX = aNumber;
+-    }
++	public int length(FSCoder coder)
++	{
++		size = FSCoder.size(new int[] {minX, maxX, minY, maxY }, true);
++		return ((5+size&lt;&lt;2)+7) &gt;&gt; 3;
++	}
+ 
+-    /** Sets the x-coordinate of the bottom right corner of the bounding rectangle.
+-        
+-        @param aNumber x-coordinate of the bottom right corner of the bounding rectangle.
+-        */
+-    public void setMaxX(int aNumber)
+-    {
+-        maxX = aNumber;
+-    }
++	public void encode(FSCoder coder)
++	{
++		coder.alignToByte();
++		coder.writeBits(size, 5);
++		coder.writeBits(minX, size);
++		coder.writeBits(maxX, size);
++		coder.writeBits(minY, size);
++		coder.writeBits(maxY, size);
++		coder.alignToByte();
++	}
+ 
+-    /** Sets the y-coordinate of the upper left corner of the bounding rectangle.
+-        
+-        @param aNumber y-coordinate of the lower left corner of the bounding rectangle.
+-        */
+-    public void setMinY(int aNumber)
+-    {
+-        minY = aNumber;
+-    }
+-
+-    /** Sets the y-coordinate of the bottom right corner of the bounding rectangle.
+-        
+-        @param aNumber x-coordinate of the bottom right corner of the bounding rectangle.
+-        */
+-    public void setMaxY(int aNumber)
+-    {
+-        maxY = aNumber;
+-    }
+-
+-    /** Gets the width of the rectangle.
+-
+-        @return the width of the rectangle.
+-        */
+-    public int getWidth()
+-    {
+-        return maxX - minX;
+-    }
+-
+-    /** Gets the height of the rectangle. 
+-    
+-        @return the height of the rectangle.
+-        */
+-    public int getHeight()
+-    {
+-        return maxY - minY;
+-    }
+-
+-    /** Sets the x and y coordinates of the lower corner.
+-    
+-        @param xl the x-coordinate of the top left corner point.
+-        @param yl the y-coordinate of the top left corner point.
+-        */
+-    public void setMin(int xl, int yl)
+-    {
+-        minX = xl;
+-        minY = yl;
+-    }
+-
+-    /** Sets the x and y coordinates of the upper corner. 
+-        
+-        @param xr the x-coordinate of the bottom right corner point.
+-        @param yr the y-coordinate of the bottom right corner point.
+-        */
+-    public void setMax(int xr, int yr)
+-    {
+-        maxX = xr;
+-        maxY = yr;
+-    }
+-
+-    /** Sets the x and y coordinates of the lower and upper corner point.
+-            
+-        @param xl the x-coordinate of the top left corner point.
+-        @param yl the y-coordinate of the top left corner point.
+-        @param xr the x-coordinate of the bottom right corner point.
+-        @param yr the y-coordinate of the bottom right corner point.
+-        */
+-    public void setPoints(int xl, int yl, int xr, int yr)
+-    {
+-        minX = xl;
+-        minY = yl;
+-        maxX = xr;
+-        maxY = yr;
+-    }
+-    
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSBounds typedObject = (FSBounds)anObject;
+-            
+-            result = minX == typedObject.minX;
+-            result = result &amp;&amp; minY == typedObject.minY;
+-            result = result &amp;&amp; maxX == typedObject.maxX;
+-            result = result &amp;&amp; maxY == typedObject.maxY;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;minX&quot;, minX);
+-            Transform.append(buffer, &quot;minY&quot;, minY);
+-            Transform.append(buffer, &quot;maxX&quot;, maxX);
+-            Transform.append(buffer, &quot;maxY&quot;, maxY);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int numberOfBits = 0;
+-        int fieldSize = FSCoder.size(new int[]{minX, maxX, minY, maxY}, true);
+-        
+-        numberOfBits = 5 + fieldSize*4;
+-        numberOfBits += (numberOfBits % 8 &gt; 0) ? 8 - (numberOfBits % 8) : 0;
+-        
+-        return numberOfBits&gt;&gt;3; 
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        int numberOfBits = FSCoder.size(new int[]{minX, maxX, minY, maxY}, true);
+-        
+-        coder.alignToByte();    
+-        coder.writeBits(numberOfBits, 5);
+-        coder.writeBits(minX, numberOfBits);
+-        coder.writeBits(maxX, numberOfBits);
+-        coder.writeBits(minY, numberOfBits);
+-        coder.writeBits(maxY, numberOfBits);    
+-        coder.alignToByte();
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        coder.alignToByte();
+-        
+-        int fieldSize = coder.readBits(5, false);
+-        
+-        minX = coder.readBits(fieldSize, true);
+-        maxX = coder.readBits(fieldSize, true);
+-        minY = coder.readBits(fieldSize, true);
+-        maxY = coder.readBits(fieldSize, true);
+-        
+-        coder.alignToByte();
+-    }
++	public void decode(FSCoder coder)
++	{
++		coder.alignToByte();
++		size = coder.readBits(5, false);
++		minX = coder.readBits(size, true);
++		maxX = coder.readBits(size, true);
++		minY = coder.readBits(size, true);
++		maxY = coder.readBits(size, true);
++		coder.alignToByte();
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000282.html">[Transform-svn] r346 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000284.html">[Transform-svn] r348 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#283">[ date ]</a>
+              <a href="thread.html#283">[ thread ]</a>
+              <a href="subject.html#283">[ subject ]</a>
+              <a href="author.html#283">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

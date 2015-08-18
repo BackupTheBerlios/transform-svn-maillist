@@ -1,0 +1,436 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r432%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804022200.m32M0ShY009766%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000367.html">
+   <LINK REL="Next"  HREF="000369.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r432%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804022200.m32M0ShY009766%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r432 - dev/dev-3-0/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Apr  3 00:00:28 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000367.html">[Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+        <LI>Next message: <A HREF="000369.html">[Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#368">[ date ]</a>
+              <a href="thread.html#368">[ thread ]</a>
+              <a href="subject.html#368">[ subject ]</a>
+              <a href="author.html#368">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-03 00:00:21 +0200 (Thu, 03 Apr 2008)
+New Revision: 432
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java
+Log:
+Added constructors with path and file arguments to allow the decoders to be used outside of the scope of Transform.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java	2008-04-02 21:45:53 UTC (rev 431)
++++ dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java	2008-04-02 22:00:21 UTC (rev 432)
+@@ -58,13 +58,47 @@
+     private int blueMask;
+     
+     /**
+-     * Constructs an FSImageConstructor object with no image.
++     * Constructs an BMPDecoder object with no image.
+      */
+     public BMPDecoder()
+     {
+     }
+-        
++           
+     /**
++     * Construct an BMPDecoder object with the image from the specified file. 
++     *
++     * @param path the path to the file containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public BMPDecoder(String path) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(new File(path)));
++    }   
++    
++    /**
++     * Construct an BMPDecoder object with the image from the specified file. 
++     *
++     * @param file the file containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public BMPDecoder(File file) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(file));
++    }   
++
++    /**
+      * Returns a constant identifying the format for the way the pixels are encoded.
+      *
+      * @return the image format.
+@@ -464,4 +498,15 @@
+             }
+         }
+     }
++    
++    private byte[] dataFromFile(File file) throws FileNotFoundException, IOException
++    {
++        byte[] bytes = new byte[(int)file.length()];
++        
++        FileInputStream imageContents = new FileInputStream(file);            
++        imageContents.read(bytes);
++        imageContents.close();
++
++        return bytes;
++    }
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java	2008-04-02 21:45:53 UTC (rev 431)
++++ dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java	2008-04-02 22:00:21 UTC (rev 432)
+@@ -42,6 +42,47 @@
+     private int height;
+     private byte[] image;
+      
++    /**
++     * Constructs an JPGDecoder object with no image.
++     */
++    public JPGDecoder()
++    {
++    }
++           
++    /**
++     * Construct an JPGDecoder object with the image from the specified file. 
++     *
++     * @param path the path to the file containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public JPGDecoder(String path) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(new File(path)));
++    }   
++    
++    /**
++     * Construct an JPGDecoder object with the image from the specified file. 
++     *
++     * @param file the file containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public JPGDecoder(File file) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(file));
++    }   
++
+     public int getFormat()
+     {
+     	return format;
+@@ -109,4 +150,15 @@
+             }
+         }
+     }
++    
++    private byte[] dataFromFile(File file) throws FileNotFoundException, IOException
++    {
++        byte[] bytes = new byte[(int)file.length()];
++        
++        FileInputStream imageContents = new FileInputStream(file);            
++        imageContents.read(bytes);
++        imageContents.close();
++
++        return bytes;
++    }
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java	2008-04-02 21:45:53 UTC (rev 431)
++++ dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java	2008-04-02 22:00:21 UTC (rev 432)
+@@ -32,6 +32,7 @@
+ 
+ import java.io.*;
+ import java.util.zip.*;
++
+ import com.flagstone.transform.*;
+ 
+ 
+@@ -68,13 +69,46 @@
+     private int samplesPerFrame = 0;
+ 
+     /**
+-     * Creates a new uninitialized FSSoundConstructor object.  Use setSound to 
+-     * provide the content.
++     * Creates a new MP3Decoder object.
+      */
+     public MP3Decoder() 
+     {
+     }
+ 
++    /**
++     * Constructs a MP3Decoder object and loads the sound from the specified file.
++     *
++     * @param path the path to the file containing the sound.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported sound 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public MP3Decoder(String path) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(new File(path)));
++    }   
++    
++    /**
++     * Constructs a MP3Decoder object and loads the sound from the specified file.
++     *
++     * @param path the file containing the sound.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported sound 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public MP3Decoder(File file) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(file));
++    }   
++    
+     public int getFormat()
+     {
+         return format;
+@@ -247,4 +281,15 @@
+         
+         return frameSize;
+     }
++    
++    private byte[] dataFromFile(File file) throws FileNotFoundException, IOException
++    {
++        byte[] bytes = new byte[(int)file.length()];
++        
++        FileInputStream imageContents = new FileInputStream(file);            
++        imageContents.read(bytes);
++        imageContents.close();
++
++        return bytes;
++    }
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java	2008-04-02 21:45:53 UTC (rev 431)
++++ dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java	2008-04-02 22:00:21 UTC (rev 432)
+@@ -146,10 +146,9 @@
+     }
+     
+     /**
+-     * Constructs and FSImageConstructor object and loads the image from the specified file. The FSImageConstructor
+-     * class support Windows bitmap (BMP), Portable Network Graphics (PNG) or JPEG encoded images.
++     * Constructs a PNGDecoder object and loads the image from the specified file.
+      *
+-     * @param filename the name of the file containing the image.
++     * @param path the path to the file containing the image.
+      *
+      * @throws FileNotFoundException is the file cannot be found.
+      *
+@@ -158,23 +157,27 @@
+      * @throws DataFormatException if the file contains an unsupported image format or if an error occurs 
+      * while decoding the image in the file.
+      */
+-    public PNGDecoder(String filename) throws IOException, DataFormatException
++    public PNGDecoder(String path) throws IOException, DataFormatException
+     {
+-        decode(dataFromFile(filename));
++        decode(dataFromFile(new File(path)));
+     }   
++    
+     /**
+-     * Constructs and FSImageConstructor object and loads the encoded image data. The FSImageConstructor
+-     * class support Windows bitmap (BMP), Portable Network Graphics (PNG) or JPEG encoded images.
++     * Constructs a PNGDecoder object and loads the image from the specified file.
+      *
+-     * @param bytes an array of bytes containing the encoded image.
++     * @param path the file containing the image.
+      *
+-     * @throws DataFormatException if the data contains an unsupported image format or if an error occurs 
+-     * while decoding the image.
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image format or if an error occurs 
++     * while decoding the image in the file.
+      */
+-    public PNGDecoder(byte[] bytes) throws DataFormatException
++    public PNGDecoder(File file) throws IOException, DataFormatException
+     {
+-        decode(bytes);
+-    }    
++        decode(dataFromFile(file));
++    }   
+     
+     /**
+      * Returns a constant identifying the format for the way the pixels are encoded.
+@@ -602,14 +605,11 @@
+         }
+     }
+     
+-    private byte[] dataFromFile(String filename) throws FileNotFoundException, IOException
++    private byte[] dataFromFile(File file) throws FileNotFoundException, IOException
+     {
+-        File aFile = new File(filename);
+-        FileInputStream imageContents = null;
++        byte[] bytes = new byte[(int)file.length()];
+         
+-        byte[] bytes = new byte[(int)aFile.length()];
+-        
+-        imageContents = new FileInputStream(aFile);            
++        FileInputStream imageContents = new FileInputStream(file);            
+         imageContents.read(bytes);
+         imageContents.close();
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java	2008-04-02 21:45:53 UTC (rev 431)
++++ dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java	2008-04-02 22:00:21 UTC (rev 432)
+@@ -32,6 +32,7 @@
+ 
+ import java.io.*;
+ import java.util.zip.*;
++
+ import com.flagstone.transform.*;
+ 
+ public class WAVDecoder implements SoundDecoder
+@@ -53,6 +54,40 @@
+     {
+     }
+ 
++    /**
++     * Constructs a WAVDecoder object and loads the sound from the specified file.
++     *
++     * @param path the path to the file containing the sound.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported sound 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public WAVDecoder(String path) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(new File(path)));
++    }   
++    
++    /**
++     * Constructs a WAVDecoder object and loads the sound from the specified file.
++     *
++     * @param path the file containing the sound.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported sound 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public WAVDecoder(File file) throws IOException, DataFormatException
++    {
++        decode(dataFromFile(file));
++    }   
++    
+     public int getFormat()
+     {
+         return format;
+@@ -156,4 +191,15 @@
+         sound = new byte[length];
+         coder.readBytes(sound);
+     }
++    
++    private byte[] dataFromFile(File file) throws FileNotFoundException, IOException
++    {
++        byte[] bytes = new byte[(int)file.length()];
++        
++        FileInputStream imageContents = new FileInputStream(file);            
++        imageContents.read(bytes);
++        imageContents.close();
++
++        return bytes;
++    }
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000367.html">[Transform-svn] r431 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+</A></li>
+	<LI>Next message: <A HREF="000369.html">[Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#368">[ date ]</a>
+              <a href="thread.html#368">[ thread ]</a>
+              <a href="subject.html#368">[ subject ]</a>
+              <a href="author.html#368">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

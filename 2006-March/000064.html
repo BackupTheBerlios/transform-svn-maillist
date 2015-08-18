@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r123 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r123%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200603062035.k26KZ9N3026641%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000063.html">
+   <LINK REL="Next"  HREF="000065.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r123 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r123%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200603062035.k26KZ9N3026641%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r123 - trunk/src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Mon Mar  6 21:35:09 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000063.html">[Transform-svn] r122 - trunk
+</A></li>
+        <LI>Next message: <A HREF="000065.html">[Transform-svn] r124 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-06 21:35:03 +0100 (Mon, 06 Mar 2006)
+New Revision: 123
+
+Modified:
+   trunk/src/com/flagstone/transform/FSBitmapFill.java
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+   trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+   trunk/src/com/flagstone/transform/FSMovieObject.java
+Log:
+Finished release notes for 2.1 and updated class data sheets.
+
+Modified: trunk/src/com/flagstone/transform/FSBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBitmapFill.java	2006-03-06 20:34:50 UTC (rev 122)
++++ trunk/src/com/flagstone/transform/FSBitmapFill.java	2006-03-06 20:35:03 UTC (rev 123)
+@@ -152,7 +152,7 @@
+     /**
+      * Construct an FSBitmapFill object by copying an existing object.
+      * 
+-     * @param object an FSBitmapFill object. 
++     * @param obj an FSBitmapFill object. 
+      */
+     public FSBitmapFill(FSBitmapFill obj)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-03-06 20:34:50 UTC (rev 122)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-03-06 20:35:03 UTC (rev 123)
+@@ -441,7 +441,7 @@
+      * range supported by the buffer then an IllegalArgumentException will
+      * be thrown.
+      *  
+-     * @param offset the offset in bits from the start of the array of bytes.
++     * @param location the offset in bits from the start of the array of bytes.
+      */
+     public void setPointer(int location)
+     {
+@@ -759,7 +759,7 @@
+      * Write a fixed point number, in either (8.8) or (16.16) format to a bit 
+      * field.
+      * 
+-     * @param the value to be ecoded.
++     * @param value the value to be ecoded.
+      * @param numberOfBits the number of bits the number is encoded in.
+      * @param fractionSize the number of bits occupied by the fractional
+      * part of the number. The integer part will be signed extended.
+@@ -792,7 +792,7 @@
+      * Write a fixed point number, in either (8.8) or (16.16) format to a 
+      * word field, accounting for the byte-ordering used.
+      * 
+-     * @value the value to be written.
++     * @param value the value to be written.
+      * @param mantissaSize the number of bits occupied by the integer
+      * part of the number.
+      * @param fractionSize the number of bits occupied by the fractional
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-06 20:34:50 UTC (rev 122)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-06 20:35:03 UTC (rev 123)
+@@ -77,7 +77,7 @@
+     /** 
+      * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
+      *
+-     * @param aString the string defining the password.
++     * @param password the string defining the password.
+      */
+     public FSEnableDebugger(String password)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-06 20:34:50 UTC (rev 122)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-06 20:35:03 UTC (rev 123)
+@@ -74,7 +74,7 @@
+     /** 
+      * Constructs an FSEnableDebugger2 object with an MD5 encrypted password.
+      *
+-     * @param aString the string defining the password.
++     * @param password the string defining the password.
+      */
+     public FSEnableDebugger2(String password)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-03-06 20:34:50 UTC (rev 122)
++++ trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2006-03-06 20:35:03 UTC (rev 123)
+@@ -111,7 +111,7 @@
+     /**
+      * Construct an FSMorphBitmapFill object by copying an existing object.
+      * 
+-     * @param object an FSMorphBitmapFill object. 
++     * @param obj an FSMorphBitmapFill object. 
+      */
+     public FSMorphBitmapFill(FSMorphBitmapFill obj)
+     {
+
+Modified: trunk/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-06 20:34:50 UTC (rev 122)
++++ trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-06 20:35:03 UTC (rev 123)
+@@ -171,7 +171,7 @@
+     /**
+      * Constructs a movie object by copying an existing one.
+      * 
+-     * @param aType an identifier indicating the type of movie object.
++     * @param obj an FSMovieObject object. 
+      */
+     protected FSMovieObject(FSMovieObject obj)
+     {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000063.html">[Transform-svn] r122 - trunk
+</A></li>
+	<LI>Next message: <A HREF="000065.html">[Transform-svn] r124 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

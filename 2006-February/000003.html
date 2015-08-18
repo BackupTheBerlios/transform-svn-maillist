@@ -1,0 +1,496 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r63 - trunk/test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r63%20-%20trunk/test/suites&In-Reply-To=%3C200602211439.k1LEdChm016984%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000002.html">
+   <LINK REL="Next"  HREF="000004.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r63 - trunk/test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r63%20-%20trunk/test/suites&In-Reply-To=%3C200602211439.k1LEdChm016984%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r63 - trunk/test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 15:39:12 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000002.html">[Transform-svn] r62 - trunk/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000004.html">[Transform-svn] r64 - in trunk/test/data: . fonts fonts/orgdot fonts/vera
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 15:38:41 +0100 (Tue, 21 Feb 2006)
+New Revision: 63
+
+Added:
+   trunk/test/suites/FSImageConstructor.xml
+   trunk/test/suites/FSTextConstructor.xml
+Removed:
+   trunk/test/suites/MovieTestResultsToText.xml
+Modified:
+   trunk/test/suites/FSMovie.xml
+Log:
+Added testng suites for FSImageConstructor and FSTextConstructor.
+Restructured the tests for FSMovie so all the steps for regression
+testing are included. Removed MovieTestResultsToText since this step
+is now performed in FSMovieTest.java
+
+Added: trunk/test/suites/FSImageConstructor.xml
+===================================================================
+--- trunk/test/suites/FSImageConstructor.xml	2006-02-21 14:36:31 UTC (rev 62)
++++ trunk/test/suites/FSImageConstructor.xml	2006-02-21 14:38:41 UTC (rev 63)
+@@ -0,0 +1,24 @@
++&lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
++  
++&lt;suite name=&quot;FSImageConstructorTest&quot; verbose=&quot;10&quot;&gt;
++
++    &lt;test name=&quot;JPG Images&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/files/jpg&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSImageConstructor/jpg&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;jpg&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSImageConstructorTest&quot;/&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
++    &lt;test name=&quot;PNG Images&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/files/png&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSImageConstructor/png&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;png&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSImageConstructorTest&quot;/&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
++&lt;/suite&gt;
++
+
+Modified: trunk/test/suites/FSMovie.xml
+===================================================================
+--- trunk/test/suites/FSMovie.xml	2006-02-21 14:36:31 UTC (rev 62)
++++ trunk/test/suites/FSMovie.xml	2006-02-21 14:38:41 UTC (rev 63)
+@@ -1,31 +1,261 @@
+ &lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
+   
+ &lt;suite name=&quot;FSMovie&quot;&gt;
+-	&lt;parameter name=&quot;dstDir&quot;  value=&quot;test/results/FSMovie&quot;/&gt;
+ 	
+-    &lt;test name=&quot;Test SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot;  value=&quot;test/data/movies/swf4&quot;/&gt;
++	&lt;!--
++	    Create text dumps of the movies to use as a reference for comparing
++	    the files saved by the encode and clone tests.
++	--&gt;
++    &lt;test name=&quot;Reference SWF4&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/reference/swf4&quot;/&gt;
+ 		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;/&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+-    &lt;test name=&quot;Test SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot;  value=&quot;test/data/movies/swf5&quot;/&gt;
++
++    &lt;test name=&quot;Reference SWF5&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/reference/swf5&quot;/&gt;
+ 		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;/&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+-    &lt;test name=&quot;Test SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot;  value=&quot;test/data/movies/swf6&quot;/&gt;
++
++    &lt;test name=&quot;Reference SWF6&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/reference/swf6&quot;/&gt;
+ 		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;/&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+-    &lt;test name=&quot;Test SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot;  value=&quot;test/data/movies/swf7&quot;/&gt;
++
++    &lt;test name=&quot;Reference SWF7&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/reference/swf7&quot;/&gt;
+ 		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;/&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
++
++    &lt;!--
++        Decode then encode a movie. 
++    --&gt;
++    &lt;test name=&quot;Encode SWF4&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;encode&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Encode SWF5&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;encode&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Encode SWF6&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;encode&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Encode SWF7&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;encode&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;!--
++        Convert the results from the encode test to text to compare against
++        the reference files. 
++    --&gt;
++    &lt;test name=&quot;Encode ToText SWF4&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Encode ToText SWF5&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Encode ToText SWF6&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Encode ToText SWF7&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;!--
++        Decode, clone then encode a movie. 
++    --&gt;
++    &lt;test name=&quot;Clone SWF4&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;clone&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Clone SWF5&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;clone&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Clone SWF6&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;clone&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Clone SWF7&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;clone&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++
++    &lt;test name=&quot;Clone ToText SWF4&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Clone ToText SWF5&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Clone ToText SWF6&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++    &lt;test name=&quot;Clone ToText SWF7&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
++      			&lt;methods&gt;
++      				&lt;include name=&quot;toText&quot;/&gt;
++      			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
+ &lt;/suite&gt;
+ 
+
+Added: trunk/test/suites/FSTextConstructor.xml
+===================================================================
+--- trunk/test/suites/FSTextConstructor.xml	2006-02-21 14:36:31 UTC (rev 62)
++++ trunk/test/suites/FSTextConstructor.xml	2006-02-21 14:38:41 UTC (rev 63)
+@@ -0,0 +1,34 @@
++&lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
++  
++&lt;suite name=&quot;FSTextConstructorTest&quot; verbose=&quot;10&quot;&gt;
++
++	&lt;parameter name=&quot;srcDir&quot; value=&quot;&quot;/&gt;
++	&lt;parameter name=&quot;dstDir&quot; value=&quot;&quot;/&gt;
++	&lt;parameter name=&quot;ext&quot; value=&quot;&quot;/&gt;
++
++    &lt;test name=&quot;TTF Fonts&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/files/ttf&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/ttf&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;ttf&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayTrueTypeFont&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
++    &lt;test name=&quot;AWT Fonts&quot;&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/awt&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayAWTFont&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++&lt;/suite&gt;
++
+
+Deleted: trunk/test/suites/MovieTestResultsToText.xml
+===================================================================
+--- trunk/test/suites/MovieTestResultsToText.xml	2006-02-21 14:36:31 UTC (rev 62)
++++ trunk/test/suites/MovieTestResultsToText.xml	2006-02-21 14:38:41 UTC (rev 63)
+@@ -1,62 +0,0 @@
+-&lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
+-  
+-&lt;suite name=&quot;TextDumpMovieTestResults&quot;&gt;
+-    &lt;test name=&quot;Encode SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-    &lt;test name=&quot;Encode SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-    &lt;test name=&quot;Encode SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-    &lt;test name=&quot;Encode SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-  	
+-    &lt;test name=&quot;Clone SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-    &lt;test name=&quot;Clone SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-    &lt;test name=&quot;Clone SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-    &lt;test name=&quot;Clone SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.TextDumpTest&quot;/&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;  	
+-&lt;/suite&gt;
+-
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000002.html">[Transform-svn] r62 - trunk/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000004.html">[Transform-svn] r64 - in trunk/test/data: . fonts fonts/orgdot fonts/vera
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

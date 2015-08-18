@@ -1,0 +1,1573 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r371%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181706.m2IH6WVI011235%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000306.html">
+   <LINK REL="Next"  HREF="000308.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r371%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181706.m2IH6WVI011235%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r371 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 18:06:32 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000306.html">[Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000308.html">[Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#307">[ date ]</a>
+              <a href="thread.html#307">[ thread ]</a>
+              <a href="subject.html#307">[ subject ]</a>
+              <a href="author.html#307">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 18:06:28 +0100 (Tue, 18 Mar 2008)
+New Revision: 371
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSPush.java
+Log:
+Cleaned up handling of lightweight data objects and added checks to accessor methods.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSPush.java	2008-03-18 16:49:55 UTC (rev 370)
++++ dev/dev-2-4/src/com/flagstone/transform/FSPush.java	2008-03-18 17:06:28 UTC (rev 371)
+@@ -33,655 +33,920 @@
+ import java.util.*;
+ 
+ /**
+-FSPush is used to push values on the Flash Player's internal stack.
++ * FSPush is used to push values on the Flash Player's internal stack.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;values&lt;/td&gt;
++ * &lt;td&gt;An array of values that will be pushed onto the Flash Player's Stack and
++ * used when executing actions.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The FSPush action supports the full range of data types supported by Flash:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot;&gt;Data Type&lt;/th&gt;
++ * &lt;th align=&quot;left&quot;&gt;Description&lt;/th&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Boolean&lt;/td&gt;
++ * &lt;td&gt;A boolean value, 1 (true) or 0 (false).&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Integer&lt;/td&gt;
++ * &lt;td&gt;A signed 32-bit integer, range -2,147,483,648 to 2,147,483,647.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Double&lt;/td&gt;
++ * &lt;td&gt;A double-precision (64-bit) floating-point number, range approximately
++ * +/- 1.79769313486231570E+308.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;String&lt;/td&gt;
++ * &lt;td&gt;A String. The string is encoded as using the UTF-8 encoding which is
++ * backward compatible with ASCII encoding supported in Flash 5.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Register Index&lt;/td&gt;
++ * &lt;td&gt;The number (0,..3) of one of the Flash player's internal registers.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Table Index&lt;/td&gt;
++ * &lt;td&gt;An index into a table of string literals defined using the FSTable
++ * action.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Null&lt;/td&gt;
++ * &lt;td&gt;A null value.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Void&lt;/td&gt;
++ * &lt;td&gt;A void value.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Movie Clip Property&lt;/td&gt;
++ * &lt;td&gt;A reserved number used to identify a specific property of a movie clip.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td nowrap width=&quot;20%&quot;&gt;Player Property&lt;/td&gt;
++ * &lt;td&gt;A reserved number used to identify a specific property of the Flash
++ * Player.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Movie Clip properties are used to access the attributes of the specified
++ * movie clip. To simplify using movie clip properties the values are defined as
++ * constants in the FSPush class:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * &lt;tr&gt;
++ * &lt;th nowrap align=&quot;left&quot;&gt;Name&lt;/th&gt;
++ * &lt;th align=&quot;left&quot;&gt;Description&lt;/th&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_x&lt;/td&gt;
++ * &lt;td&gt;The x-coordinate of the current drawing point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_y&lt;/td&gt;
++ * &lt;td&gt;The y-coordinate of the current drawing point.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_xscale&lt;/td&gt;
++ * &lt;td&gt;The scale of the player window in the x-axis.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_yscale&lt;/td&gt;
++ * &lt;td&gt;The scale of the player window in the y-axis.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_currentframe&lt;/td&gt;
++ * &lt;td&gt;The number of the frame currently being displayed&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_totalframes&lt;/td&gt;
++ * &lt;td&gt;The total number of frames in the current movie clip being played.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_alpha&lt;/td&gt;
++ * &lt;td&gt;Whether the player supports alpha channel transparency in colours.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_visible&lt;/td&gt;
++ * &lt;td&gt;Whether the player is currently visible.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_width&lt;/td&gt;
++ * &lt;td&gt;The width of the player, in pixels, on the screen.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_height&lt;/td&gt;
++ * &lt;td&gt;The height of the player, in pixels, on the screen.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_rotation&lt;/td&gt;
++ * &lt;td&gt;The rotation of the movie clip in degrees&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_target&lt;/td&gt;
++ * &lt;td&gt;The current target or context for actions.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_framesloaded&lt;/td&gt;
++ * &lt;td&gt;The number of frames from the movie clip that are currently loaded&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_name&lt;/td&gt;
++ * &lt;td&gt;The name of a movie clip.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_droptarget&lt;/td&gt;
++ * &lt;td&gt;Then name of the movie clip currently being dragged.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_url&lt;/td&gt;
++ * &lt;td&gt;The URL of the current movie clip being played.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * Player properties are used to access the attributes of the Player showing the
++ * movie clips. To simplify using player properties the values are defined as
++ * constants in the FSPush class:
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * &lt;tr&gt;
++ * &lt;th nowrap align=&quot;left&quot;&gt;Name&lt;/th&gt;
++ * &lt;th align=&quot;left&quot;&gt;Description&lt;/th&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_quality&lt;/td&gt;
++ * &lt;td&gt;Whether the player is set to display movie clips at high quality.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_highquality&lt;/td&gt;
++ * &lt;td&gt;Whether the player is set to display movie clips at high quality.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_focusrect&lt;/td&gt;
++ * &lt;td&gt;Whether a bounding yellow rectangle is drawn around the current object
++ * (a sprite or button) has the keyboard and mouse focus.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_soundbuftime&lt;/td&gt;
++ * &lt;td&gt;The number of seconds to buffer streaming sound before playing&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_xmouse&lt;/td&gt;
++ * &lt;td&gt;The current x-coordinate of the mouse location.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;tr&gt;
++ * &lt;td&gt;_ymouse&lt;/td&gt;
++ * &lt;td&gt;The current y-coordinate of the mouse location.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The FSPush class maintains an array of values that will be pushed onto the
++ * stack. Any basic data types: boolean, int and double passed in the class
++ * constructors or using the add() methods are wrapped internally, in an
++ * Boolean, Integer and Double class respectively - simplifying how the class is
++ * used. Wrapper classes are only used explicitly when parsing a Flash files and
++ * manipulating the values stored in the array.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * Push each of the different types value onto the stack:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  FSPush boolean        = new FSPush(true);
++ *  FSPush integer        = new FSPush(123);
++ *  FSPush double         = new FSPush(123.0);
++ *  FSPush string         = new FSPush(&quot;123&quot;);
++ *  FSPush null           = new FSPush(new FSNull());
++ *  FSPush void           = new FSPush(new FSVoid());
++ *  FSPush registerIndex  = new FSPush(new FSRegisterIndex(0));
++ *  FSPush tableIndex     = new FSPush(new FSTableIndex(0));
++ *  FSPush movieProperty  = new FSPush(FSPush._x);
++ *  FSPush playerProperty = new FSPush(FSPush._xmouse);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * For efficiency a single FSPush action can push several values onto the stack
++ * in a single operation. The order in which values are added to the FSPush
++ * action is the same order in which the values are pushed onto the stack.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * FSPush push = new FSPush();
++ * 
++ * push.add(123);
++ * push.add(123.0);
++ * push.add(&quot;123&quot;);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * If an array of values are added to a FSPush object then boolean, int and
++ * double values must be wrapped using the Boolean, Integer and Double classes
++ * respectively.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * FSPush is a class for representing the Push action of the Macromedia Flash
++ * (SWF) File Format Specification. It was introduced in Flash 4 and contained
++ * either an integer or string argument. It was extended in Flash 5 to support a
++ * number of different data types and allow more than one value to be added in a
++ * single action.
++ * &lt;/p&gt;
++ */
++public class FSPush extends FSActionObject
++{
++	/** The x-origin of the movie clip relative to the parent clip. */
++	public static final int _x = (Transform.VERSION &lt; 5) ? 0x00000000 : 0;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/** The y-origin of the movie clip relative to the parent clip. */
++	public static final int _y = (Transform.VERSION &lt; 5) ? 0x3f800000 : 1;
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/** The scaling factor of the movie clip in the x direction. */
++	public static final int _xscale = (Transform.VERSION &lt; 5) ? 0x40000000 : 2;
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSPush_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the action when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/** The scaling factor of the movie clip in the x direction. */
++	public static final int _yscale = (Transform.VERSION &lt; 5) ? 0x40400000 : 3;
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSPush_1&quot;&gt;values&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of values that will be pushed onto the Flash Player's Stack and used when executing actions.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/** The number of the current frame playing in the movie clip. */
++	public static final int _currentframe = (Transform.VERSION &lt; 5) ? 0x40800000
++					: 4;
+ 
+-&lt;p&gt;The FSPush action supports the full range of data types supported by Flash:&lt;/p&gt;
++	/** The total number of frames in the movie clip. */
++	public static final int _totalframes = (Transform.VERSION &lt; 5) ? 0x40a00000
++					: 5;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
+-&lt;tr&gt;&lt;th align=&quot;left&quot;&gt;Data Type&lt;/th&gt;&lt;th align=&quot;left&quot;&gt;Description&lt;/th&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Boolean&lt;/td&gt;&lt;td&gt;A boolean value, 1 (true) or 0 (false).&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Integer&lt;/td&gt;&lt;td&gt;A signed 32-bit integer, range -2,147,483,648 to 2,147,483,647.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Double&lt;/td&gt;&lt;td&gt;A double-precision (64-bit) floating-point number, range approximately +/- 1.79769313486231570E+308.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;String&lt;/td&gt;&lt;td&gt;A String. The string is encoded as using the UTF-8 encoding which is backward compatible with ASCII encoding supported in Flash 5.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Register Index&lt;/td&gt;&lt;td&gt;The number (0,..3) of one of the Flash player's internal registers.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Table Index&lt;/td&gt;&lt;td&gt;An index into a table of string literals defined using the FSTable action.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Null&lt;/td&gt;&lt;td&gt;A null value.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Void&lt;/td&gt;&lt;td&gt;A void value.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Movie Clip Property&lt;/td&gt;&lt;td&gt;A reserved number used to identify a specific property of a movie clip.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td nowrap width=&quot;20%&quot;&gt;Player Property&lt;/td&gt;&lt;td&gt;A reserved number used to identify a specific property of the Flash Player.&lt;/td&gt;&lt;/tr&gt;
+-&lt;/table&gt;
++	/** The transparency of the movie clip. */
++	public static final int _alpha = (Transform.VERSION &lt; 5) ? 0x40c00000 : 6;
+ 
+-&lt;p&gt;Movie Clip properties are used to access the attributes of the specified movie clip. To simplify using movie clip properties the values are defined as constants in the FSPush class:&lt;/p&gt;
++	/** Whether the movie clip is visible. */
++	public static final int _visible = (Transform.VERSION &lt; 5) ? 0x40e00000 : 7;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
+-&lt;tr&gt;&lt;th nowrap align=&quot;left&quot;&gt;Name&lt;/th&gt;&lt;th align=&quot;left&quot;&gt;Description&lt;/th&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_x&lt;/td&gt;&lt;td&gt;The x-coordinate of the current drawing point.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_y&lt;/td&gt;&lt;td&gt;The y-coordinate of the current drawing point.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_xscale&lt;/td&gt;&lt;td&gt;The scale of the player window in the x-axis.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_yscale&lt;/td&gt;&lt;td&gt;The scale of the player window in the y-axis.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_currentframe&lt;/td&gt;&lt;td&gt;The number of the frame currently being displayed&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_totalframes&lt;/td&gt;&lt;td&gt;The total number of frames in the current movie clip being played.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_alpha&lt;/td&gt;&lt;td&gt;Whether the player supports alpha channel transparency in colours.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_visible&lt;/td&gt;&lt;td&gt;Whether the player is currently visible.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_width&lt;/td&gt;&lt;td&gt;The width of the player, in pixels, on the screen.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_height&lt;/td&gt;&lt;td&gt;The height of the player, in pixels, on the screen.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_rotation&lt;/td&gt;&lt;td&gt;The rotation of the movie clip in degrees&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_target&lt;/td&gt;&lt;td&gt;The current target or context for actions.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_framesloaded&lt;/td&gt;&lt;td&gt;The number of frames from the movie clip that are currently loaded&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_name&lt;/td&gt;&lt;td&gt;The name of a movie clip.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_droptarget&lt;/td&gt;&lt;td&gt;Then name of the movie clip currently being dragged.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_url&lt;/td&gt;&lt;td&gt;The URL of the current movie clip being played.&lt;/td&gt;&lt;/tr&gt;
+-&lt;/table&gt;
++	/** The width of the movie clip in pixels. */
++	public static final int _width = (Transform.VERSION &lt; 5) ? 0x41000000 : 8;
+ 
+-&lt;p&gt;Player properties are used to access the attributes of the Player showing the movie clips. To simplify using player properties the values are defined as constants in the FSPush class:&lt;/p&gt;
++	/** The height of the movie clip in pixels. */
++	public static final int _height = (Transform.VERSION &lt; 5) ? 0x41100000 : 9;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
+-&lt;tr&gt;&lt;th nowrap align=&quot;left&quot;&gt;Name&lt;/th&gt;&lt;th align=&quot;left&quot;&gt;Description&lt;/th&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_quality&lt;/td&gt;&lt;td&gt;Whether the player is set to display movie clips at high quality.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_highquality&lt;/td&gt;&lt;td&gt;Whether the player is set to display movie clips at high quality.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_focusrect&lt;/td&gt;&lt;td&gt;Whether a bounding yellow rectangle is drawn around the current object (a sprite or button) has the keyboard and mouse focus.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_soundbuftime&lt;/td&gt;&lt;td&gt;The number of seconds to buffer streaming sound before playing&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_xmouse&lt;/td&gt;&lt;td&gt;The current x-coordinate of the mouse location.&lt;/td&gt;&lt;/tr&gt;
+-&lt;tr&gt;&lt;td&gt;_ymouse&lt;/td&gt;&lt;td&gt;The current y-coordinate of the mouse location.&lt;/td&gt;&lt;/tr&gt;
+-&lt;/table&gt;
++	/** The angle of rotation of the movie clip in degrees. */
++	public static final int _rotation = (Transform.VERSION &lt; 5) ? 0x41200000
++					: 10;
+ 
+-&lt;p&gt;The FSPush class maintains an array of values that will be pushed onto the stack. Any basic data types: boolean, int and double passed in the class constructors or using the add() methods are wrapped internally, in an Boolean, Integer and Double class respectively - simplifying how the class is used. Wrapper classes are only used explicitly when parsing a Flash files and manipulating the values stored in the array.&lt;/p&gt;
++	/** The path of the movie clip relative to the root movie in the Player. */
++	public static final int _target = (Transform.VERSION &lt; 5) ? 0x41300000 : 11;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++	/** The number of frames form the movie clip loaded. */
++	public static final int _framesloaded = (Transform.VERSION &lt; 5) ? 0x41400000
++					: 12;
+ 
+-&lt;p&gt;Push each of the different types value onto the stack:&lt;/p&gt;
++	/** The name of movie clip. */
++	public static final int _name = (Transform.VERSION &lt; 5) ? 0x41500000 : 13;
+ 
+-&lt;pre&gt;
+-FSPush boolean        = new FSPush(true);
+-FSPush integer        = new FSPush(123);
+-FSPush double         = new FSPush(123.0);
+-FSPush string         = new FSPush(&quot;123&quot;);
+-FSPush null           = new FSPush(new FSNull());
+-FSPush void           = new FSPush(new FSVoid());
+-FSPush registerIndex  = new FSPush(new FSRegisterIndex(0));
+-FSPush tableIndex     = new FSPush(new FSTableIndex(0));
+-FSPush movieProperty  = new FSPush(FSPush._x);
+-FSPush playerProperty = new FSPush(FSPush._xmouse);
+-&lt;/pre&gt;
++	/** The name of the movie clip currently being dragged */
++	public static final int _droptarget = (Transform.VERSION &lt; 5) ? 0x41600000
++					: 14;
+ 
+-&lt;p&gt;For efficiency a single FSPush action can push several values onto the stack in a single operation. The order in which values are added to the FSPush action is the same order in which the values are pushed onto the stack.&lt;/p&gt;
++	/** The URL from which the movie clip was loaded. */
++	public static final int _url = (Transform.VERSION &lt; 5) ? 0x41700000 : 15;
+ 
+-&lt;pre&gt;
+-FSPush push = new FSPush();
++	/** Identifies the level of aliasing being performed by the Player. */
++	public static final int _highquality = (Transform.VERSION &lt; 5) ? 0x41800000
++					: 16;
+ 
+-push.add(123);
+-push.add(123.0);
+-push.add(&quot;123&quot;);
+-&lt;/pre&gt;
++	/**
++	 * Identifies whether a yellow rectangle is drawn around a button or test
++	 * field that has the current focus.
++	 */
++	public static final int _focusrect = (Transform.VERSION &lt; 5) ? 0x41880000
++					: 17;
+ 
+-&lt;p&gt;If an array of values are added to a FSPush object then boolean, int and double values must be wrapped using the Boolean, Integer and Double classes respectively.&lt;/p&gt;
++	/**
++	 * The amount of time streaming sound is buffered by the Player before
++	 * playing.
++	 */
++	public static final int _soundbuftime = (Transform.VERSION &lt; 5) ? 0x41900000
++					: 18;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/** Identifies the level of rendering quality being performed by the Player. */
++	public static final int _quality = 19;
+ 
+-&lt;p&gt;FSPush is a class for representing the Push action of the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 4 and contained either an integer or string argument. It was extended in Flash 5 to support a number of different data types and allow more than one value to be added in a single action.&lt;/p&gt;
+- */  
+-public class FSPush extends FSActionObject
+-{
+-/** The x-origin of the movie clip relative to the parent clip.*/
+-    public static final int _x = (Transform.VERSION &lt; 5) ? 0x00000000 : 0;
+-/** The y-origin of the movie clip relative to the parent clip.*/
+-    public static final int _y = (Transform.VERSION &lt; 5) ? 0x3f800000 : 1;
+-/** The scaling factor of the movie clip in the x direction.*/
+-    public static final int _xscale = (Transform.VERSION &lt; 5) ? 0x40000000 : 2;
+-/** The scaling factor of the movie clip in the x direction.*/
+-    public static final int _yscale = (Transform.VERSION &lt; 5) ? 0x40400000 : 3;
+-/** The number of the current frame playing in the movie clip.*/
+-    public static final int _currentframe = (Transform.VERSION &lt; 5) ? 0x40800000 : 4;
+-/** The total number of frames in the movie clip.*/
+-    public static final int _totalframes = (Transform.VERSION &lt; 5) ? 0x40a00000 : 5;
+-/** The transparency of the movie clip.*/
+-    public static final int _alpha = (Transform.VERSION &lt; 5) ? 0x40c00000 : 6;
+-/** Whether the movie clip is visible.*/
+-    public static final int _visible = (Transform.VERSION &lt; 5) ? 0x40e00000 : 7;
+-/** The width of the movie clip in pixels.*/
+-    public static final int _width = (Transform.VERSION &lt; 5) ? 0x41000000 : 8;
+-/** The height of the movie clip in pixels.*/
+-    public static final int _height = (Transform.VERSION &lt; 5) ? 0x41100000 : 9;
+-/** The angle of rotation of the movie clip in degrees.*/
+-    public static final int _rotation = (Transform.VERSION &lt; 5) ? 0x41200000 :10;
+-/** The path of the movie clip relative to the root movie in the Player.*/
+-    public static final int _target = (Transform.VERSION &lt; 5) ? 0x41300000 : 11;
+-/** The number of frames form the movie clip loaded.*/
+-    public static final int _framesloaded = (Transform.VERSION &lt; 5) ? 0x41400000 : 12;
+-/** The name of movie clip.*/
+-    public static final int _name = (Transform.VERSION &lt; 5) ? 0x41500000 : 13;
+-/** The name of the movie clip currently being dragged */
+-    public static final int _droptarget = (Transform.VERSION &lt; 5) ? 0x41600000 : 14;
+-/** The URL from which the movie clip was loaded.*/
+-    public static final int _url = (Transform.VERSION &lt; 5) ? 0x41700000 : 15;
+-/** Identifies the level of aliasing being performed by the Player.*/
+-    public static final int _highquality = (Transform.VERSION &lt; 5) ? 0x41800000 : 16;
+-/** Identifies whether a yellow rectangle is drawn around a button or test field that has the current  focus.*/
+-    public static final int _focusrect = (Transform.VERSION &lt; 5) ? 0x41880000 : 17;
+-/** The amount of time streaming sound is buffered by the Player before playing.*/
+-    public static final int _soundbuftime = (Transform.VERSION &lt; 5) ? 0x41900000 : 18;
+-/** Identifies the level of rendering quality being performed by the Player.*/
+-    public static final int _quality = 19;
+-/** The current x-coordinate of the mouse pointer on the Player screen.*/
+-    public static final int _xmouse = 20;
+-/** The current y-coordinate of the mouse pointer on the Player screen.*/
+-    public static final int _ymouse = 21;
++	/** The current x-coordinate of the mouse pointer on the Player screen. */
++	public static final int _xmouse = 20;
+ 
+-    private static HashMap propertyNames = new HashMap();
+-        
+-    static {
+-        propertyNames.put(&quot;_x&quot;, new Integer(_x));
+-        propertyNames.put(&quot;_y&quot;, new Integer(_y));
+-        propertyNames.put(&quot;_xscale&quot;, new Integer(_xscale));
+-        propertyNames.put(&quot;_yscale&quot;, new Integer(_yscale));
+-        propertyNames.put(&quot;_currentframe&quot;, new Integer(_currentframe));
+-        propertyNames.put(&quot;_totalframes&quot;, new Integer(_totalframes));
+-        propertyNames.put(&quot;_alpha&quot;, new Integer(_alpha));
+-        propertyNames.put(&quot;_visible&quot;, new Integer(_visible));
+-        propertyNames.put(&quot;_width&quot;, new Integer(_width));
+-        propertyNames.put(&quot;_height&quot;, new Integer(_height));
+-        propertyNames.put(&quot;_rotation&quot;, new Integer(_rotation));
+-        propertyNames.put(&quot;_target&quot;, new Integer(_target));
+-        propertyNames.put(&quot;_framesloaded&quot;, new Integer(_framesloaded));
+-        propertyNames.put(&quot;_name&quot;, new Integer(_name));
+-        propertyNames.put(&quot;_droptarget&quot;, new Integer(_droptarget));
+-        propertyNames.put(&quot;_url&quot;, new Integer(_url));
+-        propertyNames.put(&quot;_highquality&quot;, new Integer(_highquality));
+-        propertyNames.put(&quot;_focusrect&quot;, new Integer(_focusrect));
+-        propertyNames.put(&quot;_soundbuftime&quot;, new Integer(_soundbuftime));
+-        propertyNames.put(&quot;_quality&quot;, new Integer(_quality));
+-        propertyNames.put(&quot;_xmouse&quot;, new Integer(_xmouse));
+-        propertyNames.put(&quot;_ymouse&quot;, new Integer(_ymouse));
+-    }
+-    
+-/** Translates the name of a property into the integer value used to identify the property by the Flash Player.
++	/** The current y-coordinate of the mouse pointer on the Player screen. */
++	public static final int _ymouse = 21;
+ 
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">- at param</A> propertyName a String representing the name of the property.
+<A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">- at return</A> the value of a property identifier.
+-*/
+-    public static Integer propertyWithName (String propertyName)
+-    {
+-        Integer identifier = null;
+-        
+-        if (propertyNames.containsKey(propertyName))
+-            identifier = (Integer)propertyNames.get(propertyName);
+-            
+-        return identifier;
+-    }
+-    
+-    private ArrayList values = new ArrayList();
++	private static HashMap&lt;String,Integer&gt; propertyNames = new HashMap&lt;String,Integer&gt;();
+ 
+-    /**
+-     * Construct an FSPush object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSPush(FSCoder coder)
+-    {
+-        super(Push);
+-        decode(coder);
+-    }
+-    /** Constructs an FSPush action object with no values added. */
+-    public FSPush()
+-    {
+-        super(Push);
+-    }
++	static
++	{
++		propertyNames.put(&quot;_x&quot;, new Integer(_x));
++		propertyNames.put(&quot;_y&quot;, new Integer(_y));
++		propertyNames.put(&quot;_xscale&quot;, new Integer(_xscale));
++		propertyNames.put(&quot;_yscale&quot;, new Integer(_yscale));
++		propertyNames.put(&quot;_currentframe&quot;, new Integer(_currentframe));
++		propertyNames.put(&quot;_totalframes&quot;, new Integer(_totalframes));
++		propertyNames.put(&quot;_alpha&quot;, new Integer(_alpha));
++		propertyNames.put(&quot;_visible&quot;, new Integer(_visible));
++		propertyNames.put(&quot;_width&quot;, new Integer(_width));
++		propertyNames.put(&quot;_height&quot;, new Integer(_height));
++		propertyNames.put(&quot;_rotation&quot;, new Integer(_rotation));
++		propertyNames.put(&quot;_target&quot;, new Integer(_target));
++		propertyNames.put(&quot;_framesloaded&quot;, new Integer(_framesloaded));
++		propertyNames.put(&quot;_name&quot;, new Integer(_name));
++		propertyNames.put(&quot;_droptarget&quot;, new Integer(_droptarget));
++		propertyNames.put(&quot;_url&quot;, new Integer(_url));
++		propertyNames.put(&quot;_highquality&quot;, new Integer(_highquality));
++		propertyNames.put(&quot;_focusrect&quot;, new Integer(_focusrect));
++		propertyNames.put(&quot;_soundbuftime&quot;, new Integer(_soundbuftime));
++		propertyNames.put(&quot;_quality&quot;, new Integer(_quality));
++		propertyNames.put(&quot;_xmouse&quot;, new Integer(_xmouse));
++		propertyNames.put(&quot;_ymouse&quot;, new Integer(_ymouse));
++	}
+ 
+-    /** Constructs an FSPush action that will place the specified boolean value on the stack.
++	/**
++	 * Translates the name of a property into the integer value used to identify
++	 * the property by the Flash Player.
++	 * 
++	 * @param propertyName
++	 *            a String representing the name of the property.
++	 * @return the value of a property identifier.
++	 */
++	public static Integer propertyWithName(String propertyName)
++	{
++		Integer identifier = null;
+ 
+-        @param aBoolean boolean value to push onto the stack.
+-        */
+-    public FSPush(boolean aBoolean)
+-    {
+-        super(Push);
+-        add(aBoolean);
+-    }
++		if (propertyNames.containsKey(propertyName))
++			identifier = (Integer) propertyNames.get(propertyName);
+ 
+-    /** Constructs an FSPush action that will place the specified integer on the stack.
++		return identifier;
++	}
+ 
+-        @param aNumber integer value to push onto the stack.
+-        */
+-    public FSPush(int aNumber)
+-    {
+-        super(Push);
+-        add(aNumber);
+-    }
++	private ArrayList&lt;Object&gt; values = new ArrayList&lt;Object&gt;();
+ 
+-    /** Constructs an FSPush action that will place the specified double value on the stack.
++	/**
++	 * Construct an FSPush object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSPush(FSCoder coder)
++	{
++		super(Push);
++		decode(coder);
++	}
+ 
+-        @param aNumber double-precision floating-point value to push onto the stack.
+-        */
+-    public FSPush(double aNumber)
+-    {
+-        super(Push);
+-        add(aNumber);
+-    }
++	/** 
++	 * Constructs an FSPush action object with no values added. 
++	 */
++	public FSPush()
++	{
++		super(Push);
++	}
+ 
+-    /** Constructs an FSPush action that will place a null value on the stack.
++	/**
++	 * Constructs an FSPush action that will place the specified boolean value
++	 * on the stack.
++	 * 
++	 * @param aBoolean
++	 *            boolean value to push onto the stack.
++	 */
++	public FSPush(boolean aBoolean)
++	{
++		super(Push);
++		add(aBoolean);
++	}
+ 
+-        @param nullValue an instance of the simple FSNull class.
+-        */
+-    public FSPush(FSNull nullValue)
+-    {
+-        super(Push);
+-        add(nullValue);
+-    }
++	/**
++	 * Constructs an FSPush action that will place the specified integer on the
++	 * stack.
++	 * 
++	 * @param aNumber
++	 *            integer value to push onto the stack.
++	 */
++	public FSPush(int aNumber)
++	{
++		super(Push);
++		add(aNumber);
++	}
+ 
+-    /** Constructs an FSPush action that will place a void value on the stack.
++	/**
++	 * Constructs an FSPush action that will place the specified double value on
++	 * the stack.
++	 * 
++	 * @param aNumber
++	 *            double-precision floating-point value to push onto the stack.
++	 */
++	public FSPush(double aNumber)
++	{
++		super(Push);
++		add(aNumber);
++	}
+ 
+-        @param voidValue an instance of the simple FSVoid class.
+-        */    
+-    public FSPush(FSVoid voidValue)
+-    {
+-        super(Push);
+-        add(voidValue);
+-    }
++	/**
++	 * Constructs an FSPush action that will place a null value on the stack.
++	 * 
++	 * @param nullValue
++	 *            an instance of the simple FSNull class.
++	 */
++	public FSPush(FSNull nullValue)
++	{
++		super(Push);
++		add(nullValue);
++	}
+ 
+-    /** Constructs an FSPush action that will place the specified value on the stack.
++	/**
++	 * Constructs an FSPush action that will place a void value on the stack.
++	 * 
++	 * @param voidValue
++	 *            an instance of the simple FSVoid class.
++	 */
++	public FSPush(FSVoid voidValue)
++	{
++		super(Push);
++		add(voidValue);
++	}
+ 
+-        @param aString string literal value to push onto the stack.
+-        */    
+-    public FSPush(String aString)
+-    {
+-        super(Push);
+-        add(aString);
+-    }
++	/**
++	 * Constructs an FSPush action that will place the specified value on the
++	 * stack.
++	 * 
++	 * @param aString
++	 *            string literal value to push onto the stack.
++	 */
++	public FSPush(String aString)
++	{
++		super(Push);
++		add(aString);
++	}
+ 
+-    /** Constructs an FSPush action that reference a variable in a table.
++	/**
++	 * Constructs an FSPush action that reference a variable in a table.
++	 * 
++	 * @param anIndex
++	 *            an index into a literal table to push onto the stack.
++	 */
++	public FSPush(FSTableIndex anIndex)
++	{
++		super(Push);
++		add(anIndex);
++	}
+ 
+-        @param anIndex an index into a literal table to push onto the stack.
+-        */    
+-    public FSPush(FSTableIndex anIndex)
+-    {
+-        super(Push);
+-        add(anIndex);
+-    }
++	/**
++	 * Constructs an FSPush action that references one of the players internal
++	 * registers.
++	 * 
++	 * @param anIndex
++	 *            a reference to one of the Flash Player's internal registers to
++	 *            push onto the stack.
++	 */
++	public FSPush(FSRegisterIndex anIndex)
++	{
++		super(Push);
++		add(anIndex);
++	}
+ 
+-    /** Constructs an FSPush action that references one of the players internal registers.
++	/**
++	 * Constructs an FSPush action that will push the values in the array onto
++	 * the stack.
++	 * 
++	 * @param anArray
++	 *            an array of values to be pushed onto the stack. The values in
++	 *            the array must be one of the following classes: Boolean,
++	 *            Integer, Double, String, FSRegisterIndex or FSTableIndex.
++	 */
++	public FSPush(ArrayList&lt;Object&gt; anArray)
++	{
++		super(Push);
++		setValues(anArray);
++	}
+ 
+-        @param anIndex a reference to one of the Flash Player's internal registers to push onto the stack.
+-        */
+-    public FSPush(FSRegisterIndex anIndex)
+-    {
+-        super(Push);
+-        add(anIndex);
+-    }
++	/**
++	 * Constructs an FSPush object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSPush object.
++	 */
++	public FSPush(FSPush obj)
++	{
++		super(obj);
+ 
+-    /** Constructs an FSPush action that will push the values in the array onto the stack.
++		values = new ArrayList&lt;Object&gt;(obj.values.size());
+ 
+-        @param anArray an array of values to be pushed onto the stack. The values in the array must be one of the following classes: Boolean, Integer, Double, String, FSRegisterIndex or FSTableIndex.
+-        */    
+-    public FSPush(ArrayList anArray)
+-    {
+-        super(Push);
+-        setValues(anArray);
+-    }
+-    /**
+-     * Constructs an FSPush object by copying values from an existing object.
+-     *
+-     * @param obj an FSPush object.
+-     */
+-    public FSPush(FSPush obj)
+-    {
+-        super(obj);
++		for (Iterator&lt;Object&gt; i = obj.values.iterator(); i.hasNext();)
++		{
++			Object value = i.next();
+ 
+-        values = new ArrayList(obj.values.size());
++			if (value instanceof Boolean)
++				values.add(new Boolean(((Boolean) value).booleanValue()));
++			else if (value instanceof Integer)
++				values.add(new Integer(((Integer) value).intValue()));
++			else if (value instanceof Float)
++				values.add(new Float(((Float) value).floatValue()));
++			else if (value instanceof Double)
++				values.add(new Double(((Double) value).doubleValue()));
++			else if (value instanceof String)
++				values.add(new String((String) value));
++			else if (value instanceof FSProperty)
++				values.add(new FSProperty((FSProperty) value));
++			else if (value instanceof FSNull)
++				values.add(FSNull.getInstance());
++			else if (value instanceof FSVoid)
++				values.add(FSVoid.getInstance());
++			else if (value instanceof FSTableIndex)
++				values.add(new FSTableIndex((FSTableIndex)value));
++			else if (value instanceof FSRegisterIndex)
++				values.add(new FSRegisterIndex((FSRegisterIndex)value));
++		}
++	}
+ 
+-        for (Iterator i = obj.values.iterator(); i.hasNext();)
+-        {
+-            Object value = i.next();
+-            
+-            if (value instanceof Boolean)
+-                values.add(new Boolean(((Boolean)value).booleanValue()));
+-            else if (value instanceof Integer)
+-                values.add(new Integer(((Integer)value).intValue()));
+-            else if (value instanceof Float)
+-                values.add(new Float(((Float)value).floatValue()));
+-            else if (value instanceof Double)
+-                values.add(new Double(((Double)value).doubleValue()));
+-            else if (value instanceof String)
+-                values.add(new String((String)value));
+-            else if (value instanceof FSProperty)
+-                values.add(new FSProperty((FSProperty)value));
+-            else if (value instanceof FSNull)
+-                values.add(((FSNull)value).clone());
+-            else if (value instanceof FSVoid)
+-                values.add(((FSVoid)value).clone());
+-            else if (value instanceof FSTableIndex)
+-                values.add(((FSTableIndex)value).clone());
+-            else if (value instanceof FSRegisterIndex)
+-                values.add(((FSRegisterIndex)value).clone());
+-        }
+-    }    
++	/**
++	 * Adds a boolean value to the array of values that will be pushed onto the
++	 * stack.
++	 * 
++	 * @param value
++	 *            a boolean value.
++	 */
++	public void add(boolean value)
++	{
++		values.add(new Boolean(value));
++	}
+ 
+-    /** Adds a boolean value to the array of values that will be pushed onto the stack.
++	/**
++	 * Adds an integer value to the array of values that will be pushed onto the
++	 * stack.
++	 * 
++	 * @param value
++	 *            an integer (int) value.
++	 */
++	public void add(int value)
++	{
++		values.add(new Integer(value));
++	}
+ 
+-        @param aBool a boolean value.
+-        */
+-    public void add(boolean aBool)
+-    {
+-        values.add(new Boolean(aBool));
+-    } 
++	/**
++	 * Adds a double value to the array of values that will be pushed onto the
++	 * stack.
++	 * 
++	 * @param value
++	 *            a double-precision floating-point value.
++	 */
++	public void add(double value)
++	{
++		values.add(new Double(value));
++	}
+ 
+-    /** Adds an integer value to the array of values that will be pushed onto the stack.
++	/**
++	 * Adds a null value to the array of values that will be pushed onto the
++	 * stack.
++	 * 
++	 * @param value
++	 *            a lightweight FSNull object.
++	 * 
++	 * @throws NullPointerException is the argument is null.
++	 */
++	public void add(FSNull value)
++	{
++		if (value == null) {
++			throw new NullPointerException(&quot;Argument must be an instance of FSNull and not null.&quot;);
++		}
++		values.add(value);
++	}
+ 
+-        @param anInt an integer (int) value.
+-        */
+-    public void add(int anInt)
+-    {
+-        values.add(new Integer(anInt));
+-    } 
++	/**
++	 * Adds a void value to the array of values that will be pushed onto the
++	 * stack.
++	 * 
++	 * @param value
++	 *            a lightweight FSVoid object.
++	 * 
++	 * @throws NullPointerException is the argument is null.
++	 */
++	public void add(FSVoid value)
++	{
++		if (value == null) {
++			throw new NullPointerException(&quot;Argument must be an instance of FSVoid and not null.&quot;);
++		}
++		values.add(value);
++	}
+ 
+-    /** Adds a double value to the array of values that will be pushed onto the stack.
++	/**
++	 * Adds a String to the array of values that will be pushed onto the stack.
++	 * 
++	 * @param value
++	 *            a String.
++	 * 
++	 * @throws NullPointerException is the argument is null.
++	 */
++	public void add(String value)
++	{
++		if (value == null) {
++			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
++		}
++		values.add(value);
++	}
+ 
+-        @param aDouble a double-precision floating-point value.
+-        */
+-    public void add(double aDouble)
+-    {
+-        values.add(new Double(aDouble));
+-    } 
++	/**
++	 * Adds an FSTableIndex to the array of values that will be pushed onto the
++	 * stack.
++	 * 
++	 * @param value
++	 *            a FSTableIndex referencing an entry in a table of literals.
++	 * 
++	 * @throws NullPointerException is the argument is null.
++	 */
++	public void add(FSTableIndex value)
++	{
++		if (value == null) {
++			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
++		}
++		values.add(value);
++	}
+ 
+-    /** Adds a null value to the array of values that will be pushed onto the stack.
++	/**
++	 * Adds an FSRegisterIndex to the array of values that will be pushed onto
++	 * the stack.
++	 * 
++	 * @param value
++	 *            a FSRegisterIndex referencing one of the Flash Player's
++	 *            internal registers.
++	 * 
++	 * @throws NullPointerException is the argument is null.
++	 */
++	public void add(FSRegisterIndex value)
++	{
++		if (value == null) {
++			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
++		}
++		values.add(value);
++	}
+ 
+-        @param nullValue a lightweight FSNull object.
+-        */
+-    public void add(FSNull nullValue)
+-    {
+-        values.add(nullValue);
+-    } 
++	/**
++	 * Gets the array of values.
++	 * 
++	 * @return the array of values that will be pushed onto the stack.
++	 */
++	public ArrayList&lt;Object&gt; getValues()
++	{
++		return values;
++	}
+ 
+-    /** Adds a void value to the array of values that will be pushed onto the stack.
++	/**
++	 * Sets the array of values.
++	 * 
++	 * @param anArray
++	 *            replaces the existing array of value with anArray. The values
++	 *            in the array must be one of the following classes: Boolean,
++	 *            Integer, Double, String, FSNull, FSVoid, FSRegisterIndex or
++	 *            FSTableIndex.
++	 *            
++	 * @throws NullPointerException if the array is null.
++	 */
++	public void setValues(ArrayList&lt;Object&gt; anArray)
++	{
++		if (anArray == null) {
++			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
++		}
++		values = anArray;
++	}
+ 
+-        @param voidValue a lightweight FSVoid object.
+-        */
+-    public void add(FSVoid voidValue)
+-    {
+-        values.add(voidValue);
+-    } 
++	public Object clone()
++	{
++		FSPush anObject = (FSPush) super.clone();
+ 
+-    /** Adds a String to the array of values that will be pushed onto the stack.
++		anObject.values = new ArrayList&lt;Object&gt;(values.size());
+ 
+-        @param aString a String.
+-        */
+-    public void add(String aString)
+-    {
+-        values.add(aString);
+-    } 
++		for (Iterator&lt;Object&gt; i = values.iterator(); i.hasNext();)
++		{
++			Object obj = i.next();
+ 
+-    /** Adds an FSTableIndex to the array of values that will be pushed onto the stack.
++			if (obj instanceof Boolean)
++				anObject.values
++								.add(new Boolean(((Boolean) obj).booleanValue()));
++			else if (obj instanceof Integer)
++				anObject.values.add(new Integer(((Integer) obj).intValue()));
++			else if (obj instanceof Float)
++				anObject.values.add(new Float(((Float) obj).floatValue()));
++			else if (obj instanceof Double)
++				anObject.values.add(new Double(((Double) obj).doubleValue()));
++			else if (obj instanceof String)
++				anObject.values.add(new String((String) obj));
++			else if (obj instanceof FSProperty)
++				anObject.values.add(new FSProperty((FSProperty) obj));
++			else if (obj instanceof FSNull)
++				anObject.values.add(FSNull.getInstance());
++			else if (obj instanceof FSVoid)
++				anObject.values.add(FSVoid.getInstance());
++			else if (obj instanceof FSTableIndex)
++				anObject.values.add(new FSTableIndex((FSTableIndex)obj));
++			else if (obj instanceof FSRegisterIndex)
++				anObject.values.add(new FSRegisterIndex((FSRegisterIndex)obj));
++		}
+ 
+-        @param anIndex a FSTableIndex referencing an entry in a table of literals.
+-        */
+-    public void add(FSTableIndex anIndex)
+-    {
+-        values.add(anIndex);
+-    } 
++		return anObject;
++	}
+ 
+-    /** Adds an FSRegisterIndex to the array of values that will be pushed onto the stack.
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-        @param anIndex a FSRegisterIndex referencing one of the Flash Player's internal registers.
+-        */
+-    public void add(FSRegisterIndex anIndex)
+-    {
+-        values.add(anIndex);
+-    } 
++		if (super.equals(anObject))
++			result = values.equals(((FSPush) anObject).values);
+ 
+-    /** Gets the array of values.
++		return result;
++	}
+ 
+-        @return the array of values that will be pushed onto the stack.
+-        */
+-    public ArrayList getValues() { return values; }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Sets the array of values.
++		buffer.append(&quot;FSPush: { &quot;);
++		buffer.append(&quot;values = array[&quot;).append(values.size()).append(&quot;]; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @param anArray replaces the existing array of value with anArray. The values in the array must be one of the following classes: Boolean, Integer, Double, String, FSNull, FSVoid, FSRegisterIndex or FSTableIndex.
+-        */
+-    public void setValues(ArrayList anArray)
+-    {
+-        values = anArray;
+-    }
++		return buffer.toString();
++	}
+ 
+-    public Object clone()
+-    {
+-        FSPush anObject = (FSPush)super.clone();
+-        
+-        anObject.values = new ArrayList(values.size());
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-        for (Iterator i = values.iterator(); i.hasNext();)
+-        {
+-            Object obj = i.next();
+-            
+-            if (obj instanceof Boolean)
+-                anObject.values.add(new Boolean(((Boolean)obj).booleanValue()));
+-            else if (obj instanceof Integer)
+-                anObject.values.add(new Integer(((Integer)obj).intValue()));
+-            else if (obj instanceof Float)
+-                anObject.values.add(new Float(((Float)obj).floatValue()));
+-            else if (obj instanceof Double)
+-                anObject.values.add(new Double(((Double)obj).doubleValue()));
+-            else if (obj instanceof String)
+-                anObject.values.add(new String((String)obj));
+-            else if (obj instanceof FSProperty)
+-                anObject.values.add(new FSProperty((FSProperty)obj));
+-            else if (obj instanceof FSNull)
+-                anObject.values.add(((FSNull)obj).clone());
+-            else if (obj instanceof FSVoid)
+-                anObject.values.add(((FSVoid)obj).clone());
+-            else if (obj instanceof FSTableIndex)
+-                anObject.values.add(((FSTableIndex)obj).clone());
+-            else if (obj instanceof FSRegisterIndex)
+-                anObject.values.add(((FSRegisterIndex)obj).clone());
+-        }
++		for (Iterator&lt;Object&gt; i = values.iterator(); i.hasNext();)
++		{
++			Object anObject = i.next();
+ 
+-        return anObject;
+-    }
++			if (anObject instanceof Boolean)
++				length += 2;
++			else if (anObject instanceof FSProperty)
++				length += 5;
++			else if (anObject instanceof Integer)
++				length += 5;
++			else if (anObject instanceof Double)
++				length += 9;
++			else if (anObject instanceof String)
++				length += 1 + FSCoder.strlen((String) anObject, true);
++			else if (anObject instanceof FSNull)
++				length += 1;
++			else if (anObject instanceof FSVoid)
++				length += 1;
++			else if (anObject instanceof FSTableIndex)
++			{
++				if (((FSTableIndex) anObject).getIndex() &lt; 256)
++					length += 2;
++				else
++					length += 3;
++			} else if (anObject instanceof FSRegisterIndex)
++				length += 2;
++		}
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-            result = values.equals(((FSPush)anObject).values);
+-        
+-        return result;
+-    }
++		return length;
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;values&quot;, values, depth);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
+ 
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-        
+-        for (Iterator i=values.iterator(); i.hasNext();)
+-        {
+-            Object anObject = i.next();
+-            
+-            if (anObject instanceof Boolean)
+-                length += 2;
+-            else if (anObject instanceof FSProperty)
+-                length += 5;
+-            else if (anObject instanceof Integer)
+-                length += 5;
+-            else if (anObject instanceof Double)
+-                length += 9;
+-            else if (anObject instanceof String)
+-                length += 1 + coder.strlen((String)anObject, true);
+-            else if (anObject instanceof FSNull)
+-                length += 1;
+-            else if (anObject instanceof FSVoid)
+-                length += 1;
+-            else if (anObject instanceof FSTableIndex)
+-            {
+-                if (((FSTableIndex)anObject).getIndex() &lt; 256)
+-                    length += 2;
+-                else
+-                    length += 3;
+-            }
+-            else if (anObject instanceof FSRegisterIndex)
+-                length += 2;
+-        }
++		for (Iterator&lt;Object&gt; i = values.iterator(); i.hasNext();)
++		{
++			Object anObject = i.next();
+ 
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
++			if (anObject instanceof Boolean)
++			{
++				coder.writeWord(5, 1);
++				coder.writeWord(((Boolean) anObject).booleanValue() ? 1 : 0, 1);
++			} else if (anObject instanceof Integer)
++			{
++				coder.writeWord(7, 1);
++				coder.writeWord(((Integer) anObject).intValue(), 4);
++			} else if (anObject instanceof FSProperty)
++			{
++				coder.writeWord(1, 1);
++				coder.writeWord(((FSProperty) anObject).getValue(), 4);
++			} else if (anObject instanceof Double)
++			{
++				coder.writeWord(6, 1);
++				coder.writeDouble(((Double) anObject).doubleValue());
++			} else if (anObject instanceof String)
++			{
++				coder.writeWord(0, 1);
++				coder.writeString((String) anObject);
++				coder.writeWord(0, 1);
++			} else if (anObject instanceof FSNull)
++			{
++				coder.writeWord(2, 1);
++			} else if (anObject instanceof FSVoid)
++			{
++				coder.writeWord(3, 1);
++			} else if (anObject instanceof FSTableIndex)
++			{
++				if (((FSTableIndex) anObject).getIndex() &lt; 256)
++				{
++					coder.writeWord(8, 1);
++					coder.writeWord(((FSTableIndex) anObject).getIndex(), 1);
++				} else
++				{
++					coder.writeWord(9, 1);
++					coder.writeWord(((FSTableIndex) anObject).getIndex(), 2);
++				}
++			} else if (anObject instanceof FSRegisterIndex)
++			{
++				coder.writeWord(4, 1);
++				coder.writeWord(((FSRegisterIndex) anObject).getIndex(), 1);
++			}
++		}
++	}
+ 
+-        for (Iterator i=values.iterator(); i.hasNext();)
+-        {
+-            Object anObject = i.next();
+-            
+-            if (anObject instanceof Boolean)
+-            {
+-                coder.writeWord(5, 1);
+-                coder.writeWord(((Boolean)anObject).booleanValue() ? 1 : 0, 1);
+-            }
+-            else if (anObject instanceof Integer)
+-            {
+-                coder.writeWord(7, 1);
+-                coder.writeWord(((Integer)anObject).intValue(), 4);
+-            }
+-            else if (anObject instanceof FSProperty)
+-            {
+-                coder.writeWord(1, 1);
+-                coder.writeWord(((FSProperty)anObject).getValue(), 4);
+-            }
+-            else if (anObject instanceof Double)
+-            {
+-                coder.writeWord(6, 1);
+-                coder.writeDouble(((Double)anObject).doubleValue());
+-            }
+-            else if (anObject instanceof String)
+-            {               
+-                coder.writeWord(0, 1);
+-                coder.writeString((String)anObject);
+-                coder.writeWord(0, 1);
+-            }
+-            else if (anObject instanceof FSNull)
+-            {
+-                coder.writeWord(2, 1);
+-            }
+-            else if (anObject instanceof FSVoid)
+-            {
+-                coder.writeWord(3, 1);
+-            }
+-            else if (anObject instanceof FSTableIndex)
+-            {
+-                if (((FSTableIndex)anObject).getIndex() &lt; 256)
+-                {
+-                    coder.writeWord(8, 1);
+-                    coder.writeWord(((FSTableIndex)anObject).getIndex(), 1);
+-                }
+-                else
+-                {
+-                    coder.writeWord(9, 1);
+-                    coder.writeWord(((FSTableIndex)anObject).getIndex(), 2);
+-                }
+-            }
+-            else if (anObject instanceof FSRegisterIndex)
+-            {
+-                coder.writeWord(4, 1);
+-                coder.writeWord(((FSRegisterIndex)anObject).getIndex(), 1);
+-            }
+-        }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
+ 
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        
+-        int valuesLength = length;
++		int valuesLength = length;
+ 
+-        while (valuesLength &gt; 0)
+-        {
+-            int dataType = coder.scanWord(1, false);
+-            
+-            coder.adjustPointer(8);
+-            
+-            switch (dataType)
+-            {
+-                case 0:
+-                    int start = coder.getPointer();
+-                    int strlen = 0;
+-                    
+-                    for (strlen=0; coder.scanWord(1, false) != 0; coder.adjustPointer(8), strlen++);
+-                    
+-                    coder.setPointer(start);
+-                    values.add(coder.readString(strlen));
+-                    coder.adjustPointer(8);
+-                    valuesLength -= strlen + 2;
+-                    break;
+-                case 1: // Pre version 5 property
+-                    int propertyValue = coder.readWord(4, false);
+-                    values.add(new FSProperty(propertyValue));
+-                    valuesLength -= 5;
+-                    break;
+-                case 2:
+-                    values.add(FSNull.getInstance());
+-                    valuesLength -= 1;
+-                    break;
+-                case 3:
+-                    values.add(FSVoid.getInstance());
+-                    valuesLength -= 1;
+-                    break;
+-                case 4:
+-                    int registerIndex = coder.readWord(1, false);
+-                    values.add(new FSRegisterIndex(registerIndex));
+-                    valuesLength -= 2;
+-                    break;
+-                case 5:
+-                    boolean boolValue = coder.readWord(1, false) != 0 ? true : false;
+-                    values.add(new Boolean(boolValue));
+-                    valuesLength -= 2;
+-                    break;
+-                case 6:
+-                    double doubleValue = coder.readDouble();
+-                    values.add(new Double(doubleValue));
+-                    valuesLength -= 9;
+-                    break;
+-                case 7:
+-                    int intValue = coder.readWord(4, false);
+-                    values.add(new Integer(intValue));
+-                    valuesLength -= 5;
+-                    break;
+-                case 8:
+-                case 9:
+-                    int tableIndex = coder.readWord(dataType == 8 ? 1 : 2, false);
+-                    values.add(new FSTableIndex(tableIndex));
+-                    valuesLength -= (dataType == 8) ? 2 : 3;
+-                    break;
+-            }
+-        }
++		while (valuesLength &gt; 0)
++		{
++			int dataType = coder.scanWord(1, false);
+ 
+-        coder.endObject(name());
+-    }
++			coder.adjustPointer(8);
++
++			switch (dataType)
++			{
++				case 0:
++					int start = coder.getPointer();
++					int strlen = 0;
++
++					for (strlen = 0; coder.scanWord(1, false) != 0; coder.adjustPointer(8), strlen++)
++						;
++
++					coder.setPointer(start);
++					values.add(coder.readString(strlen));
++					coder.adjustPointer(8);
++					valuesLength -= strlen + 2;
++					break;
++				case 1: // Pre version 5 property
++					values.add(new FSProperty(coder.readWord(4, false)));
++					valuesLength -= 5;
++					break;
++				case 2:
++					values.add(FSNull.getInstance());
++					valuesLength -= 1;
++					break;
++				case 3:
++					values.add(FSVoid.getInstance());
++					valuesLength -= 1;
++					break;
++				case 4:
++					values.add(new FSRegisterIndex(coder.readByte()));
++					valuesLength -= 2;
++					break;
++				case 5:
++					values.add(new Boolean(coder.readByte() != 0));
++					valuesLength -= 2;
++					break;
++				case 6:
++					values.add(new Double(coder.readDouble()));
++					valuesLength -= 9;
++					break;
++				case 7:
++					values.add(new Integer(coder.readWord(4, false)));
++					valuesLength -= 5;
++					break;
++				case 8:
++					values.add(new FSTableIndex(coder.readWord(1, false)));
++					valuesLength -= 2;
++					break;
++				case 9:
++					values.add(new FSTableIndex(coder.readWord(2, false)));
++					valuesLength -= 3;
++					break;
++			}
++		}
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000306.html">[Transform-svn] r370 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000308.html">[Transform-svn] r372 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#307">[ date ]</a>
+              <a href="thread.html#307">[ thread ]</a>
+              <a href="subject.html#307">[ subject ]</a>
+              <a href="author.html#307">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

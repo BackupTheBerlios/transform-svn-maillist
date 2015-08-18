@@ -1,0 +1,802 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r317 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r317%20-%20trunk/doc/releases&In-Reply-To=%3C200803011702.m21H2g0q010680%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000252.html">
+   <LINK REL="Next"  HREF="000254.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r317 - trunk/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r317%20-%20trunk/doc/releases&In-Reply-To=%3C200803011702.m21H2g0q010680%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r317 - trunk/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Mar  1 18:02:42 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000252.html">[Transform-svn] r316 - trunk
+</A></li>
+        <LI>Next message: <A HREF="000254.html">[Transform-svn] r318 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#253">[ date ]</a>
+              <a href="thread.html#253">[ thread ]</a>
+              <a href="subject.html#253">[ subject ]</a>
+              <a href="author.html#253">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-01 18:02:37 +0100 (Sat, 01 Mar 2008)
+New Revision: 317
+
+Added:
+   trunk/doc/releases/transform-2.1.0.txt
+   trunk/doc/releases/transform-2.2.1.txt
+   trunk/doc/releases/transform-pre-2.3.0.txt
+Removed:
+   trunk/doc/releases/transform-2.1.txt
+   trunk/doc/releases/transform-pre-2.1.6.txt
+   trunk/doc/releases/transform-pre-2.2.0.txt
+Log:
+Updated release notes.
+
+Copied: trunk/doc/releases/transform-2.1.0.txt (from rev 298, trunk/doc/releases/transform-2.1.txt)
+
+Deleted: trunk/doc/releases/transform-2.1.txt
+===================================================================
+--- trunk/doc/releases/transform-2.1.txt	2008-03-01 17:01:27 UTC (rev 316)
++++ trunk/doc/releases/transform-2.1.txt	2008-03-01 17:02:37 UTC (rev 317)
+@@ -1,263 +0,0 @@
+-------------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.1.
+-------------------------------------------------------------
+-
+-This release brings forward a lot of changes discussed in the roadmap for 
+-Version 3.0. The two most important ones are:
+-
+-Transform Utilities classes are included in the package structure.
+-Lazy decoding of actions and shapes which brings huge performance gains.
+-
+-Other changes are mostly administrative, cleaning up code and generally 
+-resolving minor technical issues and improving support and use of TestNG for 
+-testing and verification.
+-
+-The project is also open to code contributed by other developers. A new 
+-package transform.contrib is now included in the source tree for code not 
+-covered by Flagstone's copyright. This package is open for any code which maybe 
+-useful for developers - as long as it is compatible with the BSD licence.
+-
+-Bug Fixes          
+-    FSPush: FSProperty objects are cloned correctly.     
+-    FSTextConstructor handles file names in upper case.     
+- 
+-New Classes 
+-    FSCharacterTable providing character sets for FSTextConstructor     
+-    FSCoderException to handle and report encoding or decoding errors.     
+-
+-Class Changes   
+-    FSMovieTest: Added methods to benchmark code performance.     
+-    FSTransformObject: methods used to encode/decode classes are public.     
+-    Added copy constructors on all classes.     
+-    Removed redundant exception declarations.
+-    Added the constructor public FSTextConstructor(int, Font).
+-    FSTextConstructor: added reset method.
+-    FSTextConstructor: added willDisplay method.
+-    Tidied up FSCoder class and deprecated FSCodec.
+-    TransformUtil is deprecated.
+-    Deprecated the FSMovieListener interface.
+-
+-Internal Class Changes     
+-    Canonical objects are now used.     
+-    Added lazy decoding of shapes and actions.     
+-    Improved decoding of JPEG image data.     
+- 
+-Package Changes      
+-    Merged Transform and Transform Utilities.     
+-    Added a package for contrubuted code.     
+- 
+- 
+--------------
+-  Bug Fixes  
+--------------
+-
+-1. FSPush: FSProperty objects are cloned correctly.  
+-
+-FSProperty objects are now copied into the cloned array. Previously the 
+-cloned array &quot;dropped&quot; any FSPropert objects. 
+-
+-2. FSTextConstructor handles file names in upper case.  
+-
+-File names in upper case are now handled - this makes using TrueType files 
+-from Windows systems much easier.
+-
+-
+----------------
+-  New Classes  
+----------------
+-
+-1. FSCharacterTable providing character sets for FSTextConstructor  
+-
+-The willDisplay() method on FSTextConstructor (see below) is used to 
+-define the characters that will be encoded in a font. The FSCharacterTable 
+-class provided arrays of characters that can be used with the willDisplay
+-method. Different character sets are provided for ISO 8859-1 as well as 
+-characters for the main European languages. 
+-
+-2. FSCoderException to handle and report encoding or decoding errors.  
+-
+-Added a new exception class, FSCoderException to report when underflow or
+-overflow errors occur when encoding or decoding objects. Previously only the 
+-more general IOException was reported. FSCoderException contains information on 
+-the location of the data structure in the file that caused the error making 
+-diagnosis much easier.
+-
+------------------
+-  Class Changes  
+------------------
+-
+-1. FSMovieTest: Added methods to benchmark code performance.  
+-
+-Updated FSMovieTest.java to record the time taken to decode and encode
+-Flash files. TestNG scripts for running the tests were added to the directory
+-test\benchmarks. The benchmark tests use Flash files stored in the directories
+-text\data\movies\swf&lt;x&gt;
+-
+-The benchmarks measure the time taken to decode or encode a given Flash file
+-100 times and are best suited to measure relative improvements when optimizing 
+-the code in the Transform classes.
+-
+-2. FSTransformObject: methods used to encode/decode classes are public.  
+-
+-The methods used to encode and decode objects:
+-
+-    int length(FSCoder)
+-    void decode(FSCoder)
+-    void encode(FSCoder)
+-
+-
+-along with the constructor for each class that initialised an object with
+-binary data decoded from an FSCoder object are all &quot;upgraded&quot; to public to 
+-support testing with TestNG.
+-
+-3. Added copy constructors on all classes.  
+-
+-All classes now have copy constructors to complement the clone()
+-method.
+-
+-4. Removed redundant exception declarations.  
+-
+-Removed redundant exceptions declarations from method signatures:
+-FileNotFoundException is covered by IOException. Applies to FSMovie,
+-FSSoundConstructor, FSImageConstructor. This change is simply aesthetic all the 
+-removed exceptions are subclasses of IOException.
+-
+-5. Added the constructor public FSTextConstructor(int, Font).  
+-
+-FSTextConstructor had a single constructor FSTextConstructor(int, String)
+-which was used to pass names of files and names of fonts. This new constructor
+-was added to clearly differentiate fonts from files. Existing code is unaffected
+-and will continue to operate in all future releases however use of this new
+-method is encouraged when using AWT font definitions.
+-
+-6. FSTextConstructor: added reset method.  
+-
+-Added a reset(int) method to allow FSTextConstructor objects to be reused 
+-when generating objects for more than one Flash file. The reset method clears
+-the internal table used to track the order in which characters are used. This 
+-allows the same FSTextConstructor object to be used to generate multiple font
+-definitions. This is particularly useful when using AWT based fonts where the 
+-time taken to decode the font definitions is relatively large.
+-
+-7. FSTextConstructor: added willDisplay method.  
+-
+-Added the method, willDisplay(char[]) to allow sets of characters to be 
+-defined before creating any text objects.
+-
+-This solves the bug where characters were encoded in the order they were used 
+-but not in ascending order of character code. This also simplifies using 
+-FSTextConstructor class where previously text objects had to be defined before 
+-the font definition was created.
+-
+-A corresponding canDisplay(char[]) method was added to verify that a given
+-font can display all of the characters in a given set.
+-
+-8. Tidied up FSCoder class and deprecated FSCodec.  
+-
+-Tidied up the FSCoder class, making all methods more reliable and merging in
+-functionality from Transform Utilities FSCodec. All decoding and encoding of 
+-data is now performed using FSCoder. FSCodec is deprecated.
+-
+-9. TransformUtil is now deprecated.  
+-
+-with the merging of the Transform and Transform Utilities packages the 
+-class TransformUtil is no longer required to provide basic version information
+-and is now deprecated.
+-
+-10. Deprecated the FSMovieListener interface.  
+-
+-Deprecated the FSMovieListener interface, FSMovieEvent class and the methods 
+-on the FSMovie class that used them.
+-
+-The FSMovieListener interface was originally used to support Describe. When 
+-a movie was parsed the values decoded were reported to a FSMovieListener. This 
+-allowed Describe to build a tree of objects so the contents of a Flash file 
+-could be browsed.
+-
+-The interface also allowed errors to be reported so a file could be decoded 
+-even if part of it was corrupted - some third-party tools are known to contain 
+-bugs that generate errors. The Flash Player is robust when encountering this 
+-type of error so the Movie Listener interface was an attempt to introduce 
+-robustness into Transform.
+-
+-In practice the value of the interface was limited. Files containing errors
+- which would cause errors were relatively unusual and when an error was detected 
+- it was not obvious that recovering form the error was useful.
+-
+-
+---------------------------
+-  Internal Class Changes  
+---------------------------
+-
+-1. Canonical objects are now used.  
+-
+-Added canonical version of objects that can be safely shared since they 
+-contain no editable attributes. The classes affected are FSNull, FSVoid, 
+-FSAction, FSCall, FSShowFrame and FSPathsArePostscript. The most significant is 
+-FSAction which specifies byte-codes for stack-based actionsand so will boost 
+-performance when decoding files. The numbers of objects involved for other
+-classes are much smaller in comparison but are included for completeness.
+-
+-2. Added lazy decoding of shapes and actions.  
+-
+-Added lazy decoding of actions to FSButtonEvent, FSClipEvent, FSDoAction, 
+-FSDefineButton and FSInitialize. The encoded actions will be stored in binary
+-form in these objects until accessed using the getActions() or addAction()
+-methods. When either of these methods are used the encoded actions will be 
+-decoded into an array of FSAction objects. This reduces the number of objects
+-created when a file is decoded so that only the actions accessed are decoded.
+-
+-Similarly for classes that define shapes. The array of FSLine, FSCurve and 
+-FSShapeStyle objects are stored in binary form then decoded only when the array
+-is accessed. The classes that define shapes are FSDefineShape, FSDefineShape2, 
+-FSDefineShape3, FSDefineMorphShape, FSDefineFont and FSDefineFont2. Accessing
+-shape objects is relatively unusual so lazy decoding speeds up processing by 
+-only decoding objects that are used.
+-
+-Lazy decoding provides an enormous increase in performance. Benchmark tests
+-when decoding files gave average performance increases of 15 times - with a 
+-range between 0 and 420 times. Larger files gave larger performance gains.
+-
+-This is particularly important when using existing Flash files as a 
+-template for customization. Simply replacing images, text and sound in a file
+-does not typically need font glyphs and shapes to be decoded and using lazy 
+-decoding can dramatically increase performance.
+-
+-Lazy decoding and encoding does not require any API changes.
+-
+-3. Improved decoding of JPEG image data.  
+-
+-Improved the algorithm when decoding the encoding table in the classes
+-FSDefineJPEGImage2 and FSDefineJPEGImage3. The encoding table is now processed 
+-correctly, even when the encoding table is empty and the start of image (SOI) 
+-and end of image (EOI) markers are incorrectly specified.
+-
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+-1. Merged Transform and Tranform Utilities.
+-
+-Merged the classes from Transform Utilities into the Transform framework to 
+-create a single release. All future releases will include the Utilities classes.
+-Transform Utilities will no longer be released as a separate framework.
+-
+-Consequently the class, TransformUtil, which contains version number 
+-information is deprecated and will be dropped in Transform 2.2.
+-
+-2. Added a package for contributed code.
+-
+-A new package transform.contrib is included for code from third-parties
+-that can be used with the classes in the Transform framework but which is not 
+-subject to the same licencing terms or copyright ownership.
+-
+-Contributed code can be found in the directory src/transform/contrib. Any 
+-code may be contributed to the project as long as it is compatible with the 
+-terms of the BSD licence. All rights are retained by the author(s). Flagstone 
+-specifically disclaims any rights to the code.
+-
+-The first contributed class is the code to compress WAV files to ADPCM. The 
+-code is a Java port of C code released by Jack Jansen, Stichting Mathematisch 
+-Centrum, Amsterdam, The Netherlands. This code was previously available on the 
+-Flagstone web site and will now be included in future releases.
+
+Added: trunk/doc/releases/transform-2.2.1.txt
+===================================================================
+--- trunk/doc/releases/transform-2.2.1.txt	2008-03-01 17:01:27 UTC (rev 316)
++++ trunk/doc/releases/transform-2.2.1.txt	2008-03-01 17:02:37 UTC (rev 317)
+@@ -0,0 +1,91 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.2.1
++------------------------------------------------------------
++
++The release contains bug fixes and minor updates.
++
++
++Bug Fixes
++    Clip events are not re-encoded correctly.
++    Cannot decode WAV files with odd number of bytes in data.
++    Cannot decode clip events generated by Flash CS3.
++    Font definitions with no name do not decode.
++
++Class Changes
++    FSCoder no longer throws IllegalArgumentExceptions on pointer overflows.
++    
++Documentation Changes
++    None scheduled
++
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++1. Clip events are not re-encoded correctly.
++
++When the code was updated in release 2.1.6 to handle cases where end of action
++markers were encountered in the middle of an array of actions (which caused 
++decoded to terminate prematurely) a bug was introduced in the way FSClipEvent
++objects were encoded: the offset to the end of the clip event was mis-calculated
++by one byte causing the encoded movie not to play correctly. This is now fixed.
++
++2. Cannot decode WAV files with odd number of bytes in data.
++
++WAV files that end with a DATA block which contains an odd number of bytes can
++now be decoded correctly by the FSSoundConstructor.
++
++3. Cannot decode clip events generated by Flash CS3.
++
++There is an internal field in FSClipEvent that gives the offset to either the
++next event or to the end of the event array. In Flash CS3 the offset appears to
++be incorrect. Instead of the offset being set to the length of the actions for 
++the handler it is 1 byte larger. The code in the FSClipEvent has been updated
++to test for this condition allowing files to be decoded.
++    
++4.Font definitions with no name do not decode.
++
++Font objects (FSFontInfo, FSFontInfo2, FSDefineFont2) contain a field for the 
++font name. In releas 2.1.6 code was added to remove trailing null bytes but the
++code did not test for cases where the font name was not set. This is now fixed.
++
++-----------------
++  Class Changes  
++-----------------
++
++1. FSCoder no longer throws IllegalArgumentExceptions on pointer overflows.
++
++If the internal pointer used in the FSCoder class to mark the current position 
++in the data buffer is moved beyond the end of the buffer an IllegalArgumentException
++is no longer thrown. Instead the position of the pointer is clamped to the end 
++of the buffer. Any attempt to read the data will return zero. Read errors can
++be detected by checking whether the expected number of bytes were read by comparing
++the pointer value at the start and end of reading a block of data.
++
++This is an internal change and will not have any impact unless you use the 
++FSCoder class directly to decode blocks of data.
++
++-------------------------
++  Documentation Changes  
++-------------------------
++
++None
++
++-------------------
++  Testing Changes  
++-------------------
++
++None
++
++-------------------
++  Package Changes  
++-------------------
++
++None
++
+
+Deleted: trunk/doc/releases/transform-pre-2.1.6.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.6.txt	2008-03-01 17:01:27 UTC (rev 316)
++++ trunk/doc/releases/transform-pre-2.1.6.txt	2008-03-01 17:02:37 UTC (rev 317)
+@@ -1,147 +0,0 @@
+-------------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.1.6.
+-------------------------------------------------------------
+-
+-The release fixes a number of bugs and improves reliability when dealing with
+-file that are &quot;outside&quot; of the Flash specification. Testing is now carried out 
+-using JUnit and way each release is packaged was simplified.
+-
+-Bug Fixes
+-    12776. NAME block in TrueType fonts is not decoded correctly.
+-    12769. JPEG SOI and EOI markers are swapped on null encoding tables.
+-    12768. Font name in FSDefineFont2, FSFontInfo[2] has trailing null.
+-    12747. Leading in FSDefineTextField is decoded as unsigned.
+-    12730. FSSerialNumber does not decode if string contains null.
+-    12729. FSProtect will not decode Flash 4 files with passwords.
+-    12728. FSProtect does not decode if string contains null.
+-     9806. Transform cannot handle obfuscated actions.
+-
+-Class Changes
+-    Equals method added to FSCoder.
+-    Increased compression buffer on FSImageConstructor.
+-    Equals on FSDefineImage and FSDefineImage2 compares uncompressed images.
+-    
+-Testing Changes
+-    JUnit replaces TestNG
+-    Testing is simplified
+-    
+-Package Changes
+-    Releases simplified.
+-    Tools package was removed.
+-  
+--------------
+-  Bug Fixes  
+--------------
+-
+-12776. NAME block in TrueType fonts is not decoded correctly.
+-
+-The NAME block in TrueType font files which contains the name of the font, 
+-copyright information and other font related strings is now decoded correctly.
+-
+-12769. JPEG SOI and EOI markers are swapped on null encoding tables.
+-
+-The readJPEGStream methods in FSDefineJPEG2 and FSDefineJPEG3 was updated and 
+-the classes are now better able to decode encoding tables where the Start of 
+-Image (SOI) and End of Image (EOI) markers are reversed.
+-
+-In FSDefineJPEG2 the order of the markers when specifying a NULL encoding table
+-was incorrectly reversed. The correct order, 0xFFD8 (SOI), 0xFFD9 (EOI) is now
+-used.
+-
+-12768. Font name in FSDefineFont2, FSFontInfo[2] has trailing null.
+-
+-The trailing null byte that was used to terminate the string in the FSDefineFont2, 
+-FSFontInfo and FSFontInfo2 classes has now been removed.
+-
+-12747. Leading in FSDefineTextField is decoded as unsigned.
+-
+-The leading field, which defines the spacing between lines is now correctly 
+-decoded as a signed integer.
+-
+-12730. FSSerialNumber does not decode if string contains null.
+-
+-If a serial number contains a null byte in the middle of the string it will 
+-still be decoded correctly.
+-
+-12729. FSProtect will not decode Flash 4 files with passwords.
+-
+-Flash 4 files containing a Protect data structure with an MD5 encoded password
+-are now decoded correctly.
+-
+-12728. FSProtect does not decode if string contains null.
+-
+-If a password string contains a null byte in the middle of the string it will 
+-still be decoded correctly.
+-
+-9806. Transform cannot handle obfuscated actions.
+-
+-The decoding of actions in FSButtonEvent, FSClipEvent, FSDefineButton, 
+-FSDoAction and FSInitialize is now able to handle causes where End of Action
+-markers (0x00) are injected into the sequences of actions - perhaps as an 
+-obfuscation technique to prematurely stop the decoding of actions.
+-
+------------------
+-  Class Changes  
+------------------
+-
+-1. Equals method added to FSCoder.
+-
+-A method, boolean equals(Object obj), was added to FSCoder to support unit 
+-testing.
+-
+-2. Increased compression buffer on FSImageConstructor.
+-
+-Increase the buffer spaced used during compression of images for the rare 
+-occasion where the compressed image is larger than the original.
+-
+-3. Equals on FSDefineImage and FSDefineImage2 compares uncompressed images.
+-
+-The equals method on FSDefineImage and FSDefineImage2 now unzips the compressed
+-images before comparing objects. This allows objects that contain identical 
+-images but which were compressed with different parameters to pass as being 
+-equal.
+-
+-This change was introduced primarily for testing to compare images created 
+-by the Flash authoring tool to be compared with images compressed by the 
+-Transform framework.
+-
+--------------------
+-  Testing Changes  
+--------------------
+-
+-1. JUnit replaces TestNG.
+-
+-The classes used to unit test the framework were refactored to use JUnit. While
+-TestNG is probably the more powerful of the two the simplicity and ease of use 
+-of JUnit is hard to beat, especially since there is good support for executing 
+-tests from within IDEs such as Eclipse.
+-
+-2. Testing is simplified.
+-
+-With the adoption of JUnit the approach to testing has been simplified. Testing 
+-is now a simple pass/fail approach with the JUnit tests used to verify changes 
+-made to the framework. This is ideal to verify correct operation of the classes,
+-for example when testing different image or sound files or for verifying changes
+-when submitting bug fixes.
+-
+-More detailed testing, particularly for significant changes to the way files 
+-are encoded or decoded is now handled by a separate project where the way objects
+-are encoded is verified using the Flash authoring tool as a reference.
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+-1. Releases simplified.
+-
+-Releases of the framework now only include documentation, jar file and source
+-for the framework classes, contributed classes and examples. The goal is to
+-strip down releases so they are easier to use within other projects. All the 
+-files used to debug and test the framework  are still available from the 
+-Subversion repository: <A HREF="https://svn.berlios.de/svnroot/repos/transform/trunk">https://svn.berlios.de/svnroot/repos/transform/trunk</A>
+-
+-2. Tools package was removed.
+-
+-With the simplification of the way the framework is tested the TextDump class
+-was no longer used and the package was removed from the release. If this causes
+-any inconvenience please contact Flagstone.
+
+Deleted: trunk/doc/releases/transform-pre-2.2.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.2.0.txt	2008-03-01 17:01:27 UTC (rev 316)
++++ trunk/doc/releases/transform-pre-2.2.0.txt	2008-03-01 17:02:37 UTC (rev 317)
+@@ -1,129 +0,0 @@
+-----------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.2.
+-----------------------------------------------------------
+-
+-The release adds new classes to make it easier to construct movies and get 
+-information about flash file. New methods are added to JPEG images to get 
+-width and height.
+-
+-
+-Bug Fixes
+-    FSColorTransform method isUnityTransform is now correctly spelled.
+-    Trailing null byte is now removed from password string in FSProtect.
+-
+-Class Changes
+-    JPEG Images have width and height.
+-    FSShapeConstructor - polygon() now handles absolute coordinates.
+-    FSFrame - a new class for organising the time-line within movies.
+-    FSLayer - a new class for organising the animation of objects within movies.
+-    FSHeader - a new class for just getting information about a flash file.
+-    
+-Documentation Changes
+-    FSPlaceObject2 - corrected documentation on setting the morph ratio.
+-
+-Testing Changes
+-    None scheduled
+-    
+-Package Changes
+-    None scheduled
+-
+-  
+--------------
+-  Bug Fixes  
+--------------
+-
+-1. FSColorTransform method isUnityTransform is now correctly spelled.
+-
+-In previous releases the 't' was missing from 'Unity' i.e. isUniyTransform. This 
+-is now corrected to isUnityTransform.
+-
+-2. Trailing null byte is now removed from password string in FSProtect.
+-
+-If the password string in FSProtect contained a trailing null byte marking the
+-end of the string then it was included in the string when it was decoded using 
+-the UTF-8 character set. The null byte is no longer included.
+-
+------------------
+-  Class Changes  
+------------------
+-
+-1. JPEG Images have width and height.
+-
+-Accessor methods to get the width and height of a JPEG encoded image are 
+-added to the FSDefineJPEGImage, FSDefineJPEGImage2 and FSDefineJPEGImage3
+-classes.
+-
+-    public int getWidth();
+-    public int getHeight();
+-
+-No set methods are added, the width and height are decoded from the image data 
+-whenver the object is decoded or the setImage() method is used.
+-
+-2. FSShapeConstructor - polygon() now handles absolute coordinates.
+-
+-The coordinates passed to the polygon(int[]) method on FSShapeConstructor are 
+-now absolute. A new method rpolygon(int[]) was added to allow polygons to be 
+-drawn using relative coordinates.
+-
+-3. FSFrame - a new class for organising the time-line within movies.
+-
+-FSFrame is an upgraded version of the Frame class currently available on the 
+-Useful Code page with the addition of a frame number attribute. 
+-
+-Grouping together all the objects associated with a frame simplifies greatly the 
+-task of creation and editing a movie. However supported numbered frames becomes
+-really useful when combined with the new FSLayer class.
+-
+-4. FSLayer - a new class for organising the animation of objects within movies.
+-
+-Currently all the objects must be created and positioned for successive frames.
+-This makes creating of complex animations with Transform next to impossible 
+-without careful coding.
+-
+-With the FSLayer class, separate time-lines can be created for each object. With
+-each frame numbered using the FSFrame class all the layers can easily be aligned 
+-and flattened to create the final animation. 
+-
+-5. FSHeader - a new class for just getting information about a flash file.
+-
+-FSHeader decodes the header block of a flash file that contains the following 
+-information about a movie:
+-
+-    signature, indicates whether a file was compressed &quot;CWS&quot; or not &quot;FWS&quot;.
+-	version, the version of Flash used.
+-	length, the length of the movie in bytes when uncompressed.
+- 	minX, the x-coordinate of the top left corner of the screen.
+- 	maxX, the x-coordinate of the bottom right corner of the screen.
+- 	minY, the y-coordinate of the top left corner of the screen.
+- 	maxY, the y-coordinate of the bottom right corner of the screen.
+- 	frameRate, the rate at which the movie is played, in frames per second.
+- 	frameCount, the number of frames in the movie.
+- 	
+-FSHeader only the header information is decoded, the rest of the data structures 
+-are ignored so the class can be used to get the attributes of a movie without
+-paying the penalty of using FSMovie where all the data structures are decoded.
+-
+--------------------------
+-  Documentation Changes  
+--------------------------
+-
+-1. FSPlaceObject2 - corrected documentation on setting the morph ratio.
+-
+-The javadoc comments on methods that set the morph ratio for an object specified
+-the range as 0..65535, this is the actual number encoded in the Flash file 
+-however Transform uses a floating point value in the range 0..1 which is more 
+-intuitive to use - the value in converted when the object is encoded or decoded.
+-The documentation was updated to refer to the floating point range. 
+-
+--------------------
+-  Testing Changes  
+--------------------
+-
+-None
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+-None
+-
+
+Added: trunk/doc/releases/transform-pre-2.3.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.3.0.txt	2008-03-01 17:01:27 UTC (rev 316)
++++ trunk/doc/releases/transform-pre-2.3.0.txt	2008-03-01 17:02:37 UTC (rev 317)
+@@ -0,0 +1,64 @@
++----------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.3.
++----------------------------------------------------------
++
++The release adds new classes to decode and process Flash Video (.flv) files.
++
++
++Bug Fixes
++    None scheduled
++
++Class Changes
++    New classes for handling Flash Video.
++     
++Documentation Changes
++    None scheduled
++
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++None
++
++-----------------
++  Class Changes  
++-----------------
++
++1. New classes for handling Flash Video.
++
++Four new classes have been added to decode and encode Flash Video files.
++
++   FSVideoObject - an abstract parent class similar to FSMovieObject.
++   FSVideo - a collection class similar to FSMovie.
++   FSAudioData - contains the encoded audio.
++   FSVideoData - contains the encoded video.
++   
++The classes provide basic information on the format used to encode the audio
++and video streams and provide access to the binary data - no encoding or 
++decoding is performed.
++
++-------------------------
++  Documentation Changes  
++-------------------------
++
++None
++
++-------------------
++  Testing Changes  
++-------------------
++
++None
++
++-------------------
++  Package Changes  
++-------------------
++
++None
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000252.html">[Transform-svn] r316 - trunk
+</A></li>
+	<LI>Next message: <A HREF="000254.html">[Transform-svn] r318 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#253">[ date ]</a>
+              <a href="thread.html#253">[ thread ]</a>
+              <a href="subject.html#253">[ subject ]</a>
+              <a href="author.html#253">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

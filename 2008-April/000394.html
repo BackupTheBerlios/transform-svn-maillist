@@ -1,0 +1,466 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r458 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r458%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804161502.m3GF2Dew004542%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000393.html">
+   <LINK REL="Next"  HREF="000395.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r458 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r458%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804161502.m3GF2Dew004542%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r458 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr 16 17:02:13 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000393.html">[Transform-svn] r457 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000395.html">[Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#394">[ date ]</a>
+              <a href="thread.html#394">[ thread ]</a>
+              <a href="subject.html#394">[ subject ]</a>
+              <a href="author.html#394">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-16 17:02:09 +0200 (Wed, 16 Apr 2008)
+New Revision: 458
+
+Added:
+   dev/dev-3-0/src/com/flagstone/transform/FSString.java
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java
+   dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+   dev/dev-3-0/src/com/flagstone/transform/FSTable.java
+Log:
+Added class FSString to enable strings to be indexed and updated.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java	2008-04-16 15:00:36 UTC (rev 457)
++++ dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java	2008-04-16 15:02:09 UTC (rev 458)
+@@ -166,8 +166,8 @@
+  */
+ public class FSGetUrl extends FSActionObject
+ {
+-	private String url;
+-	private String target;
++	private FSString url;
++	private FSString target;
+ 
+ 	FSGetUrl()
+ 	{
+@@ -220,7 +220,7 @@
+ 	{
+ 		super(GetUrl);
+ 		setUrl(urlString);
+-		target = &quot;&quot;;
++		target = new FSString(&quot;&quot;);
+ 	}
+ 
+ 	/**
+@@ -232,8 +232,8 @@
+ 	public FSGetUrl(FSGetUrl obj)
+ 	{
+ 		super(GetUrl);
+-		url = new String(obj.url);
+-		target = new String(obj.target);
++		url = new FSString(obj.url);
++		target = new FSString(obj.target);
+ 	}
+ 
+ 	/**
+@@ -243,6 +243,11 @@
+ 	 */
+ 	public String getUrl()
+ 	{
++		return url.getString();
++	}
++	
++	public FSString getIndexableUrl()
++	{
+ 		return url;
+ 	}
+ 
+@@ -254,7 +259,7 @@
+ 	 */
+ 	public String getTarget()
+ 	{
+-		return target;
++		return target.getString();
+ 	}
+ 
+ 	/**
+@@ -274,7 +279,7 @@
+ 		if (aString.length() == 0) {
+ 			throw new IllegalArgumentException(&quot;URL cannot be an empty string.&quot;);
+ 		}
+-		url = aString;
++		url = new FSString(aString);
+ 	}
+ 
+ 	/**
+@@ -294,7 +299,7 @@
+ 		if (aString == null) {
+ 			throw new NullPointerException(&quot;Target cannot be null.&quot;);
+ 		}
+-		target = aString;
++		target = new FSString(aString);
+ 	}
+ 
+ 	public boolean equals(Object anObject)
+@@ -327,8 +332,8 @@
+ 	{
+ 		super.length(context);
+ 
+-		length += FSCoder.strlen(url, true);
+-		length += FSCoder.strlen(target, true);
++		length += FSCoder.strlen(url.getString(), true);
++		length += FSCoder.strlen(target.getString(), true);
+ 
+ 		return length;
+ 	}
+@@ -337,17 +342,17 @@
+ 	{
+ 		super.encode(coder, context);
+ 
+-		coder.writeString(url);
++		coder.writeString(url.getString());
+ 		coder.writeWord(0, 1);
+ 
+-		coder.writeString(target);
++		coder.writeString(target.getString());
+ 		coder.writeWord(0, 1);
+ 	}
+ 
+ 	public void decode(FSCoder coder, FSContext context)
+ 	{
+ 		super.decode(coder, context);
+-		url = coder.readString();
+-		target = coder.readString();
++		url = new FSString(coder.readString());
++		target = new FSString(coder.readString());
+ 	}
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-16 15:00:36 UTC (rev 457)
++++ dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-16 15:02:09 UTC (rev 458)
+@@ -680,7 +680,7 @@
+ 		if (value == null) {
+ 			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
+ 		}
+-		values.add(value);
++		values.add(new FSString(value));
+ 	}
+ 
+ 	/**
+@@ -725,9 +725,39 @@
+ 	 */
+ 	public List&lt;Object&gt; getValues()
+ 	{
+-		return values;
++		List&lt;Object&gt;list = new ArrayList&lt;Object&gt;(values.size());
++		Object obj;
++		
++		for (Iterator&lt;Object&gt;i = values.iterator(); i.hasNext();) 
++		{
++			obj = i.next();
++			
++			if (obj instanceof FSString) {
++				list.add(((FSString)obj).getString());
++			}
++			else {
++				list.add(obj);
++			}
++		}
++		return list;
+ 	}
+ 
++	public List&lt;FSString&gt; getStrings()
++	{
++		List&lt;FSString&gt;list = new ArrayList&lt;FSString&gt;();
++		Object obj;
++		
++		for (Iterator&lt;Object&gt;i = values.iterator(); i.hasNext();) 
++		{
++			obj = i.next();
++			
++			if (obj instanceof FSString) {
++				list.add((FSString)obj);
++			}
++		}
++		return list;
++	}
++
+ 	/**
+ 	 * Sets the array of values.
+ 	 * 
+@@ -744,6 +774,22 @@
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
+ 		}
++		
++		values.clear();
++		
++		Object obj;
++		
++		for (Iterator&lt;Object&gt;i = anArray.iterator(); i.hasNext();) 
++		{
++			obj = i.next();
++			
++			if (obj instanceof String) {
++				values.add(new FSString((String)obj));
++			}
++			else {
++				values.add(obj);
++			}
++		}
+ 		values = anArray;
+ 	}
+ 
+@@ -820,8 +866,8 @@
+ 				length += 5;
+ 			else if (anObject instanceof Double)
+ 				length += 9;
+-			else if (anObject instanceof String)
+-				length += 1 + FSCoder.strlen((String) anObject, true);
++			else if (anObject instanceof FSString)
++				length += 1 + FSCoder.strlen(((FSString) anObject).getString(), true);
+ 			else if (anObject instanceof FSNull)
+ 				length += 1;
+ 			else if (anObject instanceof FSVoid)
+@@ -866,7 +912,7 @@
+ 			} else if (anObject instanceof String)
+ 			{
+ 				coder.writeWord(0, 1);
+-				coder.writeString((String) anObject);
++				coder.writeString(((FSString) anObject).getString());
+ 				coder.writeWord(0, 1);
+ 			} else if (anObject instanceof FSNull)
+ 			{
+@@ -915,7 +961,7 @@
+ 						;
+ 
+ 					coder.setPointer(start);
+-					values.add(coder.readString(strlen));
++					values.add(new FSString(coder.readString(strlen)));
+ 					coder.adjustPointer(8);
+ 					valuesLength -= strlen + 2;
+ 					break;
+
+Added: dev/dev-3-0/src/com/flagstone/transform/FSString.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSString.java	2008-04-16 15:00:36 UTC (rev 457)
++++ dev/dev-3-0/src/com/flagstone/transform/FSString.java	2008-04-16 15:02:09 UTC (rev 458)
+@@ -0,0 +1,26 @@
++package com.flagstone.transform;
++
++public class FSString
++{
++	private String string;
++	
++	public FSString(String value)
++	{
++		string = value;
++	}
++	
++	public FSString(FSString obj)
++	{
++		string = obj.string;
++	}
++	
++	public String getString()
++	{
++		return string;
++	}
++	
++	public void setString(String value) 
++	{
++		string = value;
++	}
++}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSTable.java	2008-04-16 15:00:36 UTC (rev 457)
++++ dev/dev-3-0/src/com/flagstone/transform/FSTable.java	2008-04-16 15:02:09 UTC (rev 458)
+@@ -123,7 +123,7 @@
+  */
+ public class FSTable extends FSActionObject
+ {
+-	private List&lt;String&gt; values;
++	private List&lt;FSString&gt; values;
+ 
+ 	/**
+ 	 * Construct an FSTable object, initialising it with values decoded from an
+@@ -144,6 +144,7 @@
+ 	public FSTable()
+ 	{
+ 		super(Table);
++		values = new ArrayList&lt;FSString&gt;();
+ 	}
+ 
+ 	/**
+@@ -170,10 +171,10 @@
+ 	{
+ 		super(Table);
+ 
+-		values = new ArrayList&lt;String&gt;(obj.values.size());
++		values = new ArrayList&lt;FSString&gt;(obj.values.size());
+ 
+-		for (Iterator&lt;String&gt; i = obj.values.iterator(); i.hasNext();)
+-			values.add(new String((String) i.next()));
++		for (Iterator&lt;FSString&gt; i = obj.values.iterator(); i.hasNext();)
++			values.add(new FSString(i.next()));
+ 	}
+ 
+ 	/**
+@@ -186,17 +187,32 @@
+ 	 */
+ 	public void add(String aString)
+ 	{
+-		values.add(aString);
++		values.add(new FSString(aString));
+ 	}
+ 
+ 	/**
++	 * Gets the array of IndeableStrings stored in the variable table.
++	 * 
++	 * @return the array of indexable string objects.
++	 */
++	public List&lt;FSString&gt; getIndexableValues()
++	{
++		return values;
++	}
++
++	/**
+ 	 * Gets the array of Strings stored in the variable table.
+ 	 * 
+ 	 * @return the array of string literals.
+ 	 */
+ 	public List&lt;String&gt; getValues()
+ 	{
+-		return values;
++		List&lt;String&gt;list = new ArrayList&lt;String&gt;(values.size());
++		
++		for (Iterator&lt;FSString&gt;i = values.iterator(); i.hasNext();) {
++			list.add(i.next().getString());
++		}
++		return list;
+ 	}
+ 
+ 	/**
+@@ -212,17 +228,22 @@
+ 		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array cannot be null.&quot;);
+ 		}
+-		values = anArray;
++		
++		values.clear();
++		
++		for (Iterator&lt;String&gt;i = anArray.iterator(); i.hasNext();) {
++			values.add(new FSString(i.next()));
++		}
+ 	}
+ 
+ 	public Object clone()
+ 	{
+ 		FSTable anObject = (FSTable) super.clone();
+ 
+-		anObject.values = new ArrayList&lt;String&gt;();
++		anObject.values = new ArrayList&lt;FSString&gt;();
+ 
+-		for (Iterator&lt;String&gt; i = values.iterator(); i.hasNext();)
+-			anObject.values.add(new String((String) i.next()));
++		for (Iterator&lt;FSString&gt; i = values.iterator(); i.hasNext();)
++			anObject.values.add(new FSString(i.next()));
+ 
+ 		return anObject;
+ 	}
+@@ -254,8 +275,8 @@
+ 
+ 		length += 2;
+ 
+-		for (Iterator&lt;String&gt; i = values.iterator(); i.hasNext();)
+-			length += FSCoder.strlen((String) i.next(), true);
++		for (Iterator&lt;FSString&gt; i = values.iterator(); i.hasNext();)
++			length += FSCoder.strlen(i.next().getString(), true);
+ 
+ 		return length;
+ 	}
+@@ -268,9 +289,9 @@
+ 
+ 		if (values.size() &gt; 0)
+ 		{
+-			for (Iterator&lt;String&gt; i = values.iterator(); i.hasNext();)
++			for (Iterator&lt;FSString&gt; i = values.iterator(); i.hasNext();)
+ 			{
+-				coder.writeString((String) i.next());
++				coder.writeString(i.next().getString());
+ 				coder.writeWord(0, 1);
+ 			}
+ 		}
+@@ -284,19 +305,19 @@
+ 
+ 		if (attributeCount &gt; 0)
+ 		{
+-			values = new ArrayList&lt;String&gt;();
++			values = new ArrayList&lt;FSString&gt;();
+ 
+ 			for (int i = 0; i &lt; attributeCount; i++)
+-				values.add(coder.readString());
++				values.add(new FSString(coder.readString()));
+ 		} 
+ 		else
+ 		{
+ 			/*
+ 			 * Reset the length as Macromedia is using the length of a table to
+-			 * hide coded following an empty table.
++			 * hide code following an empty table.
+ 			 */
+ 			length = 2;
+-			values = new ArrayList&lt;String&gt;();
++			values = new ArrayList&lt;FSString&gt;();
+ 		}
+ 	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000393.html">[Transform-svn] r457 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000395.html">[Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#394">[ date ]</a>
+              <a href="thread.html#394">[ thread ]</a>
+              <a href="subject.html#394">[ subject ]</a>
+              <a href="author.html#394">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

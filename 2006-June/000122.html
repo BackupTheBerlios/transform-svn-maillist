@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r183 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r183%20-%20trunk/doc/releases&In-Reply-To=%3C200606290747.k5T7lVMm019738%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000121.html">
+   <LINK REL="Next"  HREF="000123.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r183 - trunk/doc/releases</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r183%20-%20trunk/doc/releases&In-Reply-To=%3C200606290747.k5T7lVMm019738%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r183 - trunk/doc/releases">smackay at berlios.de
+       </A><BR>
+    <I>Thu Jun 29 09:47:31 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000121.html">[Transform-svn] r182 - in trunk/doc: . web
+</A></li>
+        <LI>Next message: <A HREF="000123.html">[Transform-svn] r184 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#122">[ date ]</a>
+              <a href="thread.html#122">[ thread ]</a>
+              <a href="subject.html#122">[ subject ]</a>
+              <a href="author.html#122">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-29 09:47:26 +0200 (Thu, 29 Jun 2006)
+New Revision: 183
+
+Modified:
+   trunk/doc/releases/transform-2.1.3.txt
+Log:
+Updated with latest bug fixes.
+
+Modified: trunk/doc/releases/transform-2.1.3.txt
+===================================================================
+--- trunk/doc/releases/transform-2.1.3.txt	2006-06-29 07:46:48 UTC (rev 182)
++++ trunk/doc/releases/transform-2.1.3.txt	2006-06-29 07:47:26 UTC (rev 183)
+@@ -8,7 +8,16 @@
+     FSDefineImage2: The encoding of the type and length always uses 6 bytes.     
+     TextDump: NewFunction and NewFunction2 no longer decodes actions twice.     
+ 	FSDefinedJPEGImage[2,3]: now allows null encoding tables.
++	FSCoder: buffer is correctly resized when writing data.
++	FSProtect: copy constructor can now be used when passwords are null.
++	FSPlaceObject2: equals() now works on objects containing encoded clip events.
+ 	
++Class Changes:
++    FSCoder context variable, version is now public.
++	
++Testing Changes:
++    Added test classes for FSProtect, FSShowFrame and FSSetBackgroundColor.
++	
+ Package Changes     
+     The TestNG libraries are now included in the release.     
+  
+@@ -53,8 +62,55 @@
+ create an empty table containing only the StartOfImage (0xFFD8) and EndOfImage  
+ (0xFFD9) markers.
+ 
++4. FSCoder: buffer is correctly resized when writing data.
+ 
++When writing data that would overflow the internal buffer maintained by the 
++FSCoder the size is adjusted automatically. The buffer was adjusted by 50% of 
++the current size. However if the volume of data being written was greater than 
++this figure an overflow would occur and an ArrayIndexOutOfBoundsException 
++would be raised.
++
++The buffer is now resized by 50% + the size of the data being written so making
++sure that overflows will not occur.
++
++5. FSProtect: copy constructor can now be used when passwords are null.
++
++The copy constructor no longer throws a NullPointerException when copying 
++objects that do not contain a string with an MD5 password.
++
++6. FSPlaceObject2: equals() now works on objects containing encoded clip events.
++
++The equals() method now correctly takes into account the comparison performed
++on all of the objects attributes.
++
++-----------------
++  Class Changes  
++-----------------
++
++1. FSCoder context variable, version is now public.
++
++The FSCoder class uses an array of integers to pass information across the 
++object hierarchy when encoding and decoding Flash files. The version variable
++which contains the version of Flash that the objects are being encoded/decoded
++for is now public to support the unit test classes in the package 
++com.flagstone.transfrom.test.
++
++This variable has very little use outside of testing. Other context variables
++will be made public as more test cases are developed.
++
+ -------------------
++  Testing Changes  
++-------------------
++
++1. Added test classes for FSProtect, FSShowFrame and FSSetBackgroundColor.
++
++The FSProtectTest, FSShowFrameTest and FSSetBackgroundColorTest were added to
++the com.flagstone.transform.test package to perform unit testing of the 
++FSProtect, FSShowFrame and FSSetBackgroundColor classes respectively. TestNG
++scripts to run the unit tests for each of the classes was added to the 
++test/suites directory.
++
++-------------------
+   Package Changes  
+ -------------------
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000121.html">[Transform-svn] r182 - in trunk/doc: . web
+</A></li>
+	<LI>Next message: <A HREF="000123.html">[Transform-svn] r184 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#122">[ date ]</a>
+              <a href="thread.html#122">[ thread ]</a>
+              <a href="subject.html#122">[ subject ]</a>
+              <a href="author.html#122">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

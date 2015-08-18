@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r441 - in dev/dev-3-0/src/com/flagstone/transform:	. test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r441%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20test&In-Reply-To=%3C200804042204.m34M4TV4004511%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000375.html">
+   <LINK REL="Next"  HREF="000377.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r441 - in dev/dev-3-0/src/com/flagstone/transform:	. test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r441%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20test&In-Reply-To=%3C200804042204.m34M4TV4004511%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r441 - in dev/dev-3-0/src/com/flagstone/transform:	. test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Apr  5 00:04:29 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000375.html">[Transform-svn] r440 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000377.html">[Transform-svn] r442 - dev/dev-3-0/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#376">[ date ]</a>
+              <a href="thread.html#376">[ thread ]</a>
+              <a href="subject.html#376">[ subject ]</a>
+              <a href="author.html#376">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-05 00:04:25 +0200 (Sat, 05 Apr 2008)
+New Revision: 441
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSCoder.java
+   dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+   dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java
+Log:
+Removed convenience method on FSCoder.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-04 13:51:47 UTC (rev 440)
++++ dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-04 22:04:25 UTC (rev 441)
+@@ -866,7 +866,7 @@
+ 	 */
+ 	public static List&lt;FSActionObject&gt; decodeActions(byte[] data)
+ 	{
+-		return decodeActions(new FSCoder(data), new FSContext(), data.length);
++		return decodeActions(new FSCoder(FSCoder.LITTLE_ENDIAN, data), new FSContext(), data.length);
+ 	}
+ 
+ 	private static Map&lt;Integer, Class&lt;FSActionObject&gt;&gt; table = 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSCoder.java	2008-04-04 13:51:47 UTC (rev 440)
++++ dev/dev-3-0/src/com/flagstone/transform/FSCoder.java	2008-04-04 22:04:25 UTC (rev 441)
+@@ -281,21 +281,6 @@
+ 
+ 	/**
+ 	 * Constructs an FSCoder object containing an array of bytes with the
+-	 * default little-endian byte order.
+-	 * 
+-	 * @param bytes
+-	 *            an array of bytes where the data will be read or written.
+-	 */
+-	public FSCoder(byte[] bytes)
+-	{
+-		byteOrder = LITTLE_ENDIAN;
+-		data = bytes;
+-		ptr = 0;
+-		end = data.length &lt;&lt; 3;
+-	}
+-
+-	/**
+-	 * Constructs an FSCoder object containing an array of bytes with the
+ 	 * specified byte order.
+ 	 * 
+ 	 * @param order
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-04 13:51:47 UTC (rev 440)
++++ dev/dev-3-0/src/com/flagstone/transform/FSMovieObject.java	2008-04-04 22:04:25 UTC (rev 441)
+@@ -208,77 +208,7 @@
+ 
+ 	// / Type used to identify TabOrder objects.
+ 	public static final int TabOrder = 66;
+-
+-	public static final String[] className =
+-	{
+-		&quot;ShowFrame&quot;,
+-		&quot;DefineShape&quot;,
+-		&quot;Free&quot;,
+-		&quot;PlaceObject&quot;,
+-		&quot;RemoveObject&quot;, // 5
+-		&quot;DefineJPEGImage&quot;,
+-		&quot;DefineButton&quot;,
+-		&quot;JPEGTables&quot;,
+-		&quot;SetBackgroundColor&quot;,
+-		&quot;DefineFont&quot;, // 10
+-		&quot;DefineText&quot;,
+-		&quot;DoAction&quot;,
+-		&quot;FontInfo&quot;,
+-		&quot;DefineSound&quot;,
+-		&quot;StartSound&quot;, // 15
+-		&quot;Unknown&quot;,
+-		&quot;ButtonSound&quot;,
+-		&quot;SoundStreamHead&quot;,
+-		&quot;SoundStreamBlock&quot;,
+-		&quot;DefineImage&quot;, // 20
+-		&quot;DefineJPEGImage2&quot;, 
+-		&quot;DefineShape2&quot;,
+-		&quot;ButtonColorTransform&quot;,
+-		&quot;Protect&quot;,
+-		&quot;PathsArePostscript&quot;, // 25
+-		&quot;PlaceObject2&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;RemoveObject2&quot;,
+-		&quot;Unknown&quot;,
+-		&quot;Unknown&quot;, // 30
+-		&quot;Unknown&quot;, 
+-		&quot;DefineShape3&quot;, 
+-		&quot;DefineText2&quot;,
+-		&quot;DefineButton2&quot;,
+-		&quot;DefineJPEGImage3&quot;, // 35
+-		&quot;DefineImage2&quot;, 
+-		&quot;DefineTextField&quot;, 
+-		&quot;QuicktimeMovie&quot;, 
+-		&quot;DefineMovieClip&quot;,
+-		&quot;Unknown&quot;, // 40
+-		&quot;SerialNumber&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;FrameLabel&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;SoundStreamHead2&quot;, // 45
+-		&quot;DefineMorphShape&quot;,
+-		&quot;Unknown&quot;, 
+-		&quot;DefineFont2&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;Unknown&quot;, // 50
+-		&quot;Unknown&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;Unknown&quot;, // 55
+-		&quot;Export&quot;, 
+-		&quot;Import&quot;, 
+-		&quot;EnableDebugger&quot;, 
+-		&quot;Initialize&quot;, 
+-		&quot;DefineVideo&quot;, // 60
+-		&quot;VideoFrame&quot;, 
+-		&quot;FontInfo2&quot;, 
+-		&quot;Unknown&quot;, 
+-		&quot;EnableDebugger2&quot;, 
+-		&quot;LimitScript&quot;, // 65
+-		&quot;TabOrder&quot;,
+-	};
+-
++	
+ 	static int length(FSContext context, List&lt;FSMovieObject&gt; array)
+ 	{
+ 		FSMovieObject object;
+@@ -730,19 +660,6 @@
+ 		return anObject;
+ 	}
+ 
+-	/**
+-	 * Generates a string representation of the object showing the values of the
+-	 * fields or nested objects. If the object contains an array then only the
+-	 * size of the array will be reported rather than the string representation
+-	 * being returned for all the objects in the array.
+-	 * 
+-	 * @return a string giving a brief description of the object and its fields.
+-	 */
+-	public String toString()
+-	{
+-		return className[type];
+-	}
+-
+ 	public int length(FSContext context)
+ 	{
+ 		context.type = type;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java	2008-04-04 13:51:47 UTC (rev 440)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java	2008-04-04 22:04:25 UTC (rev 441)
+@@ -41,7 +41,7 @@
+ 
+ public class FSColorTest
+ {
+-    private FSCoder coder = new FSCoder(new byte[4]);
++    private FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, new byte[4]);
+     private FSContext context = new FSContext();
+     private FSColor colour;
+     
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000375.html">[Transform-svn] r440 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000377.html">[Transform-svn] r442 - dev/dev-3-0/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#376">[ date ]</a>
+              <a href="thread.html#376">[ thread ]</a>
+              <a href="subject.html#376">[ subject ]</a>
+              <a href="author.html#376">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,645 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r329 - dev/dev-2-3/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r329%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803141353.m2EDrD3g009201%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000264.html">
+   <LINK REL="Next"  HREF="000266.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r329 - dev/dev-2-3/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r329%20-%20dev/dev-2-3/src/com/flagstone/transform&In-Reply-To=%3C200803141353.m2EDrD3g009201%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r329 - dev/dev-2-3/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 14 14:53:13 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000264.html">[Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000266.html">[Transform-svn] r330 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#265">[ date ]</a>
+              <a href="thread.html#265">[ thread ]</a>
+              <a href="subject.html#265">[ subject ]</a>
+              <a href="author.html#265">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-14 14:53:09 +0100 (Fri, 14 Mar 2008)
+New Revision: 329
+
+Added:
+   dev/dev-2-3/src/com/flagstone/transform/FSVideoMetaData.java
+Modified:
+   dev/dev-2-3/src/com/flagstone/transform/FSVideo.java
+   dev/dev-2-3/src/com/flagstone/transform/FSVideoData.java
+   dev/dev-2-3/src/com/flagstone/transform/FSVideoObject.java
+Log:
+Debugged the code and updated the documentation.
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/FSVideo.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSVideo.java	2008-03-14 13:51:54 UTC (rev 328)
++++ dev/dev-2-3/src/com/flagstone/transform/FSVideo.java	2008-03-14 13:53:09 UTC (rev 329)
+@@ -34,8 +34,12 @@
+ import java.io.*;
+ 
+ /** 
+- * \htmlinclude FSVideo.html
+- */  
++ * FSVideo is a container class for the objects that represents the data 
++ * structures in a Flash video file. It is very similar to the FSMovie class
++ * for flash (.swf) files and provides a simple API for decoding and encoding 
++ * files and accessing the objects that represent the different data structures
++ * used for audio and video data.
++ */ 
+ public final class FSVideo implements Cloneable
+ {
+     /** 
+@@ -82,15 +86,14 @@
+     {
+ 		FSVideoObject currentObject = null;
+         
+-        int previousLength = coder.readWord(4, false);
+-        
+-        if ((coder.getPointer() &gt;&gt; 3) &gt;= coder.getData().length)
+-            return null;
++        int start = coder.getPointer();
+ 
+-		int type = coder.scanWord(1, false);
+-		int length = coder.scanWord(4, false) &amp; 0x00FFFFFF;
+-		int next = coder.getPointer() + (11 + length) &gt;&gt; 3;
++		int type = coder.readWord(1, false);
++		int length = coder.readWord(3, false) &amp; 0x00FFFFFF;
++		int next = start + ((11 + length) &lt;&lt; 3);
+ 		
++		coder.setPointer(start);
++		
+  		switch (type)
+ 		{
+ 			case FSVideoObject.AudioData:
+@@ -99,17 +102,14 @@
+ 			case FSVideoObject.VideoData:
+ 				currentObject = new FSVideoData(coder);
+ 				break;
++			case FSVideoObject.MetaData:
++				currentObject = new FSVideoMetaData(coder);
++				break;
+ 			default:
+ 				break;
+ 		}
+     
+-        int delta = (next - coder.getPointer()) &gt;&gt; 3;
+-
+-        if (delta &lt; 0)
+-            coder.logError(&quot;ObjectOverflow&quot;, next, -delta);
+-        else if (delta &gt; 0)
+-            coder.logError(&quot;ObjectUnderflow&quot;, next, delta);
+-            
++        int delta = next - coder.getPointer();            
+         coder.context[FSVideo.Delta] = delta;
+ 		coder.setPointer(next);
+         
+@@ -118,7 +118,6 @@
+     
+ 	private String signature = &quot;FLV&quot;;
+     private int version = 1;
+-    
+     private ArrayList objects = new ArrayList();
+ 
+     /** 
+@@ -209,14 +208,16 @@
+     }
+ 
+     /** 
+-     * Decodes the contents of the specified file. An object for each tag decoded from the file 
+-     * is placed in the  Movie's object array in the order they were decoded from the file. If 
+-     * an error occurs while reading and parsing the file then an exception is thrown.
++     * Decodes the contents of the specified file. An object for each tag decoded 
++     * from the file is placed in the object array in the order they were read
++     * from the file. If an error occurs while reading and parsing the file then 
++     * an exception is thrown.
+      *
+      * @param fileName the path to the Flash Video file that will be parsed.
+-        @throws FileNotFoundException - if an error occurs while reading the file.
+-        @throws DataFormatException - if the file does not contain Flash data.
+-        @throws IOException - if an error occurs while reading and decoding the file.
++     * 
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws DataFormatException - if the file does not contain Flash data.
++     * @throws IOException - if an error occurs while reading and decoding the file.
+      */
+ 	public void decodeFromFile(String fileName) throws FileNotFoundException, DataFormatException, IOException
+ 	{
+@@ -235,14 +236,13 @@
+     }
+ 
+    /** 
+-    * Decodes the binary Flash Video data stored in the byte array. If an error occurs while the data 
+-    * is being decoded an exception is thrown. The array of objects in the Movie will 
+-    * contain the last tag successfully decoded.
++    * Decodes the binary Flash Video data stored in the byte array. If an error 
++    * occurs while the data is being decoded an exception is thrown.
+     *
+     * @param bytes an array of bytes that contain the encoded Flash Video objects.
+     *
+-        @throws DataFormatException - if the file does not contain Flash data.
+-        @throws IOException - if an error occurs while reading and decoding the file.
++    * @throws DataFormatException - if the file does not contain Flash data.
++    * @throws IOException - if an error occurs while reading and decoding the file.
+     */
+ 	public void decodeFromData(byte[] bytes) throws DataFormatException, IOException
+ 	{
+@@ -260,25 +260,29 @@
+         containsAudio = coder.readBits(1, false) != 0;
+         coder.readBits(1, false);
+         containsVideo = coder.readBits(1, false) != 0;
+-        coder.readWord(32, false);
++
++        int offset = coder.readWord(4, false);
++        offset = coder.readWord(4, false);
+         
+-        while ((object = decodeObject(coder)) != null)
+-        {
+-            objects.add(object);
++        do {
++            objects.add(decodeObject(coder));
+             
+             if (coder.context[Delta] != 0)
+                 throw new IOException();
+-        }
++            
++            offset = coder.readWord(4, false);    
++
++        } while (!coder.eof());
+ 	}
+     
+     /** 
+-     * Encodes the array of objects and writes the data to the specified file. If an error occurs 
+-     * while encoding the file then an exception is thrown.
++     * Encodes the array of objects and writes the data to the specified file. 
++     * If an error occurs while encoding the file then an exception is thrown.
+      *
+      * @param fileName the path to the file that the video will be encoded to.
+      *
+-        @throws FileNotFoundException - if an error occurs while reading the file.
+-        @throws IOException - if an error occurs while encoding and writing the file.
++     * @throws FileNotFoundException - if an error occurs while reading the file.
++     * @throws IOException - if an error occurs while encoding and writing the file.
+      */
+ 	public void encodeToFile(String fileName) throws FileNotFoundException, IOException
+ 	{
+@@ -291,8 +295,9 @@
+     }
+ 
+     /** 
+-     * Returns the encoded representation of the array of objects that this Movie contains. If an error occurs 
+-     * while encoding the file then an exception is thrown.
++     * Returns the encoded representation of the array of objects that this Video
++     * contains. If an error occurs while encoding the file then an exception is 
++     * thrown.
+      *
+      * @return the array of bytes representing the encoded objects.
+      * @throws IOException if an error occurs while the data is being decoded.
+@@ -327,9 +332,8 @@
+         coder.writeBits(0, 1);
+         coder.writeBits(containsVideo ? 1 : 0, 1);
+         coder.writeWord(9, 4);
++        coder.writeWord(0, 4);
+         
+-        coder.writeWord(fileLength, 4);
+-
+         for (Iterator i = objects.iterator(); i.hasNext();)
+         {
+ 			FSVideoObject object = (FSVideoObject)i.next();
+@@ -343,6 +347,8 @@
+             
+             if (((next - coder.getPointer()) &gt;&gt; 3) != 0)
+                 throw new IOException();
++            
++            coder.writeWord(length+11, 4);
+         }
+ 		return coder.getData();
+     }
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/FSVideoData.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSVideoData.java	2008-03-14 13:51:54 UTC (rev 328)
++++ dev/dev-2-3/src/com/flagstone/transform/FSVideoData.java	2008-03-14 13:53:09 UTC (rev 329)
+@@ -29,47 +29,47 @@
+  */
+ package com.flagstone.transform;
+ 
+-/** 
+-&lt;p&gt;The FSVideoData class is used to store the data for a single video frame.&lt;/p&gt;
+-
+-&lt;table class=&quot;datasheet&quot;&gt;
+-
+-&lt;tr&gt;
+-&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSVideoData_0&quot;&gt;timestamp&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The time in milliseconds at which the sound will be played. The timestamp is 
+-used exclusively for determining when sound or video will be played. Any internal 
+-timing information in the audio or video data is ignored.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSVideoData_1&quot;&gt;codec&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the format of the video data. FSVideo.H263 represents data encoded 
+-using the Sorenson modified H263 format.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSVideoData_2&quot;&gt;frameType&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The type of frame being displayed, either FSVideo.KeyFrame, FSVideo.Frame or 
+-FSVideo.Optional.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSVideoData_5&quot;&gt;data&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The encoded video data.&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;/table&gt;
+-
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
+-
+-&lt;p&gt;The FSVideoData class represents the FLV Tag with the Video Data section from 
+-Macromedia's Flash (SWF) File Format Specification. It was added in Flash 6 with 
+-support for the Sorenson modified H263 format. Support for Macromedia's 
+-ScreenVideo format was added in Flash 7.&lt;/p&gt;
++/**  
++ * The FSVideoData class is used to store the data for a single video frame.
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;timestamp&lt;/td&gt;
++ * &lt;td&gt;The time in milliseconds at which the sound will be played. The timestamp 
++ * is used exclusively for determining when sound or video will be played. Any 
++ * internal timing information in the audio or video data is ignored.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;codec&lt;/td&gt;
++ * &lt;td&gt;Identifies the format of the video data. FSVideo.H263 represents data 
++ * encoded using the Sorenson modified H263 format.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;frameType&lt;/td&gt;
++ * &lt;td&gt;The type of frame being displayed, either FSVideo.KeyFrame, FSVideo.Frame 
++ * or FSVideo.Optional.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;data&lt;/td&gt;
++ * &lt;td&gt;The encoded video data.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * The FSVideoData class represents the FLV Tag with the Video Data section from 
++ * Macromedia's Flash (SWF) File Format Specification. It was added in Flash 
++ * Video 1 with support for the Sorenson modified H263 format. Support for 
++ * Macromedia's ScreenVideo format was added when Flash 7 was released.&lt;/p&gt;
+  */  
+ public final class FSVideoData extends FSVideoObject
+ {
+@@ -90,9 +90,13 @@
+      * frame or an optional frame which can be discarded (H263 format only). 
+      *
+ 	 * @param timestamp the time in milliseconds at which the data should be played.
+-     * @param format the format used to encode the video either FSVideo.H263 or FSVideo.ScreenVideo.
+-     * @param type the type of frame being displayed, either FSVideo.KeyFrame, FSVideo.Frame or FSVideo.Optional.
+-     * @param data an array of bytes containing the video encoded using the format indicated in the codec attribute, either FSVideo.H263 or FSVideo.ScreenVideo.
++     * @param format the format used to encode the video either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
++     * @param type the type of frame being displayed, either FSVideo.KeyFrame, 
++     * FSVideo.Frame or FSVideo.Optional.
++     * @param data an array of bytes containing the video encoded using the 
++     * format indicated in the codec attribute, either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
+      */
+ 	public FSVideoData(int timestamp, int format, int type, byte[] data)
+ 	{
+@@ -103,11 +107,13 @@
+ 	}
+ 
+     /**
+-     * Gets the scheme used to encode the video data, either FSVideo.H263 for data
+-     * that was encoded using the modified Sorenson H263 format or FSVideo.ScreenVideo 
+-     * for video that was encoded using Macromedia's ScreenVideo format.
++     * Gets the scheme used to encode the video data, either FSVideo.H263 for 
++     * data that was encoded using the modified Sorenson H263 format or 
++     * FSVideo.ScreenVideo for video that was encoded using Macromedia's 
++     * ScreenVideo format.
+      *
+-     * @return the format used to encode the video either FSVideo.H263 or FSVideo.ScreenVideo.
++     * @return the format used to encode the video either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
+      */
+     public int getCodec()
+     {
+@@ -115,11 +121,13 @@
+     }
+ 
+     /**
+-     * Sets the format used to encode the video data, either FSVideo.H263 for data
+-     * that was encoded using the modified Sorenson H263 format or FSVideo.ScreenVideo 
+-     * for video that was encoded using Macromedia's ScreenVideo format.
++     * Sets the format used to encode the video data, either FSVideo.H263 for 
++     * data that was encoded using the modified Sorenson H263 format or
++     * FSVideo.ScreenVideo for video that was encoded using Macromedia's 
++     * ScreenVideo format.
+      *
+-     * @param format the format used to encode the video either FSVideo.H263 or FSVideo.ScreenVideo.
++     * @param format the format used to encode the video either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
+      */
+     public void setCodec(int format)
+ 	{
+@@ -127,11 +135,12 @@
+ 	}
+     
+     /**
+-     * Gets the type of frame that will be displayed, either FSVideo.KeyFrame, FSVideo.Frame
+-     * or FSVideo.Optional. The latter is used only to indicate disposable frame and is only
+-     * used with the Sorenson modified H263 format.
++     * Gets the type of frame that will be displayed, either FSVideo.KeyFrame, 
++     * FSVideo.Frame or FSVideo.Optional. The latter is used only to indicate 
++     * disposable frame and is only used with the Sorenson modified H263 format.
+      *
+-     * @return the type of frame, either FSVideo.KeyFrame, FSVideo.Frame or FSVideo.Optional.
++     * @return the type of frame, either FSVideo.KeyFrame, FSVideo.Frame or 
++     * FSVideo.Optional.
+      */
+     public int getFrameType() 
+     {
+@@ -139,12 +148,14 @@
+     }
+ 
+     /**
+-     * Sets the type of frame type indicating whether it is a key frame (FSVideo.KeyFrame), 
+-     * a normal frame (FSVideo.Frame) displayed between key frames other whether display of 
+-     * the frame is optional ( FSVideo.Optional). The latter is used only with video encoded
+-     * using the Sorenson modified H263 format.
++     * Sets the type of frame type indicating whether it is a key frame 
++     * (FSVideo.KeyFrame), a normal frame (FSVideo.Frame) displayed between key 
++     * frames other whether display of the frame is optional ( FSVideo.Optional). 
++     * The latter is used only with video encoded using the Sorenson modified 
++     * H263 format.
+      *
+-     * @param type the type of frame being displayed, either FSVideo.KeyFrame, FSVideo.Frame or FSVideo.Optional.
++     * @param type the type of frame being displayed, either FSVideo.KeyFrame, 
++     * FSVideo.Frame or FSVideo.Optional.
+      */
+     public void setFrameType(int type)
+ 	{
+@@ -154,8 +165,8 @@
+     /**
+      * Get the encoded video data.
+      *
+-     * @return an array of bytes encoded using the format indicated in the codec attribute,
+-     * either FSVideo.H263 or FSVideo.ScreenVideo.
++     * @return an array of bytes encoded using the format indicated in the codec 
++     * attribute, either FSVideo.H263 or FSVideo.ScreenVideo.
+      */
+     public byte[] getData() 
+     {
+@@ -165,7 +176,9 @@
+     /**
+      * Sets the encoded video data for the frame.
+      *
+-     * @param data an array of bytes containing the video encoded using the format indicated in the codec attribute, either FSVideo.H263 or FSVideo.ScreenVideo.
++     * @param data an array of bytes containing the video encoded using the 
++     * format indicated in the codec attribute, either FSVideo.H263 or 
++     * FSVideo.ScreenVideo.
+      */
+     public void setData(byte[] data)
+ 	{
+@@ -176,6 +189,8 @@
+ 	{
+         FSVideoData anObject = (FSVideoData)super.clone();
+         
++        anObject.data = Transform.clone(data);
++        
+ 		return anObject;
+ 	}
+ 
+@@ -235,10 +250,10 @@
+ 	{
+ 		super.decode(coder);
+         
+-        data = new byte[length];
++        data = new byte[length-1];
+         
+-		codec = coder.readBits(2, false);
+-		frameType = coder.readBits(2, false);
++		codec = coder.readBits(4, false);
++		frameType = coder.readBits(4, false);
+         coder.readBytes(data);
+ 	}
+ }
+\ No newline at end of file
+
+Added: dev/dev-2-3/src/com/flagstone/transform/FSVideoMetaData.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSVideoMetaData.java	2008-03-14 13:51:54 UTC (rev 328)
++++ dev/dev-2-3/src/com/flagstone/transform/FSVideoMetaData.java	2008-03-14 13:53:09 UTC (rev 329)
+@@ -0,0 +1,128 @@
++/*
++ * FSVideoData.java
++ * Transform
++ *
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform;
++
++/** 
++ * The FSVideoMetaData class is used to store infromation on how the video
++ * stream should be displayed.
++ * 
++ * Although meta-data can be found in all flash Video files there is no 
++ * documentation published by Adobe that describes the data structure. As a 
++ * result the information is decoded as a simple block of binary data.
++ */  
++public final class FSVideoMetaData extends FSVideoObject
++{
++	private byte[] data;
++	
++	FSVideoMetaData(FSCoder coder)
++	{
++        super(FSVideoObject.MetaData, 0);
++		decode(coder);
++	}
++    
++    /**
++     * Get the encoded meta data that decribes how the video stream should be 
++     * played.
++     *
++     * @return an array of bytes containing the encoded meta-data.
++     */
++    public byte[] getData() 
++    {
++        return data;
++    }
++
++    /**
++     * Sets the encoded meta data that decribes how the video stream should be 
++     * played.
++     * 
++     * @param data an array of bytes containing the encoded meta-data.
++     */
++    public void setData(byte[] data)
++	{
++		this.data = data;
++	}
++    
++    public Object clone()
++	{
++        FSVideoMetaData anObject = (FSVideoMetaData)super.clone();
++        
++		return anObject;
++	}
++
++    public boolean equals(Object anObject)
++	{
++		boolean result = false;
++		
++		if (super.equals(anObject))
++        {
++            FSVideoMetaData typedObject = (FSVideoMetaData)anObject;
++            
++            if (data != null)
++                result = result &amp;&amp; Transform.equals(data, typedObject.data);
++            else
++                result = result &amp;&amp; typedObject.data == null;
++        }
++		return result;
++	}
++
++	public void appendDescription(StringBuffer buffer, int depth)
++	{
++		buffer.append(name());
++
++		if (depth &gt; 0)
++		{
++			buffer.append(&quot;: { &quot;);
++            Transform.append(buffer, &quot;data&quot;, &quot;&lt;data&gt;&quot;);
++			buffer.append(&quot;}&quot;);
++		}
++	}
++
++	int length(FSCoder coder)
++	{
++		super.length(coder);
++	
++		length += data.length;
++	
++		return length;
++	}
++	
++	void encode(FSCoder coder)
++	{
++        super.encode(coder);
++		coder.writeBytes(data);
++	}
++	
++	void decode(FSCoder coder)
++	{
++		super.decode(coder);
++        data = new byte[length];
++        coder.readBytes(data);
++	}
++}
+\ No newline at end of file
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/FSVideoObject.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSVideoObject.java	2008-03-14 13:51:54 UTC (rev 328)
++++ dev/dev-2-3/src/com/flagstone/transform/FSVideoObject.java	2008-03-14 13:53:09 UTC (rev 329)
+@@ -51,6 +51,8 @@
+     public static final int AudioData = 8;
+     /** Type identifying objects containing video */
+     public static final int VideoData = 9;
++    /** Type identifying objects containing meta-data */
++    public static final int MetaData = 18;
+ 
+     protected int type = 0;
+ 	protected int length = 0;
+@@ -187,5 +189,6 @@
+         type = coder.readWord(1, false);
+         length = coder.readWord(3, false);
+         timestamp = coder.readWord(3, false);
++        coder.readWord(4, false); // reserved
+ 	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000264.html">[Transform-svn] r328 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000266.html">[Transform-svn] r330 - dev/dev-2-3/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#265">[ date ]</a>
+              <a href="thread.html#265">[ thread ]</a>
+              <a href="subject.html#265">[ subject ]</a>
+              <a href="author.html#265">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

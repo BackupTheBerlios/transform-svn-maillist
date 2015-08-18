@@ -1,0 +1,786 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r434 - dev/dev-3-0/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r434%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804022235.m32MZRbI020777%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000369.html">
+   <LINK REL="Next"  HREF="000370.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r434 - dev/dev-3-0/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r434%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804022235.m32MZRbI020777%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r434 - dev/dev-3-0/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Apr  3 00:35:27 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000369.html">[Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000370.html">[Transform-svn] r435 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#371">[ date ]</a>
+              <a href="thread.html#371">[ thread ]</a>
+              <a href="subject.html#371">[ subject ]</a>
+              <a href="author.html#371">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-03 00:35:17 +0200 (Thu, 03 Apr 2008)
+New Revision: 434
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+   dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+   dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java
+Log:
+Added methods to download files from URLs.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/BMPDecoder.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,8 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.zip.*;
+ 
+ import com.flagstone.transform.FSCoder;
+@@ -99,6 +101,23 @@
+     }   
+ 
+     /**
++     * Construct an BMPDecoder object with the image from the specified URL. 
++     *
++     * @param url the URL containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public BMPDecoder(URL url) throws IOException, DataFormatException
++    {
++        decode(dataFromURL(url));
++    }   
++
++    /**
+      * Returns a constant identifying the format for the way the pixels are encoded.
+      *
+      * @return the image format.
+@@ -509,4 +528,25 @@
+ 
+         return bytes;
+     }
++    
++    private byte[] dataFromURL(URL url) throws IOException
++    {
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] bytes = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(bytes);
++	    bufIn.close();
++
++	    return bytes;
++    }
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,9 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.MalformedURLException;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.*;
+ import java.util.zip.*;
+ 
+@@ -219,7 +222,7 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+     
+-    public static Definition defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
++    public static Definition defineImage(int identifier, String path) throws IOException, DataFormatException
+     {
+     	return defineImage(identifier, new File(path));
+     }
+@@ -285,6 +288,82 @@
+     	return object;
+     }
+ 
++    public static Definition defineImage(int identifier, URL url) throws IOException, DataFormatException
++    {
++    	Definition object = null;
++    	
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] bytes = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(bytes);
++	    bufIn.close();
++
++    	ImageInfo ii = new ImageInfo();
++    	ii.setInput(new ByteArrayInputStream(bytes));
++    	ii.setDetermineImageNumber(true);
++    	
++    	if (!ii.check()) 
++    	{
++    		throw new DataFormatException();
++    	}
++    	
++    	if (decoders.containsKey(ii.getFormatName()))
++    	{
++			try
++			{
++				Class&lt;ImageDecoder&gt; obj = decoders.get(ii.getFormatName());
++				ImageDecoder decoder = (ImageDecoder) obj.newInstance();
++				decoder.decode(bytes);
++				
++				int format = decoder.getFormat();
++				int width = decoder.getWidth();
++				int height = decoder.getHeight();
++				
++				byte[] colourTable = decoder.getTable();
++				byte[] image = decoder.getImage();
++
++				switch (format)
++	            {
++	                case JPEG: 
++	                	object = new FSDefineJPEGImage2(identifier, image); 
++	                	break;
++	                case IDX8: 
++	                	object = new FSDefineImage(identifier, width, height, colourTable.length, zip(merge(adjustScan(width, height, image), colourTable))); 
++	                	break;
++	                case IDXA: 
++	                	object = new FSDefineImage2(identifier, width, height, colourTable.length, zip(mergeAlpha(adjustScan(width, height, image), colourTable))); 
++	                	break;
++	                case RGB5: 
++	                	object = new FSDefineImage(identifier, width, height, zip(packColours(width, height, image)), 16); 
++	                	break;
++	                case RGB8: 
++	                	orderAlpha(image);
++	                	object = new FSDefineImage(identifier, width, height, zip(image), 24); 
++	                	break;
++	                case RGBA: 
++	                	applyAlpha(image);
++	                	object = new FSDefineImage2(identifier, width, height, zip(image)); 
++	                	break;
++	            }
++			} 
++			catch (Exception e)
++			{
++				throw new DataFormatException();
++			}
++    	}  	
++    	return object;
++    }
++
+     /**
+      * Generates the shape definition object that is required to display an image in a Flash movie.
+      * The shape is generated with a single fill style (FSBitmapFill object). The origin of the shape
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/JPGDecoder.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,8 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.zip.*;
+ 
+ import com.flagstone.transform.FSCoder;
+@@ -83,6 +85,23 @@
+         decode(dataFromFile(file));
+     }   
+ 
++    /**
++     * Construct an JPGDecoder object with the image from the specified URL. 
++     *
++     * @param url the URL containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public JPGDecoder(URL url) throws IOException, DataFormatException
++    {
++        decode(dataFromURL(url));
++    }   
++
+     public int getFormat()
+     {
+     	return format;
+@@ -161,4 +180,25 @@
+ 
+         return bytes;
+     }
++    
++    private byte[] dataFromURL(URL url) throws IOException
++    {
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] bytes = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(bytes);
++	    bufIn.close();
++
++	    return bytes;
++    }
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/MP3Decoder.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,8 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.zip.*;
+ 
+ import com.flagstone.transform.*;
+@@ -109,6 +111,21 @@
+         decode(dataFromFile(file));
+     }   
+     
++    /**
++     * Construct an MP3Decoder object with the sound from the specified URL. 
++     *
++     * @param url the URL containing the sound.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported sound 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public MP3Decoder(URL url) throws IOException, DataFormatException
++    {
++        decode(dataFromURL(url));
++    }   
++
+     public int getFormat()
+     {
+         return format;
+@@ -292,4 +309,25 @@
+ 
+         return bytes;
+     }
++    
++    private byte[] dataFromURL(URL url) throws IOException
++    {
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] bytes = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(bytes);
++	    bufIn.close();
++
++	    return bytes;
++    }
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/PNGDecoder.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,8 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.zip.*;
+ 
+ import com.flagstone.transform.FSCoder;
+@@ -180,6 +182,23 @@
+     }   
+     
+     /**
++     * Construct an PNGDecoder object with the image from the specified URL. 
++     *
++     * @param url the URL containing the image.
++     *
++     * @throws FileNotFoundException is the file cannot be found.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public PNGDecoder(URL url) throws IOException, DataFormatException
++    {
++        decode(dataFromURL(url));
++    }   
++
++    /**
+      * Returns a constant identifying the format for the way the pixels are encoded.
+      *
+      * @return the image format.
+@@ -616,6 +635,27 @@
+         return bytes;
+     }
+     
++    private byte[] dataFromURL(URL url) throws IOException
++    {
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] bytes = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(bytes);
++	    bufIn.close();
++
++	    return bytes;
++    }
++
+     private byte[] unzip(byte[] bytes) throws DataFormatException
+     {
+         byte[] data = new byte[width*height*8];
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Sound.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,8 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.List;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+@@ -203,6 +205,67 @@
+     	return object;
+     }
+     
++    public static FSDefineSound defineSound(URL url, int identifier) throws FileNotFoundException, IOException, DataFormatException
++    {
++    	FSDefineSound object = null;
++    	String extension = null;
++    	
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] data = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(data);
++	    bufIn.close();
++
++    	if (decoders.containsKey(extension))
++    	{
++			try
++			{
++				Class&lt;SoundDecoder&gt; obj = decoders.get(extension);
++				SoundDecoder decoder = (SoundDecoder) obj.newInstance();
++				decoder.decode(data);
++				
++				int format = decoder.getFormat();
++			    int channels = decoder.getNumberOfChannels();
++			    int samples = decoder.getSamplesPerChannel();
++			    int rate = decoder.getSampleRate();
++			    int size = decoder.getSampleSize();
++			    byte[] sound = decoder.getSound();
++			    byte[] bytes = null;
++
++		        switch (format)
++		        {
++		            case FSDefineSound.PCM:
++		            case FSDefineSound.ADPCM:
++		                bytes = new byte[sound.length];
++		                System.arraycopy(sound, 0, bytes, 0, sound.length);
++		                break;
++		            case FSDefineSound.MP3:
++		                bytes = new byte[2+sound.length];
++		                bytes[0] = 0;
++		                bytes[1] = 0;
++		                System.arraycopy(sound, 0, bytes, 2, sound.length);
++		                break;
++		        }
++		        object = new FSDefineSound(identifier, format, rate, channels, size, samples, bytes);
++			} 
++			catch (Exception e)
++			{
++				throw new DataFormatException();
++			}
++    	}
++    	return object;
++    }
++    
+     /** 
+      * Generates all the objects required to stream a sound. 
+      * 
+@@ -244,18 +307,34 @@
+      * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
+      * sound.
+      */
+-    public static List&lt;FSMovieObject&gt; streamSound(File file, int frameRate) throws FileNotFoundException, IOException, DataFormatException
++    public static List&lt;FSMovieObject&gt; streamSound(URL url, int frameRate) throws IOException, DataFormatException
+     {
+     	String extension = null;
+     	ArrayList&lt;FSMovieObject&gt;array = new ArrayList&lt;FSMovieObject&gt;();
+     	
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] data = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(data);
++	    bufIn.close();
++
+     	if (decoders.containsKey(extension))
+     	{
+ 			try
+ 			{
+ 				Class&lt;SoundDecoder&gt; obj = decoders.get(extension);
+ 				SoundDecoder decoder = (SoundDecoder) obj.newInstance();
+-				decoder.decode(dataFromFile(file));
++				decoder.decode(data);
+ 				
+ 		        int firstSample = 0;
+ 		        int firstSampleOffset = 0;
+@@ -385,6 +464,165 @@
+     	return array;
+      }
+ 
++    /** 
++     * Generates all the objects required to stream a sound. 
++     * 
++     * The object containing a block sound data. This method is 
++     * used to divide the encoded sound into a sequence of blocks to allow a sound to be 
++     * streamed to the Flash Player.
++     *
++     * If the number of samples in the last block to stream is less than the samplesPerBlock,
++     * the size of the FSSoundStreamBlock object is reduced accordingly. It is not padded 
++     * to maintain the specified length.
++     * 
++     * @param blockNumber the nth block of samples.
++     * 
++     * @param samplesPerBlock the number of samples to stream.
++     * 
++     * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
++     * sound.
++     */
++    public static List&lt;FSMovieObject&gt; streamSound(File file, int frameRate) throws IOException, DataFormatException
++    {
++    	String extension = null;
++    	ArrayList&lt;FSMovieObject&gt;array = new ArrayList&lt;FSMovieObject&gt;();
++    	
++    	if (decoders.containsKey(extension))
++    	{
++			try
++			{
++				Class&lt;SoundDecoder&gt; obj = decoders.get(extension);
++				SoundDecoder decoder = (SoundDecoder) obj.newInstance();
++				decoder.decode(dataFromFile(file));
++				
++		        int firstSample = 0;
++		        int firstSampleOffset = 0;
++		        int bytesPerBlock = 0;
++		        int bytesRemaining = 0;
++		        int numberOfBytes = 0;
++		        
++		        int framesToSend = 0;
++		        int framesSent = 0;
++		        int frameCount = 0;
++		        int sampleCount = 0;
++		        int seek = 0;
++		        
++				int format = decoder.getFormat();
++			    int channels = decoder.getNumberOfChannels();
++			    int samples = decoder.getSamplesPerChannel();
++			    int rate = decoder.getSampleRate();
++			    int size = decoder.getSampleSize();
++			    byte[] sound = decoder.getSound();
++			    byte[] bytes = null;
++			    
++		    	int samplesPerBlock = rate/frameRate;
++			 	int numberOfBlocks = samples/samplesPerBlock;
++
++			    int[][] frameTable = null;
++			    int samplesPerFrame = 0;
++
++			    array.add(new FSSoundStreamHead2(format, rate, channels, size, rate, channels, size, samplesPerBlock));
++
++			 	switch (format)
++		        {
++		            case FSDefineSound.PCM:
++		        	    for (int i=0; i&lt;numberOfBlocks; i++)
++		        	    {
++			                firstSample = i*samplesPerBlock;
++			                firstSampleOffset = firstSample * size * channels;
++			                bytesPerBlock = samplesPerBlock * size * channels;
++			                bytesRemaining = sound.length - firstSampleOffset;
++			                
++			                numberOfBytes = (bytesRemaining &lt; bytesPerBlock) ? bytesRemaining : bytesPerBlock;
++			            
++			                bytes = new byte[numberOfBytes];
++			                System.arraycopy(sound, firstSampleOffset, bytes, 0, numberOfBytes);
++			                
++			                array.add(new FSSoundStreamBlock(bytes));
++		        	    }
++		                break;
++		            case FSDefineSound.ADPCM:
++		                break;
++		            case FSDefineSound.MP3:
++		                FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++		                
++		                coder.findBits(0x7FF, 11, 8);
++		                
++		                int frameStart = coder.getPointer();
++		                int numberOfFrames = 0;
++		                
++		                while (coder.findBits(0x7FF, 11, 8))
++		                {
++		                    coder.adjustPointer(MP3FrameSize(coder) &lt;&lt; 3);
++		                    numberOfFrames++;
++		                }
++		                
++		                frameTable = new int[numberOfFrames][2];
++		                
++		                coder.setPointer(frameStart);
++		                
++		                int frameNumber = 0;
++		                
++		                while (coder.findBits(0x7FF, 11, 8))
++		                {
++		                    frameTable[frameNumber][0] = (coder.getPointer()- frameStart + 16) &gt;&gt; 3;
++		                    
++		                    coder.adjustPointer(11); // skip start of frame marker
++
++		                    int version = coder.readBits(2, false);
++		                    
++		                    coder.adjustPointer(3);
++		                    
++		                    int bitRate = bitRates[version][coder.readBits(4, false)];
++		                    int samplingRate = samplingRates[version][coder.readBits(2, false)];
++		                    int padding = coder.readBits(1, false);
++
++		                    frameTable[frameNumber++][1] = 4 + (((version == MPEG1) ? 144 : 72) * bitRate*1000 / samplingRate + padding) - 4;
++		            
++		                    coder.adjustPointer((MP3FrameSize(coder) &lt;&lt; 3)-23);
++		                }
++
++		                for (int i=0; i&lt;numberOfBlocks; i++)
++		        	    {            	
++			                framesToSend = ((i+1) * samplesPerBlock) / samplesPerFrame;
++			                framesSent = (i * samplesPerBlock) / samplesPerFrame;
++			                frameCount = framesToSend - framesSent;
++			                sampleCount = frameCount * samplesPerFrame;
++			                seek = (i * samplesPerBlock) - (framesSent * samplesPerFrame);
++			            
++			                numberOfBytes = 4;
++			                
++			                for (int j=0, k=framesSent; j&lt;frameCount; j++, k++)
++			                     numberOfBytes += frameTable[k][1];
++			                
++			                bytes = new byte[numberOfBytes];
++			            
++			                bytes[0] = (byte)sampleCount;
++			                bytes[1] = (byte)(sampleCount &gt;&gt; 8);
++			                bytes[2] = (byte)seek;
++			                bytes[3] = (byte)(seek &gt;&gt; 8);
++			                
++			                int offset = 4; 
++			                
++			                for (int j=0, k=framesSent; j&lt;frameCount; j++, k++)
++			                {
++			                    System.arraycopy(sound, frameTable[k][0], bytes, offset, frameTable[k][1]);
++			                    offset += frameTable[k][1];
++			                }
++			                
++			                array.add(new FSSoundStreamBlock(bytes));
++		        	    }
++		                break;
++			    }
++			} 
++			catch (Exception e)
++			{
++				throw new DataFormatException();
++			}
++    	}
++    	return array;
++    }
++
+     private static int MP3FrameSize(FSCoder coder)
+     {
+         int frameSize = 4;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java	2008-04-02 22:09:17 UTC (rev 433)
++++ dev/dev-3-0/src/com/flagstone/transform/util/WAVDecoder.java	2008-04-02 22:35:17 UTC (rev 434)
+@@ -31,6 +31,8 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.net.URL;
++import java.net.URLConnection;
+ import java.util.zip.*;
+ 
+ import com.flagstone.transform.*;
+@@ -88,6 +90,21 @@
+         decode(dataFromFile(file));
+     }   
+     
++    /**
++     * Construct an MP3Decoder object with the sound from the specified URL. 
++     *
++     * @param url the URL containing the sound.
++     *
++     * @throws IOException if an error occurs while reading the file.
++     *
++     * @throws DataFormatException if the file contains an unsupported sound 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public WAVDecoder(URL url) throws IOException, DataFormatException
++    {
++        decode(dataFromURL(url));
++    }   
++
+     public int getFormat()
+     {
+         return format;
+@@ -202,4 +219,25 @@
+ 
+         return bytes;
+     }
++    
++    private byte[] dataFromURL(URL url) throws IOException
++    {
++	    URLConnection connection = url.openConnection();
++
++	    int fileSize = connection.getContentLength();
++            
++	    if (fileSize&lt;0) {
++              throw new FileNotFoundException(url.getFile());
++	    }
++	    
++	    byte[] bytes = new byte[fileSize];
++
++	    InputStream in = url.openStream();
++	    BufferedInputStream bufIn = new BufferedInputStream(in);
++
++	    bufIn.read(bytes);
++	    bufIn.close();
++
++	    return bytes;
++    }
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000369.html">[Transform-svn] r433 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000370.html">[Transform-svn] r435 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#371">[ date ]</a>
+              <a href="thread.html#371">[ thread ]</a>
+              <a href="subject.html#371">[ subject ]</a>
+              <a href="author.html#371">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

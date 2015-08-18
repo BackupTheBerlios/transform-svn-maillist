@@ -1,0 +1,1991 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r394%20-%20dev/dev-2-4/src/com/flagstone/transform/test&In-Reply-To=%3C200803271217.m2RCH6vh007181%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000327.html">
+   <LINK REL="Next"  HREF="000331.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r394%20-%20dev/dev-2-4/src/com/flagstone/transform/test&In-Reply-To=%3C200803271217.m2RCH6vh007181%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar 27 13:17:06 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000327.html">[Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000331.html">[Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#328">[ date ]</a>
+              <a href="thread.html#328">[ thread ]</a>
+              <a href="subject.html#328">[ subject ]</a>
+              <a href="author.html#328">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-27 13:16:57 +0100 (Thu, 27 Mar 2008)
+New Revision: 394
+
+Added:
+   dev/dev-2-4/src/com/flagstone/transform/test/CanvasTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/SoundTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/TextTest.java
+Removed:
+   dev/dev-2-4/src/com/flagstone/transform/test/FSImageConstructorTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FSShapeConstructorTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FSTextConstructorTest.java
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/test/ConstructorTests.java
+   dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+Log:
+refactored tests for new util classes.
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/test/CanvasTest.java (from rev 385, dev/dev-2-4/src/com/flagstone/transform/test/FSShapeConstructorTest.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2008-03-26 15:26:42 UTC (rev 385)
++++ dev/dev-2-4/src/com/flagstone/transform/test/CanvasTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -0,0 +1,143 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++import junit.framework.TestCase;
++
++public class CanvasTest extends TestCase
++{
++    private File destDir = null;
++
++    public void setup()
++    {
++        destDir = new File(&quot;test/results/FSShapeConstructor&quot;);
++    }
++
++    public void testBasicShapes()
++    {
++        try
++        {
++            File dstFile = new File(destDir, &quot;BasicShapes.swf&quot;);
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            Canvas path = new Canvas();
++            FSMovie movie = new FSMovie();
++
++            path.COORDINATES_ARE_PIXELS = true;
++
++            int width = 150;
++            int height = 100;
++            int cornerRadius = 10;
++
++            int identifier = 0;
++
++            path.setLineStyle(new FSLineStyle(20, FSColorTable.black()));
++            path.setFillStyle(new FSSolidFill(FSColorTable.red()));
++
++            movie.setFrameRate(1.0f);
++            movie.setFrameSize(new FSBounds(-4000, -4000, 4000, 4000));
++            movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++
++            identifier = movie.newIdentifier();
++
++            path.rect(width/2, -height/2, width, height);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++
++            /*
++             * Draw a rectangle with rounded corners
++             */
++            identifier = movie.newIdentifier();
++
++            path.clear();
++            path.setLineStyle(new FSLineStyle(20, FSColorTable.black()));
++            path.setFillStyle(new FSSolidFill(FSColorTable.red()));
++            path.rect(width/2, height/2, width, height, cornerRadius);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++
++            /*
++             * Draw a circle
++             */
++            identifier = movie.newIdentifier();
++
++            path.clear();
++            path.setLineStyle(new FSLineStyle(20, FSColorTable.black()));
++            path.setFillStyle(new FSSolidFill(FSColorTable.red()));
++            path.circle(-width/2, height/2, height/2);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++
++            /*
++             * Draw a elipse
++             */
++            identifier = movie.newIdentifier();
++
++            path.clear();
++            path.setLineStyle(new FSLineStyle(20, FSColorTable.black()));
++            path.setFillStyle(new FSSolidFill(FSColorTable.red()));
++            path.ellipse(-width/2, -height/2, width/2, height/2);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++
++            /*
++             * Draw a polyline
++             */
++            identifier = movie.newIdentifier();
++
++            int[] points = new int[] {
++                0, -100,
++                10, 0,
++                0, 90,
++                90, 0,
++                0, 20,
++                -90, 0,
++                0, 90,
++                -20, 0,
++                0, -90,
++                -90, 0,
++                0, -20,
++                90, 0,
++                0, -90,
++                10, 0
++            };
++
++            path.clear();
++            path.setLineStyle(new FSLineStyle(20, FSColorTable.black()));
++            path.setFillStyle(new FSSolidFill(FSColorTable.red()));
++            path.polygon(points);
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++
++            /*
++             * Draw a cubic bezier curve
++             */
++            identifier = movie.newIdentifier();
++
++            path.clear();
++            path.setLineStyle(new FSLineStyle(20, FSColorTable.black()));
++            path.setFillStyle(new FSSolidFill(FSColorTable.red()));
++            path.curve(0, -100, 150, -100, 150, 0);
++            path.close();
++            movie.add(path.defineShape(identifier));
++            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
++            movie.add(new FSShowFrame());
++
++            movie.encodeToFile(dstFile.getPath());
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/test/ConstructorTests.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/ConstructorTests.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/ConstructorTests.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -8,10 +8,10 @@
+     public static Test suite()
+     {
+         TestSuite suite= new TestSuite();
+-        suite.addTestSuite(FSImageConstructorTest.class);
+-        suite.addTestSuite(FSShapeConstructorTest.class);
+-        suite.addTestSuite(FSSoundConstructorTest.class);
+-        suite.addTestSuite(FSTextConstructorTest.class);
++        suite.addTestSuite(ImageTest.class);
++        suite.addTestSuite(CanvasTest.class);
++        suite.addTestSuite(SoundTest.class);
++        suite.addTestSuite(TextTest.class);
+         return suite;
+     }
+ }
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/test/FSImageConstructorTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSImageConstructorTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSImageConstructorTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -1,111 +0,0 @@
+-package com.flagstone.transform.test;
+-
+-import java.io.File;
+-import java.io.FilenameFilter;
+-import java.util.zip.DataFormatException;
+-
+-import com.flagstone.transform.*;
+-import com.flagstone.transform.util.*;
+-
+-import junit.framework.TestCase;
+-import junit.framework.Assert;
+-
+-public class FSImageConstructorTest extends TestCase
+-{
+-    private File sourceDir = null;
+-    private File destDir = null;
+-    private String extension = null;
+-
+-    public void testBMP()
+-    {
+-		sourceDir = new File(&quot;test/data/bmp&quot;);
+-		destDir = new File(&quot;test/results/FSImageConstructor/bmp&quot;);
+-		extension = &quot;bmp&quot;;
+-
+-		displayImage();
+-    }
+-
+-    public void testPNG()
+-    {
+-		sourceDir = new File(&quot;test/data/png&quot;);
+-		destDir = new File(&quot;test/results/FSImageConstructor/png&quot;);
+-		extension = &quot;png&quot;;
+-
+-		displayImage();
+-    }
+-
+-    public void displayImage()
+-    {
+-        File sourceFile = null;
+-        File destFile = null;
+-
+-        try
+-        {
+-            FilenameFilter filter = new FilenameFilter()
+-            {
+-                public boolean accept(File directory, String name)
+-                {
+-                    String ext = name.substring(name.length()-extension.length()).toLowerCase();
+-
+-                    return ext.equals(extension);
+-                }
+-            };
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	try
+-            	{
+-	                sourceFile = new File(sourceDir, files[i]);
+-	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-	
+-	                FSImageConstructor imageConstructor = new FSImageConstructor(sourceFile.getPath());
+-	                encodeImageToFile(imageConstructor, destFile);
+-            	}
+-            	catch (DataFormatException e)
+-            	{
+-            		if (!sourceFile.getName().startsWith(&quot;x&quot;)) {
+-                        fail(&quot;Cannot decode file: &quot;+sourceFile.getName() + &quot;, &quot;+e.toString());
+-            		}      		
+-            	}
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-        	fail(e.toString());
+-        }
+-    }
+-
+-    private void encodeImageToFile(FSImageConstructor generator, File file) throws Exception
+-    {
+-        FSMovie movie = new FSMovie();
+-
+-        int imageId = movie.newIdentifier();
+-        int shapeId = movie.newIdentifier();
+-
+-        int xOrigin = generator.getWidth()/2;
+-        int yOrigin = generator.getHeight()/2;
+-
+-        FSLineStyle borderStyle = new FSLineStyle(20, FSColorTable.black());
+-
+-        FSDefineObject image = generator.defineImage(imageId);
+-        FSDefineShape3 shape = generator.defineEnclosingShape(shapeId, imageId,
+-            -xOrigin, -yOrigin, borderStyle);
+-
+-        movie.setFrameRate(1.0f);
+-        movie.setFrameSize(shape.getBounds());
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-        movie.add(image);
+-        movie.add(shape);
+-        movie.add(new FSPlaceObject2(shapeId, 1, 0, 0));
+-        movie.add(new FSShowFrame());
+-
+-        movie.encodeToFile(file.getPath());
+-    }
+-}
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSScreenVideoPacketTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -113,10 +113,10 @@
+ 
+         try
+         {
+-            FSImageConstructor imageConstructor = new FSImageConstructor(new File(sourceDir, files[0]).getAbsolutePath());
++            FSDefineObject image = Image.defineImage(0, new File(sourceDir, files[0]).getAbsolutePath());
+ 
+-            int screenWidth = imageConstructor.getWidth();
+-            int screenHeight = imageConstructor.getHeight();
++            int screenWidth = ((Displayable)image).getWidth();
++            int screenHeight = ((Displayable)image).getHeight();
+ 
+             int blockWidth = 64;
+             int blockHeight = 64;
+@@ -137,9 +137,9 @@
+                           
+             movie.add(new FSDefineVideo(identifier, numberOfFrames, screenWidth, screenHeight, deblocking, smoothing, codec));     
+             
+-            ArrayList prev = imageConstructor.getImageAsBlocks(blockWidth, blockHeight);
+-            ArrayList next;
+-            ArrayList delta;
++            ArrayList&lt;FSImageBlock&gt; prev = Image.getImageAsBlocks(blockWidth, blockHeight, new File(sourceDir, files[0]).getAbsolutePath());
++            ArrayList&lt;FSImageBlock&gt; next;
++            ArrayList&lt;FSImageBlock&gt; delta;
+             
+         	FSScreenVideoPacket packet = new FSScreenVideoPacket(true, codec, screenWidth, screenHeight, blockWidth, blockHeight, prev);
+             
+@@ -153,10 +153,9 @@
+ 	    	{
+                 File srcFile = new File(sourceDir, files[i]);
+ 
+-                imageConstructor.setImageFromFile(srcFile.getAbsolutePath());                                
+-                next = imageConstructor.getImageAsBlocks(blockWidth, blockHeight);
++                next = Image.getImageAsBlocks(blockWidth, blockHeight, srcFile.getAbsolutePath());
+                 
+-        		delta = new ArrayList(prev.size());
++        		delta = new ArrayList&lt;FSImageBlock&gt;(prev.size());
+         		
+         		for (int j=0; j&lt;prev.size(); j++)
+         		{
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/test/FSShapeConstructorTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -1,139 +0,0 @@
+-package com.flagstone.transform.test;
+-
+-import java.io.*;
+-
+-import com.flagstone.transform.*;
+-import com.flagstone.transform.util.*;
+-
+-import junit.framework.TestCase;
+-
+-public class FSShapeConstructorTest extends TestCase
+-{
+-    private File destDir = null;
+-
+-    public void setup()
+-    {
+-        destDir = new File(&quot;test/results/FSShapeConstructor&quot;);
+-    }
+-
+-    public void testBasicShapes()
+-    {
+-        try
+-        {
+-            File dstFile = new File(destDir, &quot;BasicShapes.swf&quot;);
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            FSShapeConstructor path = new FSShapeConstructor();
+-            FSMovie movie = new FSMovie();
+-
+-            path.COORDINATES_ARE_PIXELS = true;
+-
+-            int width = 150;
+-            int height = 100;
+-            int cornerRadius = 10;
+-
+-            int identifier = 0;
+-
+-            path.add(new FSLineStyle(20, FSColorTable.black()));
+-            path.add(new FSSolidFill(FSColorTable.red()));
+-
+-            movie.setFrameRate(1.0f);
+-            movie.setFrameSize(new FSBounds(-4000, -4000, 4000, 4000));
+-            movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-
+-            identifier = movie.newIdentifier();
+-
+-            path.selectStyle(0, 0);
+-            path.rect(width/2, -height/2, width, height);
+-            movie.add(path.defineShape(identifier));
+-            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+-            movie.add(new FSShowFrame());
+-
+-            /*
+-             * Draw a rectangle with rounded corners
+-             */
+-            identifier = movie.newIdentifier();
+-
+-            path.newPath();
+-            path.selectStyle(0, 0);
+-            path.rect(width/2, height/2, width, height, cornerRadius);
+-            movie.add(path.defineShape(identifier));
+-            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+-            movie.add(new FSShowFrame());
+-
+-            /*
+-             * Draw a circle
+-             */
+-            identifier = movie.newIdentifier();
+-
+-            path.newPath();
+-            path.selectStyle(0, 0);
+-            path.circle(-width/2, height/2, height/2);
+-            movie.add(path.defineShape(identifier));
+-            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+-            movie.add(new FSShowFrame());
+-
+-            /*
+-             * Draw a elipse
+-             */
+-            identifier = movie.newIdentifier();
+-
+-            path.newPath();
+-            path.selectStyle(0, 0);
+-            path.ellipse(-width/2, -height/2, width/2, height/2);
+-            movie.add(path.defineShape(identifier));
+-            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+-            movie.add(new FSShowFrame());
+-
+-            /*
+-             * Draw a polyline
+-             */
+-            identifier = movie.newIdentifier();
+-
+-            int[] points = new int[] {
+-                0, -100,
+-                10, 0,
+-                0, 90,
+-                90, 0,
+-                0, 20,
+-                -90, 0,
+-                0, 90,
+-                -20, 0,
+-                0, -90,
+-                -90, 0,
+-                0, -20,
+-                90, 0,
+-                0, -90,
+-                10, 0
+-            };
+-
+-            path.newPath();
+-            path.selectStyle(0, 0);
+-            path.polygon(points);
+-            movie.add(path.defineShape(identifier));
+-            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+-            movie.add(new FSShowFrame());
+-
+-            /*
+-             * Draw a cubic bezier curve
+-             */
+-            identifier = movie.newIdentifier();
+-
+-            path.newPath();
+-            path.selectStyle(0, 0);
+-            path.curve(0, -100, 150, -100, 150, 0);
+-            path.closePath();
+-            movie.add(path.defineShape(identifier));
+-            movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+-            movie.add(new FSShowFrame());
+-
+-            movie.encodeToFile(dstFile.getPath());
+-        }
+-        catch (Exception e)
+-        {
+-            assert false;
+-        }
+-    }
+-}
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -1,181 +0,0 @@
+-package com.flagstone.transform.test;
+-
+-import java.io.File;
+-import java.io.FilenameFilter;
+-import java.util.zip.DataFormatException;
+-
+-import junit.framework.TestCase;
+-import junit.framework.Assert;
+-
+-import com.flagstone.transform.*;
+-import com.flagstone.transform.util.*;
+-
+-public class FSSoundConstructorTest extends TestCase
+-{
+-    public void testEventSound()
+-    {
+-        FilenameFilter filter = new FilenameFilter() {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(&quot;.wav&quot;);
+-            }
+-        };
+-
+-        try
+-        {
+-            File sourceDir = new File(&quot;/windows/media&quot;);
+-            File destDir = new File(&quot;test/results/FSSoundConstructor/event/windows&quot;);
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-            File sourceFile = null;
+-            File destFile = null;
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	try
+-            	{
+-	            	sourceFile = new File(sourceDir, files[i]);
+-	            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-	
+-	            	FSSoundConstructor soundGenerator = new FSSoundConstructor(sourceFile.getPath());
+-	            	encodeEventSoundToFile(soundGenerator, destFile);
+-            	}
+-                catch (DataFormatException e)
+-                {
+-                    System.err.println(sourceFile+&quot;: &quot;+e.toString());
+-                }
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testStreamingSound()
+-    {
+-        try
+-        {
+-            FilenameFilter filter = new FilenameFilter() {
+-                public boolean accept(File directory, String name) {
+-                    return name.endsWith(&quot;.wav&quot;);
+-                }
+-            };
+-
+-            File sourceDir = new File(&quot;/windows/media&quot;);
+-            File destDir = new File(&quot;test/results/FSSoundConstructor/streaming/windows&quot;);
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-
+-            File sourceFile = null;
+-            File destFile = null;
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	try
+-            	{
+-	            	sourceFile = new File(sourceDir, files[i]);
+-	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-	
+-		            FSSoundConstructor soundGenerator = new FSSoundConstructor(sourceFile.getPath());
+-		            encodeStreamingSoundToFile(soundGenerator, destFile);
+-            	}
+-                catch (DataFormatException e)
+-                {
+-                    System.err.println(sourceFile+&quot;: &quot;+e.toString());
+-                }
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    private void encodeEventSoundToFile(FSSoundConstructor soundGenerator, File file) throws Exception
+-    {
+-        FSMovie movie = new FSMovie();
+-
+-        float framesPerSecond = 12.0f;
+-
+-        movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
+-        movie.setFrameRate(framesPerSecond);
+-
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-
+-        int soundId = movie.newIdentifier();
+-
+-        /*
+-         * Calculate the time it takes to play the sound and the number of frames this
+-         * represents.
+-         */
+-        float duration = ((float) soundGenerator.getSamplesPerChannel()) / ((float) soundGenerator.getSampleRate());
+-        int numberOfFrames = (int) (duration * framesPerSecond);
+-
+-        /*
+-         * Add the sound definition and the FSStartSound object which is used to start
+-         * the sound playing.
+-         */
+-
+-        FSDefineSound sound = soundGenerator.defineSound(soundId);
+-
+-        movie.add(sound);
+-        movie.add(new FSStartSound(new FSSoundInfo(soundId, FSSoundInfo.Start, 0)));
+-
+-        /*
+-         * Add frames to give the sound time to play.
+-         */
+-        for (int j=0; j&lt;numberOfFrames; j++)
+-            movie.add(new FSShowFrame());
+-
+-        movie.encodeToFile(file.getPath());
+-    }
+-
+-    private void encodeStreamingSoundToFile(FSSoundConstructor soundGenerator, File file) throws Exception
+-    {
+-        float framesPerSecond = 12.0f;
+-
+-        FSMovie movie = new FSMovie();
+-
+-        movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
+-        movie.setFrameRate(framesPerSecond);
+-
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-
+-        /*
+-         * Play the Streaming Sound.
+-         *
+-         * Calculate the number of decoded sound samples played for each frame and
+-         * the size, in bytes, of each block compressed sound data.
+-         */
+-        int samplesPerBlock = soundGenerator.getSampleRate() / (int) framesPerSecond;
+-        int numberOfBlocks = soundGenerator.getSamplesPerChannel() / samplesPerBlock;
+-
+-        /*
+-         * An FSSoundStreamHeader2 object defines the attributes of the streaming sound.
+-         */
+-        movie.add(soundGenerator.streamHeader(samplesPerBlock));
+-
+-        /*
+-         * Add a streaming block for each frame so the sound is played as each frame
+-         * is displayed.
+-         */
+-        for (int j=0; j&lt;numberOfBlocks; j++)
+-        {
+-            movie.add(soundGenerator.streamBlock(j, samplesPerBlock));
+-            movie.add(new FSShowFrame());
+-        }
+-
+-        movie.encodeToFile(file.getPath());
+-    }
+-
+-}
+
+Deleted: dev/dev-2-4/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSTextConstructorTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FSTextConstructorTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -1,460 +0,0 @@
+-package com.flagstone.transform.test;
+-
+-import java.io.*;
+-import java.util.*;
+-import java.awt.*;
+-
+-import junit.framework.TestCase;
+-import junit.framework.Assert;
+-
+-import com.flagstone.transform.*;
+-import com.flagstone.transform.util.*;
+-
+-public class FSTextConstructorTest extends TestCase
+-{
+-    public void testAWTFont()
+-    {
+-        try
+-        {
+-            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/awt&quot;);
+-            Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+-
+-            for (int i=0; i&lt;fonts.length; i++)
+-            {
+-                String fontName = fonts[i].getFontName();
+-
+-                File destFile = new File(destDir, fontName + &quot;.swf&quot;);
+-
+-                if (destDir.exists() == false)
+-                    assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, fontName);
+-                encodeFontToFile(textGenerator, destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testTrueTypeFont()
+-    {
+-        FilenameFilter filter = new FilenameFilter() {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(&quot;.ttf&quot;);
+-            }
+-        };
+-
+-        try
+-        {
+-            File sourceDir = new File(&quot;test/data/ttf&quot;);
+-            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/ttf&quot;);
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-            File sourceFile = null;
+-            File destFile = null;
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	sourceFile = new File(sourceDir, files[i]);
+-            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, sourceFile.getPath());
+-                encodeFontToFile(textGenerator, destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testWindowsFont()
+-    {
+-        FilenameFilter filter = new FilenameFilter() {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(&quot;.ttf&quot;);
+-            }
+-        };
+-
+-        try
+-        {
+-            File sourceDir = new File(&quot;/windows/fonts&quot;);
+-            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/win&quot;);
+-
+-            assertTrue(sourceDir.exists());
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            String[] files = sourceDir.list(filter);
+-            File sourceFile = null;
+-            File destFile = null;
+-
+-            for (int i=0; i&lt;files.length; i++)
+-            {
+-            	sourceFile = new File(sourceDir, files[i]);
+-            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, sourceFile.getPath());
+-                encodeFontToFile(textGenerator, destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testCharacterSets(Integer code, String name)
+-    {
+-        try
+-        {
+-            Object[][] parameters = new Object[][] {
+-                new Object[] { new Integer(FSCharacterTable.euro), &quot;euro&quot; },
+-                new Object[] { new Integer(FSCharacterTable.iso_646), &quot;iso-646&quot; },
+-                new Object[] { new Integer(FSCharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },
+-            };
+-
+-            File destDir = new File(&quot;test/results/FSTextConstructor/character-sets&quot;);
+-            File destFile = null;
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            for (int i=0; i&lt;parameters.length; i++)
+-            {
+-                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-                encodeCharacterSet(textGenerator, FSCharacterTable.characterSet(((Integer)parameters[i][1]).intValue()), destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testBoundedCharacters(Locale locale, String name)
+-    {
+-        try
+-        {
+-            Object[][] parameters = new Object[][] {
+-                new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },
+-                new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },
+-                new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },
+-                new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },
+-                new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },
+-                new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },
+-                new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },
+-                new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },
+-                new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },
+-            };
+-
+-            File destDir = new File(&quot;test/results/FSTextConstructor/locales&quot;);
+-            File destFile = null;
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            for (int i=0; i&lt;parameters.length; i++)
+-            {
+-                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-
+-                encodeBoundedCharacterSet(textGenerator,
+-                                FSCharacterTable.characterSetForLocale((Locale)parameters[i][1]), destFile);
+-            }
+-       }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testLocales(Locale locale, String name)
+-    {
+-        try
+-        {
+-            Object[][] parameters = new Object[][] {
+-                new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },
+-                new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },
+-                new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },
+-                new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },
+-                new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },
+-                new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },
+-                new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },
+-                new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },
+-                new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },
+-            };
+-
+-            File destDir = new File(&quot;test/results/FSTextConstructor/locales&quot;);
+-            File destFile = null;
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            for (int i=0; i&lt;parameters.length; i++)
+-            {
+-                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-
+-                encodeCharacterSet(textGenerator,
+-                                FSCharacterTable.characterSetForLocale((Locale)parameters[i][0]), destFile);
+-            }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    public void testStrings(String str, String title)
+-    {
+-        try
+-        {
+-            Object[][] parameters = new Object[][] {
+-                new Object[] { &quot;The quick brown, fox jumped over the lazy dog.&quot;, &quot;atoz&quot; },
+-                new Object[] { &quot;This line contains the same no. of characters.&quot;, &quot;fixed&quot; },
+-                new Object[] { &quot;Lorem ipsum dolor sit amet, consectetuer elit.&quot;, &quot;latin&quot; },
+-                new Object[] { &quot;Rato roeu a rolha da garrafa do rei da Russia.&quot;, &quot;rhyme&quot; },
+-            };
+-
+-            File destDir = new File(&quot;test/results/FSTextConstructor/strings&quot;);
+-            File destFile = null;
+-
+-            if (destDir.exists() == false)
+-                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+-
+-            for (int i=0; i&lt;parameters.length; i++)
+-            {
+-                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
+-
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-                encodeString(textGenerator, (String)parameters[i][0], destFile);
+-           }
+-        }
+-        catch (Exception e)
+-        {
+-            fail(e.toString());
+-        }
+-    }
+-
+-    private void encodeFontToFile(FSTextConstructor textGenerator, File file) throws Exception
+-    {
+-        int fontSize = 280;
+-        int lineSpacing = fontSize;
+-        int margin = fontSize;
+-
+-        FSMovie movie = new FSMovie();
+-        ArrayList lines = new ArrayList();
+-        char c = 0;
+-
+-        for (int i=0; i&lt;32; i++)
+-        {
+-            StringBuffer line = new StringBuffer();
+-
+-            for (int j=0; j&lt;64; j++, c++)
+-
+-                line.append((char)c);
+-
+-            lines.add(line.toString());
+-        }
+-
+-        int fontId = movie.newIdentifier();
+-
+-        FSDefineText2 text = textGenerator.defineTextBlock(movie.newIdentifier(), lines, fontSize, FSColorTable.black(), lineSpacing);
+-        FSDefineFont2 font = textGenerator.defineFont();
+-
+-        font.setIdentifier(fontId);
+-
+-        int screenWidth = text.getBounds().getWidth() + margin + margin;
+-        int screenHeight = text.getBounds().getHeight() + margin + margin;
+-
+-        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
+-        movie.setFrameRate(1.0f);
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-        movie.add(font);
+-        movie.add(text);
+-        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
+-        movie.add(new FSShowFrame());
+-
+-        movie.encodeToFile(file.getPath());
+-    }
+-    private void encodeCharacterSet(FSTextConstructor textGenerator, char[] chars, File file) throws Exception
+-    {
+-        int fontSize = 280;
+-        int lineSpacing = fontSize;
+-        int margin = fontSize;
+-        int charsPerline = 32;
+-
+-        FSMovie movie = new FSMovie();
+-        ArrayList lines = new ArrayList();
+-
+-        StringBuffer line = new StringBuffer();
+-
+-        for (int i=0; i&lt;chars.length; i++)
+-        {
+-            line.append(chars[i]);
+-
+-            if (i % charsPerline == charsPerline-1)
+-            {
+-                lines.add(line.toString());
+-                line = new StringBuffer();
+-            }
+-        }
+-
+-        if (line.length() &gt; 0)
+-            lines.add(line.toString());
+-
+-
+-        int fontId = movie.newIdentifier();
+-
+-        textGenerator.willDisplay(chars);
+-
+-        FSDefineFont2 font = textGenerator.defineFont();
+-        FSDefineText2 text = textGenerator.defineTextBlock(movie.newIdentifier(), lines, fontSize, FSColorTable.black(), lineSpacing);
+-
+-        font.setIdentifier(fontId);
+-
+-        int screenWidth = text.getBounds().getWidth() + margin + margin;
+-        int screenHeight = text.getBounds().getHeight() + margin + margin;
+-
+-        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
+-        movie.setFrameRate(1.0f);
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-        movie.add(font);
+-        movie.add(text);
+-        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
+-
+-        FSShapeConstructor path = new FSShapeConstructor();
+-        int textWidth = text.getBounds().getWidth();
+-        int textHeight = text.getBounds().getHeight();
+-        int shapeId = movie.newIdentifier();
+-
+-        path.add(new FSLineStyle(1, FSColorTable.darkblue()));
+-        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
+-                        textWidth, textHeight);
+-
+-        movie.add(path.defineShape(shapeId));
+-        movie.add(new FSPlaceObject2(shapeId, 2, margin+textWidth/2, margin+textHeight/2));
+-        movie.add(new FSShowFrame());
+-
+-        movie.encodeToFile(file.getPath());
+-    }
+-    private void encodeBoundedCharacterSet(FSTextConstructor textGenerator, char[] chars, File file) throws Exception
+-    {
+-        int fontSize = 280;
+-        int lineSpacing = fontSize;
+-        int margin = fontSize;
+-        int charsPerLine = 32;
+-        int layer = 1;
+-
+-        FSMovie movie = new FSMovie();
+-        FSShapeConstructor path = new FSShapeConstructor();
+-
+-        textGenerator.willDisplay(chars);
+-
+-        int maxWidth = 0;
+-        int x = margin;
+-        int y = margin;
+-
+-        int fontId = movie.newIdentifier();
+-        FSDefineFont2 font = textGenerator.defineFont();
+-        font.setIdentifier(fontId);
+-
+-        movie.setFrameSize(new FSBounds(0, 0, 0, 0));
+-        movie.setFrameRate(1.0f);
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-        movie.add(font);
+-
+-        for (int i=0; i&lt;chars.length; i++)
+-        {
+-            FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), String.valueOf(chars[i]), fontSize, FSColorTable.black());
+-
+-            int textWidth = text.getBounds().getWidth();
+-            int textHeight = text.getBounds().getHeight();
+-            int advance = textGenerator.advanceForChar(chars[i], fontSize) + 40;
+-
+-            int shapeId = movie.newIdentifier();
+-
+-            path.newPath();
+-            path.add(new FSLineStyle(1, FSColorTable.darkblue()));
+-            path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
+-                            textWidth, textHeight);
+-
+-            movie.add(path.defineShape(shapeId));
+-            movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));
+-
+-            movie.add(text);
+-            movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
+-
+-            if (i % charsPerLine == charsPerLine-1)
+-            {
+-                maxWidth = x+advance+margin &gt; maxWidth ? x+advance+margin : maxWidth;
+-
+-                x = margin;
+-                y += lineSpacing;
+-            }
+-            else
+-            {
+-                x += advance;
+-            }
+-        }
+-        movie.setFrameSize(new FSBounds(0, 0, maxWidth, y+margin));
+-
+-        movie.add(new FSShowFrame());
+-        movie.encodeToFile(file.getPath());
+-    }
+-    private void encodeString(FSTextConstructor textGenerator, String str, File file) throws Exception
+-    {
+-        int fontSize = 280;
+-        int margin = fontSize;
+-        int layer = 1;
+-        int x = margin;
+-        int y = margin;
+-
+-        FSMovie movie = new FSMovie();
+-        FSShapeConstructor path = new FSShapeConstructor();
+-
+-        textGenerator.willDisplay(str.toCharArray());
+-
+-        int fontId = movie.newIdentifier();
+-        FSDefineFont2 font = textGenerator.defineFont();
+-        font.setIdentifier(fontId);
+-
+-        movie.setFrameRate(1.0f);
+-        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-        movie.add(font);
+-
+-        FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), str, fontSize, FSColorTable.black());
+-
+-        int textWidth = text.getBounds().getWidth();
+-        int textHeight = text.getBounds().getHeight();
+-        int shapeId = movie.newIdentifier();
+-
+-        path.newPath();
+-        path.add(new FSLineStyle(1, FSColorTable.darkblue()));
+-        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
+-                        textWidth, textHeight);
+-
+-        movie.add(path.defineShape(shapeId));
+-        movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));
+-
+-        movie.add(text);
+-        movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
+-        movie.add(new FSShowFrame());
+-
+-        movie.setFrameSize(new FSBounds(0, 0, textWidth+2*margin, textHeight+2*margin));
+-        movie.encodeToFile(file.getPath());
+-    }
+-}
+
+Added: dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/FontTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -0,0 +1,152 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.*;
++import java.awt.GraphicsEnvironment;
++
++import junit.framework.TestCase;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class FontTest extends TestCase
++{
++    public void testAWTFont()
++    {
++        try
++        {
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/awt&quot;);
++            java.awt.Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
++
++            for (int i=0; i&lt;fonts.length; i++)
++            {
++                String fontName = fonts[i].getFontName();
++
++                File destFile = new File(destDir, fontName + &quot;.swf&quot;);
++
++                if (destDir.exists() == false)
++                    assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++                encodeFontToFile(new Font(fonts[i]), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testTrueTypeFont()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;test/data/ttf&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/ttf&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testWindowsFont()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;/windows/fonts&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/win&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                encodeFontToFile(new Font(sourceFile.getPath()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    private void encodeFontToFile(Font font, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;
++        int margin = fontSize;
++
++        FSMovie movie = new FSMovie();
++        ArrayList&lt;String&gt; lines = new ArrayList&lt;String&gt;();
++        CharacterSet set = new CharacterSet();
++        char c = 0;
++
++        for (int i=0; i&lt;32; i++)
++        {
++            StringBuffer line = new StringBuffer();
++
++            for (int j=0; j&lt;64; j++, c++) {
++                line.append((char)c);
++            }
++
++            lines.add(line.toString());
++            set.add(line.toString());
++        }
++
++        int fontId = movie.newIdentifier();
++
++        FSDefineFont2 definition = font.defineFont(fontId, set.getCharacters());
++        FSDefineText2 text = Text.defineTextBlock(movie.newIdentifier(), lines, definition, fontSize, FSColorTable.black(), lineSpacing);
++
++        int screenWidth = text.getBounds().getWidth() + margin + margin;
++        int screenHeight = text.getBounds().getHeight() + margin + margin;
++
++        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(definition);
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+Added: dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java	2008-03-27 12:16:25 UTC (rev 393)
++++ dev/dev-2-4/src/com/flagstone/transform/test/ImageTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -0,0 +1,110 @@
++package com.flagstone.transform.test;
++
++import java.io.File;
++import java.io.FilenameFilter;
++import java.util.zip.DataFormatException;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++public class ImageTest extends TestCase
++{
++    private File sourceDir = null;
++    private File destDir = null;
++    private String extension = null;
++
++    public void testBMP()
++    {
++		sourceDir = new File(&quot;test/data/bmp&quot;);
++		destDir = new File(&quot;test/results/FSImageConstructor/bmp&quot;);
++		extension = &quot;bmp&quot;;
++
++		displayImage();
++    }
++
++    public void testPNG()
++    {
++		sourceDir = new File(&quot;test/data/png&quot;);
++		destDir = new File(&quot;test/results/FSImageConstructor/png&quot;);
++		extension = &quot;png&quot;;
++
++		displayImage();
++    }
++
++    public void displayImage()
++    {
++        File sourceFile = null;
++        File destFile = null;
++
++        try
++        {
++            FilenameFilter filter = new FilenameFilter()
++            {
++                public boolean accept(File directory, String name)
++                {
++                    String ext = name.substring(name.length()-extension.length()).toLowerCase();
++
++                    return ext.equals(extension);
++                }
++            };
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	try
++            	{
++	                sourceFile = new File(sourceDir, files[i]);
++	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++	
++	                encodeImageToFile(sourceFile.getPath(), destFile);
++            	}
++            	catch (DataFormatException e)
++            	{
++            		if (!sourceFile.getName().startsWith(&quot;x&quot;)) {
++                        fail(&quot;Cannot decode file: &quot;+sourceFile.getName() + &quot;, &quot;+e.toString());
++            		}      		
++            	}
++            }
++        }
++        catch (Exception e)
++        {
++        	fail(e.toString());
++        }
++    }
++
++    private void encodeImageToFile(String path, File file) throws Exception
++    {
++        FSMovie movie = new FSMovie();
++
++        int imageId = movie.newIdentifier();
++        int shapeId = movie.newIdentifier();
++        
++        FSDefineObject image = Image.defineImage(imageId, path);
++
++        int xOrigin = ((Displayable)image).getWidth()/2;
++        int yOrigin = ((Displayable)image).getHeight()/2;
++
++        FSLineStyle borderStyle = new FSLineStyle(20, FSColorTable.black());
++
++         FSDefineShape3 shape = Image.defineEnclosingShape(shapeId, image, -xOrigin, -yOrigin, borderStyle);
++
++        movie.setFrameRate(1.0f);
++        movie.setFrameSize(shape.getBounds());
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(image);
++        movie.add(shape);
++        movie.add(new FSPlaceObject2(shapeId, 1, 0, 0));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/test/SoundTest.java (from rev 391, dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2008-03-26 17:56:38 UTC (rev 391)
++++ dev/dev-2-4/src/com/flagstone/transform/test/SoundTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -0,0 +1,183 @@
++package com.flagstone.transform.test;
++
++import java.io.File;
++import java.io.FilenameFilter;
++
++import java.util.ArrayList;
++import java.util.Iterator;
++import java.util.zip.DataFormatException;
++
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class SoundTest extends TestCase
++{
++    public void testEventSound()
++    {
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.wav&quot;);
++            }
++        };
++
++        try
++        {
++            File sourceDir = new File(&quot;/windows/media&quot;);
++            File destDir = new File(&quot;test/results/FSSoundConstructor/event/windows&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	try
++            	{
++	            	sourceFile = new File(sourceDir, files[i]);
++	            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++	
++	            	encodeEventSoundToFile(sourceFile.getPath(), destFile);
++            	}
++                catch (DataFormatException e)
++                {
++                    System.err.println(sourceFile+&quot;: &quot;+e.toString());
++                }
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testStreamingSound()
++    {
++        try
++        {
++            FilenameFilter filter = new FilenameFilter() {
++                public boolean accept(File directory, String name) {
++                    return name.endsWith(&quot;.wav&quot;);
++                }
++            };
++
++            File sourceDir = new File(&quot;/windows/media&quot;);
++            File destDir = new File(&quot;test/results/FSSoundConstructor/streaming/windows&quot;);
++
++            assertTrue(sourceDir.exists());
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	try
++            	{
++	            	sourceFile = new File(sourceDir, files[i]);
++	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++	
++		            encodeStreamingSoundToFile(sourceFile.getPath(), destFile);
++            	}
++                catch (DataFormatException e)
++                {
++                    System.err.println(sourceFile+&quot;: &quot;+e.toString());
++                }
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    private void encodeEventSoundToFile(String source, File file) throws Exception
++    {
++        FSMovie movie = new FSMovie();
++
++        float framesPerSecond = 12.0f;
++
++        movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
++        movie.setFrameRate(framesPerSecond);
++
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++
++        int soundId = movie.newIdentifier();
++
++
++        /*
++         * Add the sound definition and the FSStartSound object which is used to start
++         * the sound playing.
++         */
++
++        FSDefineSound sound = Sound.defineSound(soundId, source);
++
++        /*
++         * Calculate the time it takes to play the sound and the number of frames this
++         * represents.
++         */
++        float duration = ((float) sound.getSampleCount() / (float) sound.getPlaybackRate());
++        int numberOfFrames = (int) (duration * framesPerSecond);
++
++        movie.add(sound);
++        movie.add(new FSStartSound(new FSSoundInfo(soundId, FSSoundInfo.Start, 0)));
++
++        /*
++         * Add frames to give the sound time to play.
++         */
++        for (int j=0; j&lt;numberOfFrames; j++)
++            movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++
++    private void encodeStreamingSoundToFile(String source, File file) throws Exception
++    {
++        float framesPerSecond = 12.0f;
++
++        FSMovie movie = new FSMovie();
++
++        movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
++        movie.setFrameRate(framesPerSecond);
++
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++
++        /*
++         * Play the Streaming Sound.
++         *
++         * Calculate the number of decoded sound samples played for each frame and
++         * the size, in bytes, of each block compressed sound data.
++         */
++        
++        ArrayList&lt;FSMovieObject&gt;stream = Sound.streamSound(source, (int)framesPerSecond);
++        
++        /*
++         * An FSSoundStreamHeader2 object defines the attributes of the streaming sound.
++         */
++        movie.add((FSSoundStreamHead2)stream.remove(0));
++
++        /*
++         * Add a streaming block for each frame so the sound is played as each frame
++         * is displayed.
++         */
++        for (Iterator&lt;FSMovieObject&gt;i=stream.iterator(); i.hasNext();)
++        {
++            movie.add(i.next());
++            movie.add(new FSShowFrame());
++        }
++
++        movie.encodeToFile(file.getPath());
++    }
++
++}
+
+Copied: dev/dev-2-4/src/com/flagstone/transform/test/TextTest.java (from rev 383, dev/dev-2-4/src/com/flagstone/transform/test/FSTextConstructorTest.java)
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/test/FSTextConstructorTest.java	2008-03-19 10:47:20 UTC (rev 383)
++++ dev/dev-2-4/src/com/flagstone/transform/test/TextTest.java	2008-03-27 12:16:57 UTC (rev 394)
+@@ -0,0 +1,311 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.*;
++
++import junit.framework.TestCase;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class TextTest extends TestCase
++{
++    public void testCharacterSets(Integer code, String name)
++    {
++        try
++        {
++            Object[][] parameters = new Object[][] {
++                new Object[] { new Integer(CharacterTable.euro), &quot;euro&quot; },
++                new Object[] { new Integer(CharacterTable.iso_646), &quot;iso-646&quot; },
++                new Object[] { new Integer(CharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/character-sets&quot;);
++            File destFile = null;
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++            
++            Font font = new Font(new java.awt.Font(&quot;Arial&quot;, java.awt.Font.PLAIN, 12));
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                encodeCharacterSet(font, CharacterTable.characterSet(((Integer)parameters[i][1]).intValue()), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testBoundedCharacters(Locale locale, String name)
++    {
++        try
++        {
++            Object[][] parameters = new Object[][] {
++                new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },
++                new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },
++                new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },
++                new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },
++                new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },
++                new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/locales&quot;);
++            File destFile = null;
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            Font font = new Font(new java.awt.Font(&quot;Arial&quot;, java.awt.Font.PLAIN, 12));
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                encodeBoundedCharacterSet(font,
++                                CharacterTable.characterSetForLocale((Locale)parameters[i][1]), destFile);
++            }
++       }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testLocales(Locale locale, String name)
++    {
++        try
++        {
++            Object[][] parameters = new Object[][] {
++                new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },
++                new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },
++                new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },
++                new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },
++                new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },
++                new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/locales&quot;);
++            File destFile = null;
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            Font font = new Font(new java.awt.Font(&quot;Arial&quot;, java.awt.Font.PLAIN, 12));
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                encodeCharacterSet(font,
++                               CharacterTable.characterSetForLocale((Locale)parameters[i][0]), destFile);
++            }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    public void testStrings(String str, String title)
++    {
++        try
++        {
++            Object[][] parameters = new Object[][] {
++                new Object[] { &quot;The quick brown, fox jumped over the lazy dog.&quot;, &quot;atoz&quot; },
++                new Object[] { &quot;This line contains the same no. of characters.&quot;, &quot;fixed&quot; },
++                new Object[] { &quot;Lorem ipsum dolor sit amet, consectetuer elit.&quot;, &quot;latin&quot; },
++                new Object[] { &quot;Rato roeu a rolha da garrafa do rei da Russia.&quot;, &quot;rhyme&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/strings&quot;);
++            File destFile = null;
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            Font font = new Font(new java.awt.Font(&quot;Arial&quot;, java.awt.Font.PLAIN, 12));
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                encodeString(font, (String)parameters[i][0], destFile);
++           }
++        }
++        catch (Exception e)
++        {
++            fail(e.toString());
++        }
++    }
++
++    
++    private void encodeCharacterSet(Font font, char[] chars, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;
++        int margin = fontSize;
++        int charsPerline = 32;
++
++        FSMovie movie = new FSMovie();
++        ArrayList&lt;String&gt; lines = new ArrayList&lt;String&gt;();
++
++        StringBuffer line = new StringBuffer();
++
++        for (int i=0; i&lt;chars.length; i++)
++        {
++            line.append(chars[i]);
++
++            if (i % charsPerline == charsPerline-1)
++            {
++                lines.add(line.toString());
++                line = new StringBuffer();
++            }
++        }
++
++        if (line.length() &gt; 0)
++            lines.add(line.toString());
++
++
++        int fontId = movie.newIdentifier();
++        FSDefineFont2 definition = font.defineFont(fontId, chars);
++
++        FSDefineText2 text = Text.defineTextBlock(movie.newIdentifier(), lines, definition, fontSize, FSColorTable.black(), lineSpacing);
++
++        int screenWidth = text.getBounds().getWidth() + margin + margin;
++        int screenHeight = text.getBounds().getHeight() + margin + margin;
++
++        movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(definition);
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), 1, margin , margin));
++
++        Canvas path = new Canvas();
++        int textWidth = text.getBounds().getWidth();
++        int textHeight = text.getBounds().getHeight();
++        int shapeId = movie.newIdentifier();
++
++        path.setLineStyle(new FSLineStyle(1, FSColorTable.darkblue()));
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
++                        textWidth, textHeight);
++
++        movie.add(path.defineShape(shapeId));
++        movie.add(new FSPlaceObject2(shapeId, 2, margin+textWidth/2, margin+textHeight/2));
++        movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++    private void encodeBoundedCharacterSet(Font font, char[] chars, File file) throws Exception
++    {
++        int fontSize = 280;
++        int lineSpacing = fontSize;
++        int margin = fontSize;
++        int charsPerLine = 32;
++        int layer = 1;
++
++        FSMovie movie = new FSMovie();
++ 
++        int maxWidth = 0;
++        int x = margin;
++        int y = margin;
++
++        int fontId = movie.newIdentifier();
++        FSDefineFont2 definition = font.defineFont(fontId, chars);
++        Canvas path = new Canvas();
++
++        movie.setFrameSize(new FSBounds(0, 0, 0, 0));
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(definition);
++
++        for (int i=0; i&lt;chars.length; i++)
++        {
++            FSDefineText2 text = Text.defineText(movie.newIdentifier(), String.valueOf(chars[i]), definition, fontSize, FSColorTable.black());
++
++            int textWidth = text.getBounds().getWidth();
++            int textHeight = text.getBounds().getHeight();
++            int advance = Text.boundsForText(String.valueOf(chars[i]), definition, fontSize).getWidth() + 40;
++
++            int shapeId = movie.newIdentifier();
++
++            path.clear();
++            path.setLineStyle(new FSLineStyle(1, FSColorTable.darkblue()));
++            path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
++                            textWidth, textHeight);
++
++            movie.add(path.defineShape(shapeId));
++            movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));
++
++            movie.add(text);
++            movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
++
++            if (i % charsPerLine == charsPerLine-1)
++            {
++                maxWidth = x+advance+margin &gt; maxWidth ? x+advance+margin : maxWidth;
++
++                x = margin;
++                y += lineSpacing;
++            }
++            else
++            {
++                x += advance;
++            }
++        }
++        movie.setFrameSize(new FSBounds(0, 0, maxWidth, y+margin));
++
++        movie.add(new FSShowFrame());
++        movie.encodeToFile(file.getPath());
++    }
++    
++    private void encodeString(Font font, String str, File file) throws Exception
++    {
++        int fontSize = 280;
++        int margin = fontSize;
++        int layer = 1;
++        int x = margin;
++        int y = margin;
++
++        FSMovie movie = new FSMovie();
++        Canvas path = new Canvas();
++
++        int fontId = movie.newIdentifier();
++        FSDefineFont2 definition = font.defineFont(fontId, str.toCharArray());
++
++        movie.setFrameRate(1.0f);
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++        movie.add(definition);
++
++        FSDefineText2 text = Text.defineText(movie.newIdentifier(), str, definition, fontSize, FSColorTable.black());
++
++        int textWidth = text.getBounds().getWidth();
++        int textHeight = text.getBounds().getHeight();
++        int shapeId = movie.newIdentifier();
++
++        path.clear();
++        path.setLineStyle(new FSLineStyle(1, FSColorTable.darkblue()));
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
++                        textWidth, textHeight);
++
++        movie.add(path.defineShape(shapeId));
++        movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));
++
++        movie.add(text);
++        movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
++        movie.add(new FSShowFrame());
++
++        movie.setFrameSize(new FSBounds(0, 0, textWidth+2*margin, textHeight+2*margin));
++        movie.encodeToFile(file.getPath());
++    }
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000327.html">[Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000331.html">[Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#328">[ date ]</a>
+              <a href="thread.html#328">[ thread ]</a>
+              <a href="subject.html#328">[ subject ]</a>
+              <a href="author.html#328">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

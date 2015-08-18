@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r459%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804161505.m3GF51vu004755%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000394.html">
+   <LINK REL="Next"  HREF="000396.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r459%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804161505.m3GF51vu004755%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr 16 17:05:01 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000394.html">[Transform-svn] r458 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000396.html">[Transform-svn] r460 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#395">[ date ]</a>
+              <a href="thread.html#395">[ thread ]</a>
+              <a href="subject.html#395">[ subject ]</a>
+              <a href="author.html#395">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-16 17:04:59 +0200 (Wed, 16 Apr 2008)
+New Revision: 459
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+Log:
+Updated FSDefineTextField to use FSString.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-16 15:02:09 UTC (rev 458)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-16 15:04:59 UTC (rev 459)
+@@ -340,7 +340,7 @@
+ 	private int indent = 0;
+ 	private int leading = 0;
+ 	private String variableName = &quot;&quot;;
+-	private String initialText = &quot;&quot;;
++	private FSString initialText = new FSString(&quot;&quot;);
+ 
+ 	/**
+ 	 * Construct an FSDefineTextField object, initialising it with values decoded
+@@ -441,7 +441,7 @@
+ 		indent = obj.indent;
+ 		leading = obj.leading;
+ 		variableName = new String(obj.variableName);
+-		initialText = new String(obj.initialText);
++		initialText = new FSString(obj.initialText);
+ 	}
+ 
+ 	public int getWidth() 
+@@ -682,7 +682,7 @@
+ 	 */
+ 	public String getInitialText()
+ 	{
+-		return initialText;
++		return initialText.getString();
+ 	}
+ 
+ 	/**
+@@ -997,7 +997,7 @@
+ 	 */
+ 	public void setInitialText(String aString)
+ 	{
+-		initialText = aString;
++		initialText = new FSString(aString);
+ 	}
+ 
+ 	/**
+@@ -1169,7 +1169,7 @@
+ 		length += (_containsMaxLength) ? 2 : 0;
+ 		length += (containsLayoutInfo()) ? 9 : 0;
+ 		length += FSCoder.strlen(variableName, true);
+-		length += (_containsText) ? FSCoder.strlen(initialText, true) : 0;
++		length += (_containsText) ? FSCoder.strlen(initialText.getString(), true) : 0;
+ 
+ 		context.transparent = false;
+ 
+@@ -1232,7 +1232,7 @@
+ 
+ 		if (_containsText)
+ 		{
+-			coder.writeString(initialText);
++			coder.writeString(initialText.getString());
+ 			coder.writeWord(0, 1);
+ 		}
+ 		context.transparent = false;
+@@ -1293,7 +1293,7 @@
+ 		variableName = coder.readString();
+ 
+ 		if (_containsText)
+-			initialText = coder.readString();
++			initialText = new FSString(coder.readString());
+ 
+ 		context.transparent = false;
+ 	}
+@@ -1328,6 +1328,6 @@
+ 
+ 	private boolean containsText()
+ 	{
+-		return initialText != null &amp;&amp; initialText.length() &gt; 0;
++		return initialText != null &amp;&amp; initialText.getString().length() &gt; 0;
+ 	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000394.html">[Transform-svn] r458 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000396.html">[Transform-svn] r460 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#395">[ date ]</a>
+              <a href="thread.html#395">[ thread ]</a>
+              <a href="subject.html#395">[ subject ]</a>
+              <a href="author.html#395">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

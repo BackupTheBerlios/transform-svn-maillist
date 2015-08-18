@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r325 - dev/dev-2-3/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r325%20-%20dev/dev-2-3/doc/releases&In-Reply-To=%3C200803081447.m28ElVDN000781%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000260.html">
+   <LINK REL="Next"  HREF="000262.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r325 - dev/dev-2-3/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r325%20-%20dev/dev-2-3/doc/releases&In-Reply-To=%3C200803081447.m28ElVDN000781%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r325 - dev/dev-2-3/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Mar  8 15:47:31 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000260.html">[Transform-svn] r324 - dev/dev-2-3/doc/releases
+</A></li>
+        <LI>Next message: <A HREF="000262.html">[Transform-svn] r326 - in dev/dev-2-3/src: . com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#261">[ date ]</a>
+              <a href="thread.html#261">[ thread ]</a>
+              <a href="subject.html#261">[ subject ]</a>
+              <a href="author.html#261">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-08 15:47:27 +0100 (Sat, 08 Mar 2008)
+New Revision: 325
+
+Added:
+   dev/dev-2-3/doc/releases/transform-2.3.0.txt
+   dev/dev-2-3/doc/releases/transform-3.0.0.txt
+Removed:
+   dev/dev-2-3/doc/releases/transform-pre-2.3.0.txt
+   dev/dev-2-3/doc/releases/transform-pre-3.0.0.txt
+Log:
+Dropped the &quot;pre&quot; from the name of releases notes that contain advance informationo release to simplify the update/release process.
+
+Copied: dev/dev-2-3/doc/releases/transform-2.3.0.txt (from rev 324, dev/dev-2-3/doc/releases/transform-pre-2.3.0.txt)
+
+Copied: dev/dev-2-3/doc/releases/transform-3.0.0.txt (from rev 322, dev/dev-2-3/doc/releases/transform-pre-3.0.0.txt)
+
+Deleted: dev/dev-2-3/doc/releases/transform-pre-2.3.0.txt
+===================================================================
+--- dev/dev-2-3/doc/releases/transform-pre-2.3.0.txt	2008-03-08 14:45:45 UTC (rev 324)
++++ dev/dev-2-3/doc/releases/transform-pre-2.3.0.txt	2008-03-08 14:47:27 UTC (rev 325)
+@@ -1,75 +0,0 @@
+-----------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.3.
+-----------------------------------------------------------
+-
+-The release adds new classes to decode and process Flash Video (.flv) files.
+-
+-
+-Bug Fixes
+-    None scheduled
+-
+-Class Changes
+-    New classes for handling Flash Video.
+-     
+-Documentation Changes
+-    None scheduled
+-
+-Testing Changes
+-    None scheduled
+-    
+-Package Changes
+-    Contributed code is no longer included in the release.
+-	Examples are no longer included in the release.
+-
+-	
+--------------
+-  Bug Fixes  
+--------------
+-
+-None
+-
+------------------
+-  Class Changes  
+------------------
+-
+-1. New classes for handling Flash Video.
+-
+-Four new classes have been added to decode and encode Flash Video files.
+-
+-   FSVideoObject - an abstract parent class similar to FSMovieObject.
+-   FSVideo - a collection class similar to FSMovie.
+-   FSAudioData - contains the encoded audio.
+-   FSVideoData - contains the encoded video.
+-   
+-The classes provide basic information on the format used to encode the audio
+-and video streams and provide access to the binary data - no encoding or 
+-decoding is performed.
+-
+--------------------------
+-  Documentation Changes  
+--------------------------
+-
+-None
+-
+--------------------
+-  Testing Changes  
+--------------------
+-
+-None
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+-1. Contributed code is no longer included in the release.
+-
+-The code in the transform.contrib package has been removed from the release.
+-Instead the code will be hosted in the new Cookbook section of the web site.
+-
+-2. Examples are no longer included in the release.
+-
+-As with the contributed code package the examples in the package, 
+-com.flagstone.transform.examples have been removed and will be hosted in the 
+-cookbook section of the Flagstone web site. The aim is to expand the examples
+-the available without causing bloat to the releases.
+-
+
+Deleted: dev/dev-2-3/doc/releases/transform-pre-3.0.0.txt
+===================================================================
+--- dev/dev-2-3/doc/releases/transform-pre-3.0.0.txt	2008-03-08 14:45:45 UTC (rev 324)
++++ dev/dev-2-3/doc/releases/transform-pre-3.0.0.txt	2008-03-08 14:47:27 UTC (rev 325)
+@@ -1,177 +0,0 @@
+--------------------------------------------------
+-  Release Notes for Transform SWF, Version 3.0. 
+--------------------------------------------------
+-
+-IMPORTANT: This document contains the set of proposed changes for version 3.0 
+-of the Transfrom SWF framework. This document will be updated regularly and 
+-everything is, of course, subject to change.
+- 
+-Introduction
+-Over the past year I have been involved in projects that used existing Flash 
+-files as a template. Transform was used to decode the file then update or 
+-replace objects to create a customised version.
+-
+-The changes proposed for Transform 3.0 will update the code to include all 
+-the lessons learned from this work and also generally clean up the code base - 
+-fixing mistakes, dumb decisions and generally making the framework easier to 
+-use.
+-
+-Architecturally the changes should be minor - the same philosophy of 
+-providing a low-level API which exposes all the data structures in a Flash file 
+-as objects will be maintained. Files will still be generated and parsed in the 
+-same way. Most of the changes will essentially be cosmetic - fixing code that 
+-simply bad or poorly implemented. As a result migrating code from Transform 2 
+-to Transform 3 should be very simple and extensive rewrites will not be 
+-necessary.
+-
+-Class Changes
+-
+-    Flatten class hierarchy and use interfaces to identify object types.
+-    Enforce encapsulation and add support for references.
+-    Add factory methods.
+-    More use of Java 'native' classes.
+-    
+-    Rename existing classes:
+-    
+-        Rename FSGradient to FSGradientColor.
+-        Rename FSEnvelope to FSSoundLevel.
+-        Rename FSShapeStyle to FSStyle.
+-        Rename FSUnknownObject to FSBinaryObject.
+-
+-    New Classes:
+-
+-        FSScript - a wrapper for encoded actions generated by Translate.
+-        FSEnvelope - a collection class for FSSoundLevels.
+-        FSGradient - a collection class for FSGradientColors.
+-        FSGlyph - a collection class for font information.
+-
+-Internal Class Changes
+-
+-    To be defined
+-
+-Package Changes
+-
+-    None planned.
+-
+-
+------------------
+-  Class Changes
+------------------
+-
+-1. Flatten class hierarchy and use interfaces to identify object types.
+-
+-In short the current class hierarchy: 
+-
+-    FSTransformObject -&gt; FSMovieObject -&gt; FSDefineObject 
+-    
+-adds very little to the project. Code reuse is minimal and the overhead slows 
+-down the encoding and decoding of files.
+-
+-To fix this the hierarchy will be flattened to a single level. For code that 
+-need to identify where an object was a definition or a display list command Java 
+-interfaces will be used to effectively create types of object. For example 
+-rather than inheriting from FSTransformObject objects will implement the 
+-FSTransformable interface which defines where an object knows how to encode and 
+-decode itself from binary data.
+-
+-Examples of the interfaces that will be defined include:
+-
+-    public interface Transformable
+-    {
+-        public int decode(FSCoder coder);
+-        public void precode(FSCoder coder);
+-        public int encode(FSCoder coder);
+-    }
+-
+-    public interface MovieObject
+-    {
+-        public int getType();
+-        public boolean isDefinition();
+-        public boolean isShape();
+-        public boolean isImage();
+-        public boolean isSound();
+-        public boolean isFont();
+-        public boolean isText();
+-    }
+-    
+-    public interface DefinitionObject
+-    {
+-        public int getIdentifier();
+-        public void setIdentifier(int identifier);
+-    }
+-
+-The methods, of course, is all subject to change should a better idea come 
+-to light.
+-
+-
+-2. Enforce encapsulation and add support for references.
+-
+-Flash files are simply large data structures. An object in Transform is 
+-simply a data structure that knows how to encode and decode itself. As a result 
+-a deliberate decision was taken to break encapsulation and support accessor 
+-methods that simply used references rather than copies. This avoided the 
+-overhead of creating trees of objects whenever the objects in a Flash file were 
+-traversed. Enforcing encapsulation would have required creating several trees 
+-of objects as the graph was traversed to change for example a small-grained 
+-object such as a shape's colour.
+-
+-The move to use lazily decoded arrays potentially requires encapsulation to 
+-be enforced since it would make it explicitly clear when an array of objects 
+-was modified and required encoding when a files was saved.
+-
+-For the 3.0 release the default policy will most likely be that normal 
+-get/set accessor methods create copies of objects. Methods will be added to 
+-return references so that excessive copying when traversing the object tree is 
+-avoided.
+-
+-
+-3. Add factory methods.
+-
+-Constructors for simple objects such as shape definitions and some display 
+-list commands are easy to use. However for multipurpose objects which have 
+-optional attributes including constructors for every option is tedious and 
+-confusing, FSPlaceObject2 is the obvious culprit. The basic set of constructors
+-was standardised in version 2.1. For version 3.0 the factory methods will be
+-updated.
+-
+-
+-4. More use of Java 'native' classes.
+-
+-The FSMovie class is the obvious example of how classes in Transform fail to 
+-make use of Java classes. Rather than using File objects the names of Flash 
+-files are presented using Strings - which are used internally to create File 
+-objects. This situation arose as I wanted to keep the API for the Java and C++ 
+-versions as close as possible to minimise the effort of maintaining the code - 
+-a poor decision. So Transform 3.0 will make better use of Java objects to provide 
+-a more 'natural' API.
+-
+-
+-5. Rename existing classes.
+-
+-With a new version comes a chance to clean up and ugliness. The following 
+-classes will be renamed to make their role clearer and hopefully more intuitive:
+-
+-Rename FSGradient to FSGradientColor to support the new FSGradient collection 
+-class for FSGradientColours - specifying how the colour of a shape changes 
+-across the Gradient Square.
+-
+-Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class 
+-for a FSSoundLevels which describes the waveform applied to a sound.
+-
+-Rename FSShapeStyle to FSStyle - easier to type.
+-
+-Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly 
+-by Transform Utilities classes to generate encoded version of objects.
+-
+- 
+-6. New Classes
+-
+-The new classes that will be added in Transform 3.0 are designed to support 
+-lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
+-FSGradient are  simple collection classes.
+-
+-FSGlyph is more complicated as it will support all the information that 
+-describes a font glyph: shape, advance, character code and bounding box. This 
+-will simply the use of the FSTextConstructor class in Tranform Utilities and 
+-handling of the FSDefineFont2 class in Transform.
+-
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000260.html">[Transform-svn] r324 - dev/dev-2-3/doc/releases
+</A></li>
+	<LI>Next message: <A HREF="000262.html">[Transform-svn] r326 - in dev/dev-2-3/src: . com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#261">[ date ]</a>
+              <a href="thread.html#261">[ thread ]</a>
+              <a href="subject.html#261">[ subject ]</a>
+              <a href="author.html#261">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

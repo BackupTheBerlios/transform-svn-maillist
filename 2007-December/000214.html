@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r278 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r278%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200712230721.lBN7LuIW006413%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000213.html">
+   <LINK REL="Next"  HREF="000215.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r278 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r278%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200712230721.lBN7LuIW006413%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r278 - trunk/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sun Dec 23 08:21:56 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000213.html">[Transform-svn] r277 - in trunk: . doc doc/releases
+</A></li>
+        <LI>Next message: <A HREF="000215.html">[Transform-svn] r279 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#214">[ date ]</a>
+              <a href="thread.html#214">[ thread ]</a>
+              <a href="subject.html#214">[ subject ]</a>
+              <a href="author.html#214">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-23 08:21:53 +0100 (Sun, 23 Dec 2007)
+New Revision: 278
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Fixed bug 12776. The offset to the string table in the NAME block of TrueType files is not calculated relative to the start of the block rather than an absolute address.
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2007-12-22 16:20:29 UTC (rev 277)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2007-12-23 07:21:53 UTC (rev 278)
+@@ -1474,9 +1474,11 @@
+     }
+     private void decodeNAME(FSCoder coder)
+     {
++    	int stringTableBase = coder.getPointer() &gt;&gt;&gt; 3;
++    	
+         int format = coder.readWord(2, false);
+         int numberOfNameRecords = coder.readWord(2, false);
+-        int stringTable = coder.readWord(2, false);
++        int stringTable = coder.readWord(2, false) + stringTableBase;
+         
+         for (int i=0; i&lt;numberOfNameRecords; i++) 
+         {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000213.html">[Transform-svn] r277 - in trunk: . doc doc/releases
+</A></li>
+	<LI>Next message: <A HREF="000215.html">[Transform-svn] r279 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#214">[ date ]</a>
+              <a href="thread.html#214">[ thread ]</a>
+              <a href="subject.html#214">[ subject ]</a>
+              <a href="author.html#214">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

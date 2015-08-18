@@ -1,0 +1,458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r377%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182148.m2ILm2of003031%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000312.html">
+   <LINK REL="Next"  HREF="000314.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r377%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182148.m2ILm2of003031%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 22:48:02 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000312.html">[Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000314.html">[Transform-svn] r378 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#313">[ date ]</a>
+              <a href="thread.html#313">[ thread ]</a>
+              <a href="subject.html#313">[ subject ]</a>
+              <a href="author.html#313">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 22:47:59 +0100 (Tue, 18 Mar 2008)
+New Revision: 377
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSJPEGEncodingTable.java
+Log:
+updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSJPEGEncodingTable.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSJPEGEncodingTable.java	2008-03-18 21:28:14 UTC (rev 376)
++++ dev/dev-2-4/src/com/flagstone/transform/FSJPEGEncodingTable.java	2008-03-18 21:47:59 UTC (rev 377)
+@@ -31,187 +31,221 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSJPEGEncodingTable defines an encoding table for JPEG images. 
++ * FSJPEGEncodingTable defines an encoding table for JPEG images.
++ * 
++ * &lt;p&gt;
++ * The encoding table is shared between all images defined using the
++ * FSDefineJPEGImage class so there should only be one FSJPEGEncodingTable
++ * object defined in a movie.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;type&lt;/td&gt;
++ * &lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;encodingTable&lt;/td&gt;
++ * &lt;td&gt;An array of bytes containing the encoding table data.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * The FSJPEGEncodingTable class is not essential to define JPEG encoded images
++ * in a movie using the FSDefineJPEGImage class. If an FSJPEGEncodingTable
++ * object is created with an empty encoding table then the Flash Player will
++ * still display JPEG images defined using FSDefineJPEGImage objects correctly.
++ * When an FSJPEGEncodingTable with an empty encoding table is encoded to a
++ * Flash file, the &quot;end of stream&quot; marker 0xFFD9 is encoded allowing the empty
++ * table to be decoded correctly.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The simplest way to use the FSJPEGEncodingTable and FSDefineJPEGImage classes
++ * to define JPEG encoded images is to create an empty encoding table then
++ * construct the FSDefineJPEGImage object(s) with the image data from a file:
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * File aFile = new File(filename);
++ * byte[] bytes = new byte[(int) aFile.length()];
++ * 
++ * try
++ * {
++ * 	FileInputStream imageContents = new FileInputStream(aFile);
++ * 	imageContents.read(bytes);
++ * 	imageContents.close();
++ * } catch (FileNotFoundException e)
++ * {
++ * 	throw new FileNotFoundException(filename);
++ * } catch (IOException e)
++ * {
++ * 	throw new IOException(filename);
++ * }
++ * 
++ * movie.add(new FSJPEGEncodingTable());
++ * movie.add(new FSDefineJPEGImage(movie.newIdentifier(), bytes));
++ * &lt;/pre&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSJPEGEncodingTable class represents the JPEGEncodingTable tag from the
++ * Macromedia Flash (SWF) File Format Specification. It was introduced in Flash
++ * 1.
++ * &lt;/p&gt;
++ */
++public class FSJPEGEncodingTable extends FSMovieObject
++{
++	private byte[] encodingTable;
+ 
+-&lt;p&gt;The encoding table is shared between all images defined using the FSDefineJPEGImage class so there should only be one FSJPEGEncodingTable object defined in a movie.&lt;/p&gt;
++	/**
++	 * Construct an FSJPEGEncodingTable object, initalizing it with values
++	 * decoded from an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSJPEGEncodingTable(FSCoder coder)
++	{
++		super(FSMovieObject.JPEGTables);
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSJPEGEncodingTable object with an empty encoding table.
++	 */
++	public FSJPEGEncodingTable()
++	{
++		super(FSMovieObject.JPEGTables);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSJPEGEncodingTable object with the encoding table data.
++	 * 
++	 * @param bytes
++	 *            an array of bytes contains the data for the encoding table.
++	 */
++	public FSJPEGEncodingTable(byte[] bytes)
++	{
++		super(FSMovieObject.JPEGTables);
++		setEncodingTable(bytes);
++	}
+ 
+-&lt;tr&gt;&lt;td&gt;&lt;a name=&quot;FSJPEGEncodingTable_0&quot;&gt;type&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;Identifies the data structure when it is encoded. Read-only.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSJPEGEncodingTable object by copying values from an
++	 * existing object.
++	 * 
++	 * @param obj
++	 *            an FSJPEGEncodingTable object.
++	 */
++	public FSJPEGEncodingTable(FSJPEGEncodingTable obj)
++	{
++		super(obj);
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSJPEGEncodingTable_0&quot;&gt;encodingTable&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An array of bytes containing the encoding table data.&lt;/td&gt;
+-&lt;/tr&gt;
++		if (obj.encodingTable != null)
++			encodingTable = Transform.clone(obj.encodingTable);
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Gets the encoding table.
++	 * 
++	 * @return the array of bytes contains the data for the encoding table.
++	 */
++	public byte[] getEncodingTable()
++	{
++		return encodingTable;
++	}
+ 
+-&lt;p&gt;The FSJPEGEncodingTable class is not essential to define JPEG encoded images in a movie using the FSDefineJPEGImage class. If an FSJPEGEncodingTable object is created with an empty encoding table then the Flash Player will still display JPEG images defined using FSDefineJPEGImage objects correctly. When an FSJPEGEncodingTable with an empty encoding table is encoded to a Flash file, the &quot;end of stream&quot; marker 0xFFD9 is encoded allowing the empty table to be decoded correctly.&lt;/p&gt;
++	/**
++	 * Sets the encoding table. If the data is null or zero length then the 
++	 * encoding table will be set to a default value of 0xFFD8, 0xFFD9. 
++	 * 
++	 * @param bytes
++	 *            an array of bytes contains the data for the encoding table.
++	 */
++	public void setEncodingTable(byte[] bytes)
++	{
++		if (bytes == null || bytes.length == 0)
++		{
++			bytes = new byte[] { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xD9 };
++		}
++		encodingTable = bytes;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Examples&lt;/h1&gt;
++	public Object clone()
++	{
++		FSJPEGEncodingTable obj = (FSJPEGEncodingTable) super.clone();
+ 
+-&lt;p&gt;The simplest way to use the FSJPEGEncodingTable and FSDefineJPEGImage classes to define JPEG encoded images is to create an empty encoding table then construct the FSDefineJPEGImage object(s) with the image data from a file:&lt;/p&gt;
++		obj.encodingTable = new byte[encodingTable.length];
++		
++		for (int i=0; i&lt;encodingTable.length; i++) {
++			obj.encodingTable[i] = encodingTable[i];
++		}
+ 
+-&lt;pre&gt;
+-File aFile = new File(filename);
+-byte[] bytes = new byte[(int)aFile.length()];
++		return obj;
++	}
+ 
+-try {
+-    FileInputStream imageContents = new FileInputStream(aFile);            
+-    imageContents.read(bytes);
+-    imageContents.close();
+-}
+-catch (FileNotFoundException e) {
+-    throw new FileNotFoundException(filename);
+-}
+-catch (IOException e) {
+-    throw new IOException(filename);
+-}
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-movie.add(new FSJPEGEncodingTable());
+-movie.add(new FSDefineJPEGImage(movie.newIdentifier(), bytes));
+-&lt;/pre&gt;
++		if (super.equals(obj))
++		{
++			FSJPEGEncodingTable typedObject = (FSJPEGEncodingTable)obj;
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++			result = result &amp;&amp; encodingTable.length == typedObject.encodingTable.length;
+ 
+-&lt;p&gt;The FSJPEGEncodingTable class represents the JPEGEncodingTable tag from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSJPEGEncodingTable extends FSMovieObject
+-{
+-    private byte[] encodingTable = null;
++			if (result)
++				for (int i=0; i&lt;encodingTable.length; i++)
++					if (encodingTable[i] != typedObject.encodingTable[i])
++						result = false;
++		}
++		return result;
++	}
+ 
+-    /**
+-     * Construct an FSJPEGEncodingTable object, initalizing it with values 
+-     * decoded from an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSJPEGEncodingTable(FSCoder coder)
+-    {
+-        super(FSMovieObject.JPEGTables);
+-        decode(coder);
+-    }
+-    /** 
+-     * Constructs an FSJPEGEncodingTable object with an empty encoding table. 
+-     */ 
+-    public FSJPEGEncodingTable()
+-    {
+-        super(FSMovieObject.JPEGTables);
+-    }
+-    /** Constructs an FSJPEGEncodingTable object with the encoding table data.
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-        @param bytes an array of bytes contains the data for the encoding table.
+-        */ 
+-    public FSJPEGEncodingTable(byte[] bytes)
+-    {
+-        super(FSMovieObject.JPEGTables);
+-        setEncodingTable(bytes);
+-    }
+-    /**
+-     * Constructs an FSJPEGEncodingTable object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSJPEGEncodingTable object.
+-     */
+-    public FSJPEGEncodingTable(FSJPEGEncodingTable obj)
+-    {
+-        super(obj);
+-        
+-        if (obj.encodingTable != null)
+-            encodingTable = Transform.clone(obj.encodingTable);
+-    }    
++		buffer.append(&quot;FSJPEGEncodingTable: { &quot;);
++		buffer.append(&quot;encodingTable = &quot;).append(&quot;&lt;data&gt;&quot;).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-    /** Gets the encoding table.
++		return buffer.toString();
++	}
+ 
+-        @return the array of bytes contains the data for the encoding table.
+-        */
+-    public byte[] getEncodingTable() { return encodingTable; }
++	public int length(FSCoder coder)
++	{
++		super.length(coder);
+ 
+-    /** Sets the encoding table.
++		length += encodingTable.length;
+ 
+-        @param bytes an array of bytes contains the data for the encoding table.
+-        */
+-    public void setEncodingTable(byte[] bytes)
+-    {
+-        encodingTable = bytes;
+-    }
++		return length;
++	}
+ 
+-    public Object clone()
+-    {
+-        FSJPEGEncodingTable anObject = (FSJPEGEncodingTable)super.clone();
+-        
+-        anObject.encodingTable = Transform.clone(encodingTable);
+-        
+-        return anObject;
+-    }
++	public void encode(FSCoder coder)
++	{
++		super.encode(coder);
++		coder.writeBytes(encodingTable);
++	}
+ 
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSJPEGEncodingTable typedObject = (FSJPEGEncodingTable)anObject;
+-            
+-            result = Transform.equals(encodingTable, typedObject.encodingTable);
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;encodingTable&quot;, &quot;&lt;data&gt;&quot;);
+-            buffer.append(&quot;}&quot;);
+-        }        
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        super.length(coder);
+-    
+-        length += (encodingTable == null) ? 2 : encodingTable.length;
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        super.encode(coder);
+-        
+-        if (encodingTable == null)
+-        {
+-            coder.writeWord((byte)0xFF, 1);
+-            coder.writeWord((byte)0xD9, 1);
+-        }
+-        else
+-        {
+-            coder.writeBytes(encodingTable);
+-        }
+-        coder.endObject(name());
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        super.decode(coder);
+-        
+-        if (length == 0)
+-        {
+-            encodingTable = null;
+-        }
+-        else
+-        {
+-            encodingTable = new byte[length];
+-            coder.readBytes(encodingTable);        
+-        }
+-        coder.endObject(name());
+-    }
++	public void decode(FSCoder coder)
++	{
++		super.decode(coder);
++		
++		byte[] data = new byte[length];
++		coder.readBytes(data);
++		
++		setEncodingTable(data);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000312.html">[Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000314.html">[Transform-svn] r378 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#313">[ date ]</a>
+              <a href="thread.html#313">[ thread ]</a>
+              <a href="subject.html#313">[ subject ]</a>
+              <a href="author.html#313">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r204 - trunk/doc/web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-July/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r204%20-%20trunk/doc/web&In-Reply-To=%3C200607011224.k61COo8M029399%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000141.html">
+   <LINK REL="Next"  HREF="000143.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r204 - trunk/doc/web</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r204%20-%20trunk/doc/web&In-Reply-To=%3C200607011224.k61COo8M029399%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r204 - trunk/doc/web">smackay at berlios.de
+       </A><BR>
+    <I>Sat Jul  1 14:24:50 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000141.html">[Transform-svn] r203 - trunk/doc/web
+</A></li>
+        <LI>Next message: <A HREF="000143.html">[Transform-svn] r205 - in trunk/doc: releases web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#142">[ date ]</a>
+              <a href="thread.html#142">[ thread ]</a>
+              <a href="subject.html#142">[ subject ]</a>
+              <a href="author.html#142">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-07-01 14:24:42 +0200 (Sat, 01 Jul 2006)
+New Revision: 204
+
+Added:
+   trunk/doc/web/releases.html
+Removed:
+   trunk/doc/web/whatsnew.html
+Log:
+Changed whatsnew to individual table that will be included on main page.
+
+Copied: trunk/doc/web/releases.html (from rev 200, trunk/doc/web/whatsnew.html)
+===================================================================
+--- trunk/doc/web/whatsnew.html	2006-06-30 11:31:39 UTC (rev 200)
++++ trunk/doc/web/releases.html	2006-07-01 12:24:42 UTC (rev 204)
+@@ -0,0 +1,89 @@
++&lt;table class=&quot;release&quot;&gt;
++
++&lt;tr&gt;
++&lt;th class=&quot;date&quot;&gt;Date&lt;/th&gt;
++&lt;th class=&quot;version&quot;&gt;Version&lt;/th&gt;
++&lt;th&gt;Description&lt;/th&gt;
++&lt;th class=&quot;release&quot;&gt;Details&lt;/th&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;30th June 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.3&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Bugs fixes, updates to the test suites. JAR files for 
++TestNG are also included.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.3.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;3rd April 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.2&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Bugs fixes, mostly to the FSTextConstructor class.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.2.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;13th March 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.1&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Bug fix for the infinite loop problem when decoding MP3 files.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.1.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;7th March 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Release now integrates Transform Utilities. Brought forward several improvements planned for version 3.0.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;20th February 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.5&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;More bug fixes discovered using new test suites.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.0.5.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;4th October 2005&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.4&lt;/td&gt;
++&lt;td&gt;Simplified package organisation and fixed coordinate transform bug.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.4.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;12th October 2004&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.3&lt;/td&gt;
++&lt;td&gt;Transform SWF is now covered by a BSD license.&lt;/td&gt;
++&lt;td&gt;&lt;a href=&quot;/downloads/transform-java-2.0.3.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;14th June 2004&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.2&lt;/td&gt;
++&lt;td&gt;Sets the default signature for the FSMovie class correctly. Adds methods to 
++classes containing actions so binary encoded actions, generated by Translate 
++AS1, can be added to movies.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.2.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;6th June 2004&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.1&lt;/td&gt;
++&lt;td&gt;Fixes a bug in the FSProtect, FSEnableDebugger and FSEnableDebugger2 classes 
++which fails to decode the password field correctly.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.1.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
++&lt;/tr&gt;
++
++&lt;tr class=&quot;even&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;6th April 2004&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.0.0&lt;/td&gt;
++&lt;td&gt;Completely restructured and overhauled the entire framework to boost performance 
++and reduce code size.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.0.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
++&lt;/tr&gt;
++&lt;/table&gt;
+
+Deleted: trunk/doc/web/whatsnew.html
+===================================================================
+--- trunk/doc/web/whatsnew.html	2006-07-01 12:10:11 UTC (rev 203)
++++ trunk/doc/web/whatsnew.html	2006-07-01 12:24:42 UTC (rev 204)
+@@ -1,99 +0,0 @@
+-&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=content-type content=&quot;text/html;  charset=ISO-8859-1&quot;&gt;
+&lt;title&gt;Flagstone Software :: What's New With Transform SWF&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/flagstone.css&quot;&gt;
+&lt;script language=&quot;JavaScript&quot; src=&quot;/js/imageload.js&quot;&gt;&lt;/script&gt;
+&lt;script language=&quot;JavaScript&quot; src=&quot;/js/imageswap.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;script type='text/javascript'&gt;function Go(){return}&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/js/menu_var.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/js/menu_com.js&quot;&gt;&lt;/script&gt;
+&lt;noscript&gt;Your browser does not support script&lt;/noscript&gt;
+
+&lt;div class=&quot;page&quot;&gt;
+
+&lt;div class=&quot;header&quot;&gt;
+&lt;img src=&quot;/images/flagstone_header.gif&quot; alt=&quot;Flagstone Software&quot; width=760 height=77&gt;
+&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; class=&quot;sitemenu&quot;&gt;
+&lt;tr&gt;
+&lt;td width=150 bgcolor=&quot;#9A1F31&quot;&gt;&lt;a href=&quot;/index.html&quot; onmouseover=&quot;imageSwap('home', 'homeOn');&quot; onmouseout=&quot;imageSwap('home', 'homeOff');&quot;&gt;&lt;img src=&quot;/images/home_off.gif&quot; alt=&quot;[Home]&quot;!
+  width=77 height=29 border=0 name=&quot;home&quot;&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td width=29&gt;&lt;img src=&quot;/images/diagonal_divider.gif&quot; alt=&quot;&quot; width=29 height=29&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#C43F52&quot;&gt;&lt;div id='MenuPos' style='position:left; width:440; height:27;'&gt;&lt;img src='/images/spacer.gif' width='440' height='27'&gt;&lt;/div&gt;&lt;/td&gt;
+&lt;td bgcolor=&quot;#C43F52&quot;&gt;&lt;img src='/images/spacer.gif' width='141' height='27'&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;content&quot;&gt;
+-
+-&lt;h1&gt;What's New With Transform SWF&lt;/h1&gt;
+-
+-&lt;p&gt;Here is a brief summary of all the releases of the Transform SWF framework.
+-The release notes link describe all the features, update and bug fixes included
+-in each release.&lt;/P&gt;
+-
+-&lt;table class=&quot;release&quot;&gt;
+-
+-&lt;tr&gt;
+-&lt;th class=&quot;date&quot;&gt;Date&lt;/th&gt;
+-&lt;th class=&quot;version&quot;&gt;Version&lt;/th&gt;
+-&lt;th&gt;Description&lt;/th&gt;
+-&lt;th class=&quot;release&quot;&gt;Details&lt;/th&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;30th June 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.1.3&lt;/td&gt;
+-&lt;td class=&quot;description&quot;&gt;Bugs fixes, updates to the test suites. JAR files for 
+-TestNG are also included.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.3.txt&quot;&gt;release notes&lt;/a&gt;
+-&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;even&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;3rd April 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.1.2&lt;/td&gt;
+-&lt;td class=&quot;description&quot;&gt;Bugs fixes, mostly to the FSTextConstructor class.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.2.txt&quot;&gt;release notes&lt;/a&gt;
+-&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;13th March 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.1.1&lt;/td&gt;
+-&lt;td class=&quot;description&quot;&gt;Bug fix for the infinite loop problem when decoding MP3 files.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.1.txt&quot;&gt;release notes&lt;/a&gt;
+-&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;even&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;7th March 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.1&lt;/td&gt;
+-&lt;td class=&quot;description&quot;&gt;Release now integrates Transform Utilities. Brought forward several improvements planned for version 3.0.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.txt&quot;&gt;release notes&lt;/a&gt;
+-&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;20th February 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.5&lt;/td&gt;
+-&lt;td class=&quot;description&quot;&gt;More bug fixes discovered using new test suites.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.0.5.txt&quot;&gt;release notes&lt;/a&gt;
+-&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;even&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;4th October 2005&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.4&lt;/td&gt;
+-&lt;td&gt;Simplified package organisation and fixed coordinate transform bug.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.4.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;12th October 2004&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.3&lt;/td&gt;
+-&lt;td&gt;Transform SWF is now covered by a BSD license.&lt;/td&gt;
+-&lt;td&gt;&lt;a href=&quot;/downloads/transform-java-2.0.3.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;even&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;14th June 2004&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.2&lt;/td&gt;
+-&lt;td&gt;Sets the default signature for the FSMovie class correctly. Adds methods to 
+-classes containing actions so binary encoded actions, generated by Translate 
+-AS1, can be added to movies.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.2.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;6th June 2004&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.1&lt;/td&gt;
+-&lt;td&gt;Fixes a bug in the FSProtect, FSEnableDebugger and FSEnableDebugger2 classes 
+-which fails to decode the password field correctly.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.1.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
+-&lt;/tr&gt;
+-
+-&lt;tr class=&quot;even&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;6th April 2004&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.0.0&lt;/td&gt;
+-&lt;td&gt;Completely restructured and overhauled the entire framework to boost performance 
+-and reduce code size.&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-java-2.0.0.txt&quot;&gt;release notes&lt;/a&gt;&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
+-
+-&lt;/div&gt;
+&lt;div class=&quot;footer&quot;&gt;
+Copyright 2001-2006, Flagstone Software. All rights reserved. 
+Please read our &lt;a href=&quot;/privacy.html&quot;&gt;Privacy Policy&lt;/a&gt; and 
+&lt;a href=&quot;/legal.html&quot;&gt;Legal Notices&lt;/a&gt;.
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000141.html">[Transform-svn] r203 - trunk/doc/web
+</A></li>
+	<LI>Next message: <A HREF="000143.html">[Transform-svn] r205 - in trunk/doc: releases web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#142">[ date ]</a>
+              <a href="thread.html#142">[ thread ]</a>
+              <a href="subject.html#142">[ subject ]</a>
+              <a href="author.html#142">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

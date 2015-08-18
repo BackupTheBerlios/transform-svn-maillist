@@ -1,0 +1,2205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r306 - in trunk: doc src/com/flagstone/transform	src/com/flagstone/transform/examples	src/com/flagstone/transform/test src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r306%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%0A%09src/com/flagstone/transform/examples%0A%09src/com/flagstone/transform/test%20src/com/flagstone/transform/util&In-Reply-To=%3C200801311204.m0VC4pb1011146%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000241.html">
+   <LINK REL="Next"  HREF="000243.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r306 - in trunk: doc src/com/flagstone/transform	src/com/flagstone/transform/examples	src/com/flagstone/transform/test src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r306%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%0A%09src/com/flagstone/transform/examples%0A%09src/com/flagstone/transform/test%20src/com/flagstone/transform/util&In-Reply-To=%3C200801311204.m0VC4pb1011146%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r306 - in trunk: doc src/com/flagstone/transform	src/com/flagstone/transform/examples	src/com/flagstone/transform/test src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Jan 31 13:04:51 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000241.html">[Transform-svn] r305 - in trunk/src/com/flagstone/transform: . test
+</A></li>
+        <LI>Next message: <A HREF="000243.html">[Transform-svn] r307 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#242">[ date ]</a>
+              <a href="thread.html#242">[ thread ]</a>
+              <a href="subject.html#242">[ subject ]</a>
+              <a href="author.html#242">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-31 13:03:37 +0100 (Thu, 31 Jan 2008)
+New Revision: 306
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/doc/LICENCE.txt
+   trunk/src/com/flagstone/transform/FSAction.java
+   trunk/src/com/flagstone/transform/FSActionObject.java
+   trunk/src/com/flagstone/transform/FSBitmapFill.java
+   trunk/src/com/flagstone/transform/FSBounds.java
+   trunk/src/com/flagstone/transform/FSButton.java
+   trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSButtonSound.java
+   trunk/src/com/flagstone/transform/FSCall.java
+   trunk/src/com/flagstone/transform/FSCharacter.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/FSColor.java
+   trunk/src/com/flagstone/transform/FSColorTable.java
+   trunk/src/com/flagstone/transform/FSColorTransform.java
+   trunk/src/com/flagstone/transform/FSCoordTransform.java
+   trunk/src/com/flagstone/transform/FSCurve.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDefineButton2.java
+   trunk/src/com/flagstone/transform/FSDefineFont.java
+   trunk/src/com/flagstone/transform/FSDefineFont2.java
+   trunk/src/com/flagstone/transform/FSDefineImage.java
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+   trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+   trunk/src/com/flagstone/transform/FSDefineObject.java
+   trunk/src/com/flagstone/transform/FSDefineShape.java
+   trunk/src/com/flagstone/transform/FSDefineShape2.java
+   trunk/src/com/flagstone/transform/FSDefineShape3.java
+   trunk/src/com/flagstone/transform/FSDefineSound.java
+   trunk/src/com/flagstone/transform/FSDefineText.java
+   trunk/src/com/flagstone/transform/FSDefineText2.java
+   trunk/src/com/flagstone/transform/FSDefineTextField.java
+   trunk/src/com/flagstone/transform/FSDefineVideo.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+   trunk/src/com/flagstone/transform/FSEnvelope.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSExport.java
+   trunk/src/com/flagstone/transform/FSFillStyle.java
+   trunk/src/com/flagstone/transform/FSFontInfo.java
+   trunk/src/com/flagstone/transform/FSFontInfo2.java
+   trunk/src/com/flagstone/transform/FSFrameLabel.java
+   trunk/src/com/flagstone/transform/FSFree.java
+   trunk/src/com/flagstone/transform/FSGetUrl.java
+   trunk/src/com/flagstone/transform/FSGetUrl2.java
+   trunk/src/com/flagstone/transform/FSGotoFrame.java
+   trunk/src/com/flagstone/transform/FSGotoFrame2.java
+   trunk/src/com/flagstone/transform/FSGotoLabel.java
+   trunk/src/com/flagstone/transform/FSGradient.java
+   trunk/src/com/flagstone/transform/FSGradientFill.java
+   trunk/src/com/flagstone/transform/FSHeader.java
+   trunk/src/com/flagstone/transform/FSIf.java
+   trunk/src/com/flagstone/transform/FSImport.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java
+   trunk/src/com/flagstone/transform/FSJump.java
+   trunk/src/com/flagstone/transform/FSKerning.java
+   trunk/src/com/flagstone/transform/FSLimitScript.java
+   trunk/src/com/flagstone/transform/FSLine.java
+   trunk/src/com/flagstone/transform/FSLineStyle.java
+   trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+   trunk/src/com/flagstone/transform/FSMorphGradient.java
+   trunk/src/com/flagstone/transform/FSMorphGradientFill.java
+   trunk/src/com/flagstone/transform/FSMorphSolidFill.java
+   trunk/src/com/flagstone/transform/FSMorphSolidLine.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/src/com/flagstone/transform/FSMovieEvent.java
+   trunk/src/com/flagstone/transform/FSMovieListener.java
+   trunk/src/com/flagstone/transform/FSMovieObject.java
+   trunk/src/com/flagstone/transform/FSNewFunction.java
+   trunk/src/com/flagstone/transform/FSNewFunction2.java
+   trunk/src/com/flagstone/transform/FSNull.java
+   trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+   trunk/src/com/flagstone/transform/FSPlaceObject.java
+   trunk/src/com/flagstone/transform/FSPlaceObject2.java
+   trunk/src/com/flagstone/transform/FSPointer.java
+   trunk/src/com/flagstone/transform/FSProperty.java
+   trunk/src/com/flagstone/transform/FSProtect.java
+   trunk/src/com/flagstone/transform/FSPush.java
+   trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+   trunk/src/com/flagstone/transform/FSRegisterCopy.java
+   trunk/src/com/flagstone/transform/FSRegisterIndex.java
+   trunk/src/com/flagstone/transform/FSRegisterVariable.java
+   trunk/src/com/flagstone/transform/FSRemoveObject.java
+   trunk/src/com/flagstone/transform/FSRemoveObject2.java
+   trunk/src/com/flagstone/transform/FSSerialNumber.java
+   trunk/src/com/flagstone/transform/FSSetBackgroundColor.java
+   trunk/src/com/flagstone/transform/FSSetTarget.java
+   trunk/src/com/flagstone/transform/FSShape.java
+   trunk/src/com/flagstone/transform/FSShapeStyle.java
+   trunk/src/com/flagstone/transform/FSShowFrame.java
+   trunk/src/com/flagstone/transform/FSSolidFill.java
+   trunk/src/com/flagstone/transform/FSSolidLine.java
+   trunk/src/com/flagstone/transform/FSSound.java
+   trunk/src/com/flagstone/transform/FSSoundStreamBlock.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+   trunk/src/com/flagstone/transform/FSStartSound.java
+   trunk/src/com/flagstone/transform/FSTabOrder.java
+   trunk/src/com/flagstone/transform/FSTable.java
+   trunk/src/com/flagstone/transform/FSTableIndex.java
+   trunk/src/com/flagstone/transform/FSText.java
+   trunk/src/com/flagstone/transform/FSTransformObject.java
+   trunk/src/com/flagstone/transform/FSUnknownAction.java
+   trunk/src/com/flagstone/transform/FSUnknownObject.java
+   trunk/src/com/flagstone/transform/FSVideoFrame.java
+   trunk/src/com/flagstone/transform/FSVoid.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+   trunk/src/com/flagstone/transform/FSWith.java
+   trunk/src/com/flagstone/transform/Transform.java
+   trunk/src/com/flagstone/transform/examples/DisplayList.java
+   trunk/src/com/flagstone/transform/examples/DrawingShapes.java
+   trunk/src/com/flagstone/transform/examples/Example.java
+   trunk/src/com/flagstone/transform/examples/FillStyles.java
+   trunk/src/com/flagstone/transform/examples/Import.java
+   trunk/src/com/flagstone/transform/examples/LineStyles.java
+   trunk/src/com/flagstone/transform/examples/MovieBasics.java
+   trunk/src/com/flagstone/transform/examples/MovieClip.java
+   trunk/src/com/flagstone/transform/examples/Transforms.java
+   trunk/src/com/flagstone/transform/test/FSColorTest.java
+   trunk/src/com/flagstone/transform/test/FSHeaderTest.java
+   trunk/src/com/flagstone/transform/test/FSLayerTest.java
+   trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+   trunk/src/com/flagstone/transform/test/FSProtectTest.java
+   trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+   trunk/src/com/flagstone/transform/test/FSShowFrameTest.java
+   trunk/src/com/flagstone/transform/util/FSCharacterTable.java
+   trunk/src/com/flagstone/transform/util/FSCodec.java
+   trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+   trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+   trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+   trunk/src/com/flagstone/transform/util/TransformUtil.java
+Log:
+Updated copyright date.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/doc/CHANGES.txt	2008-01-31 12:03:37 UTC (rev 306)
+@@ -1,4 +1,4 @@
+-2007-01-31 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++2008-01-31 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Added new convenience classes: FSFrame, FSHeader and FSLayer.
+     
+
+Modified: trunk/doc/LICENCE.txt
+===================================================================
+--- trunk/doc/LICENCE.txt	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/doc/LICENCE.txt	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * All the files in this library are  covered under the terms of the Berkeley
+  * Software Distribution (BSD) License:
+  *
+- * Copyright (c) 2001-2007 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSAction.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSAction.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSAction.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSActionObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSActionObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSActionObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBitmapFill.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSBitmapFill.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSBitmapFill.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSBounds.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSBounds.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSBounds.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSBounds.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButton.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSButton.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSButton.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSButtonColorTransform.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSButtonEvent.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonSound.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSButtonSound.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSButtonSOund.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSCall.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCall.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSCall.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSCall.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSCharacter.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCharacter.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSCharacter.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSCharacter.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSClipEvent.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSCoder.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSColor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColor.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSColor.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSColor.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSColorTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColorTable.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSColorTable.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSColorTable.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSColorTransform.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSColorTransform.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSColorTransform.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSCoordTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoordTransform.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSCoordTransform.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSCoordTransform.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSCurve.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCurve.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSCurve.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSCurve.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineButton.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineButton2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineButton2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineFont.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineFont.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineFont2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineFont2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineImage.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineImage.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineImage2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineJPEGImage.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineJPEGImage2.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineJPEGImage3.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineMorphShape.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineMovieClip.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineShape.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineShape.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineShape2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineShape2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape3.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineShape3.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineShape3.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineSound.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineSound.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineSound.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineText.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineText.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineText2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineText2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineTextField.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineTextField.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineTextField.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineVideo.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDefineVideo.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDefineVideo.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSDoAction.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSEnableDebugger.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSEnableDebugger2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSEnvelope.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnvelope.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSEnvelope.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSEnvelope.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSExceptionHandler.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSExport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExport.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSExport.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSExport.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSFillStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFillStyle.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSFillStyle.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSFillStyle.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSFontInfo.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSFontInfo.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSFontInfo2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSFontInfo2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSFrameLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFrameLabel.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSFrameLabel.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSFrameLabel.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSFree.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFree.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSFree.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSFree.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGetUrl.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGetUrl.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGetUrl2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGetUrl2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGotoFrame.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGotoFrame.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGotoFrame2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGotoFrame2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGotoLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoLabel.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGotoLabel.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGotoLabel.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGradient.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGradient.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGradient.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGradient.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSGradientFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGradientFill.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSGradientFill.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSGradientFill.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSHeader.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSHeader.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSHeader.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+ /*
+  * FSHeader.java
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSIf.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSIf.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSIf.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSIf.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSImport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSImport.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSImport.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSImport.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSInitialize.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSJPEGEncodingTable.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSJPEGEncodingTable.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSJump.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJump.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSJump.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSJump.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSKerning.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSKerning.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSKerning.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSKerning.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSLimitScript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLimitScript.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSLimitScript.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSLimitScript.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLine.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSLine.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSLine.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSLineStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLineStyle.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSLineStyle.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSLineStyle.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMorphBitmapFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMorphBitmapFill.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMorphBitmapFill.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMorphGradient.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphGradient.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMorphGradient.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMorphGradient.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMorphGradientFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphGradientFill.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMorphGradientFill.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMorphGradientFill.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMorphSolidFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphSolidFill.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMorphSolidFill.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMorphSolidFill.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMorphSolidLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMorphSolidLine.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMorphSolidLine.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMorphSolidLine.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMovie.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMovieEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieEvent.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMovieEvent.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMovieEvent.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMovieListener.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieListener.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMovieListener.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMovieListener.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSMovieObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMovieObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSNewFunction.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSNewFunction.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSNewFunction2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSNewFunction2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSNull.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNull.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSNull.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSNull.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSPathsArePostscript.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSPlaceObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSPlaceObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSPlaceObject2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSPlaceObject2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSPointer.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPointer.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSPointer.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSPointer.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSProperty.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProperty.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSProperty.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSProperty.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd.. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd.. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProtect.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSProtect.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSProtect.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPush.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSPush.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSPush.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSQuicktimeMovie.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterCopy.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterCopy.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSRegisterCopy.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSRegisterCopy.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterIndex.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterIndex.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSRegisterIndex.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSRegisterIndex.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterVariable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterVariable.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSRegisterVariable.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSRegisterVariable.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSRemoveObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSRemoveObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSRemoveObject2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSRemoveObject2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSerialNumber.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSerialNumber.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSerialNumber.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSerialNumber.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSetBackgroundColor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetBackgroundColor.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSetBackgroundColor.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSetBackgroundColor.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSetTarget.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetTarget.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSetTarget.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSetTarget.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShape.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSShape.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSShape.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSShapeStyle.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShapeStyle.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSShapeStyle.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSShapeStyle.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSShowFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSShowFrame.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSShowFrame.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSShowFrame.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSolidFill.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSolidFill.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSolidFill.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSolidFill.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSolidLine.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSolidLine.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSolidLine.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSolidLine.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSound.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSound.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSound.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamBlock.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamBlock.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSoundStreamBlock.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSoundStreamBlock.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSoundStreamHead.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSoundStreamHead2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSStartSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSStartSound.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSStartSound.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSStartSound.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSTabOrder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTabOrder.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSTabOrder.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSTabOrder.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTable.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSTable.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSTable.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSTableIndex.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTableIndex.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSTableIndex.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSTableIndex.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSText.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSText.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSText.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSText.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSTransformObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTransformObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSTransformObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSTransformObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSUnknownAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSUnknownAction.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSUnknownAction.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSUnknownAction.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSUnknownObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSUnknownObject.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSUnknownObject.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSUnknownObject.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSVideoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoFrame.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSVideoFrame.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSVideoFrame.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSVoid.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVoid.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSVoid.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSVoid.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSWaitForFrame.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSWaitForFrame2.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWith.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/FSWith.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSWith.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/Transform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/Transform.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/Transform.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSTransform.java
+  * Transform
+  * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+@@ -90,7 +90,7 @@
+             &quot; * Transform For Flash &quot; + VERSION + &quot;, Version &quot; + version);
+         
+         System.out.println(&quot; * &quot;);
+-        System.out.println(&quot; * Copyright (c) Flagstone Software Limited, 2001-2006.&quot;);
++        System.out.println(&quot; * Copyright (c) Flagstone Software Limited, 2001-2008.&quot;);
+         System.out.println(&quot; * All Rights Reserved.&quot;);
+         System.out.println(&quot; * &quot;);
+         System.out.println(&quot; * Use of this software is subject to the terms in the license&quot;);
+
+Modified: trunk/src/com/flagstone/transform/examples/DisplayList.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/DisplayList.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/DisplayList.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Tue May 13 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/DrawingShapes.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/DrawingShapes.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/DrawingShapes.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Thu Jul 25 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/Example.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/Example.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/Example.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Fri Jul 25 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/FillStyles.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/FillStyles.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/FillStyles.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Fri Jul 25 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/Import.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/Import.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/Import.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Tue May 13 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/LineStyles.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/LineStyles.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/LineStyles.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Fri Jul 24 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/MovieBasics.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/MovieBasics.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/MovieBasics.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Fri Jul 25 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/MovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/MovieClip.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/MovieClip.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Fri Jul 25 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/examples/Transforms.java
+===================================================================
+--- trunk/src/com/flagstone/transform/examples/Transforms.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/examples/Transforms.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -3,7 +3,7 @@
+  *  Examples
+  *
+  *  Created by Stuart MacKay on Fri Jul 25 2003.
+- *  Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *  Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  *  This code is distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+  *  EXPRESS OR IMPLIED, AND Flagstone HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING
+
+Modified: trunk/src/com/flagstone/transform/test/FSColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSColorTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSColorTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSColorTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSHeaderTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSHeaderTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSHeaderTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSHeaderTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSLayerTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSLayerTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSLayerTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSLayerTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMovieTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSMovieTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSProtectTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSProtectTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSProtectTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSProtectTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSetBackgroundColorTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/test/FSShowFrameTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSShowFrameTest.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/test/FSShowFrameTest.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSSetBackgroundColorTest.java
+  * Transform
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/FSCharacterTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSCharacterTable.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/FSCharacterTable.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  *  FSCharacterTable.java
+  *  Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/FSCodec.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSCodec.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/FSCodec.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  * FSCodec.java
+  * Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/FSImageConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/FSImageConstructor.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  *  FSImageConstructor.java
+  *  Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/FSShapeConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/FSShapeConstructor.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  *  FSShapeConstructor.java
+  *  Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  *  FSSoundConstructor.java
+  *  Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  *  FSTextConstructor.java
+  *  Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+Modified: trunk/src/com/flagstone/transform/util/TransformUtil.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/TransformUtil.java	2008-01-31 11:50:12 UTC (rev 305)
++++ trunk/src/com/flagstone/transform/util/TransformUtil.java	2008-01-31 12:03:37 UTC (rev 306)
+@@ -2,7 +2,7 @@
+  *  TransformUtil.java
+  *  Transform Utilities
+  *
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without modification, 
+  * are permitted provided that the following conditions are met:
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000241.html">[Transform-svn] r305 - in trunk/src/com/flagstone/transform: . test
+</A></li>
+	<LI>Next message: <A HREF="000243.html">[Transform-svn] r307 - trunk/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#242">[ date ]</a>
+              <a href="thread.html#242">[ thread ]</a>
+              <a href="subject.html#242">[ subject ]</a>
+              <a href="author.html#242">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

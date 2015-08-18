@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r415 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r415%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011528.m31FStTe011593%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000350.html">
+   <LINK REL="Next"  HREF="000352.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r415 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r415%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804011528.m31FStTe011593%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r415 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Apr  1 17:28:55 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000350.html">[Transform-svn] r414 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000352.html">[Transform-svn] r416 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#351">[ date ]</a>
+              <a href="thread.html#351">[ thread ]</a>
+              <a href="subject.html#351">[ subject ]</a>
+              <a href="author.html#351">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-01 17:28:43 +0200 (Tue, 01 Apr 2008)
+New Revision: 415
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/Displayable.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java
+Log:
+Updated classes that support the Displayable interface and added an important note about why button classes do not.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/Displayable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/Displayable.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/Displayable.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -37,6 +37,16 @@
+  * The principal use of the interface is to allow the width and height of objects 
+  * representing images and shapes to obtained without having to test the class
+  * or type and cast to the correct class.
++ * 
++ * IMPORTANT: Button classes, FSDefineButton and FSdefineButton2 DO NOT implement
++ * this interface. The definition of a button only includes references (using the 
++ * unique identifier) to the shapes which define its physical appearance. This 
++ * means that in order to implement the Displayble interface on button classes
++ * the movie which contained the button would need to be searched to find the 
++ * referenced shapes. This is relatively easy to implement but is strictly 
++ * outside the scope of the button classes to avoid creating complex 
++ * relationships between classes that really only exist inside the environment
++ * of the Flash Player.
+  */
+ public interface Displayable
+ {
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineMorphShape.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -202,7 +202,7 @@
+  * 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineMorphShape extends Definition
++public class FSDefineMorphShape extends Definition implements Displayable
+ {
+ 	private FSBounds startBounds;
+ 	private FSBounds endBounds;
+@@ -291,6 +291,16 @@
+ 		endShape = new FSShape(obj.endShape);
+ 	}
+ 
++	public int getWidth()
++	{
++		return startBounds.getWidth();
++	}
++	
++	public int getHeight()
++	{
++		return startBounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Add a FSLineStyle object to the array of line styles.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineShape.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -135,7 +135,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineShape extends Definition
++public class FSDefineShape extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+ 	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+@@ -211,6 +211,16 @@
+ 		shape = new FSShape(obj.shape);
+ 	}
+ 
++	public int getWidth() 
++	{
++		return bounds.getWidth();
++	}
++
++	public int getHeight()
++	{
++		return bounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Add a FSLineStyle object to the array of line styles.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineShape2.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -137,7 +137,7 @@
+  * 2.
+  * &lt;/p&gt;
+  */
+-public class FSDefineShape2 extends Definition
++public class FSDefineShape2 extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+ 	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+@@ -212,6 +212,16 @@
+ 		shape = new FSShape(obj.shape);
+ 	}
+ 
++	public int getWidth() 
++	{
++		return bounds.getWidth();
++	}
++
++	public int getHeight()
++	{
++		return bounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Add a FSLineStyle object to the array of line styles.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineShape3.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -137,7 +137,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineShape3 extends Definition
++public class FSDefineShape3 extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+ 	private ArrayList&lt;FSFillStyle&gt; fillStyles;
+@@ -212,6 +212,16 @@
+ 		shape = new FSShape(obj.shape);
+ 	}
+ 
++	public int getWidth() 
++	{
++		return bounds.getWidth();
++	}
++
++	public int getHeight()
++	{
++		return bounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Add a FSLineStyle object to the array of line styles.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineText.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -149,7 +149,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 1.
+  * &lt;/p&gt;
+  */
+-public class FSDefineText extends Definition
++public class FSDefineText extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+@@ -217,6 +217,16 @@
+ 			objects.add((FSSpan) i.next().clone());
+ 	}
+ 
++	public int getWidth() 
++	{
++		return bounds.getWidth();
++	}
++
++	public int getHeight()
++	{
++		return bounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Add a FSText object to the array of text records.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -150,7 +150,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 3.
+  * &lt;/p&gt;
+  */
+-public class FSDefineText2 extends Definition
++public class FSDefineText2 extends Definition implements Displayable
+ {
+ 	private FSBounds bounds;
+ 	private FSCoordTransform transform;
+@@ -218,6 +218,16 @@
+ 			objects.add((FSSpan) i.next().clone());
+ 	}
+ 
++	public int getWidth() 
++	{
++		return bounds.getWidth();
++	}
++
++	public int getHeight()
++	{
++		return bounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Add a FSText object to the array of text records.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -244,7 +244,7 @@
+  * Flash (SWF) File Format Specification. It was introduced in Flash 4.
+  * &lt;/p&gt;
+  */
+-public class FSDefineTextField extends Definition
++public class FSDefineTextField extends Definition implements Displayable
+ {
+ 	/** Key used to identify the wordWrapped attribute. */
+ 	public static final String WordWrapped = &quot;WordWrapped&quot;;
+@@ -443,6 +443,16 @@
+ 		initialText = new String(obj.initialText);
+ 	}
+ 
++	public int getWidth() 
++	{
++		return bounds.getWidth();
++	}
++
++	public int getHeight()
++	{
++		return bounds.getHeight();
++	}
++	
+ 	/**
+ 	 * Gets the bounding rectangle that completely encloses the text field.
+ 	 * 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java	2008-04-01 15:14:58 UTC (rev 414)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineVideo.java	2008-04-01 15:28:43 UTC (rev 415)
+@@ -114,7 +114,7 @@
+  * ScreenVideo format was introduced in Flash 7.
+  * &lt;/p&gt;
+  */
+-public class FSDefineVideo extends Definition
++public class FSDefineVideo extends Definition implements Displayable
+ {
+ 	// / The video data was encoded using the Sorenson modified H263 format.
+ 	public static final int H263 = 2;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000350.html">[Transform-svn] r414 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000352.html">[Transform-svn] r416 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#351">[ date ]</a>
+              <a href="thread.html#351">[ thread ]</a>
+              <a href="subject.html#351">[ subject ]</a>
+              <a href="author.html#351">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

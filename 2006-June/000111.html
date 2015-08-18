@@ -1,0 +1,730 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r172 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r172%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200606261803.k5QI32S6028732%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000110.html">
+   <LINK REL="Next"  HREF="000112.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r172 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r172%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200606261803.k5QI32S6028732%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r172 - trunk/src/com/flagstone/transform/test">smackay at berlios.de
+       </A><BR>
+    <I>Mon Jun 26 20:03:02 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000110.html">[Transform-svn] r171 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000112.html">[Transform-svn] r173 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#111">[ date ]</a>
+              <a href="thread.html#111">[ thread ]</a>
+              <a href="subject.html#111">[ subject ]</a>
+              <a href="author.html#111">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-26 20:02:51 +0200 (Mon, 26 Jun 2006)
+New Revision: 172
+
+Added:
+   trunk/src/com/flagstone/transform/test/FSClassTest.java
+Modified:
+   trunk/src/com/flagstone/transform/test/FSColorTest.java
+   trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+Log:
+1. Added class FSClassTest to test package for test shared between 
+the  different test classes.
+      
+2. Completed the test class FSSetBackgroundColorTest.
+
+Added: trunk/src/com/flagstone/transform/test/FSClassTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSClassTest.java	2006-06-25 17:16:19 UTC (rev 171)
++++ trunk/src/com/flagstone/transform/test/FSClassTest.java	2006-06-26 18:02:51 UTC (rev 172)
+@@ -0,0 +1,126 @@
++/*
++ * FSSetBackgroundColorTest.java
++ * Transform
++ * 
++ * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification, 
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice, 
++ *    this list of conditions and the following disclaimer in the documentation 
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
++ *    may be used to endorse or promote products derived from this software 
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import com.flagstone.transform.*;
++
++public abstract class FSClassTest 
++{               
++    public FSClassTest()
++    {        
++    }
++    
++    protected void checkType(int expected, int actual)
++    {
++        assert expected == actual : &quot;Types are not identical.&quot;;    
++    }
++
++    protected void checkIdentical(FSTransformObject expected, FSTransformObject actual)
++    {
++        assert expected == actual : &quot;References are not to the same object.&quot;;    
++    }
++
++    protected void checkNotIdentical(FSTransformObject expected, FSTransformObject actual)
++    {
++        assert expected != actual : &quot;References are to the same object.&quot;;    
++    }
++
++    protected void checkEqual(FSTransformObject expected, FSTransformObject actual)
++    {
++        assert expected != null : &quot;First object is null.&quot;;    
++        assert actual != null : &quot;Second object is null.&quot;;    
++
++        assert actual.equals(expected) : &quot;Objects do not match.&quot;;    
++    }
++
++    protected void checkNotEqual(FSTransformObject expected, FSTransformObject actual)
++    {
++        assert expected != null : &quot;First object is null.&quot;;    
++        assert actual != null : &quot;Second object is null.&quot;;    
++
++        assert actual.equals(expected) == false : &quot;Objects should not match.&quot;;    
++    }
++
++    protected void checkEncode(FSTransformObject obj, int[] bytes)
++    {
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++        
++        checkEncode(coder, obj, bytes);
++    }
++    
++    protected void checkEncode(FSCoder coder, FSTransformObject obj, int[] bytes)
++    {
++        int length = obj.length(coder);
++        
++        if (obj instanceof FSMovieObject)
++            length += (length &lt; 63) ? 2 : 6;
++        
++        coder.setPointer(0);
++        obj.encode(coder);
++        
++        assert (length == bytes.length) : &quot;Calculated length does not match expected.&quot;;
++
++        compareData(coder.getData(), bytes);
++    }
++    
++    protected void checkDecode(FSCoder coder, int length)
++    {
++        int delta = (coder.getPointer() &gt;&gt;&gt; 3) - length;
++        
++        if (delta &lt; 0)
++            assert false : &quot;Actual length is less than expected by &quot;+(-delta)+&quot; bytes.&quot;;
++        else if (delta &gt; 0)
++            assert false : &quot;Actual length is greater than expected by &quot;+delta+&quot; bytes.&quot;;
++    }
++    
++    protected void compareData(byte[] actual, int[] expected)
++    {
++        int delta = actual.length - expected.length;
++        
++        if (delta &lt; 0)
++            assert false : &quot;Actual length is less than expected by &quot;+(-delta)+&quot; bytes.&quot;;
++        else if (delta &gt; 0)
++            assert false : &quot;Actual length is greater than expected by &quot;+delta+&quot; bytes.&quot;;
++        
++        for (int i=0; i&lt;expected.length; i++) {
++            assert(actual[i] == (byte)expected[i]) : &quot;Encoded byte does not match expected value&quot;;
++        }
++    }
++
++    protected byte[] compact(int[] ints)
++    {
++        byte[] bytes = new byte[ints.length];
++        
++        for (int i=0; i&lt;ints.length; i++)
++            bytes[i] = (byte)ints[i];
++        
++        return bytes;
++    }
++}
+
+Modified: trunk/src/com/flagstone/transform/test/FSColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSColorTest.java	2006-06-25 17:16:19 UTC (rev 171)
++++ trunk/src/com/flagstone/transform/test/FSColorTest.java	2006-06-26 18:02:51 UTC (rev 172)
+@@ -31,160 +31,272 @@
+ 
+ import com.flagstone.transform.*;
+ 
+-public class FSColorTest 
++public class FSColorTest extends FSClassTest
+ {    
+-    private int[][] values = new int[][] {
++    private static int[][] opaque = new int[][] {
++        {  0,   0,   0},
++        { 51,   0,   0},
++        { 51, 102,   0},
++        {  0, 102,   0},
++        {  0, 102, 153},
++        {  0,   0, 153},
++        { 51,   0, 153},
++        { 51, 102, 153},
++    };
++    
++    private static int[][] alpha = new int[][] {
++        { 51, 102, 153,   0},
++        { 51, 102, 153, 204},
++        { 51,   0, 153, 204},
++        { 51,   0, 153,   0},
++        {  0,   0, 153,   0},
++        {  0,   0, 153, 204},
++        {  0, 102, 153, 204},
++        {  0, 102, 153,   0},
++        {  0, 102,   0,   0},
++        {  0, 102,   0, 204},
++        { 51, 102,   0, 204},
++        { 51, 102,   0,   0},
++        { 51,   0,   0,   0},
++        { 51,   0,   0, 204},
++        {  0,   0,   0, 204},
+         {  0,   0,   0,   0},
+-        {  1,   2,   3,   4},
+-        {255, 255, 255, 255},
+     };
+-                
+-    private byte[][] encodedValues = null;
+     
+-    public FSColorTest()
++    private static FSColor[] colours = null;
++    private static FSColor[] coloursWithAlpha = null;
++    
++    public static FSColor[] colours()
+     {
+-        encodeValues();
++        if (colours == null)
++        {
++            colours = new FSColor[opaque.length];
++            
++            for (int i=0; i&lt;opaque.length; i++) {
++                colours[i] = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
++            }       
++       }
++       return colours;
+     }
+-    /**
+-     * @testng.test groups=&quot;color&quot;
+-     */
+-    public void color()
++    
++    public static int[][] encodedColours()
+     {
+-        checkConstructors();
+-        checkAccessors();
+-        checkEncode();
+-        checkDecode();
++        int[][] data = new int[opaque.length][];
++        
++        for (int i=0; i&lt;opaque.length; i++)
++        {
++            data[i] = new int[opaque[i].length];
++            
++            for (int j=0; j&lt;opaque[i].length; j++) {
++                data[i][j] = opaque[i][j];
++            }
++        }
++        return data;
+     }
++    
++    public static FSColor[] coloursWithAlpha()
++    {
++        if (coloursWithAlpha == null)
++        {
++            coloursWithAlpha = new FSColor[alpha.length];
++            
++            for (int i=0; i&lt;alpha.length; i++) 
++            {
++                coloursWithAlpha[i] = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
++            }       
++       }
++       return colours;
++    }
++    
+     /**
+-     * @testng.test groups=&quot;constructors&quot;
++     * @testng.test groups=&quot;color, constructors&quot;
+      */
+     public void checkConstructors()
+     {
+         FSColor colour = null;
+         
+-        for (int i=0; i&lt;values.length; i++) 
++        for (int i=0; i&lt;opaque.length; i++) 
+         {
+-            colour = new FSColor(values[i][0], values[i][1], values[i][2]);
+-            compareAttributes(colour, values[i], 3);
+-
+-            colour = new FSColor(values[i][0], values[i][1], values[i][2], values[i][3]);
+-            compareAttributes(colour, values[i], 4);
++            colour = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
++            
++            checkColours(colour, opaque[i]);
+         }
++    }   
++    /**
++     * @testng.test groups=&quot;color, constructors&quot;
++     */
++    public void checkConstructorsWithAlpha()
++    {
++        FSColor colour = null;
++        
++        for (int i=0; i&lt;alpha.length; i++) 
++        {
++            colour = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
++            
++            checkColours(colour, alpha[i]);
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;accessors&quot;
++     * @testng.test groups=&quot;color, constructors&quot;
+      */
++    public void checkCopyConstructors()
++    {
++        for (int i=0; i&lt;opaque.length; i++) 
++        {
++            FSColor colour = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
++            
++            checkColours(new FSColor(colour), opaque[i]);
++        }
++   }    
++    /**
++     * @testng.test groups=&quot;color, constructors&quot;
++     */
++    public void checkCopyConstructorsWithAlpha()
++    {
++        for (int i=0; i&lt;alpha.length; i++) 
++        {
++            FSColor colour = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
++            
++            checkColours(new FSColor(colour), alpha[i]);
++        }
++    }    
++    /**
++     * @testng.test groups=&quot;color, accessors&quot;
++     */
+     public void checkAccessors()
+     {
+-        FSColor colour = new FSColor(-1, -1, -1, -1);
++        FSColor colour = new FSColor(-1, -1, -1);
+         
+-        for (int i=0; i&lt;values.length; i++) 
++        for (int i=0; i&lt;opaque.length; i++) 
+         {
+-            colour.setRed(values[i][0]);
+-            colour.setGreen(values[i][1]);
+-            colour.setBlue(values[i][2]);
+-            colour.setAlpha(values[i][3]);
++            colour.setRed(opaque[i][0]);
++            colour.setGreen(opaque[i][1]);
++            colour.setBlue(opaque[i][2]);
+             
+-            compareAttributes(colour, values[i], 4);
++            checkColours(colour, opaque[i]);
+         }
+ 
+-        colour = new FSColor(-1, -1, -1, -1);
++        colour = new FSColor(-1, -1, -1);
+         
+-        for (int i=0; i&lt;values.length; i++) 
++        for (int i=0; i&lt;opaque.length; i++) 
+         {
+-            colour.setChannels(values[i][0], values[i][1], values[i][2], values[i][3]);            
+-            compareAttributes(colour, values[i], 4);
++            colour.setChannels(opaque[i][0], opaque[i][1], opaque[i][2]);            
++            
++            checkColours(colour, opaque[i]);
+         }
++    }
++    /**
++     * @testng.test groups=&quot;color, accessors&quot;
++     */
++    public void checkAccessorsWithAlpha()
++    {
++        FSColor colour = new FSColor(-1, -1, -1, -1);
+         
++        for (int i=0; i&lt;alpha.length; i++) 
++        {
++            colour.setRed(alpha[i][0]);
++            colour.setGreen(alpha[i][1]);
++            colour.setBlue(alpha[i][2]);
++            colour.setAlpha(alpha[i][3]);
++            
++            checkColours(colour, alpha[i]);
++        }
++
+         colour = new FSColor(-1, -1, -1, -1);
+         
+-        for (int i=0; i&lt;values.length; i++) 
++        for (int i=0; i&lt;alpha.length; i++) 
+         {
+-            colour.setChannels(values[i][0], values[i][1], values[i][2]);            
+-            compareAttributes(colour, values[i], 3);
+-        }       
++            colour.setChannels(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
++            
++            checkColours(colour, alpha[i]);
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;encode&quot;
++     * @testng.test groups=&quot;color, utilities&quot;
+      */
+-    public void checkEncode()
++    public void checkEquals()
+     {
+-        checkEncode(3); // opaque colours
+-        checkEncode(4); // transparent colours
++       for (int i=0; i&lt;opaque.length; i++)
++        {
++            int next = (i+1)%opaque.length;
++            
++            FSColor a = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
++            FSColor b = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
++            FSColor c = new FSColor(opaque[next][0], opaque[next][1], opaque[next][2]);
++            FSColor d = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2], 255);
++            FSColor e = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2], 128);
++            
++            checkEqual(a, b);
++            checkNotEqual(a, c);
++            checkEqual(a, d);
++            checkNotEqual(a, e);
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;decode&quot;
++     * @testng.test groups=&quot;color, encode&quot;
+      */
+-    public void checkDecode()
++    public void checkEncode()
+     {
+-        checkDecode(3); // opaque colours
+-        checkDecode(4); // transparent colours
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++             
++        for (int i=0; i&lt;opaque.length; i++) 
++        {
++            FSColor colour = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
++            
++            checkEncode(coder, colour, opaque[i]);
++            checkColours(colour, opaque[i]);
++        }
+     }
+-    
+-    private void encodeValues()
++    /**
++     * @testng.test groups=&quot;color, encode&quot;
++     */
++    public void checkEncodeWithAlpha()
+     {
+-        encodedValues = new byte[values.length][];
+-        
+-        for (int i=0; i&lt;values.length; i++)
++        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++        coder.setContext(FSCoder.TransparentColors, 1);
++             
++        for (int i=0; i&lt;alpha.length; i++) 
+         {
+-            encodedValues[i] = new byte[values[i].length];
++            FSColor colour = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
+             
+-            for (int j=0; j&lt;values[i].length; j++)
+-            {
+-                encodedValues[i][j] = (byte)values[i][j];
+-            }
++            checkEncode(coder, colour, alpha[i]);
++            checkColours(colour, alpha[i]);
+         }
+     }
+-    
+-    private void checkEncode(int count)
++    /**
++     * @testng.test groups=&quot;color, decode&quot;
++     */
++    public void checkDecode()
+     {
+-        FSColor colour = null;
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, count);
+-        
+-        coder.setContext(FSCoder.TransparentColors, (count == 4) ? 1:0);
+-        
+-        for (int i=0; i&lt;values.length; i++) 
++        for (int i=0; i&lt;opaque.length; i++) 
+         {
+-            if (count == 3)
+-                colour = new FSColor(values[i][0], values[i][1], values[i][2]);
+-            else
+-                colour = new FSColor(values[i][0], values[i][1], values[i][2], values[i][3]);
+-                
+-            coder.setPointer(0);
+-            colour.encode(coder);
+-            
+-            assert ((colour.length(coder)) == count) : &quot;Calculated length does not match expected.&quot;;
+-            assert ((coder.getPointer() &gt;&gt;&gt; 3) == count) : &quot;Calculated length does not match encoded length.&quot;;
+-            
+-            compareData(coder.getData(), encodedValues[i], count);
++            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(opaque[i]));            
++            checkColours(new FSColor(coder), opaque[i]);
++            checkDecode(coder, opaque[i].length);
+         }
+     }
+-    private void checkDecode(int count)
++    /**
++     * @testng.test groups=&quot;color, decode&quot;
++     */
++    public void checkDecodeWithAlpha()
+     {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, count);
+-        
+-        for (int i=0; i&lt;values.length; i++) 
++        for (int i=0; i&lt;opaque.length; i++) 
+         {
+-            coder.setData(FSCoder.LITTLE_ENDIAN, encodedValues[i]);
+-            
+-            compareAttributes(new FSColor(coder), values[i], count);
++            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(alpha[i]));            
++            coder.setContext(FSCoder.TransparentColors, 1);
+ 
+-            assert ((coder.getPointer() &gt;&gt;&gt; 3) == count) : &quot;&quot;;
++            checkColours(new FSColor(coder), alpha[i]);
++            checkDecode(coder, alpha[i].length);
+         }
+     }
+-    private void compareAttributes(FSColor colour, int[] expected, int channelCount)
++    
++    private void checkColours(FSColor colour, int[] expected)
+     {
+         assert(colour.getRed() == expected[0]) : &quot;Red channel does not match expected value&quot;;
+         assert(colour.getGreen() == expected[1]) : &quot;Green channel does not match expected value&quot;;
+         assert(colour.getBlue() == expected[2]) : &quot;Blue channel does not match expected value&quot;;
+         
+-        if (channelCount == 4)
++        if (expected.length == 4)
+             assert(colour.getAlpha() == expected[3]) : &quot;Alpha channel does not match expected value&quot;;
+     }
+-    private void compareData(byte[] values, byte[] expected, int count)
+-    {
+-        for (int i=0; i&lt;count; i++) {
+-            assert(values[i] == expected[i]) : &quot;Encoded byte does not match expected value&quot;;
+-        }
+-    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2006-06-25 17:16:19 UTC (rev 171)
++++ trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2006-06-26 18:02:51 UTC (rev 172)
+@@ -29,44 +29,129 @@
+  */
+ package com.flagstone.transform.test;
+ 
+-public class FSSetBackgroundColorTest 
++import com.flagstone.transform.*;
++
++public class FSSetBackgroundColorTest extends FSClassTest
+ {    
+-    public FSSetBackgroundColorTest()
+-    {        
++    private static FSColor[] colours = new FSColor[] {
++        new FSColor(  0,   0,   0),
++        new FSColor(255,   0,   0),
++        new FSColor(255, 255,   0),
++        new FSColor(  0, 255,   0),
++        new FSColor(  0, 255, 255),
++        new FSColor(  0,   0, 255),
++        new FSColor(255,   0, 255),
++        new FSColor(255, 255, 255),
++    };
++           
++    private static int[][] encodedObjects = new int[][] {
++        { 0x43, 0x02, 0x00, 0x00, 0x00 }, 
++        { 0x43, 0x02, 0xFF, 0x00, 0x00 }, 
++        { 0x43, 0x02, 0xFF, 0xFF, 0x00 }, 
++        { 0x43, 0x02, 0x00, 0xFF, 0x00 }, 
++        { 0x43, 0x02, 0x00, 0xFF, 0xFF }, 
++        { 0x43, 0x02, 0x00, 0x00, 0xFF }, 
++        { 0x43, 0x02, 0xFF, 0x00, 0xFF }, 
++        { 0x43, 0x02, 0xFF, 0xFF, 0xFF }, 
++    };
++    
++    /**
++     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
++     */
++    public void checkConstructors()
++    {
++        for (int i=0; i&lt;colours.length; i++)
++        {
++            FSSetBackgroundColor background = new FSSetBackgroundColor(colours[i]);
++            
++            checkType(FSMovieObject.SetBackgroundColor, background.getType());
++            checkEqual(colours[i], background.getColor());
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;setbackgroundcolor&quot;
+-     *     dependsOnGroups=&quot;color&quot;
++     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+      */
+-    public void setBackgroundColor()
++    public void checkCopyConstructor()
+     {
+-        checkConstructors();
+-        checkAccessors();
+-        checkEncode();
+-        checkDecode();
++        for (int i=0; i&lt;colours.length; i++)
++        {
++            FSSetBackgroundColor original = new FSSetBackgroundColor(colours[i]);
++            FSSetBackgroundColor copy = new FSSetBackgroundColor(original);
++            
++            checkEqual(colours[i], copy.getColor());
++            checkNotIdentical(colours[i], copy.getColor());
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;constructors&quot;
++     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+      */
+-    public void checkConstructors()
++    public void checkContainsReference()
+     {
++        FSColor colour = new FSColor(0, 0, 0);
++        FSSetBackgroundColor background = new FSSetBackgroundColor(colour);
++        
++        checkIdentical(colour, background.getColor());
+     }
+     /**
+-     * @testng.test groups=&quot;accessors&quot;
++     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+      */
++    public void checkClone()
++    {
++        FSColor colour = new FSColor(0, 0, 0);
++        FSSetBackgroundColor background = new FSSetBackgroundColor(colour);
++        FSSetBackgroundColor clone = (FSSetBackgroundColor)background.clone();
++        
++        checkEqual(background, clone);
++        checkNotIdentical(background, clone);
++    }
++    /**
++     * @testng.test groups=&quot;setbackgroundcolor, accessors&quot;
++     */
+     public void checkAccessors()
+     {
++        FSSetBackgroundColor background = new FSSetBackgroundColor(new FSColor(-1, -1, -1));
++        
++        for (int i=0; i&lt;colours.length; i++)
++        {
++            background.setColor(colours[i]);
++            checkEqual(colours[i], background.getColor());
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;encode&quot;
++     * @testng.test groups=&quot;setbackgroundcolor, utilities&quot;
+      */
++    public void checkEquals()
++    {
++        FSSetBackgroundColor background = new FSSetBackgroundColor(new FSColor(-1, -1, -1));
++        
++        for (int i=0; i&lt;colours.length; i++)
++        {
++            background.setColor(colours[i]);
++            checkEqual(colours[i], background.getColor());
++        }
++    }
++    /**
++     * @testng.test groups=&quot;setbackgroundcolor, encode&quot;
++     */
+     public void checkEncode()
+     {
++        for (int i=0; i&lt;encodedObjects.length; i++) {
++            checkEncode(new FSSetBackgroundColor(colours[i]), encodedObjects[i]);
++        }
+     }
+     /**
+-     * @testng.test groups=&quot;decode&quot;
++     * @testng.test groups=&quot;setbackgroundcolor, decode&quot;
+      */
+     public void checkDecode()
+-    {
++    {       
++        for (int i=0; i&lt;encodedObjects.length; i++) 
++        {
++            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(encodedObjects[i]));            
++            FSSetBackgroundColor background = new FSSetBackgroundColor(coder);
++
++            checkDecode(coder, encodedObjects[i].length);
++            checkType(FSMovieObject.SetBackgroundColor, background.getType());
++            checkEqual(colours[i], background.getColor());
++        }
+     }
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000110.html">[Transform-svn] r171 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000112.html">[Transform-svn] r173 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#111">[ date ]</a>
+              <a href="thread.html#111">[ thread ]</a>
+              <a href="subject.html#111">[ subject ]</a>
+              <a href="author.html#111">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

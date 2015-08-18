@@ -1,0 +1,296 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r71 - in trunk: src/com/flagstone/transform/test test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r71%20-%20in%20trunk%3A%20src/com/flagstone/transform/test%20test/suites&In-Reply-To=%3C200602211811.k1LIBMZT000369%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000011.html">
+   <LINK REL="Next"  HREF="000013.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r71 - in trunk: src/com/flagstone/transform/test test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r71%20-%20in%20trunk%3A%20src/com/flagstone/transform/test%20test/suites&In-Reply-To=%3C200602211811.k1LIBMZT000369%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r71 - in trunk: src/com/flagstone/transform/test test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 19:11:22 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000011.html">[Transform-svn] r70 - trunk/test/suites
+</A></li>
+        <LI>Next message: <A HREF="000013.html">[Transform-svn] r72 - trunk/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#12">[ date ]</a>
+              <a href="thread.html#12">[ thread ]</a>
+              <a href="subject.html#12">[ subject ]</a>
+              <a href="author.html#12">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 19:11:14 +0100 (Tue, 21 Feb 2006)
+New Revision: 71
+
+Added:
+   trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+   trunk/test/suites/FSSoundConstructor.xml
+Log:
+Added a test for FSSoundConstructor.
+
+Added: trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2006-02-21 17:51:50 UTC (rev 70)
++++ trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2006-02-21 18:11:14 UTC (rev 71)
+@@ -0,0 +1,177 @@
++package com.flagstone.transform.test;
++
++import java.io.*;
++import java.util.*;
++import java.awt.*;
++
++import com.flagstone.transform.*;
++import com.flagstone.transform.util.*;
++
++public class FSSoundConstructorTest
++{
++    private File sourceDir = null;
++    private File destDir = null;
++    private String extension = null;
++    
++    public FSSoundConstructorTest()
++    {
++    }
++    /**
++     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
++     * @testng.parameters value = &quot;srcDir dstDir ext&quot;
++     */
++    public void configure(String srcDir, String dstDir, String ext)
++    {
++        sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++        extension = ext;
++    }
++	/**
++     * @testng.test dataProvider=&quot;files&quot;
++	 */
++    public void playEventSound(String sndFile)
++    {
++        try 
++        {
++            File srcFile = new File(sourceDir, sndFile);
++            File destFile = new File(destDir, sndFile.substring(0, sndFile.lastIndexOf('.')) + &quot;.swf&quot;);
++ 
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            FSSoundConstructor soundGenerator = new FSSoundConstructor(srcFile.getPath());
++            encodeEventSoundToFile(soundGenerator, destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
++     * @testng.test dataProvider=&quot;files&quot;
++     */
++    public void playStreamingSound(String sndFile)
++    {
++        try 
++        {
++            File srcFile = new File(sourceDir, sndFile);
++            File destFile = new File(destDir, sndFile.substring(0, sndFile.lastIndexOf('.')) + &quot;.swf&quot;);
++ 
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++            
++            FSSoundConstructor soundGenerator = new FSSoundConstructor(srcFile.getPath());
++            encodeStreamingSoundToFile(soundGenerator, destFile);
++        }
++        catch (Exception e)
++        {
++            assert false;
++        }
++    }
++    /**
++     * @testng.data-provider name=&quot;files&quot;
++     */
++    public Object[][] findFiles()
++    {
++        FilenameFilter filter = new FilenameFilter() 
++        {
++            public boolean accept(File directory, String name) 
++            {
++                String ext = name.substring(name.length()-extension.length()).toLowerCase();
++                
++                return ext.equals(extension);
++            }
++        };
++        
++        Object[][] parameters = new Object[0][0];
++        
++        if (sourceDir.exists())
++        {
++            String[] files = sourceDir.list(filter);       
++    
++            parameters = new Object[files.length][1];
++            
++            for (int i=0; i&lt;files.length; i++)
++                parameters[i] = new Object[] { files[i] };
++        }
++        
++        return parameters;
++    }
++      
++    private void encodeEventSoundToFile(FSSoundConstructor soundGenerator, File file) throws Exception
++    {
++        FSMovie movie = new FSMovie();
++        
++        float framesPerSecond = 12.0f;
++
++        movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
++        movie.setFrameRate(framesPerSecond);
++    
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++
++        int soundId = movie.newIdentifier();
++
++        /*
++         * Calculate the time it takes to play the sound and the number of frames this
++         * represents.
++         */
++        float duration = ((float) soundGenerator.getSamplesPerChannel()) / ((float) soundGenerator.getSampleRate());
++        int numberOfFrames = (int) (duration * framesPerSecond);
++        
++        /*
++         * Add the sound definition and the FSStartSound object which is used to start
++         * the sound playing.
++         */
++        
++        FSDefineSound sound = soundGenerator.defineSound(soundId);
++        
++        movie.add(sound);
++        movie.add(new FSStartSound(new FSSound(soundId, FSSound.Start)));
++
++        /* 
++         * Add frames to give the sound time to play.
++         */
++        for (int j=0; j&lt;numberOfFrames; j++)
++            movie.add(new FSShowFrame());
++
++        movie.encodeToFile(file.getPath());
++    }
++    private void encodeStreamingSoundToFile(FSSoundConstructor soundGenerator, File file) throws Exception
++    {
++        float framesPerSecond = 12.0f;
++
++        FSMovie movie = new FSMovie();
++
++        movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
++        movie.setFrameRate(framesPerSecond);
++    
++        movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
++
++        /*
++         * Play the Streaming Sound.
++         *
++         * Calculate the number of decoded sound samples played for each frame and
++         * the size, in bytes, of each block compressed sound data.
++         */
++        int samplesPerBlock = soundGenerator.getSampleRate() / (int) framesPerSecond;
++        int numberOfBlocks = soundGenerator.getSamplesPerChannel() / samplesPerBlock;
++
++        /* 
++         * An FSSoundStreamHeader2 object defines the attributes of the streaming sound.
++         */
++        movie.add(soundGenerator.streamHeader(samplesPerBlock));
++
++        /* 
++         * Add a streaming block for each frame so the sound is played as each frame 
++         * is displayed.
++         */
++        for (int j=0; j&lt;numberOfBlocks; j++)
++        {
++            movie.add(soundGenerator.streamBlock(j, samplesPerBlock));
++            movie.add(new FSShowFrame());
++        }
++
++        movie.encodeToFile(file.getPath());
++    }
++
++}
+
+Added: trunk/test/suites/FSSoundConstructor.xml
+===================================================================
+--- trunk/test/suites/FSSoundConstructor.xml	2006-02-21 17:51:50 UTC (rev 70)
++++ trunk/test/suites/FSSoundConstructor.xml	2006-02-21 18:11:14 UTC (rev 71)
+@@ -0,0 +1,36 @@
++&lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
++  
++&lt;suite name=&quot;FSSoundConstructorTest&quot;&gt;
++
++	&lt;parameter name=&quot;srcDir&quot; value=&quot;&quot;/&gt;
++	&lt;parameter name=&quot;dstDir&quot; value=&quot;&quot;/&gt;
++	&lt;parameter name=&quot;ext&quot; value=&quot;&quot;/&gt;
++
++    &lt;test name=&quot;WAV sounds installed in Windows - Event&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;/windows/media&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSSoundConstructor/event/windows&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;wav&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSSoundConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;playEventSound&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
++    &lt;test name=&quot;WAV sounds installed in Windows - Streaming&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;/windows/media&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSSoundConstructor/streaming/windows&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;wav&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSSoundConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;playStreamingSound&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++
++&lt;/suite&gt;
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000011.html">[Transform-svn] r70 - trunk/test/suites
+</A></li>
+	<LI>Next message: <A HREF="000013.html">[Transform-svn] r72 - trunk/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#12">[ date ]</a>
+              <a href="thread.html#12">[ thread ]</a>
+              <a href="subject.html#12">[ subject ]</a>
+              <a href="author.html#12">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

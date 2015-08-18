@@ -1,0 +1,991 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r454%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200804102115.m3ALFADq027214%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000389.html">
+   <LINK REL="Next"  HREF="000391.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r454%20-%20in%20dev/dev-3-0/src/com/flagstone/transform%3A%0A%09.%20util&In-Reply-To=%3C200804102115.m3ALFADq027214%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r454 - in dev/dev-3-0/src/com/flagstone/transform:	. util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Apr 10 23:15:10 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000389.html">[Transform-svn] r453 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000391.html">[Transform-svn] r455 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#390">[ date ]</a>
+              <a href="thread.html#390">[ thread ]</a>
+              <a href="subject.html#390">[ subject ]</a>
+              <a href="author.html#390">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-10 23:14:58 +0200 (Thu, 10 Apr 2008)
+New Revision: 454
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+   dev/dev-3-0/src/com/flagstone/transform/FSCoder.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java
+   dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java
+   dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java
+   dev/dev-3-0/src/com/flagstone/transform/FSProtect.java
+   dev/dev-3-0/src/com/flagstone/transform/FSWith.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java
+   dev/dev-3-0/src/com/flagstone/transform/util/CharacterSet.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+   dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+Log:
+Corrected coding bugs.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSActionObject.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -754,7 +754,7 @@
+ 				break;
+ 			case FSActionObject.Table:
+ 				anAction = new FSTable(coder, context);
+-				length = anAction.length;
++				length = anAction.length+3;
+ 				next = start + (length &lt;&lt; 3);
+ 				break;
+ 			case FSActionObject.RegisterCopy:
+@@ -762,12 +762,12 @@
+ 				break;
+ 			case FSActionObject.NewFunction:
+ 				anAction = new FSNewFunction(coder, context);
+-				length = anAction.length;
++				length = anAction.length+3;
+ 				next = start + (length &lt;&lt; 3);
+ 				break;
+ 			case FSActionObject.With:
+ 				anAction = new FSWith(coder, context);
+-				length = anAction.length;
++				length = anAction.length+3;
+ 				next = start + (length &lt;&lt; 3);
+ 				break;
+ 			case FSActionObject.ExceptionHandler:
+@@ -775,7 +775,7 @@
+ 				break;
+ 			case FSActionObject.NewFunction2:
+ 				anAction = new FSNewFunction2(coder, context);
+-				length = anAction.length;
++				length = anAction.length+3;
+ 				next = start + (length &lt;&lt; 3);
+ 				break;
+ 			default:
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSCoder.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSCoder.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -1028,8 +1028,10 @@
+ 		try
+ 		{
+ 			bytesWritten = writeBytes(str.getBytes(enc));
+-		} catch (java.io.UnsupportedEncodingException e)
++		} 
++		catch (java.io.UnsupportedEncodingException e)
+ 		{
++			throw new RuntimeException(e);
+ 		}
+ 		return bytesWritten;
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineFont2.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -1064,15 +1064,17 @@
+ 		}
+ 
+ 		int glyphCount = coder.readWord(2, false);
++		shapes = new ArrayList&lt;FSShape&gt;(glyphCount);
++		codes = new ArrayList&lt;Integer&gt;(glyphCount);
+ 
+ 		int offsetStart = coder.getPointer();
+ 		int[] offset = new int[glyphCount + 1];
+ 
+-		for (int i = 0; i &lt; glyphCount; i++)
++		for (int i = 0; i &lt; glyphCount; i++) {
+ 			offset[i] = coder.readWord((containsWideOffsets) ? 4 : 2, false);
++		}
+ 
+-		offset[glyphCount] = coder.readWord((containsWideOffsets) ? 4 : 2,
+-						false);
++		offset[glyphCount] = coder.readWord((containsWideOffsets) ? 4 : 2, false);
+ 
+ 		for (int i = 0; i &lt; glyphCount; i++)
+ 		{
+@@ -1085,9 +1087,9 @@
+ 
+ 		}
+ 
+-		for (int i = 0; i &lt; glyphCount; i++)
+-			codes.add(new Integer(coder.readWord((containsWideCodes) ? 2 : 1,
+-							false)));
++		for (int i = 0; i &lt; glyphCount; i++) {
++			codes.add(new Integer(coder.readWord((containsWideCodes) ? 2 : 1, false)));
++		}
+ 
+ 		if (containsLayout)
+ 		{
+@@ -1095,9 +1097,8 @@
+ 			descent = coder.readWord(2, true);
+ 			leading = coder.readWord(2, true);
+ 
+-			advances = new ArrayList&lt;Integer&gt;();
+-			bounds = new ArrayList&lt;FSBounds&gt;();
+-			kernings = new ArrayList&lt;FSKerning&gt;();
++			advances = new ArrayList&lt;Integer&gt;(glyphCount);
++			bounds = new ArrayList&lt;FSBounds&gt;(glyphCount);
+ 
+ 			for (int i = 0; i &lt; glyphCount; i++)
+ 				advances.add(new Integer(coder.readWord(2, true)));
+@@ -1106,6 +1107,7 @@
+ 				bounds.add(new FSBounds(coder, context));
+ 
+ 			int kerningCount = coder.readWord(2, false);
++			kernings = new ArrayList&lt;FSKerning&gt;(kerningCount);
+ 
+ 			for (int i = 0; i &lt; kerningCount; i++)
+ 				kernings.add(new FSKerning(coder, context));
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineText2.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -323,7 +323,7 @@
+ 	 */
+ 	public void setObjects(List&lt;FSSpan&gt; anArray)
+ 	{
+-		if (objects == null) {
++		if (anArray == null) {
+ 			throw new NullPointerException(&quot;Array of text objects cannot be null.&quot;);
+ 		}
+ 		objects = anArray;
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSInitialize.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -361,8 +361,7 @@
+ 		{
+ 			length += encodedActions.length;
+ 
+-			if ((encodedActions.length == 0)
+-							|| (encodedActions[encodedActions.length - 1] != FSAction.End))
++			if ((encodedActions.length == 0) || (encodedActions[encodedActions.length - 1] != FSAction.End))
+ 			{
+ 				length += 1;
+ 			}
+@@ -400,7 +399,7 @@
+ 
+ 		if (context.decodeActions)
+ 		{
+-			actions = FSActionObject.decodeActions(coder, context, length);
++			actions = FSActionObject.decodeActions(coder, context, length-2);
+ 		} 
+ 		else
+ 		{
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSNewFunction.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -444,16 +444,7 @@
+ 			length += FSCoder.strlen((String) arguments.get(i), true);
+ 
+ 		length += 2;
+-
+-		actionsLength = 0;
+-
+-		for (int i=0; i&lt;actions.size(); i++)
+-		{
+-			FSActionObject currentAction = (FSActionObject) actions.get(i);
+-
+-			actionsLength += currentAction.length(context);
+-			actionsLength += (currentAction.getType() &gt; 128) ? 3 : 1;
+-		}
++		actionsLength = FSActionObject.length(context, actions);;
+ 		length += actionsLength;
+ 
+ 		return length;
+@@ -477,10 +468,7 @@
+ 
+ 		coder.writeWord(actionsLength, 2);
+ 
+-		for (Iterator&lt;FSActionObject&gt; i = actions.iterator(); i.hasNext();)
+-		{
+-			FSActionObject.encode(coder, context, i.next());
+-		}
++		FSActionObject.encode(coder, context, actions);
+ 	}
+ 
+ 	public void decode(FSCoder coder, FSContext context)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSNewFunction2.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -639,11 +639,7 @@
+ 			i.next().encode(coder, context);
+ 
+ 		coder.writeWord(_actionsLength, 2);
+-
+-		for (Iterator&lt;FSActionObject&gt; i = actions.iterator(); i.hasNext();)
+-		{
+-			FSActionObject.encode(coder, context, i.next());
+-		}
++		FSActionObject.encode(coder, context, actions);
+ 	}
+ 
+ 	public void decode(FSCoder coder, FSContext context)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSProtect.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSProtect.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -225,5 +225,8 @@
+ 				password = password.substring(0, password.length() - 1);
+ 			}
+ 		}
++		else {
++			password = &quot;&quot;;
++		}
+ 	}
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSWith.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/FSWith.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -239,10 +239,7 @@
+ 		coder.writeWord(length - actionsLength, 2);
+ 		coder.writeWord(actionsLength, 2);
+ 
+-		for (Iterator&lt;FSActionObject&gt; i = actions.iterator(); i.hasNext();)
+-		{
+-			FSActionObject.encode(coder, context, i.next());
+-		}
++		FSActionObject.encode(coder, context, actions);
+ 	}
+ 
+ 	public void decode(FSCoder coder, FSContext context)
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Canvas.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -377,7 +377,7 @@
+         x = COORDINATES_ARE_PIXELS ? x * 20 : x;
+         y = COORDINATES_ARE_PIXELS ? y * 20 : y;
+         
+-        objects.add(new FSShapeStyle(1, -1, 1, x, y));
++        objects.add(new FSShapeStyle(-1, 1, -1, x, y));
+ 
+         setControl((currentX+x)/2, (currentY+y)/2);
+         setCurrent(x, y);
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/CharacterSet.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/CharacterSet.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/util/CharacterSet.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -327,6 +327,7 @@
+ 	
+ 	public CharacterSet(char from, char to)
+ 	{
++		table = new int[to+1];
+ 		add(from, to);
+ 	}
+ 	
+@@ -381,7 +382,7 @@
+ 	
+ 	public CharacterSet add(char c) 
+ 	{
+-		if (c &gt; table.length)
++		if (c &gt;= table.length)
+ 		{
+ 			int[] newTable = new int[c+1];
+ 			
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Font.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -175,8 +175,8 @@
+         double scaleY = 1024.0;
+         double scaleX = scaleY;
+         
+-        double translateX = 1024.0 - (transform.getX() * 1024.0);
+-        double translateY = 1024.0 - (transform.getY() * 1024.0);
++        double translateX = 0; //1024.0 - (transform.getX() * 1024.0);
++        double translateY = 0; //1024.0 - (transform.getY() * 1024.0);
+ 
+         /*
+          The new font scaled to the EM Square must be derived using the size as well 
+@@ -193,69 +193,59 @@
+         isBold = font.isBold();
+         isItalic = font.isItalic();
+ 
+-        int numGlyphs = font.getNumGlyphs();
+-        int glyphIndex = 0;
+-        int characterCode = 0;
++        int count = font.getNumGlyphs();
++        int index = 0;
++        int code = 0;
++        char c;
+     
+-        glyphTable = new Glyph[numGlyphs];
+-        charToGlyph = new short[numGlyphs];
+-        glyphToChar = new short[numGlyphs];
+-    
++        glyphTable = new Glyph[count];
++        charToGlyph = new short[65535];
++        glyphToChar = new short[count];
++        
++        // create the glyph for the characters that cannot be displayed
++        
++        GlyphVector glyphVector = font.createGlyphVector(fontContext, new int[] { missingGlyph });       
++        java.awt.Shape outline = glyphVector.getGlyphOutline(0);
++        int advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
++		glyphTable[index] = new Glyph(convertShape(outline), new FSBounds(0, 0, 0, 0), advance);
++		charToGlyph[code] = (short) index;
++		glyphToChar[index] = (short) code;
++   
++		index = 1;
++		
+         /*
+          * Run through all the unicode character codes looking for a corresponding glyph.
+          */
+-        while ((glyphIndex &lt; numGlyphs) &amp;&amp; (characterCode &lt; 65535))
++        while ((index &lt; count) &amp;&amp; (code &lt; 65535))
+         {
+-            char currentChar = (char) characterCode;
++            c = font.canDisplay(code) ? (char)code : (char)missingGlyph;
+     
+-            if (font.canDisplay(currentChar))
+-            {
+-                GlyphVector glyphVector = font.createGlyphVector(fontContext,
+-                       new char[] { currentChar });
+-    
+-                java.awt.Shape outline = glyphVector.getGlyphOutline(0);
+-                int advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
+-    
+-                glyphTable[glyphIndex] = new Glyph(convertShape(outline), new FSBounds(0, 0, 0, 0), advance);
+-                charToGlyph[currentChar] = (short)glyphIndex;
+-                glyphToChar[glyphIndex] = (short)currentChar;
+-    
+-                if (font.hasUniformLineMetrics() == false)
+-                {
+-                    LineMetrics lineMetrics = font.getLineMetrics(new char[]
+-                             { (char) currentChar }, 0, 1, fontContext);
+-    
+-                       ascent = 0; // Math.max(lineMetrics.getAscent() * 20, ascent);
+-                       descent = 0; // Math.max(lineMetrics.getDescent() * 20, descent);
+-                       leading = 0; // Math.max(lineMetrics.getLeading() * 20, leading);
+-                }
+-           }
+-           else
+-           {
+-                GlyphVector glyphVector = font.createGlyphVector(fontContext, new char[] { (char)missingGlyph });
+-            
+-                java.awt.Shape outline = glyphVector.getGlyphOutline(0);
+-                int advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
+-    
+-                glyphTable[glyphIndex] = new Glyph(convertShape(outline), new FSBounds(0, 0, 0, 0), advance);
+-                charToGlyph[currentChar] = (short)glyphIndex;
+-                glyphToChar[glyphIndex] = (short)currentChar;
+-    
+-                if (font.hasUniformLineMetrics() == false)
+-                {
+-                    LineMetrics lineMetrics = font.getLineMetrics(new char[]
+-                             {(char)currentChar }, 0, 1, fontContext);
+-    
+-                    ascent = 0; // Math.max(lineMetrics.getAscent() * 20, ascent);
+-                    descent = 0; // Math.max(lineMetrics.getDescent() * 20, descent);
+-                    leading = 0; // Math.max(lineMetrics.getLeading() * 20, leading);
+-                }
+-           }
+-           glyphIndex++;
+-           characterCode++;
+-       }
++            glyphVector = font.createGlyphVector(fontContext, new char[] { c });
++         
++            outline = glyphVector.getGlyphOutline(0);
++            advance = (int) (glyphVector.getGlyphMetrics(0).getAdvance());
++
++			glyphTable[index] = new Glyph(convertShape(outline), new FSBounds(0, 0, 0, 0), advance);
++			charToGlyph[c] = (short) index;
++			glyphToChar[index] = (short) c;
++
++			if (font.hasUniformLineMetrics() == false)
++			{
++				LineMetrics lineMetrics = font.getLineMetrics(new char[] { (char) c }, 0, 1, fontContext);
++
++				ascent = Math.max(lineMetrics.getAscent(), ascent);
++				descent = Math.max(lineMetrics.getDescent(), descent);
++				leading = Math.max(lineMetrics.getLeading(), leading);
++			}
++
++            if (c != missingGlyph) {
++            	index++;
++            }
++            	
++            code++;
++        }
+     }
+-    
++     
+     public Font(String path) throws IOException, DataFormatException
+     {
+     	decode(dataFromFile(new File(path)));
+@@ -580,7 +570,7 @@
+             {
+                 case PathIterator.SEG_MOVETO:
+                     path.close();
+-                    path.move(p1, p2);
++                    path.moveForFont(p1, p2);
+                     break;
+                 case PathIterator.SEG_LINETO:
+                     path.line(p1, p2);
+@@ -597,13 +587,6 @@
+             }
+             pathIter.next();
+         }
+-                
+-        if (path.objects.size() &gt; 0)
+-        {
+-            FSShapeStyle style = (FSShapeStyle)path.objects.get(0);
+-            style.setLineStyle(0);
+-            style.setAltFillStyle(1);
+-        }
+         return path.getShape();
+     }
+ 
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-10 21:14:32 UTC (rev 453)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-10 21:14:58 UTC (rev 454)
+@@ -30,6 +30,8 @@
+ 
+ package com.flagstone.transform.util;
+ 
++import java.awt.Color;
++import java.awt.Graphics2D;
+ import java.awt.image.BufferedImage;
+ import java.awt.image.ColorModel;
+ import java.awt.image.DataBuffer;
+@@ -44,6 +46,12 @@
+ import java.util.*;
+ import java.util.zip.*;
+ 
++import javax.imageio.IIOImage;
++import javax.imageio.ImageIO;
++import javax.imageio.ImageWriteParam;
++import javax.imageio.ImageWriter;
++import javax.imageio.stream.MemoryCacheImageOutputStream;
++
+ import com.flagstone.transform.FSCoder;
+ import com.flagstone.transform.Displayable;
+ import com.flagstone.transform.Definition;
+@@ -292,6 +300,10 @@
+ 				throw new DataFormatException();
+ 			}
+     	}
++    	else 
++    	{
++			object = defineImage(identifier, ImageIO.read(file));
++    	}
+     	
+     	return object;
+     }
+@@ -320,8 +332,7 @@
+     	ii.setInput(new ByteArrayInputStream(bytes));
+     	ii.setDetermineImageNumber(true);
+     	
+-    	if (!ii.check()) 
+-    	{
++    	if (!ii.check())  {
+     		throw new DataFormatException();
+     	}
+     	
+@@ -368,7 +379,7 @@
+ 			{
+ 				throw new DataFormatException();
+ 			}
+-    	}  	
++    	}
+     	return object;
+     }
+ 
+@@ -412,6 +423,325 @@
+ 		return object;
+ 	}
+ 
++    public static BufferedImage bufferedImage(FSDefineImage image)
++    {
++    	BufferedImage bufferedImage = null;
++    	
++    	int format = 0;
++    	int width = 0;
++    	int height = 0;
++    	
++    	byte[] colourTable = null;
++    	byte[] indexedImage = null;
++    	byte[] colorImage = null;
++
++    	try
++    	{
++    		width = image.getWidth();
++    		height = image.getHeight();
++    		
++    	    byte[] data = unzip(image.getCompressedData(), width, height);
++
++    	    int scanLength = (width + 3) &amp; ~3;
++    	    int tableLength = image.getTableSize();
++    	    int pixelLength = image.getPixelSize();
++
++    	    int pos = 0;
++    	    int index = 0;
++
++    	    if (tableLength &gt; 0)
++    	    {
++    		format = IDX8;
++    		width = image.getWidth();
++    		height = image.getHeight();
++    		colourTable = new byte[tableLength*4];
++    		indexedImage = new byte[height*width];
++
++    		for (int i=0; i&lt;tableLength; i++, index+=4)
++    		{
++    		    colourTable[index+3] = -1;
++    		    colourTable[index+2] = data[pos++];
++    		    colourTable[index+1] = data[pos++];
++    		    colourTable[index] = data[pos++];
++    		}
++    		
++    		index = 0;
++
++    		for (int h=0; h&lt;height; h++)
++    		{
++    		    for (int w=0; w&lt;width; w++, index++)
++    		    {
++    			indexedImage[index] = data[pos++];
++    		    }
++    		    pos += (scanLength - width);
++    		}
++    	    }
++    	    else
++    	    {
++    		format = RGB8;
++    		width = image.getWidth();
++    		height = image.getHeight();
++    		colorImage = new byte[height*width*4];
++    		index = 0;
++
++    		if (pixelLength == 16)
++    		{
++    		    for (int h=0; h&lt;height; h++)
++    		    {
++    			for (int w=0; w&lt;width; w++, index+=4)
++    			{
++    			    int color = (data[pos++] &lt;&lt; 8 | (data[pos++] &amp; 0xFF)) &amp; 0x7FFF;
++
++    			    colorImage[index+3] = -1;
++    			    colorImage[index+0] = (byte)(color &gt;&gt; 10);
++    			    colorImage[index+1] = (byte)((color &gt;&gt; 5) &amp; 0x1F);
++    			    colorImage[index+2] = (byte)(color &amp; 0x1F);
++    			}
++    			pos += (scanLength - width);
++    		    }
++    		}
++    		else
++    		{
++    			index = 0;
++    			
++    		    for (int h=0; h&lt;height; h++)
++    		    {
++    			for (int w=0; w&lt;width; w++, index+=4)
++    			{
++    			    colorImage[index+3] = -1;
++    			    colorImage[index+0] = data[pos++];
++    			    colorImage[index+1] = data[pos++];
++    			    colorImage[index+2] = data[pos++];
++    			}
++    			pos += (scanLength - width);
++    		    }
++    		}
++    	    }
++
++    	}
++    	catch (DataFormatException e)
++    	{
++    	}
++
++    	switch (format)
++    	{
++    	    case IDX8:
++    	    case IDXA:
++    		byte[] r = new byte[colourTable.length];
++    		byte[] g = new byte[colourTable.length];
++    		byte[] b = new byte[colourTable.length];
++    		byte[] a = new byte[colourTable.length];
++    	    int index = 0;
++
++    		for (int i=0; i&lt;colourTable.length; i++,index+=4)
++    		{
++    		    r[i] = colourTable[index+2];
++    		    g[i] = colourTable[index+1];
++    		    b[i] = colourTable[index+0];
++    		    a[i] = colourTable[index+3];
++    		}
++
++    		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
++
++    		int[] indexedBuffer = new int[width];
++    		int color;
++    		index = 0;
++
++    		for (int i=0; i&lt;height; i++)
++    		{
++    		    for (int j=0; j&lt;width; j++, index++)
++    		    {
++    			color = indexedImage[index] &lt;&lt; 2;
++
++    			indexedBuffer[j] = (colourTable[color+3]  &amp; 0xFF) &lt;&lt; 24;
++    			indexedBuffer[j] = indexedBuffer[j] | ((colourTable[color+2] &amp; 0xFF) &lt;&lt; 16);
++    			indexedBuffer[j] = indexedBuffer[j] | ((colourTable[color+1] &amp; 0xFF) &lt;&lt; 8);
++    			indexedBuffer[j] = indexedBuffer[j] | (colourTable[color+0] &amp; 0xFF);
++    		    }
++    		    
++    		    bufferedImage.setRGB(0, i, width, 1, indexedBuffer, 0, width);
++    		}
++    		break;
++    	    case RGB5:
++    	    case RGB8:
++    	    case RGBA:
++    		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
++
++    		int[] directBuffer = new int[width];
++    		index = 0;
++
++    		for (int i=0; i&lt;height; i++)
++    		{
++    		    for (int j=0; j&lt;width; j++, index+=4)
++    		    {
++    			//int a = colorImage[i][j][3] &amp; 0xFF;
++
++    /*			directBuffer[j] = (colorImage[i][j][3] &lt;&lt; 24) |
++    					  (colorImage[i][j][0] &lt;&lt; 16) |
++    					  (colorImage[i][j][1] &lt;&lt; 8)  |
++    					  colorImage[i][j][2];
++    */			
++    			directBuffer[j] = (colorImage[index+3]  &amp; 0xFF) &lt;&lt; 24;
++    			directBuffer[j] = directBuffer[j] | ((colorImage[index+0] &amp; 0xFF) &lt;&lt; 16);
++    			directBuffer[j] = directBuffer[j] | ((colorImage[index+1] &amp; 0xFF) &lt;&lt; 8);
++    			directBuffer[j] = directBuffer[j] | (colorImage[index+2] &amp; 0xFF);
++    		    }
++    		    bufferedImage.setRGB(0, i, width, 1, directBuffer, 0, width);
++    		}
++    		break;
++    	}
++    	
++    	return bufferedImage;
++    }
++
++    public static BufferedImage bufferedImage(FSDefineImage2 image)
++    {
++    	BufferedImage bufferedImage = null;
++    	
++    	int format = 0;
++    	int width = 0;
++    	int height = 0;
++    	
++    	byte[] colourTable = null;
++    	byte[] indexedImage = null;
++    	byte[] colorImage = null;
++
++    	try
++    	{
++    		width = image.getWidth();
++    		height = image.getHeight();
++    		
++    		byte[] data = unzip(image.getCompressedData(), width, height);
++
++    	    int scanLength = (width + 3) &amp; ~3;
++    	    int tableLength = image.getTableSize();
++    	    //int pixelLength = image.getPixelSize();
++
++    	    int pos = 0;
++    	    int index = 0;
++
++    	    if (tableLength &gt; 0)
++    	    {
++	    		format = IDXA;
++	    		width = image.getWidth();
++	    		height = image.getHeight();
++	    		colourTable = new byte[tableLength*4];
++	    		indexedImage = new byte[height*width];
++	    		
++	    		for (int i=0; i&lt;tableLength; i++, index+=4)
++	    		{
++	    		    colourTable[index+3] = data[pos++];
++	    		    colourTable[index+2] = data[pos++];
++	    		    colourTable[index+1] = data[pos++];
++	    		    colourTable[index] = data[pos++];
++	    		}
++	
++	       		index = 0;
++	
++	    		for (int h=0; h&lt;height; h++)
++	    		{
++	    		    for (int w=0; w&lt;width; w++, index++)
++	    		    {
++	    			indexedImage[index] = data[pos++];
++	    		    }
++	    		    pos += (scanLength - width);
++	    		}
++    	    }
++    	    else
++    	    {
++    			format = RGBA;
++    			width = image.getWidth();
++    			height = image.getHeight();
++    			colorImage = new byte[height*width*4];
++    	
++    			for (int h=0; h&lt;height; h++)
++    			{
++    			    for (int w=0; w&lt;width; w++, index+=4)
++    			    {
++    			    colorImage[index+3] = data[pos++];
++    				colorImage[index+0] = data[pos++];
++    				colorImage[index+1] = data[pos++];
++    				colorImage[index+2] = data[pos++];
++    			    }
++    			}
++    	    }
++
++    	}
++    	catch (Exception e)
++    	{
++    	}
++    	
++    	switch (format)
++    	{
++    	    case IDX8:
++    	    case IDXA:
++    		byte[] r = new byte[colourTable.length];
++    		byte[] g = new byte[colourTable.length];
++    		byte[] b = new byte[colourTable.length];
++    		byte[] a = new byte[colourTable.length];
++    	    int index = 0;
++
++    		for (int i=0; i&lt;colourTable.length; i++,index+=4)
++    		{
++    		    r[i] = colourTable[index+2];
++    		    g[i] = colourTable[index+1];
++    		    b[i] = colourTable[index+0];
++    		    a[i] = colourTable[index+3];
++    		}
++
++    		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
++
++    		int[] indexedBuffer = new int[width];
++    		int color;
++    		index = 0;
++
++    		for (int i=0; i&lt;height; i++)
++    		{
++    		    for (int j=0; j&lt;width; j++, index++)
++    		    {
++    			color = indexedImage[index] &lt;&lt; 2;
++
++    			indexedBuffer[j] = (colourTable[color+3]  &amp; 0xFF) &lt;&lt; 24;
++    			indexedBuffer[j] = indexedBuffer[j] | ((colourTable[color+2] &amp; 0xFF) &lt;&lt; 16);
++    			indexedBuffer[j] = indexedBuffer[j] | ((colourTable[color+1] &amp; 0xFF) &lt;&lt; 8);
++    			indexedBuffer[j] = indexedBuffer[j] | (colourTable[color+0] &amp; 0xFF);
++    		    }
++    		    
++    		    bufferedImage.setRGB(0, i, width, 1, indexedBuffer, 0, width);
++    		}
++    		break;
++    	    case RGB5:
++    	    case RGB8:
++    	    case RGBA:
++    		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
++
++    		int[] directBuffer = new int[width];
++    		index = 0;
++
++    		for (int i=0; i&lt;height; i++)
++    		{
++    		    for (int j=0; j&lt;width; j++, index+=4)
++    		    {
++    			//int a = colorImage[i][j][3] &amp; 0xFF;
++
++    /*			directBuffer[j] = (colorImage[i][j][3] &lt;&lt; 24) |
++    					  (colorImage[i][j][0] &lt;&lt; 16) |
++    					  (colorImage[i][j][1] &lt;&lt; 8)  |
++    					  colorImage[i][j][2];
++    */			
++    			directBuffer[j] = (colorImage[index+3]  &amp; 0xFF) &lt;&lt; 24;
++    			directBuffer[j] = directBuffer[j] | ((colorImage[index+0] &amp; 0xFF) &lt;&lt; 16);
++    			directBuffer[j] = directBuffer[j] | ((colorImage[index+1] &amp; 0xFF) &lt;&lt; 8);
++    			directBuffer[j] = directBuffer[j] | (colorImage[index+2] &amp; 0xFF);
++    		    }
++    		    bufferedImage.setRGB(0, i, width, 1, directBuffer, 0, width);
++    		}
++    		break;
++    	}
++    	
++    	return bufferedImage;
++    }
++
+     /**
+      * Generates the shape definition object that is required to display an image in a Flash movie.
+      * The shape is generated with a single fill style (FSBitmapFill object). The origin of the shape
+@@ -607,6 +937,74 @@
+ 
+ 		return blocks;
+ 	}
++
++	public static BufferedImage resizeImage(BufferedImage image, int width, int height)
++	{    
++        int image_type = image.getType();
++
++		if (image_type == BufferedImage.TYPE_CUSTOM) {
++			image_type = BufferedImage.TYPE_4BYTE_ABGR;
++		}
++
++		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
++
++		double width_ratio = (double) image.getWidth() / (double) width;
++		double height_ratio = (double) image.getHeight() / (double) height;
++		double ratio = (width_ratio &gt; height_ratio ? width_ratio : height_ratio);
++
++		if (ratio &lt; 1.0) {
++			ratio = 1.0;
++		}
++
++		int image_width = (int) (image.getWidth() / ratio);
++		int image_height = (int) (image.getHeight() / ratio);
++
++		int x = (width - image_width) / 2;
++		int y = (height - image_height) / 2;
++		
++		Graphics2D graphics = resized.createGraphics();
++		graphics.setColor(new Color(0.0f,0.0f,0.0f,0.0f));
++		graphics.fillRect(0, 0, width, height);
++
++	    java.awt.Image in = image.getScaledInstance(image_width, image_height, java.awt.Image.SCALE_SMOOTH);
++        new javax.swing.ImageIcon(in);
++
++        graphics.drawImage(in, x, y, null);
++		graphics.dispose();
++		resized.flush();
++
++		new javax.swing.ImageIcon(resized).getImage();
++			
++		return resized;	
++	}
++	
++	public static byte[] getImageWithQuality(BufferedImage image, float quality)
++	{
++		Iterator&lt;ImageWriter&gt;iter = ImageIO.getImageWritersByFormatName(&quot;jpeg&quot;);
++		ImageWriter writer = iter.next();
++		
++		ImageWriteParam iwp = writer.getDefaultWriteParam();
++		iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
++		iwp.setCompressionQuality(quality);
++
++		ByteArrayOutputStream stream = new ByteArrayOutputStream();
++		MemoryCacheImageOutputStream output = new MemoryCacheImageOutputStream(stream);
++		
++		try
++		{
++			writer.setOutput(output);
++			IIOImage out = new IIOImage(image, null, null);
++			writer.write(null, out, iwp);
++			output.flush();
++			output.close();
++			stream.close();
++		}
++		catch (IOException e)
++		{
++			e.printStackTrace();
++		}
++		return stream.toByteArray();
++	}
+   
+     private static byte[] adjustScan(int width, int height, byte[] image)
+     {
+@@ -761,6 +1159,23 @@
+ 		return newData;
+ 	}
+ 	
++    private static byte[] unzip(byte[] bytes, int width, int height) throws DataFormatException
++    {
++    byte[] data = new byte[width*height*8];
++	int count = 0;
++
++	Inflater inflater = new Inflater();
++	inflater.setInput(bytes);
++	count = inflater.inflate(data);
++	inflater.end();
++
++	byte[] uncompressedData = new byte[count];
++
++	System.arraycopy(data, 0, uncompressedData, 0, count);
++
++	return uncompressedData;
++    }
++
+     private static byte[] dataFromFile(File file) throws FileNotFoundException, IOException
+     {
+         FileInputStream imageContents = null;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000389.html">[Transform-svn] r453 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000391.html">[Transform-svn] r455 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#390">[ date ]</a>
+              <a href="thread.html#390">[ thread ]</a>
+              <a href="subject.html#390">[ subject ]</a>
+              <a href="author.html#390">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r396%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803272148.m2RLm8MI032497%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000331.html">
+   <LINK REL="Next"  HREF="000333.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r396%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803272148.m2RLm8MI032497%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r396 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar 27 22:48:08 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000331.html">[Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+        <LI>Next message: <A HREF="000333.html">[Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#332">[ date ]</a>
+              <a href="thread.html#332">[ thread ]</a>
+              <a href="subject.html#332">[ subject ]</a>
+              <a href="author.html#332">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-27 22:48:05 +0100 (Thu, 27 Mar 2008)
+New Revision: 396
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/Definition.java
+   dev/dev-2-4/src/com/flagstone/transform/FSFrame.java
+   dev/dev-2-4/src/com/flagstone/transform/FSMovie.java
+   dev/dev-2-4/src/com/flagstone/transform/package.html
+Log:
+Updated documentation with name change from FsDefineObject to Definition.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/Definition.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/Definition.java	2008-03-27 21:39:50 UTC (rev 395)
++++ dev/dev-2-4/src/com/flagstone/transform/Definition.java	2008-03-27 21:48:05 UTC (rev 396)
+@@ -1,5 +1,5 @@
+ /*
+- * FSDefineObject.java
++ * Definition.java
+  * Transform
+  * 
+  * Copyright (c) 2001-2008 Flagstone Software Ltd. All rights reserved.
+@@ -35,11 +35,11 @@
+  * images, buttons, shapes and sounds. Each such object contains a unique
+  * identifier that is used to reference the object when performing operations
+  * such as placing it in the display list using the FSPlaceObject class, etc.
+- * The FSDefineObject manages the encoding and decoding of this identifier.
++ * The Definition class manages the encoding and decoding of this identifier.
+  * 
+  * Identifiers are unique within a given movie. The FSMovie class is maintains
+  * an internal counter which is used to generate the identifiers that are
+- * assigned to classes derived from FSDefineObject.
++ * assigned to classes derived from Definition.
+  * 
+  * Two accessor methods, getIdentifier() and setIdentifier() are used to
+  * retrieve and update the unique identifier assigned to an object.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSFrame.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSFrame.java	2008-03-27 21:39:50 UTC (rev 395)
++++ dev/dev-2-4/src/com/flagstone/transform/FSFrame.java	2008-03-27 21:48:05 UTC (rev 396)
+@@ -47,7 +47,7 @@
+  * used to move to a named frame when playing a movie or movie clip.
+  * 
+  * definitions - An array containing objects that define items for display in a
+- * movie. Definitions are sub-classes of the FSDefineObject class and define
++ * movie. Definitions are sub-classes of the Definition class and define
+  * shapes, fonts, images and sounds that are displayed or played by the Flash
+  * Player.
+  * 
+@@ -202,7 +202,7 @@
+ 	 * movie.
+ 	 * 
+ 	 * @param anObject
+-	 *            a sub-class of FSDefineObject.
++	 *            a sub-class of Definition.
+ 	 *            
+ 	 * @throws NullPointerException if the definition is null.
+ 	 */
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMovie.java	2008-03-27 21:39:50 UTC (rev 395)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMovie.java	2008-03-27 21:48:05 UTC (rev 396)
+@@ -128,7 +128,7 @@
+  * objects such as FSPlaceObject which places the shape on the Flash Player's
+  * display list. The identifier is unique only within a movie so the FSMovie
+  * class maintains a counter that is used to generate values for the identifiers
+- * that are assigned to objects derived from the FSDefineObject class.
++ * that are assigned to objects derived from the Definition class.
+  * 
+  * To generate a Flash file use the &lt;code&gt;encodeToFile(String fileName)&lt;/code&gt;
+  * method:
+@@ -257,7 +257,7 @@
+ 	}
+ 
+ 	/**
+-	 * Returns a unique identifier for an object derived from the FSDefineObject
++	 * Returns a unique identifier for an object derived from the Definition
+ 	 * class. In order to reference objects that define items such as shapes,
+ 	 * sounds, etc. each must be assigned an identifier that is unique for a
+ 	 * given Movie.
+@@ -277,7 +277,7 @@
+ 
+ 	/**
+ 	 * Gets the current value for the unique identifier that will be assigned to
+-	 * definition objects (classes derived from the FSDefineObject class). The
++	 * definition objects (classes derived from the Definition class). The
+ 	 * value returned is the last value requested using the newIdentifier()
+ 	 * method.
+ 	 * 
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/package.html
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/package.html	2008-03-27 21:39:50 UTC (rev 395)
++++ dev/dev-2-4/src/com/flagstone/transform/package.html	2008-03-27 21:48:05 UTC (rev 396)
+@@ -64,7 +64,7 @@
+ 
+ &lt;p&gt;The &lt;b&gt;Dictionary&lt;/b&gt; is a table that contains the definitions of the objects 
+ (buttons, images, sounds) that will be displayed in the movie. Each definition tag 
+-(represented in Transform by classes derived from FSDefineObject) contains a unique 
++(represented in Transform by classes derived from Definition) contains a unique 
+ identifier which allows the definition to be referenced when creating instances of 
+ a particular shape, button, etc., to display on the screen. Entries are added to 
+ the dictionary whenever a definition tag is decoded from the Flash movie. Dictionary 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000331.html">[Transform-svn] r395 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+	<LI>Next message: <A HREF="000333.html">[Transform-svn] r397 - in dev/dev-2-4/src/com/flagstone/transform:	. test util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#332">[ date ]</a>
+              <a href="thread.html#332">[ thread ]</a>
+              <a href="subject.html#332">[ subject ]</a>
+              <a href="author.html#332">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

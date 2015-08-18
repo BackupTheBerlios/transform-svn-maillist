@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r97 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r97%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200603010831.k218V9g4005419%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000037.html">
+   <LINK REL="Next"  HREF="000039.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r97 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r97%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200603010831.k218V9g4005419%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r97 - trunk/src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Wed Mar  1 09:31:09 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000037.html">[Transform-svn] r96 - in trunk: doc src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000039.html">[Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#38">[ date ]</a>
+              <a href="thread.html#38">[ thread ]</a>
+              <a href="subject.html#38">[ subject ]</a>
+              <a href="author.html#38">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-01 09:31:05 +0100 (Wed, 01 Mar 2006)
+New Revision: 97
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSCharacterTable.java
+Log:
+Added remaining characters for Finnish and French. Added character
+sets for Norwegian, Swedish, Dutch and Italian.
+
+Modified: trunk/src/com/flagstone/transform/util/FSCharacterTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSCharacterTable.java	2006-03-01 00:03:37 UTC (rev 96)
++++ trunk/src/com/flagstone/transform/util/FSCharacterTable.java	2006-03-01 08:31:05 UTC (rev 97)
+@@ -333,19 +333,21 @@
+         '\u20AC', // Euro currency symbol
+     };
+ 
+-    /**
+-     * TODO Add ?? ?? &#65533;&#65533; &#65533;&#65533;
+-     */
+     private final static char[] fi_FI = { 
+         '\u00A2', // cent sign
++        '\u00C4', // upper case letter A with diaresis
+         '\u00C5', // upper case letter A with ring above
++        '\u00D6', // upper case letter O with diaresis
++        '\u00E4', // lower case letter A with diaresis
+         '\u00E5', // lower case letter A with ring above
++        '\u00F6', // lower case letter O with diaresis
++        '\u0160', // upper case letter S with caron
++        '\u0161', // lower case letter S with caron
++        '\u017D', // upper case letter Z with caron
++        '\u017E', // lower case letter z with caron
+         '\u20AC', // Euro currency symbol
+     };
+     
+-    /**
+-     * TODO Add ? ?
+-     */
+     private final static char[] fr_FR = {
+         '\u00A2', // cent sign
+         '\u00C0', // upper case letter A with grave
+@@ -372,9 +374,31 @@
+         '\u00F4', // lower case letter O with circumflex
+         '\u00FA', // lower case letter U with acute
+         '\u00FC', // lower case letter U with diaresis
++        '\u0152', // upper case oE ligature
++        '\u0153', // lower case oE ligature
+         '\u20AC', // Euro currency symbol
+     };
+ 
++    private final static char[] it_IT = {
++        '\u00A2', // cent sign
++        '\u20AC', // Euro currency symbol
++    };
++
++    private final static char[] nl_NL = {
++        '\u0132', // upper case IJ ligature
++        '\u0133', // lower case IJ ligature
++        '\u20AC', // Euro currency symbol
++    };
++
++    private final static char[] no_NO = {
++        '\u00C5', // upper case letter A with ring above
++        '\u00C6', // upper case letter AE
++        '\u00D8', // upper case letter O with stroke
++        '\u00E5', // lower case letter A with ring above
++        '\u00E6', // lower case letter AE
++        '\u00F8', // lower case letter O with stroke
++    };
++
+     private final static char[] pt_PT = {
+         '\u00A2', // cent sign
+         '\u00C0', // upper case letter A with grave
+@@ -406,7 +430,19 @@
+         '\u20AC', // Euro currency symbol
+     };
+ 
+-/**
++    private final static char[] se_SE = {
++        '\u00A2', // cent sign
++        '\u00C4', // upper case letter A with diaresis
++        '\u00C5', // upper case letter A with ring above
++        '\u00D6', // upper case letter O with diaresis
++        '\u00DF', // lower case letter Sharp S (German)
++        '\u00E4', // lower case letter A with diaresis
++        '\u00E5', // lower case letter A with ring above
++        '\u00F6', // lower case letter O with diaresis
++        '\u20AC', // Euro currency symbol
++    };
++
++    /**
+      * Return a predefined set of characters. An integer code is used to select 
+      * the set to avoid possible formatting issues with names of character sets
+      * specified as strings.
+@@ -557,6 +593,45 @@
+                     set[index] = fr_FR[i];            
+             }
+         }
++        else if (language.equals(&quot;it&quot;))
++        {
++            if (country.equals(&quot;IT&quot;))
++            {
++                set = new char[iso_646_chars.length+it_IT.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;it_IT.length; i++, index++)
++                    set[index] = it_IT[i];            
++            }
++        }
++        else if (language.equals(&quot;nl&quot;))
++        {
++            if (country.equals(&quot;NL&quot;))
++            {
++                set = new char[iso_646_chars.length+nl_NL.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;nl_NL.length; i++, index++)
++                    set[index] = nl_NL[i];            
++            }
++        }
++        else if (language.equals(&quot;no&quot;))
++        {
++            if (country.equals(&quot;N0&quot;))
++            {
++                set = new char[iso_646_chars.length+no_NO.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;no_NO.length; i++, index++)
++                    set[index] = no_NO[i];            
++            }
++        }
+         else if (language.equals(&quot;pt&quot;))
+         {
+             if (country.equals(&quot;PT&quot;))
+@@ -570,6 +645,19 @@
+                     set[index] = pt_PT[i];            
+             }
+         }
++        else if (language.equals(&quot;se&quot;))
++        {
++            if (country.equals(&quot;SE&quot;))
++            {
++                set = new char[iso_646_chars.length+se_SE.length];
++                
++                for (int i=0; i&lt;iso_646_chars.length; i++, index++)
++                    set[index] = iso_646_chars[i];
++                
++                for (int i=0; i&lt;se_SE.length; i++, index++)
++                    set[index] = se_SE[i];            
++            }
++        }
+         return set;
+     }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000037.html">[Transform-svn] r96 - in trunk: doc src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000039.html">[Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#38">[ date ]</a>
+              <a href="thread.html#38">[ thread ]</a>
+              <a href="subject.html#38">[ subject ]</a>
+              <a href="author.html#38">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

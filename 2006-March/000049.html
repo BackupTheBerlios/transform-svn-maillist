@@ -1,0 +1,1776 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r108 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r108%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603031831.k23IVaQs019942%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000048.html">
+   <LINK REL="Next"  HREF="000050.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r108 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r108%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200603031831.k23IVaQs019942%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r108 - in trunk: doc src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Fri Mar  3 19:31:36 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000048.html">[Transform-svn] r107 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000050.html">[Transform-svn] r109 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-03 19:30:42 +0100 (Fri, 03 Mar 2006)
+New Revision: 108
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSActionObject.java
+   trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+   trunk/src/com/flagstone/transform/FSButtonSound.java
+   trunk/src/com/flagstone/transform/FSCall.java
+   trunk/src/com/flagstone/transform/FSDefineButton2.java
+   trunk/src/com/flagstone/transform/FSDefineFont2.java
+   trunk/src/com/flagstone/transform/FSDefineImage.java
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+   trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+   trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+   trunk/src/com/flagstone/transform/FSDefineShape2.java
+   trunk/src/com/flagstone/transform/FSDefineShape3.java
+   trunk/src/com/flagstone/transform/FSDefineText2.java
+   trunk/src/com/flagstone/transform/FSDefineTextField.java
+   trunk/src/com/flagstone/transform/FSDefineVideo.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger.java
+   trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSExport.java
+   trunk/src/com/flagstone/transform/FSFontInfo2.java
+   trunk/src/com/flagstone/transform/FSFrameLabel.java
+   trunk/src/com/flagstone/transform/FSFree.java
+   trunk/src/com/flagstone/transform/FSGetUrl2.java
+   trunk/src/com/flagstone/transform/FSGotoFrame.java
+   trunk/src/com/flagstone/transform/FSGotoFrame2.java
+   trunk/src/com/flagstone/transform/FSGotoLabel.java
+   trunk/src/com/flagstone/transform/FSIf.java
+   trunk/src/com/flagstone/transform/FSImport.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSJump.java
+   trunk/src/com/flagstone/transform/FSLimitScript.java
+   trunk/src/com/flagstone/transform/FSMovieObject.java
+   trunk/src/com/flagstone/transform/FSNewFunction.java
+   trunk/src/com/flagstone/transform/FSNewFunction2.java
+   trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+   trunk/src/com/flagstone/transform/FSPlaceObject2.java
+   trunk/src/com/flagstone/transform/FSPointer.java
+   trunk/src/com/flagstone/transform/FSProtect.java
+   trunk/src/com/flagstone/transform/FSPush.java
+   trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+   trunk/src/com/flagstone/transform/FSRegisterCopy.java
+   trunk/src/com/flagstone/transform/FSRemoveObject2.java
+   trunk/src/com/flagstone/transform/FSSerialNumber.java
+   trunk/src/com/flagstone/transform/FSSetTarget.java
+   trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+   trunk/src/com/flagstone/transform/FSTabOrder.java
+   trunk/src/com/flagstone/transform/FSTable.java
+   trunk/src/com/flagstone/transform/FSVideoFrame.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame.java
+   trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+   trunk/src/com/flagstone/transform/FSWith.java
+Log:
+Removed private copies of constants used to identify different 
+types of object. This was left over from supporting different 
+versions of Flash.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/doc/CHANGES.txt	2006-03-03 18:30:42 UTC (rev 108)
+@@ -14,6 +14,9 @@
+       methods will be used for testing. All classes.
+       
+     * Added copy constructors to all classes.
++    
++    * Removed private copies of constants used to identify different types of 
++      object. This was left over from supporting different versions of Flash.
+ 
+ 2006-03-01 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSActionObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSActionObject.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -85,26 +85,6 @@
+     /// Type identifying a ExceptionHandler action.
+     public static final int ExceptionHandler = 143;
+ 
+-
+-    static final int _GotoFrame        = 129;
+-    static final int _GetUrl           = 131;
+-    static final int _WaitForFrame     = 138;
+-    static final int _SetTarget        = 139;
+-    static final int _GotoLabel        = 140;
+-    static final int _WaitForFrame2    = 141;
+-    static final int _Push             = 150;
+-    static final int _Jump             = 153;
+-    static final int _GetUrl2          = 154;
+-    static final int _If               = 157;
+-    static final int _Call             = 158;
+-    static final int _GotoFrame2       = 159;
+-    static final int _RegisterCopy     = 135;
+-    static final int _Table            = 136;
+-    static final int _With             = 148;
+-    static final int _NewFunction      = 155;
+-    static final int _NewFunction2     = 142;
+-    static final int _ExceptionHandler = 143;
+-
+     protected int type = 0;
+     protected int size = 0;
+     protected int length = 0;
+
+Modified: trunk/src/com/flagstone/transform/FSButtonColorTransform.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSButtonColorTransform.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -74,7 +74,7 @@
+      */
+     public FSButtonColorTransform(FSCoder coder)
+     {
+-        super(_ButtonColorTransform);
++        super(ButtonColorTransform);
+         decode(coder);
+     }
+ 
+@@ -85,7 +85,7 @@
+         */
+     public FSButtonColorTransform(int anIdentifier, FSColorTransform aColorTransform)
+     {
+-        super(_ButtonColorTransform);
++        super(ButtonColorTransform);
+         setIdentifier(anIdentifier);
+         setColorTransform(aColorTransform);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonSound.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSButtonSound.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -97,7 +97,7 @@
+      */
+     public FSButtonSound(FSCoder coder)
+     {
+-        super(_ButtonSound);
++        super(ButtonSound);
+         decode(coder);
+     }
+     /**  Constructs an FSButtonSound object that defines the sound played for a single button event.
+@@ -108,7 +108,7 @@
+         */
+     public FSButtonSound(int anIdentifier, int eventCode, FSSound aSound)
+     {
+-        super(_ButtonSound);
++        super(ButtonSound);
+         
+         setIdentifier(anIdentifier);
+         setSoundForEvent(eventCode, aSound);
+
+Modified: trunk/src/com/flagstone/transform/FSCall.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSCall.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -76,7 +76,7 @@
+      */
+     public FSCall(FSCoder coder)
+     {
+-        super(_Call);
++        super(Call);
+         decode(coder);
+     }
+     /** 
+@@ -84,7 +84,7 @@
+      */
+     public FSCall()
+     {
+-        super(_Call);
++        super(Call);
+     }
+     /**
+      * Constructs an FSCall object by copying values from an existing object.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineButton2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -138,7 +138,7 @@
+      */
+     public FSDefineButton2(FSCoder coder)
+     {
+-        super(_DefineButton2, 0);
++        super(DefineButton2, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineButton object, specifying the unique identifier, the type of button to be created, the button records that describe the button's appearance and the actions that are performed in response to each button event.
+@@ -150,7 +150,7 @@
+         */
+     public FSDefineButton2(int anIdentifier, int buttonType, ArrayList buttonRecordArray, ArrayList buttonEventArray)
+     {
+-        super(_DefineButton2, anIdentifier);
++        super(DefineButton2, anIdentifier);
+         setButtonType(buttonType);
+         setButtonRecords(buttonRecordArray);
+         setButtonEvents(buttonEventArray);
+@@ -169,7 +169,7 @@
+      */
+     public FSDefineButton2(int anIdentifier, int buttonType, ArrayList buttonRecordArray, byte[] bytes)
+     {
+-        super(_DefineButton2, anIdentifier);
++        super(DefineButton2, anIdentifier);
+         setButtonType(buttonType);
+         setButtonRecords(buttonRecordArray);
+         setEncodedEvents(bytes);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineFont2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineFont2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -176,7 +176,7 @@
+      */
+     public FSDefineFont2(FSCoder coder)
+     {
+-        super(_DefineFont2, 0);
++        super(DefineFont2, 0);
+         decode(coder);
+     }
+     /** 
+@@ -197,7 +197,7 @@
+      */
+     public FSDefineFont2(int anIdentifier, String name)
+     {
+-        super(_DefineFont2, anIdentifier);
++        super(DefineFont2, anIdentifier);
+         setName(name);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineImage.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -114,7 +114,7 @@
+      */
+     public FSDefineImage(FSCoder coder)
+     {
+-        super(_DefineImage, 0);
++        super(DefineImage, 0);
+         extendLength = true;
+         decode(coder);
+     }
+@@ -128,7 +128,7 @@
+         */
+     public FSDefineImage(int anIdentifier, int width, int height, int tableSize, byte[] compressedBytes)
+     {
+-        super(_DefineImage, anIdentifier);
++        super(DefineImage, anIdentifier);
+         extendLength = true;
+         setWidth(width);
+         setHeight(height);
+@@ -147,7 +147,7 @@
+         */
+     public FSDefineImage(int anIdentifier, int width, int height, byte[] compressedBytes, int aPixelSize)
+     {
+-        super(_DefineImage, anIdentifier);
++        super(DefineImage, anIdentifier);
+         extendLength = true;
+         setWidth(width);
+         setHeight(height);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -104,7 +104,7 @@
+      */
+     public FSDefineImage2(FSCoder coder)
+     {
+-        super(_DefineImage2, 0);
++        super(DefineImage2, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineImage2 object defining a colour-mapped image.
+@@ -117,7 +117,7 @@
+     */
+     public FSDefineImage2(int anIdentifier, int width, int height, int tableSize, byte[] compressedBytes)
+     {
+-        super(_DefineImage2, anIdentifier);
++        super(DefineImage2, anIdentifier);
+         setWidth(width);
+         setHeight(height);
+         setPixelSize(8);
+@@ -134,7 +134,7 @@
+     */
+     public FSDefineImage2(int anIdentifier, int width, int height, byte[] compressedBytes)
+     { 
+-        super(_DefineImage2, anIdentifier);
++        super(DefineImage2, anIdentifier);
+         setWidth(width);
+         setHeight(height);
+         setPixelSize(32);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -105,7 +105,7 @@
+      */
+     public FSDefineJPEGImage2(FSCoder coder)
+     {
+-        super(_DefineJPEGImage2, 0);
++        super(DefineJPEGImage2, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineJPEGImage2 object with the identifier, JPEG image data and JPEG encoding table data.
+@@ -116,7 +116,7 @@
+         */
+     public FSDefineJPEGImage2(int anIdentifier, byte[] imageBytes, byte[] encodingBytes)
+     {
+-        super(_DefineJPEGImage2, anIdentifier);
++        super(DefineJPEGImage2, anIdentifier);
+         setImage(imageBytes);
+         setEncodingTable(encodingBytes);
+     }
+@@ -127,7 +127,7 @@
+         */
+     public FSDefineJPEGImage2(int anIdentifier, byte[] imageBytes)
+     {
+-        super(_DefineJPEGImage2, anIdentifier);
++        super(DefineJPEGImage2, anIdentifier);
+         setImage(imageBytes);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -130,7 +130,7 @@
+      */
+     public FSDefineJPEGImage3(FSCoder coder)
+     {
+-        super(_DefineJPEGImage3, 0);
++        super(DefineJPEGImage3, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineJPEGImage3 object with the specified image data, encoding table and
+@@ -143,7 +143,7 @@
+         */
+     public FSDefineJPEGImage3(int anIdentifier, byte[] imageBytes, byte[] encodingBytes, byte[] alphaBytes)
+     {
+-        super(_DefineJPEGImage3, anIdentifier);
++        super(DefineJPEGImage3, anIdentifier);
+         setImage(imageBytes);
+         setEncodingTable(encodingBytes);
+         setCompressedAlpha(alphaBytes);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMorphShape.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineMorphShape.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -172,7 +172,7 @@
+      */
+     public FSDefineMorphShape(FSCoder coder)
+     {
+-        super(_DefineMorphShape, 0);
++        super(DefineMorphShape, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineMorphShape object.
+@@ -187,7 +187,7 @@
+         */
+     public FSDefineMorphShape(int anIdentifier, FSBounds startBounds, FSBounds endBounds, ArrayList fillStyleArray, ArrayList lineStyleArray, FSShape startShape, FSShape endShape)
+     {
+-        super(_DefineMorphShape, anIdentifier);
++        super(DefineMorphShape, anIdentifier);
+         setStartBounds(startBounds);
+         setEndBounds(endBounds);
+         setFillStyles(fillStyleArray);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineMovieClip.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineMovieClip.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -77,7 +77,7 @@
+      */
+     public FSDefineMovieClip(FSCoder coder)
+     {
+-        super(_DefineMovieClip, 0);
++        super(DefineMovieClip, 0);
+         decode(coder);
+     }
+     /** 
+@@ -88,7 +88,7 @@
+      */
+     public FSDefineMovieClip(int anIdentifier)
+     {
+-        super(_DefineMovieClip, anIdentifier);
++        super(DefineMovieClip, anIdentifier);
+         setObjects(new ArrayList());
+     }
+     /** Constructs an FSDefineMovieClip object with the unique identifier and array of movie objects.
+@@ -98,7 +98,7 @@
+         */
+     public FSDefineMovieClip(int anIdentifier, ArrayList anArray)
+     {
+-        super(_DefineMovieClip, anIdentifier);
++        super(DefineMovieClip, anIdentifier);
+         setObjects(anArray);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineShape2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -132,7 +132,7 @@
+      */
+     public FSDefineShape2(FSCoder coder)
+     {
+-        super(_DefineShape2, 0);
++        super(DefineShape2, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineShape2 object.
+@@ -145,7 +145,7 @@
+     */
+     public FSDefineShape2(int anIdentifier, FSBounds aBounds, ArrayList fillStyleArray, ArrayList lineStyleArray, FSShape aShape)
+     {
+-        super(_DefineShape2, anIdentifier);
++        super(DefineShape2, anIdentifier);
+         setBounds(aBounds);
+         setFillStyles(fillStyleArray);
+         setLineStyles(lineStyleArray);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineShape3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineShape3.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -125,7 +125,7 @@
+      */
+     public FSDefineShape3(FSCoder coder)
+     {
+-        super(_DefineShape3, 0);
++        super(DefineShape3, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineShape3 object.
+@@ -138,7 +138,7 @@
+         */
+     public FSDefineShape3(int anIdentifier, FSBounds aBounds, ArrayList fillStyleArray, ArrayList lineStyleArray, FSShape aShape)
+     {
+-        super(_DefineShape3, anIdentifier);
++        super(DefineShape3, anIdentifier);
+         setBounds(aBounds);
+         setFillStyles(fillStyleArray);
+         setLineStyles(lineStyleArray);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineText2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineText2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineText2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -131,7 +131,7 @@
+      */
+     public FSDefineText2(FSCoder coder)
+     {
+-        super(_DefineText2, 0);
++        super(DefineText2, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineText2 object with the specified bounding rectangle, coordinate transform and text records.
+@@ -143,7 +143,7 @@
+     */
+     public FSDefineText2(int anIdentifier, FSBounds aBounds, FSCoordTransform aTransform, ArrayList textRecordArray)
+     {
+-        super(_DefineText2, anIdentifier);
++        super(DefineText2, anIdentifier);
+         setBounds(aBounds);
+         setTransform(aTransform);
+         setObjects(textRecordArray);
+
+Modified: trunk/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineTextField.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineTextField.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -309,7 +309,7 @@
+      */
+     public FSDefineTextField(FSCoder coder)
+     {
+-        super(_DefineTextField, 0);
++        super(DefineTextField, 0);
+         decode(coder);
+     }
+     /** Constructs an FSDefineTextField object with the specified identifier and with the size defined by the bounding rectangle. All other attributes are set to their default values which will result in a blank, single-line, editable text field. Any values entered will not be assigned to a variable. Since no font is specified the text will be displayed in a non-spaced font 20 twips in height.
+@@ -319,7 +319,7 @@
+         */
+     public FSDefineTextField(int anIdentifier, FSBounds aBounds)
+     {
+-        super(_DefineTextField, anIdentifier);
++        super(DefineTextField, anIdentifier);
+         setBounds(aBounds);
+     }
+     /** Constructs an FSDefineTextField object setting the attributes added to the Hashtable. Each entry consists of a key-value pair. The key is one of the pre-defined attribute names while the value is an instance of a wrapper class (Boolean, Integer or String) that will be assigned to the specified attribute.
+@@ -330,7 +330,7 @@
+         */
+     public FSDefineTextField(int anIdentifier, FSBounds aBounds, Hashtable attributes)
+     {
+-        super(_DefineTextField, anIdentifier);
++        super(DefineTextField, anIdentifier);
+         setBounds(aBounds);
+         setAttributes(attributes);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineVideo.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineVideo.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSDefineVideo.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -132,7 +132,7 @@
+      */
+     public FSDefineVideo(FSCoder coder)
+     {
+-        super(_DefineVideo, 0);
++        super(DefineVideo, 0);
+         decode(coder);
+     }
+     /**
+@@ -149,7 +149,7 @@
+      */
+     public FSDefineVideo(int anIdentifier, int count, int width, int height, int deblocking, boolean smoothing, int codec)
+     {
+-        super(_DefineVideo, anIdentifier);
++        super(DefineVideo, anIdentifier);
+         setFrameCount(count);
+         setWidth(width);
+         setHeight(height);
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -71,7 +71,7 @@
+      */
+     public FSEnableDebugger(FSCoder coder)
+     {
+-        super(_EnableDebugger);
++        super(EnableDebugger);
+         decode(coder);
+     }
+     /** 
+@@ -81,7 +81,7 @@
+      */
+     public FSEnableDebugger(String password)
+     {
+-        super(_EnableDebugger);
++        super(EnableDebugger);
+         setPassword(password);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSEnableDebugger2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSEnableDebugger2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -68,7 +68,7 @@
+      */
+     public FSEnableDebugger2(FSCoder coder)
+     {
+-        super(_EnableDebugger2);
++        super(EnableDebugger2);
+         decode(coder);
+     }
+     /** 
+@@ -78,7 +78,7 @@
+      */
+     public FSEnableDebugger2(String password)
+     {
+-        super(_EnableDebugger2);
++        super(EnableDebugger2);
+         setPassword(password);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -101,7 +101,7 @@
+      */
+     public FSExceptionHandler(FSCoder coder)
+     {
+-        super(_ExceptionHandler);
++        super(ExceptionHandler);
+         decode(coder);
+     }
+     /**
+@@ -114,7 +114,7 @@
+      */
+     public FSExceptionHandler(String name, ArrayList tryArray, ArrayList catchArray, ArrayList finallyArray)
+     {
+-        super(_ExceptionHandler);
++        super(ExceptionHandler);
+     
+         register = 0;
+         variable = name;
+@@ -133,7 +133,7 @@
+      */
+     public FSExceptionHandler(int index, ArrayList tryArray, ArrayList catchArray, ArrayList finallyArray)
+     {
+-        super(_ExceptionHandler);
++        super(ExceptionHandler);
+     
+         register = index;
+         variable = null;
+
+Modified: trunk/src/com/flagstone/transform/FSExport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExport.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSExport.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -80,7 +80,7 @@
+         
+     FSExport()
+     {
+-        super(_Export);
++        super(Export);
+     }
+     /**
+      * Construct an FSExport object, initalizing it with values decoded from an
+@@ -90,7 +90,7 @@
+      */
+     public FSExport(FSCoder coder)
+     {
+-        super(_Export);
++        super(Export);
+         decode(coder);
+     }
+     /** Constructs an FSExport object that exports the object with the specified identifier. The exported object is assigned the specified name to allow it to be referenced in files importing the object. 
+@@ -100,7 +100,7 @@
+         */
+     public FSExport(int anIdentifier, String aString)
+     {
+-        super(_Export);
++        super(Export);
+         add(anIdentifier, aString);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSFontInfo2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFontInfo2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSFontInfo2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -87,7 +87,7 @@
+      */
+     public FSFontInfo2(FSCoder coder)
+     {
+-        super(_FontInfo2);
++        super(FontInfo2);
+         decode(coder);
+     }
+     /**  Constructs a basic FSFontInfo2 object specifying only the name of the font.
+@@ -97,7 +97,7 @@
+         */
+     public FSFontInfo2(int anIdentifier, String aName)
+     {
+-        super(_FontInfo2);
++        super(FontInfo2);
+         setIdentifier(anIdentifier);
+         setName(aName);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSFrameLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFrameLabel.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSFrameLabel.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -159,7 +159,7 @@
+         
+     FSFrameLabel()
+     {
+-        super(_FrameLabel);
++        super(FrameLabel);
+     }
+ 
+     /**
+@@ -170,7 +170,7 @@
+      */
+     public FSFrameLabel(FSCoder coder)
+     {
+-        super(_FrameLabel);
++        super(FrameLabel);
+         decode(coder);
+     }
+     /** Constructs an FSFrameLabel object with the specified name. 
+@@ -179,7 +179,7 @@
+         */
+     public FSFrameLabel(String aString)
+     {
+-        super(_FrameLabel);
++        super(FrameLabel);
+         setLabel(aString);
+     }
+ // Flash 6
+@@ -192,7 +192,7 @@
+      */
+     public FSFrameLabel(String aString, boolean isAnchor)
+     {
+-        super(_FrameLabel);
++        super(FrameLabel);
+         setLabel(aString);
+         setAnchor(isAnchor);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSFree.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSFree.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSFree.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -65,7 +65,7 @@
+      */
+     public FSFree(FSCoder coder)
+     {
+-        super(_Free);
++        super(Free);
+         decode(coder);
+     }
+     /** Constructs an FSFree object with the specified identifier. The identifier must be in the range 1..65535.
+@@ -74,7 +74,7 @@
+         */
+     public FSFree(int anIdentifier)
+     {
+-        super(_Free);
++        super(Free);
+         setIdentifier(anIdentifier);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSGetUrl2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGetUrl2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSGetUrl2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -184,7 +184,7 @@
+      */
+     public FSGetUrl2(FSCoder coder)
+     {
+-        super(_GetUrl2);
++        super(GetUrl2);
+         decode(coder);
+     }
+     /** Constructs an FSGetUrl2 using the specified request type. 
+@@ -193,7 +193,7 @@
+         */
+     public FSGetUrl2(int aType)
+     {
+-        super(_GetUrl2);
++        super(GetUrl2);
+         setRequestType(aType);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSGotoFrame.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -91,7 +91,7 @@
+      */
+     public FSGotoFrame(FSCoder coder)
+     {
+-        super(_GotoFrame);
++        super(GotoFrame);
+         decode(coder);
+     }
+     /** Constructs an FSGotoFrame with the specified frame number. The frame number must be in the range 1..65535.
+@@ -100,7 +100,7 @@
+         */
+     public FSGotoFrame(int aNumber)
+     {
+-        super(_GotoFrame);
++        super(GotoFrame);
+         setFrameNumber(aNumber);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSGotoFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoFrame2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSGotoFrame2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -152,7 +152,7 @@
+      */
+     public FSGotoFrame2(FSCoder coder)
+     {
+-        super(_GotoFrame2);
++        super(GotoFrame2);
+         decode(coder);
+     }
+     /** Constructs an FSGotoFrame2 object with the specified play flag setting. 
+@@ -162,7 +162,7 @@
+         */
+     public FSGotoFrame2(boolean aBool)
+     {
+-        super(_GotoFrame2);
++        super(GotoFrame2);
+         setPlayFrame(aBool);
+     }
+ // Flash 5
+@@ -176,7 +176,7 @@
+      */
+     public FSGotoFrame2(int offset, boolean aBool)
+     {
+-        super(_GotoFrame2);
++        super(GotoFrame2);
+         setPlayFrame(aBool);
+         setFrameOffset(offset);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSGotoLabel.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSGotoLabel.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSGotoLabel.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -87,7 +87,7 @@
+     
+     FSGotoLabel()
+     {
+-        super(_GotoLabel);
++        super(GotoLabel);
+     }
+     /**
+      * Construct an FSGotoLabel object, initalizing it with values decoded from
+@@ -97,7 +97,7 @@
+      */
+     public FSGotoLabel(FSCoder coder)
+     {
+-        super(_GotoLabel);
++        super(GotoLabel);
+         decode(coder);
+     }
+     /** Constructs an FSGotoLabel action with the specified frame label. 
+@@ -106,7 +106,7 @@
+         */
+     public FSGotoLabel(String aString)
+     {
+-        super(_GotoLabel);
++        super(GotoLabel);
+         setLabel(aString);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSIf.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSIf.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSIf.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -83,7 +83,7 @@
+      */
+     public FSIf(FSCoder coder)
+     {
+-        super(_If);
++        super(If);
+         decode(coder);
+     }
+     /** Constructs an if action with the specified offset. The offset must be in the range  -32768..32767.
+@@ -92,7 +92,7 @@
+         */    
+     public FSIf(int anOffset)
+     {
+-        super(_If);
++        super(If);
+         setOffset(anOffset);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSImport.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSImport.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSImport.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -91,7 +91,7 @@
+         
+     FSImport()
+     {
+-        super(_Import);
++        super(Import);
+     }
+     /**
+      * Construct an FSImport object, initalizing it with values decoded from
+@@ -101,7 +101,7 @@
+      */
+     public FSImport(FSCoder coder)
+     {
+-        super(_Import);
++        super(Import);
+         decode(coder);
+     }
+     /** Constructs an FSImport object that imports an object from the specified file. The exported object is referenced by a name assigned to it when it was exported. The newly imported object must be assigned an identifier that is unique within the movie the object is imported into. Limited security is provided by requiring that the URL must be in the same domain or sub-domain as the URL of the movie which contains this object.
+@@ -112,7 +112,7 @@
+         */
+     public FSImport(String aUrl, int anIdentifier, String aString)
+     {
+-        super(_Import);
++        super(Import);
+         setUrl(aUrl);
+         add(anIdentifier, aString);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -99,7 +99,7 @@
+      */
+     public FSInitialize(FSCoder coder)
+     {
+-        super(_Initialize);
++        super(Initialize);
+         decode(coder);
+     }
+     /**  
+@@ -111,7 +111,7 @@
+      */
+     public FSInitialize(int anIdentifier, ArrayList anArray)
+     {
+-        super(_Initialize);
++        super(Initialize);
+         setIdentifier(anIdentifier);
+         setActions(anArray);
+     }
+@@ -124,7 +124,7 @@
+      */
+     public FSInitialize(int anIdentifier, byte[] bytes)
+     {
+-        super(_Initialize);
++        super(Initialize);
+         setIdentifier(anIdentifier);
+         setEncodedActions(bytes);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSJump.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSJump.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSJump.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -76,7 +76,7 @@
+      */
+     public FSJump(FSCoder coder)
+     {
+-        super(_Jump);
++        super(Jump);
+         decode(coder);
+     }
+     /** Constructs an FSJump action with the specified offset. The offset must be in the range -32768..32767.
+@@ -85,7 +85,7 @@
+         */
+     public FSJump(int anOffset)
+     {
+-        super(_Jump);
++        super(Jump);
+         setOffset(anOffset);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSLimitScript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSLimitScript.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSLimitScript.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -74,7 +74,7 @@
+      */
+     public FSLimitScript(FSCoder coder)
+     {
+-        super(_LimitScript);
++        super(LimitScript);
+         decode(coder);
+     }
+     /**
+@@ -86,7 +86,7 @@
+      */
+     public FSLimitScript(int depth, int timeout)
+     {
+-        super(_LimitScript);
++        super(LimitScript);
+         setDepth(depth);
+         setTimeout(timeout);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSMovieObject.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -155,57 +155,6 @@
+     /// Type used to identify TabOrder objects.
+     public static final int TabOrder             = 66;
+ 
+-    static final int _ShowFrame            = 1;
+-    static final int _DefineShape          = 2;
+-    static final int _Free                 = 3;
+-    static final int _PlaceObject          = 4;
+-    static final int _RemoveObject         = 5;
+-    static final int _DefineJPEGImage      = 6;
+-    static final int _DefineButton         = 7;
+-    static final int _JPEGTables           = 8;
+-    static final int _SetBackgroundColor   = 9;
+-    static final int _DefineFont           = 10;
+-    static final int _DefineText           = 11;
+-    static final int _DoAction             = 12;
+-    static final int _FontInfo             = 13;
+-    static final int _DefineSound          = 14;
+-    static final int _StartSound           = 15;
+-    static final int _SoundStreamHead      = 18;
+-    static final int _SoundStreamBlock     = 19;
+-    static final int _ButtonSound          = 17;
+-    static final int _DefineImage          = 20;
+-    static final int _DefineJPEGImage2     = 21;
+-    static final int _DefineShape2         = 22;
+-    static final int _ButtonColorTransform = 23;
+-    static final int _Protect              = 24;
+-    static final int _PlaceObject2         = 26;
+-    static final int _RemoveObject2        = 28;
+-    static final int _DefineShape3         = 32;
+-    static final int _DefineText2          = 33;
+-    static final int _DefineButton2        = 34;
+-    static final int _DefineJPEGImage3     = 35;
+-    static final int _DefineImage2         = 36;
+-    static final int _DefineMovieClip      = 39;
+-    static final int _FrameLabel           = 43;
+-    static final int _SoundStreamHead2     = 45;
+-    static final int _DefineMorphShape     = 46;
+-    static final int _DefineFont2          = 48;
+-    static final int _PathsArePostscript   = 25;
+-    static final int _DefineTextField      = 37;
+-    static final int _QuicktimeMovie       = 38;
+-    static final int _SerialNumber         = 41;
+-    static final int _Export               = 56;
+-    static final int _Import               = 57;
+-    static final int _EnableDebugger       = 58;
+-    static final int _Initialize           = 59;
+-    static final int _DefineVideo          = 60;
+-    static final int _VideoFrame           = 61;
+-    static final int _FontInfo2            = 62;
+-    static final int _EnableDebugger2      = 64;
+-    static final int _LimitScript          = 65;
+-    static final int _TabOrder             = 66;
+-    static final int _DefineBitsPtr        = 1023;
+-
+     protected int type = 0;
+     protected int length = 0;
+     protected boolean extendLength = false;
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSNewFunction.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -151,7 +151,7 @@
+     
+     FSNewFunction()
+     {
+-        super(_NewFunction);
++        super(NewFunction);
+     }
+     /**
+      * Construct an FSNewFunction object, initalizing it with values decoded 
+@@ -161,7 +161,7 @@
+      */
+     public FSNewFunction(FSCoder coder)
+     {
+-        super(_NewFunction);
++        super(NewFunction);
+         decode(coder);
+     }
+     /** Constructs an FSNewFunction with the specified name, argument names and actions to be executed. The order of the Strings in the argument array indicate the order in which the values will be popped off the stack when the function is executed. The fist argument is popped from the stack first.
+@@ -172,7 +172,7 @@
+         */
+     public FSNewFunction(String aString, ArrayList argumentArray, ArrayList actionArray)
+     {
+-        super(_NewFunction);
++        super(NewFunction);
+         setName(aString);
+         setArguments(argumentArray);
+         setActions(actionArray);
+@@ -184,7 +184,7 @@
+         */
+     public FSNewFunction(ArrayList argumentArray, ArrayList actionArray)
+     {
+-        super(_NewFunction);
++        super(NewFunction);
+         setArguments(argumentArray);
+         setActions(actionArray);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSNewFunction2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSNewFunction2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -243,7 +243,7 @@
+      */
+     public FSNewFunction2(FSCoder coder)
+     {
+-        super(_NewFunction2);
++        super(NewFunction2);
+         decode(coder);
+     }
+     /** 
+@@ -258,7 +258,7 @@
+         */
+     public FSNewFunction2(String name, ArrayList arguments, ArrayList actions)
+     {
+-        super(_NewFunction2);
++        super(NewFunction2);
+         setName(name);
+         setArguments(arguments);
+         setActions(actions);
+@@ -273,7 +273,7 @@
+         */
+     public FSNewFunction2(ArrayList arguments, ArrayList actions)
+     {
+-        super(_NewFunction2);
++        super(NewFunction2);
+         setArguments(arguments);
+         setActions(actions);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSPathsArePostscript.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSPathsArePostscript.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -71,13 +71,13 @@
+      */
+     public FSPathsArePostscript(FSCoder coder)
+     {
+-        super(_PathsArePostscript);
++        super(PathsArePostscript);
+         decode(coder);
+     }
+     /** Constructs an FSPathsArePostscript object. */
+     public FSPathsArePostscript()
+     {
+-        super(_PathsArePostscript);
++        super(PathsArePostscript);
+     }
+     /**
+      * Constructs an FSPathsArePostscript object by copying values from an 
+
+Modified: trunk/src/com/flagstone/transform/FSPlaceObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSPlaceObject2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -279,7 +279,7 @@
+      */
+     public FSPlaceObject2(FSCoder coder)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         decode(coder);
+     }
+     /** Constructs an FSPlaceObject2 object to place a new object on the display list at the coordinates on the screen.
+@@ -291,7 +291,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -308,7 +308,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer, float aRatio, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -324,7 +324,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer, FSCoordTransform aTransform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -340,7 +340,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer, FSCoordTransform aTransform, FSColorTransform aColorTransform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -358,7 +358,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer, int aDepth, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -377,7 +377,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer, ArrayList anArray, String aName, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -401,7 +401,7 @@
+      */
+     public FSPlaceObject2(int anIdentifier, int aLayer, byte[] bytes, String aName, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.New);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -417,7 +417,7 @@
+         */
+     public FSPlaceObject2(int anIdentifier, int aLayer)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Replace);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+@@ -431,7 +431,7 @@
+         */
+     public FSPlaceObject2(int aLayer, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Modify);
+         setLayer(aLayer);
+         setTransform(new FSCoordTransform(xLocation, yLocation));
+@@ -444,7 +444,7 @@
+         */
+     public FSPlaceObject2(int aLayer, FSCoordTransform transform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Modify);
+         setLayer(aLayer);
+         setTransform(transform);
+@@ -457,7 +457,7 @@
+         */
+     public FSPlaceObject2(int aLayer, FSColorTransform colorTransform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Modify);
+         setLayer(aLayer);
+         setColorTransform(colorTransform);
+@@ -471,7 +471,7 @@
+         */
+     public FSPlaceObject2(int aLayer, FSCoordTransform transform, FSColorTransform colorTransform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Modify);
+         setLayer(aLayer);
+         setTransform(transform);
+@@ -487,7 +487,7 @@
+         */
+     public FSPlaceObject2(int aLayer, float aRatio, int xLocation, int yLocation)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Modify);
+         setLayer(aLayer);
+         setRatio(aRatio);
+@@ -502,7 +502,7 @@
+         */
+     public FSPlaceObject2(int aLayer, float aRatio, FSCoordTransform transform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(FSPlaceObject2.Modify);
+         setLayer(aLayer);
+         setRatio(aRatio);
+@@ -519,7 +519,7 @@
+      */
+     public FSPlaceObject2(int aPlace, int anIdentifier, int aLayer, FSCoordTransform transform, FSColorTransform colorTransform)
+     {
+-        super(_PlaceObject2);
++        super(PlaceObject2);
+         setPlaceType(aPlace);
+         setIdentifier(anIdentifier);
+         setLayer(aLayer);
+
+Modified: trunk/src/com/flagstone/transform/FSPointer.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPointer.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSPointer.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -69,7 +69,7 @@
+      */
+     public FSPointer(FSCoder coder)
+     {
+-        super(_DefineBitsPtr);
++        super(DefineBitsPtr);
+         decode(coder);
+     }
+     /** Constructs an FSPointer object, specifying the pointer.
+@@ -78,7 +78,7 @@
+         */
+     public FSPointer(int aPointer)
+     {
+-        super(_DefineBitsPtr);
++        super(DefineBitsPtr);
+         setPointer(aPointer);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSProtect.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSProtect.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSProtect.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -71,19 +71,19 @@
+      */
+     public FSProtect(FSCoder coder)
+     {
+-        super(_Protect);
++        super(Protect);
+         decode(coder);
+     }
+     /** Constructs an Protect object. */
+     public FSProtect()
+     {
+-        super(_Protect);
++        super(Protect);
+     }
+ 
+     /** Constructs an Protect object. */
+     public FSProtect(String password)
+     {
+-        super(_Protect);
++        super(Protect);
+         setPassword(password);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSPush.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -234,13 +234,13 @@
+      */
+     public FSPush(FSCoder coder)
+     {
+-        super(_Push);
++        super(Push);
+         decode(coder);
+     }
+     /** Constructs an FSPush action object with no values added. */
+     public FSPush()
+     {
+-        super(_Push);
++        super(Push);
+     }
+ 
+     /** Constructs an FSPush action that will place the specified boolean value on the stack.
+@@ -249,7 +249,7 @@
+         */
+     public FSPush(boolean aBoolean)
+     {
+-        super(_Push);
++        super(Push);
+         add(aBoolean);
+     }
+ 
+@@ -259,7 +259,7 @@
+         */
+     public FSPush(int aNumber)
+     {
+-        super(_Push);
++        super(Push);
+         add(aNumber);
+     }
+ 
+@@ -269,7 +269,7 @@
+         */
+     public FSPush(double aNumber)
+     {
+-        super(_Push);
++        super(Push);
+         add(aNumber);
+     }
+ 
+@@ -279,7 +279,7 @@
+         */
+     public FSPush(FSNull nullValue)
+     {
+-        super(_Push);
++        super(Push);
+         add(nullValue);
+     }
+ 
+@@ -289,7 +289,7 @@
+         */    
+     public FSPush(FSVoid voidValue)
+     {
+-        super(_Push);
++        super(Push);
+         add(voidValue);
+     }
+ 
+@@ -299,7 +299,7 @@
+         */    
+     public FSPush(String aString)
+     {
+-        super(_Push);
++        super(Push);
+         add(aString);
+     }
+ 
+@@ -309,7 +309,7 @@
+         */    
+     public FSPush(FSTableIndex anIndex)
+     {
+-        super(_Push);
++        super(Push);
+         add(anIndex);
+     }
+ 
+@@ -319,7 +319,7 @@
+         */
+     public FSPush(FSRegisterIndex anIndex)
+     {
+-        super(_Push);
++        super(Push);
+         add(anIndex);
+     }
+ 
+@@ -329,7 +329,7 @@
+         */    
+     public FSPush(ArrayList anArray)
+     {
+-        super(_Push);
++        super(Push);
+         setValues(anArray);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSQuicktimeMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSQuicktimeMovie.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -67,7 +67,7 @@
+      */
+     public FSQuicktimeMovie(FSCoder coder)
+     {
+-        super(_QuicktimeMovie);
++        super(QuicktimeMovie);
+         decode(coder);
+     }
+     /** Constructs an FSQuicktimeMovie object referencing the specified file.
+@@ -76,7 +76,7 @@
+         */
+     public FSQuicktimeMovie(String aString)
+     {
+-        super(_QuicktimeMovie);
++        super(QuicktimeMovie);
+         setName(aString);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSRegisterCopy.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRegisterCopy.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSRegisterCopy.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -80,7 +80,7 @@
+      */
+     public FSRegisterCopy(FSCoder coder)
+     {
+-        super(_RegisterCopy);
++        super(RegisterCopy);
+         decode(coder);
+     }
+     /** Constructs an FSRegisterCopy object with the register number.
+@@ -89,7 +89,7 @@
+         */
+     public FSRegisterCopy(int anIndex)
+     {
+-        super(_RegisterCopy);
++        super(RegisterCopy);
+         setRegisterNumber(anIndex);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSRemoveObject2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSRemoveObject2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSRemoveObject2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -67,7 +67,7 @@
+      */
+     public FSRemoveObject2(FSCoder coder)
+     {
+-        super(_RemoveObject2);
++        super(RemoveObject2);
+         decode(coder);
+     }
+     /** Constructs an FSRemoveObject2, specifying the layer in the display list where the object to be removed is currently displayed.
+@@ -76,7 +76,7 @@
+         */
+     public FSRemoveObject2(int layer)
+     {
+-        super(_RemoveObject2);
++        super(RemoveObject2);
+         setLayer(layer);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSSerialNumber.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSerialNumber.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSSerialNumber.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -72,7 +72,7 @@
+      */
+     public FSSerialNumber(FSCoder coder)
+     {
+-        super(_SerialNumber);
++        super(SerialNumber);
+         decode(coder);
+     }
+     /** Constructs an FSSerialNumber action with the specified string. 
+@@ -81,7 +81,7 @@
+         */
+     public FSSerialNumber(String aString)
+     {
+-        super(_SerialNumber);
++        super(SerialNumber);
+         setSerialNumber(aString);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSSetTarget.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSetTarget.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSSetTarget.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -83,7 +83,7 @@
+      */
+     public FSSetTarget(FSCoder coder)
+     {
+-        super(_SetTarget);
++        super(SetTarget);
+         decode(coder);
+     }
+     /** Constructs an FSSetTarget action that changes the context to the specified target.
+@@ -92,7 +92,7 @@
+         */
+     public FSSetTarget(String aString)
+     {
+-        super(_SetTarget);
++        super(SetTarget);
+         setTarget(aString);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSSoundStreamHead2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSSoundStreamHead2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -146,7 +146,7 @@
+      */
+     public FSSoundStreamHead2(FSCoder coder)
+     {
+-        super(_SoundStreamHead2);
++        super(SoundStreamHead2);
+         decode(coder);
+     }
+     /** Constructs an FSSoundStreamHead2 object specifying all the parameters required to define the sound.
+@@ -163,7 +163,7 @@
+     */
+     public FSSoundStreamHead2(int encoding, int playRate, int playChannels, int playSize, int streamingRate, int streamingChannels, int streamingSize, int streamingCount, int latency)
+     {
+-        super(_SoundStreamHead2);
++        super(SoundStreamHead2);
+ 
+         setFormat(encoding);
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSTabOrder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTabOrder.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSTabOrder.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -72,7 +72,7 @@
+      */
+     public FSTabOrder(FSCoder coder)
+     {
+-        super(_TabOrder);
++        super(TabOrder);
+         decode(coder);
+     }
+ 
+@@ -85,7 +85,7 @@
+      */
+     public FSTabOrder(int layer, int index)
+     {
+-        super(_TabOrder);
++        super(TabOrder);
+         setLayer(layer);
+         setIndex(index);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSTable.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSTable.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -113,13 +113,13 @@
+      */
+     public FSTable(FSCoder coder)
+     {
+-        super(_Table);
++        super(Table);
+         decode(coder);
+     }
+     /** Constructs an empty table. */
+     public FSTable()
+     {
+-        super(_Table);
++        super(Table);
+     }
+     /** Constructs an FSTable object using the array of strings.
+ 
+@@ -127,7 +127,7 @@
+         */
+     public FSTable(ArrayList anArray)
+     {
+-        super(_Table);
++        super(Table);
+         setValues(anArray);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSVideoFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSVideoFrame.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -80,7 +80,7 @@
+      */
+     public FSVideoFrame(FSCoder coder)
+     {
+-        super(_VideoFrame);
++        super(VideoFrame);
+         decode(coder);
+     }
+     /**
+@@ -94,7 +94,7 @@
+      */
+     public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
+     {
+-        super(_VideoFrame);
++        super(VideoFrame);
+         setIdentifier(identifier);
+         setFrameNumber(frameNumber);
+         setData(data);
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -97,7 +97,7 @@
+      */
+     public FSWaitForFrame(FSCoder coder)
+     {
+-        super(_WaitForFrame);
++        super(WaitForFrame);
+         decode(coder);
+     }
+     /** Constructs an FSWaitForFrame object with the specified frame number and the number of actions that will be executed when the frame is loaded.
+@@ -107,7 +107,7 @@
+         */
+     public FSWaitForFrame(int aFrameNumber, int anActionCount)
+     {
+-        super(_WaitForFrame);
++        super(WaitForFrame);
+         setFrameNumber(aFrameNumber);
+         setActionCount(anActionCount);
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSWaitForFrame2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSWaitForFrame2.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -94,7 +94,7 @@
+      */
+     public FSWaitForFrame2(FSCoder coder)
+     {
+-        super(_WaitForFrame2);
++        super(WaitForFrame2);
+         decode(coder);
+     }
+     /** Constructs an FSWaitForFrame2 object with the number of actions to execute if the frame has been loaded.
+@@ -103,7 +103,7 @@
+         */
+     public FSWaitForFrame2(int aNumber)
+     {
+-        super(_WaitForFrame2);
++        super(WaitForFrame2);
+         setActionCount(aNumber);
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/FSWith.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSWith.java	2006-03-03 18:07:11 UTC (rev 107)
++++ trunk/src/com/flagstone/transform/FSWith.java	2006-03-03 18:30:42 UTC (rev 108)
+@@ -99,7 +99,7 @@
+      */
+     public FSWith(FSCoder coder)
+     {
+-        super(_With);
++        super(With);
+         decode(coder);
+     }
+     /** Constructs an FSWith object with an array of actions.
+@@ -108,7 +108,7 @@
+         */
+     public FSWith(ArrayList anArray)
+     {
+-        super(_With);
++        super(With);
+         setActions(anArray);
+     }
+     /**
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000048.html">[Transform-svn] r107 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000050.html">[Transform-svn] r109 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#49">[ date ]</a>
+              <a href="thread.html#49">[ thread ]</a>
+              <a href="subject.html#49">[ subject ]</a>
+              <a href="author.html#49">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

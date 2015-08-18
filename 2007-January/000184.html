@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r248 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r248%20-%20trunk/doc/releases&In-Reply-To=%3C200701031130.l03BUWPB031610%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000183.html">
+   <LINK REL="Next"  HREF="000185.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r248 - trunk/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r248%20-%20trunk/doc/releases&In-Reply-To=%3C200701031130.l03BUWPB031610%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r248 - trunk/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Jan  3 12:30:32 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000183.html">[Transform-svn] r247 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000185.html">[Transform-svn] r249 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#184">[ date ]</a>
+              <a href="thread.html#184">[ thread ]</a>
+              <a href="subject.html#184">[ subject ]</a>
+              <a href="author.html#184">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-01-03 12:30:27 +0100 (Wed, 03 Jan 2007)
+New Revision: 248
+
+Added:
+   trunk/doc/releases/transform-2.1.5.txt
+   trunk/doc/releases/transform-pre-2.1.6.txt
+Removed:
+   trunk/doc/releases/transform-pre-2.1.5.txt
+Log:
+Updated release notes for 2.1.5 and added new notes for 2.1.6
+
+Copied: trunk/doc/releases/transform-2.1.5.txt (from rev 240, trunk/doc/releases/transform-pre-2.1.5.txt)
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.5.txt	2006-12-15 11:53:57 UTC (rev 240)
++++ trunk/doc/releases/transform-2.1.5.txt	2007-01-03 11:30:27 UTC (rev 248)
+@@ -0,0 +1,120 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.1.5.
++------------------------------------------------------------
++
++The release fixes a number of bugs and improves reliability when dealing with
++file that are &quot;outside&quot; of the Flash specification.
++
++
++Bug Fixes
++    9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.
++    9718. FSShapeConstructor cannot draw small circles in pixels.
++    9797. Cannot decode multiple end of action markers in FSDoAction.
++    9805. Overflow error when decoding ButtonSounds.
++    9807. Latency attribute for MP3 Sounds is optional.
++    9861. Cannot decode Gradient Fills with more than 8 Gradients.
++
++Class Changes
++    None scheduled
++    
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.
++
++The classes FSDefineJPEGImage2 and FSDefineJPEGImage3 contain an encoding 
++table. The readJPEGStream method in each class is used to search for the 
++Start of Image and End of Image tags that delimit the table. When it detects a 
++start of image tag it marks the position as the start of the encoding table. A 
++second Start of Image causes the start position to advance. However the size of 
++the image is calculated from the encoded length - the size of the encoding 
++table. This caused the decoding to overflow and an exception was thrown.
++
++9718. FSShapeConstructor cannot draw small circles in pixels.
++
++The FSShapeConstructor allows drawing to be performed using coordinates and 
++sizes specified in pixels rather than twips. A bug in the method that draws 
++ellipses resulted in distorted shapes when specifying values in pixels. The 
++problem was caused by rounding errors in the equations for calculating the 
++curves to draw. This is now fixed.
++
++9797. Cannot decode multiple end of action markers in FSDoAction.
++
++In the flash file format specification published my Macromedia/Adobe arrays 
++of actions are terminated with a zero byte. However in Flash 7 and later more 
++than one zero byte can be used to signal the end of the array.
++
++Transform only checks for a single end of action marker before stopping. The 
++result that for objects such as FSDoAction the number of bytes decoded is less 
++than the number specified in the object header and so an FSCoderException is 
++thrown.
++
++To fix this a new Action, End, was added to the FSAction class. All but the last 
++End of Action marker are decoded as this action. This preserves the original
++format of the actions when reencoded while at the same time keeps compatibility
++with existing code.
++
++9805. Overflow error when decoding ButtonSounds.
++
++When decoding a ButtonSound data structure (which defines how the sounds will
++be played when different events occur in a button) an FSCoderException is thrown 
++to report that an overflow error occurred.
++
++The root cause appears to be a violation of the flash file format specification 
++as presented by Adobe/Macromedia. The specification states that the way a sound 
++is played can be defined for 4 button events: rollOut, rollOver, press and 
++release. If a sound is not played when an event occurs then 0x0000 is encoded. 
++However in ButtonSound objects where no sound will be played for the release 
++event nothing is encoded instead of writing 0x0000.
++
++The problem is easy to fix however. The FSSound objects decoded from the 
++ButtonSound data structures are treated as optional. This allows the sound 
++information for the release event to be treated as optional and so the overflow 
++error is avoided.
++
++9807. Latency attribute for MP3 Sounds is optional.
++
++The FSSoundStreamHead and FSSoundStreamHead2 classes contain a latency 
++attribute for MP3 encoded sounds. This specifies the number of samples to skip 
++when starting to play a sound. The Flash file format specification reports that 
++this attribute is only encoded when a streaming sound is encoded using the MP3 
++format. However it appears that the attribute is actually optional - presumably 
++if the latency is zero then the attribute can be omitted.
++
++The FSSoundStreamHead and FSSoundStreamHead2 classes have been updated to 
++handle the optional cases.
++
++9861. Cannot decode Gradient Fills with more than 8 Gradients.
++
++The FSGradientFill class allows up to 8 FSGradient points to be defined. The 
++number of gradients is stored in a single byte when an FSGradientFill object is 
++encoded. In some files generated using Flash 7+ the upper bits of the byte are 
++set. The result is that the FSGradientFill class decodes more than the maximum 
++number of 8 gradients and an FSCoderException is thrown indicating an overflow 
++error.
++
++The FSGradientFill class now masks the upper four bits of the gradient fill 
++count. It also tests to see if the value is greater than 8 and subtracts 8 to 
++generate the correct number of gradient points.
++
++
++-----------------
++  Class Changes  
++-----------------
++
++-------------------
++  Testing Changes  
++-------------------
++
++-------------------
++  Package Changes  
++-------------------
++
+
+Deleted: trunk/doc/releases/transform-pre-2.1.5.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.5.txt	2007-01-03 10:49:31 UTC (rev 247)
++++ trunk/doc/releases/transform-pre-2.1.5.txt	2007-01-03 11:30:27 UTC (rev 248)
+@@ -1,57 +0,0 @@
+-------------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.1.5.
+-------------------------------------------------------------
+-
+-The release will improve the test coverage by adding more TestNG suites and 
+-unit test classes.
+-
+-
+-Bug Fixes
+-    9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.
+-    9718. FSShapeConstructor cannot draw small circles in pixels.
+-    
+-
+-Class Changes
+-    None scheduled
+-    
+-Testing Changes
+-    None scheduled
+-    
+-Package Changes
+-    None scheduled
+-
+-  
+--------------
+-  Bug Fixes  
+--------------
+-
+-9717. FSDefineJPEGImage[2,3] does not handle multiple SOI tags.
+-
+-The classes FSDefineJPEGImage2 and FSDefineJPEGImage3 contain an encoding 
+-table. The readJPEGStream method in each class is used to search for the 
+-Start of Image and End of Image tags that delimit the table. When it detects a 
+-start of image tag it marks the position as the start of the encoding table. A 
+-second Start of Image causes the start position to advance. However the size of 
+-the image is calculated from the encoded length - the size of the encoding 
+-table. This caused the decoding to overflow and an exception was thrown.
+-
+-9718. FSShapeConstructor cannot draw small circles in pixels.
+-
+-The FSShapeConstructor allows drawing to be performed using coordinates and 
+-sizes specified in pixels rather than twips. A bug in the method that draws 
+-ellipses resulted in distorted shapes when specifying values in pixels. The 
+-problem was caused by rounding errors in the equations for calculating the 
+-curves to draw. This is now fixed.
+-
+------------------
+-  Class Changes  
+------------------
+-
+--------------------
+-  Testing Changes  
+--------------------
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+
+Added: trunk/doc/releases/transform-pre-2.1.6.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.6.txt	2007-01-03 10:49:31 UTC (rev 247)
++++ trunk/doc/releases/transform-pre-2.1.6.txt	2007-01-03 11:30:27 UTC (rev 248)
+@@ -0,0 +1,37 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.1.6.
++------------------------------------------------------------
++
++The release fixes a number of bugs and improves reliability when dealing with
++file that are &quot;outside&quot; of the Flash specification.
++
++
++Bug Fixes
++    None scheduled
++
++Class Changes
++    None scheduled
++    
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++-----------------
++  Class Changes  
++-----------------
++
++-------------------
++  Testing Changes  
++-------------------
++
++-------------------
++  Package Changes  
++-------------------
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000183.html">[Transform-svn] r247 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000185.html">[Transform-svn] r249 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#184">[ date ]</a>
+              <a href="thread.html#184">[ thread ]</a>
+              <a href="subject.html#184">[ subject ]</a>
+              <a href="author.html#184">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r425 - dev/dev-3-0/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r425%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804020949.m329nBjp011681%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000360.html">
+   <LINK REL="Next"  HREF="000362.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r425 - dev/dev-3-0/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r425%20-%20dev/dev-3-0/src/com/flagstone/transform/test&In-Reply-To=%3C200804020949.m329nBjp011681%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r425 - dev/dev-3-0/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr  2 11:49:11 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000360.html">[Transform-svn] r424 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000362.html">[Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#361">[ date ]</a>
+              <a href="thread.html#361">[ thread ]</a>
+              <a href="subject.html#361">[ subject ]</a>
+              <a href="author.html#361">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-02 11:49:08 +0200 (Wed, 02 Apr 2008)
+New Revision: 425
+
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java
+Log:
+Rewrote tests using a simpler more comprehensive approach.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java	2008-04-02 09:07:54 UTC (rev 424)
++++ dev/dev-3-0/src/com/flagstone/transform/test/FSColorTest.java	2008-04-02 09:49:08 UTC (rev 425)
+@@ -33,181 +33,258 @@
+ import com.flagstone.transform.FSCoder;
+ import com.flagstone.transform.FSContext;
+ 
+-import junit.framework.TestCase;
++import org.junit.Before;
++import org.junit.Test;
+ 
+-public class FSColorTest extends TestCase
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertTrue;
++
++public class FSColorTest
+ {
+-    private static int[][] rgb = new int[][] {
+-        {0x00, 0x00, 0x00},
+-        {0x33, 0x00, 0x00},
+-        {0x33, 0x66, 0x00},
+-        {0x00, 0x66, 0x00},
+-        {0x00, 0x66, 0xCC},
+-        {0x00, 0x00, 0xCC},
+-        {0x33, 0x00, 0xCC},
+-        {0x33, 0x66, 0xCC},
+-    };
+-
+-    private static int[][] rgba = new int[][] {
+-        { 0x33, 0x66, 0x99, 0x00},
+-        { 0x33, 0x66, 0x99, 0x22},
+-        { 0x33, 0x66, 0x99, 0x44},
+-        { 0x33, 0x66, 0x99, 0x88},
+-    };
++    private FSCoder coder = new FSCoder(new byte[4]);
++    private FSContext context = new FSContext();
++    private FSColor colour;
+     
+-    private FSContext context = new FSContext();
+-
+-    public void testConstructors()
++    private int[] c = new int[] {0x33, 0x66, 0x99, 0xCC};
++    
++    @Before
++    public void setup()
+     {
+-        for (int i=0; i&lt;rgb.length; i++) {
+-            checkColours(new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]), rgb[i]);
+-        }
+-
+-        for (int i=0; i&lt;rgba.length; i++) {
+-            checkColours(new FSColor(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]), rgba[i]);
+-        }
++    	coder.setPointer(0);
++    	context.transparent = false;
++        colour = new FSColor(0,0,0);
+     }
+-
+-    public void testCopyConstructors()
++    
++    @Test
++    public void length()
+     {
+-        for (int i=0; i&lt;rgb.length; i++)
+-        {
+-            FSColor colour = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
+-            checkColours(new FSColor(colour), rgb[i]);
+-        }
+-
+-        for (int i=0; i&lt;rgba.length; i++)
+-        {
+-            FSColor colour = new FSColor(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]);
+-            checkColours(new FSColor(colour), rgba[i]);
+-        }
++    	assertEquals(colour.length(context), 3);
+     }
+-
+-    public void testAccessors()
++    
++    @Test
++    public void lengthWithAlpha()
+     {
+-        FSColor colour = new FSColor(-1, -1, -1);
+-
+-        for (int i=0; i&lt;rgb.length; i++)
+-        {
+-            colour.setRed(rgb[i][0]);
+-            colour.setGreen(rgb[i][1]);
+-            colour.setBlue(rgb[i][2]);
+-
+-            checkColours(colour, rgb[i]);
+-
+-            colour.setChannels(rgb[i][0], rgb[i][1], rgb[i][2]);
+-
+-            checkColours(colour, rgb[i]);
+-        }
+-
+-        for (int i=0; i&lt;rgba.length; i++)
+-        {
+-            colour.setRed(rgba[i][0]);
+-            colour.setGreen(rgba[i][1]);
+-            colour.setBlue(rgba[i][2]);
+-            colour.setAlpha(rgba[i][3]);
+-            checkColours(colour, rgba[i]);
+-
+-            colour.setChannels(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]);
+-            checkColours(colour, rgba[i]);
+-        }
++    	context.transparent = true;
++    	assertEquals(colour.length(context), 4);
+     }
+-
+-    public void testEquals()
++    
++    @Test
++    public void encode()
+     {
+-        for (int i=0; i&lt;rgb.length; i++)
+-        {
+-            int next = (i+1)%rgb.length;
+-
+-            FSColor a = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
+-
+-            FSColor b = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
+-            FSColor c = new FSColor(rgb[next][0], rgb[next][1], rgb[next][2]);
+-            FSColor d = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2], 0xFF);
+-            FSColor e = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2], 0x80);
+-
+-            assertEquals(a,b);
+-            assertTrue(!a.equals(c));
+-            assertEquals(a,d);
+-            assertTrue(!a.equals(e));
+-        }
++    	colour.encode(coder, context);
++    	assertEquals(coder.getPointer(), 24);
+     }
++    
++    @Test
++    public void encodeWithAlpha()
++    {
++    	context.transparent = true;
++    	colour.encode(coder, context);
++    	assertTrue(coder.getPointer() == 32);
++    }
++    
++    @Test
++    public void decode()
++    {
++    	colour.encode(coder, context);
++    	coder.setPointer(0);
++    	assertEquals(colour, new FSColor(coder,context));
++    	assertEquals(coder.getPointer(), 24);
++    }
++    
++    @Test
++    public void decodeWithAlpha()
++    {
++    	context.transparent = true;
++    	colour.encode(coder, context);
++    	coder.setPointer(0);
++    	assertEquals(colour, new FSColor(coder,context));
++    	assertTrue(coder.getPointer() == 32);
++    }
++    
++    @Test
++    public void constructor()
++    {
++    	colour = new FSColor(c[0], c[1], c[2]);
++    	assertEquals(colour.getRed(), c[0]);
++    	assertEquals(colour.getGreen(), c[1]);
++    	assertEquals(colour.getBlue(), c[2]);
++    	assertEquals(colour.getAlpha(), 255);
++    }
++    
++    @Test
++    public void constructorWithAlpha()
++    {
++    	colour = new FSColor(c[0], c[1], c[2], c[3]);
++    	assertEquals(colour.getRed(), c[0]);
++    	assertEquals(colour.getGreen(), c[1]);
++    	assertEquals(colour.getBlue(), c[2]);
++    	assertEquals(colour.getAlpha(), c[3]);
++    }
++   
++    @Test
++    public void copy()
++    {
++    	colour = new FSColor(c[0], c[1], c[2], c[3]);
++    	assertEquals(colour, new FSColor(colour));
++    }
++    
++    @Test
++    public void clonedCopy()
++    {
++    	colour = new FSColor(c[0], c[1], c[2], c[3]);
++    	assertEquals(colour, colour.clone());
++    }
++   
++    @Test
++    public void setRed()
++    {
++    	colour.setRed(c[0]);
++    	assertEquals(colour.getRed(), c[0]);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setRedBelowRange()
++    {
++    	colour.setRed(-1);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setRedAboveRange()
++    {
++    	colour.setRed(256);
++    }
+ 
+-    public void testEncode()
++    @Test
++    public void encodeRed()
+     {
+-        FSCoder coder;
+-        FSColor colour;
+-
+-        for (int i=0; i&lt;rgb.length; i++)
+-        {
+-        	coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
+-
+-            colour = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
+-            colour.encode(coder, context);
+-
+-            assertTrue(coder.equals(initCoder(rgb[i], true)));
+-            checkColours(colour, rgb[i]);
+-        }
+-
+-        context.transparent = true;
+-
+-        for (int i=0; i&lt;rgba.length; i++)
+-        {
+-        	coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
+-
+-            colour = new FSColor(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]);
+-            colour.encode(coder, context);
+-
+-            assertTrue(coder.equals(initCoder(rgba[i], true)));
+-            checkColours(colour, rgba[i]);
+-        }
++    	context.transparent = true;
++    	colour.setRed(c[0]);
++    	colour.encode(coder, context);
++    	
++    	coder.setPointer(0);
++    	assertEquals(coder.readByte(), c[0]);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), 255);
+     }
++    
++    @Test
++    public void setGreen()
++    {
++    	colour.setGreen(c[0]);
++    	assertEquals(colour.getGreen(), c[0]);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setGreenBelowRange()
++    {
++    	colour.setGreen(-1);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setGreenAboveRange()
++    {
++    	colour.setGreen(256);
++    }
+ 
+-    public void testDecode()
++    @Test
++    public void encodeGreen()
+     {
+-        for (int i=0; i&lt;rgb.length; i++)
+-        {
+-            FSCoder coder = initCoder(rgb[i], false);
+-            FSColor colour = new FSColor(coder, context);
+-
+-            assertEquals(coder.getPointer() &gt;&gt; 3, rgb[i].length);
+-            checkColours(colour, rgb[i]);
+-        }
+-
+-        context.transparent = true;
+-
+-        for (int i=0; i&lt;rgba.length; i++)
+-        {
+-            FSCoder coder = initCoder(rgba[i], false);
+-            FSColor colour = new FSColor(coder, context);
+-
+-            assertEquals(coder.getPointer() &gt;&gt; 3, rgba[i].length);
+-            checkColours(colour, rgba[i]);
+-        }
++    	context.transparent = true;
++    	colour.setGreen(c[0]);
++    	colour.encode(coder, context);
++    	
++    	coder.setPointer(0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), c[0]);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), 255);
+     }
++    
++    @Test
++    public void setBlue()
++    {
++    	colour.setBlue(c[0]);
++    	assertEquals(colour.getBlue(), c[0]);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setBlueBelowRange()
++    {
++    	colour.setBlue(-1);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setBlueAboveRange()
++    {
++    	colour.setBlue(256);
++    }
+ 
+-    private void checkColours(FSColor colour, int[] expected)
++    @Test
++    public void encodeBlue()
+     {
+-    	assertTrue(&quot;Red channel does not match expected value&quot;, colour.getRed() == expected[0]);
+-    	assertTrue(&quot;Green channel does not match expected value&quot;, colour.getGreen() == expected[1]);
+-    	assertTrue(&quot;Blue channel does not match expected value&quot;, colour.getBlue() == expected[2]);
+-
+-        if (expected.length == 4) {
+-        	assertTrue(&quot;Alpha channel does not match expected value&quot;, colour.getAlpha() == expected[3]);
+-        }
++    	context.transparent = true;
++    	colour.setBlue(c[0]);
++    	colour.encode(coder, context);
++    	
++    	coder.setPointer(0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), c[0]);
++    	assertEquals(coder.readByte(), 255);
+     }
+     
+-    private FSCoder initCoder(int[] data, boolean atEnd)
++    @Test
++    public void setAlpha()
+     {
+-    	FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++    	colour.setAlpha(c[0]);
++    	assertEquals(colour.getAlpha(), c[0]);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setAlphaBelowRange()
++    {
++    	colour.setAlpha(-1);
++    }
++    
++    @Test(expected=IllegalArgumentException.class)
++    public void setAlphaAboveRange()
++    {
++    	colour.setAlpha(256);
++    }
+ 
+-        for (int i=0; i&lt;data.length; i++) {
+-            coder.writeWord(data[i], 1);
+-        }
+-
+-        if (!atEnd) {
+-        	coder.setPointer(0);
+-        }
+-        return coder;
++    @Test
++    public void encodeAlpha()
++    {
++    	context.transparent = true;
++    	colour.setAlpha(c[0]);
++    	colour.encode(coder, context);
++    	
++    	coder.setPointer(0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), 0);
++    	assertEquals(coder.readByte(), c[0]);
+     }
++    
++    @Test
++    public void setChannels()
++    {
++    	colour.setChannels(c[0], c[1], c[2]);
++    	assertEquals(colour.getRed(), c[0]);
++    	assertEquals(colour.getGreen(), c[1]);
++    	assertEquals(colour.getBlue(), c[2]);
++    	assertEquals(colour.getAlpha(), 255);
++    }
++    
++    @Test
++    public void setChannelsWithAlpha()
++    {
++    	colour.setChannels(c[0], c[1], c[2], c[3]);
++    	assertEquals(colour.getRed(), c[0]);
++    	assertEquals(colour.getGreen(), c[1]);
++    	assertEquals(colour.getBlue(), c[2]);
++    	assertEquals(colour.getAlpha(), c[3]);
++    }
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000360.html">[Transform-svn] r424 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000362.html">[Transform-svn] r426 - dev/dev-3-0/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#361">[ date ]</a>
+              <a href="thread.html#361">[ thread ]</a>
+              <a href="subject.html#361">[ subject ]</a>
+              <a href="author.html#361">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

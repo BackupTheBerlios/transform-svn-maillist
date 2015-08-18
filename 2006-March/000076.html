@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r136 - trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r136%20-%20trunk&In-Reply-To=%3C200603271143.k2RBhsUY008059%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000075.html">
+   <LINK REL="Next"  HREF="000077.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r136 - trunk</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r136%20-%20trunk&In-Reply-To=%3C200603271143.k2RBhsUY008059%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r136 - trunk">smackay at berlios.de
+       </A><BR>
+    <I>Mon Mar 27 13:43:54 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000075.html">[Transform-svn] r135 - tags
+</A></li>
+        <LI>Next message: <A HREF="000077.html">[Transform-svn] r137 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-27 13:43:49 +0200 (Mon, 27 Mar 2006)
+New Revision: 136
+
+Modified:
+   trunk/build.xml
+Log:
+Fixed bug in docs target of build.xml so utilities datasheets are 
+generated.
+
+Modified: trunk/build.xml
+===================================================================
+--- trunk/build.xml	2006-03-13 17:22:46 UTC (rev 135)
++++ trunk/build.xml	2006-03-27 11:43:49 UTC (rev 136)
+@@ -126,6 +126,7 @@
+         &lt;javadoc destdir=&quot;${doc.datasheet.dir}&quot; stylesheetfile=&quot;${doc.css.dir}/datasheet.css&quot;&gt;
+             &lt;packageset dir=&quot;${src.dir}&quot; defaultexcludes=&quot;yes&quot;&gt;
+                 &lt;include name=&quot;${package.dir}&quot; /&gt;
++                &lt;include name=&quot;${package.util.dir}&quot; /&gt;
+             &lt;/packageset&gt;
+         &lt;/javadoc&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000075.html">[Transform-svn] r135 - tags
+</A></li>
+	<LI>Next message: <A HREF="000077.html">[Transform-svn] r137 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

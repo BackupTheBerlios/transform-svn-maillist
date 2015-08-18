@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r112 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r112%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200603051352.k25Dqg7U010074%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000052.html">
+   <LINK REL="Next"  HREF="000054.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r112 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r112%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200603051352.k25Dqg7U010074%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r112 - trunk/src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Sun Mar  5 14:52:42 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000052.html">[Transform-svn] r111 - in trunk: doc src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000054.html">[Transform-svn] r113 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-05 14:52:36 +0100 (Sun, 05 Mar 2006)
+New Revision: 112
+
+Modified:
+   trunk/src/com/flagstone/transform/FSPush.java
+Log:
+Property values are now cloned when FSPush objects are cloned.
+
+Modified: trunk/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSPush.java	2006-03-05 10:55:58 UTC (rev 111)
++++ trunk/src/com/flagstone/transform/FSPush.java	2006-03-05 13:52:36 UTC (rev 112)
+@@ -357,6 +357,8 @@
+                 values.add(new Double(((Double)value).doubleValue()));
+             else if (value instanceof String)
+                 values.add(new String((String)value));
++            else if (value instanceof FSProperty)
++                values.add(new FSProperty((FSProperty)value));
+             else if (value instanceof FSNull)
+                 values.add(((FSNull)value).clone());
+             else if (value instanceof FSVoid)
+@@ -475,6 +477,8 @@
+                 anObject.values.add(new Double(((Double)obj).doubleValue()));
+             else if (obj instanceof String)
+                 anObject.values.add(new String((String)obj));
++            else if (obj instanceof FSProperty)
++                anObject.values.add(new FSProperty((FSProperty)obj));
+             else if (obj instanceof FSNull)
+                 anObject.values.add(((FSNull)obj).clone());
+             else if (obj instanceof FSVoid)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000052.html">[Transform-svn] r111 - in trunk: doc src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000054.html">[Transform-svn] r113 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

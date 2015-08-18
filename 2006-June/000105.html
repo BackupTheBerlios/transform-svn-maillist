@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r166 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r166%20-%20trunk/doc/releases&In-Reply-To=%3C200606241103.k5OB32W5005014%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000104.html">
+   <LINK REL="Next"  HREF="000106.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r166 - trunk/doc/releases</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r166%20-%20trunk/doc/releases&In-Reply-To=%3C200606241103.k5OB32W5005014%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r166 - trunk/doc/releases">smackay at berlios.de
+       </A><BR>
+    <I>Sat Jun 24 13:03:02 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000104.html">[Transform-svn] r165 - in trunk: doc src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000106.html">[Transform-svn] r167 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#105">[ date ]</a>
+              <a href="thread.html#105">[ thread ]</a>
+              <a href="subject.html#105">[ subject ]</a>
+              <a href="author.html#105">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-24 13:02:40 +0200 (Sat, 24 Jun 2006)
+New Revision: 166
+
+Added:
+   trunk/doc/releases/transform-2.1.3.txt
+Log:
+Added release notes for 2.1.3
+
+Added: trunk/doc/releases/transform-2.1.3.txt
+===================================================================
+--- trunk/doc/releases/transform-2.1.3.txt	2006-06-20 07:18:32 UTC (rev 165)
++++ trunk/doc/releases/transform-2.1.3.txt	2006-06-24 11:02:40 UTC (rev 166)
+@@ -0,0 +1,66 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.1.3.
++------------------------------------------------------------
++
++This a minor release fixing bugs.
++
++Bug Fixes     
++    FSDefineImage2: The encoding of the type and length always uses 6 bytes.     
++    TextDump: NewFunction and NewFunction2 no longer decodes actions twice.     
++	FSDefinedJPEGImage[2,3]: now allows null encoding tables.
++	
++Package Changes     
++    The TestNG libraries are now included in the release.     
++ 
++-------------
++  Bug Fixes  
++-------------
++
++1. FSDefineImage2: The encoding of the type and length always uses 6 bytes.  
++
++The type and length of each data structure can be encoded using either 2 bytes,
++if the length of the encoded structure is less than 63 bytes or 6 bytes if it 
++is longer. There is a bug in Flash that requires that the FSDefineImage class 
++(DefineLosslessImage in the Macromedia specification) always uses the 6-byte 
++form. This bug was also discivered to apply to the FSDefineImage2 class 
++(DefineLosslessImage2). The class now always uses the 6-byte form.
++
++2. TextDump: NewFunction and NewFunction2 no longer decodes actions twice.  
++
++The definition of the NewFunction and NewFunction2 actions from Macromedia
++contains a field that specifies the size, in bytes, of the encoded actions that 
++make up the body of the function. These encoded actions are not part of the data 
++structure but instead follow immediately  after the NewFunction[2] action.
++  
++In Transform the encoded actions are stored in an array internal to the 
++NewFunction[2] action as this allows the developer to ignore the encoded length 
++of the function body - the NewFunction[2] action calculates that when the 
++objects are encoded.
++  
++The TextDump tool was decoding the actions that make up the body of the function
++twice. The result was that the actions appeared as part of the function 
++definition then again as a series of actions following the function definition.
++This is now fixed.
++
++3. FSDefinedJPEGImage[2,3]: now allows null encoding tables.  
++
++The documentation for the FSDefineJPEGImage2 and FSDefineJPEGImage2 classes
++state that a null reference can be used when creating objects with empty 
++(undefined) encoding tables. This was incorrect and a NullPointerException would
++be throw.
++
++The classes have now been fixed to allow this. Passing a null reference will
++create an empty table containing only the StartOfImage (0xFFD8) and EndOfImage  
++(0xFFD9) markers.
++
++
++-------------------
++  Package Changes  
++-------------------
++
++1. The TestNG libraries are now included in the release.  
++
++TestNG is used to perform testing on the classes in the framework. Rather than 
++having to download them separately from www.testng.org, the JAR files are now
++included in the release. Thanks to Cedric Beust and the TestNG team for allowing
++this.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000104.html">[Transform-svn] r165 - in trunk: doc src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000106.html">[Transform-svn] r167 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#105">[ date ]</a>
+              <a href="thread.html#105">[ thread ]</a>
+              <a href="subject.html#105">[ subject ]</a>
+              <a href="author.html#105">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

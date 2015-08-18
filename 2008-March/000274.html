@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r338 - dev/dev-2-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r338%20-%20dev/dev-2-3&In-Reply-To=%3C200803151438.m2FEcwEJ021233%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000272.html">
+   <LINK REL="Next"  HREF="000275.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r338 - dev/dev-2-3</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r338%20-%20dev/dev-2-3&In-Reply-To=%3C200803151438.m2FEcwEJ021233%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r338 - dev/dev-2-3">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Mar 15 15:38:58 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000272.html">[Transform-svn] r337 - dev/dev-2-3
+</A></li>
+        <LI>Next message: <A HREF="000275.html">[Transform-svn] r339 - dev/dev-2-3/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#274">[ date ]</a>
+              <a href="thread.html#274">[ thread ]</a>
+              <a href="subject.html#274">[ subject ]</a>
+              <a href="author.html#274">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-15 15:38:56 +0100 (Sat, 15 Mar 2008)
+New Revision: 338
+
+Modified:
+   dev/dev-2-3/build.xml
+Log:
+Removed targets for examples and contributed code.
+
+Modified: dev/dev-2-3/build.xml
+===================================================================
+--- dev/dev-2-3/build.xml	2008-03-14 13:59:08 UTC (rev 337)
++++ dev/dev-2-3/build.xml	2008-03-15 14:38:56 UTC (rev 338)
+@@ -23,10 +23,6 @@
+         classes    compile the classes in the packages com.flagstone.transform
+                    and com.flagstone.transform,util.
+ 
+-        examples   compile the examples.
+-
+-        contrib    compile all the classes contributed to the framework.
+-
+         jar        packages all of the compiled classes in the build directory
+                    into the JAR file, transform.jar.
+ 
+@@ -46,7 +42,7 @@
+          Major targets for compiling and packaging the classes.
+      ********************************************************** --&gt;
+ 
+-    &lt;target name=&quot;build&quot; depends=&quot;clean,classes,contrib,jar&quot;
++    &lt;target name=&quot;build&quot; depends=&quot;clean,classes,jar&quot;
+         description=&quot;Compile optimized versions of the classes for deployment&quot;/&gt;
+ 
+ &lt;!-- *******************************************************************
+@@ -70,32 +66,6 @@
+ 
+     &lt;/target&gt;
+ 
+-    &lt;target name=&quot;examples&quot; description=&quot;Compile the examples&quot;&gt;
+-
+-        &lt;mkdir dir=&quot;${build.dir}&quot;/&gt;
+-
+-        &lt;javac srcdir=&quot;${src.dir}&quot; destdir=&quot;${build.dir}&quot; debug=&quot;on&quot; optimize=&quot;off&quot;&gt;
+-            &lt;include name=&quot;${package.dir}/examples/*.java&quot; /&gt;
+-        &lt;/javac&gt;
+-
+-    &lt;/target&gt;
+-
+-    &lt;target name=&quot;contrib&quot; description=&quot;Compile the classes contributed to the framework&quot;&gt;
+-
+-        &lt;mkdir dir=&quot;${build.dir}&quot;/&gt;
+-
+-        &lt;javac srcdir=&quot;${src.dir}&quot;
+-               destdir=&quot;${build.dir}&quot;
+-               classpath=&quot;${build.dir}&quot;
+-               debug=&quot;off&quot;
+-               optimize=&quot;on&quot;
+-               source=&quot;1.4&quot;&gt;
+-            &lt;compilerarg value=&quot;-Xlint&quot;/&gt;
+-            &lt;include name=&quot;${package.contrib.dir}/**&quot; /&gt;
+-        &lt;/javac&gt;
+-
+-    &lt;/target&gt;
+-
+     &lt;target name=&quot;jar&quot; description=&quot;Package all of the classes in a JAR file&quot;&gt;
+ 
+         &lt;jar jarfile=&quot;${package.name}.jar&quot;&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000272.html">[Transform-svn] r337 - dev/dev-2-3
+</A></li>
+	<LI>Next message: <A HREF="000275.html">[Transform-svn] r339 - dev/dev-2-3/doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#274">[ date ]</a>
+              <a href="thread.html#274">[ thread ]</a>
+              <a href="subject.html#274">[ subject ]</a>
+              <a href="author.html#274">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

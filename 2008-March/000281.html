@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r345 - in dev/dev-2-3: doc doc/releases	src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r345%20-%20in%20dev/dev-2-3%3A%20doc%20doc/releases%0A%09src/com/flagstone/transform&In-Reply-To=%3C200803161728.m2GHS6fs010360%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000280.html">
+   <LINK REL="Next"  HREF="000282.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r345 - in dev/dev-2-3: doc doc/releases	src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r345%20-%20in%20dev/dev-2-3%3A%20doc%20doc/releases%0A%09src/com/flagstone/transform&In-Reply-To=%3C200803161728.m2GHS6fs010360%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r345 - in dev/dev-2-3: doc doc/releases	src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sun Mar 16 18:28:06 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000280.html">[Transform-svn] r344 - dev
+</A></li>
+        <LI>Next message: <A HREF="000282.html">[Transform-svn] r346 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#281">[ date ]</a>
+              <a href="thread.html#281">[ thread ]</a>
+              <a href="subject.html#281">[ subject ]</a>
+              <a href="author.html#281">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-16 18:28:01 +0100 (Sun, 16 Mar 2008)
+New Revision: 345
+
+Modified:
+   dev/dev-2-3/doc/CHANGES.txt
+   dev/dev-2-3/doc/releases/transform-2.3.0.txt
+   dev/dev-2-3/src/com/flagstone/transform/FSMovie.java
+Log:
+Backed out table for registering classes to decode movie objects and actions. It will be added to the 2.4 release.
+
+Modified: dev/dev-2-3/doc/CHANGES.txt
+===================================================================
+--- dev/dev-2-3/doc/CHANGES.txt	2008-03-16 08:53:49 UTC (rev 344)
++++ dev/dev-2-3/doc/CHANGES.txt	2008-03-16 17:28:01 UTC (rev 345)
+@@ -10,9 +10,6 @@
+     * Added FSVideoMetaData class for undocumented meta-data block in FLV 
+       files.
+       
+-    * Added new methods to register classes that will be used to decode movie
+-      objects and actions not supported by Transform.
+-  
+ 2008-03-13 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+   
+     * Added ScreenVideo classes: FSScreenVideoPacket, FsImageBlock.
+
+Modified: dev/dev-2-3/doc/releases/transform-2.3.0.txt
+===================================================================
+--- dev/dev-2-3/doc/releases/transform-2.3.0.txt	2008-03-16 08:53:49 UTC (rev 344)
++++ dev/dev-2-3/doc/releases/transform-2.3.0.txt	2008-03-16 17:28:01 UTC (rev 345)
+@@ -3,8 +3,7 @@
+ ----------------------------------------------------------
+ 
+ The release adds new classes to decode and encode Flash Video (.flv) files and 
+-adds support for ScreenVideo in .swf files. Also new plug-in methods allow you
+-to add custom classes to handle Flash data structures not supported by Transform.
++adds support for ScreenVideo in .swf files.
+ 
+ 
+ Bug Fixes
+@@ -14,7 +13,6 @@
+     New classes for handling Flash Video.
+     New classes for handling ScreenVideo.
+     FSImageConstructor updated to support ScreenVideo.
+-    New plug-in methods to extend framework.
+     FSShapeStyle now encodes empty style arrays. 
+      
+ Documentation Changes
+@@ -76,35 +74,8 @@
+ 
+ was added to FSImageConstructor to return an image as an array of FSImageBlocks.
+ 
+-4.  New plug-in methods to extend framework.
++4. FSShapeStyle now encodes empty style arrays.
+ 
+-Two new methods were added to allow user-defined classes to be used to decode
+-movie objects and actions not supported by the framework.
+-
+-    public static void registerClassForObject(int type, Class aClass)
+-    public static void registerClassForAction(int type, Class aClass)
+-    
+-When decoding a movie or decoding a set of actions if a type is encountered that
+-the framework does not currently support then the table of registered classes
+-is searched. If an entry is found then an object is instantiated and it is used
+-to decode the data structure and is then added to the movie.
+-
+-Classes are created by subclassing either FSMovieObject or FSActionObject and 
+-implementing the following methods:
+-
+-  public int length(FSCoder coder)
+-  public void encode(FSCoder coder)
+-  public void decode(FSCoder coder)
+-
+-These methods are the interface which the FSMovie object calls to decode and 
+-encode all data structures and any object that implments these methods can be
+-used.
+-  
+-You must also implement the nullary or default constructor to ensure that an 
+-instance of the class can be created. 
+-
+-5. FSShapeStyle now encodes empty style arrays.
+-
+ The line and fill style arrays in an FSShapeStyle object are optional. If the 
+ attributes were null then they we not included when the object was encoded. They
+ were also not encoded if they were empty - though this was not well documented.
+
+Modified: dev/dev-2-3/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- dev/dev-2-3/src/com/flagstone/transform/FSMovie.java	2008-03-16 08:53:49 UTC (rev 344)
++++ dev/dev-2-3/src/com/flagstone/transform/FSMovie.java	2008-03-16 17:28:01 UTC (rev 345)
+@@ -393,29 +393,7 @@
+                 currentObject = new FSTabOrder(coder);
+                 break;
+             default:
+-            	Integer key = new Integer(type);
+-            
+-            	if (typeTable.containsKey(key))
+-            	{
+-            		try
+-            		{
+-                		Class obj = (Class)typeTable.get(key);
+-                		currentObject = (FSMovieObject)obj.newInstance();
+-                		currentObject.decode(coder);  		
+-                		
+-                		if (currentObject instanceof FSDefineObject) {
+-                            identifier = ((FSDefineObject)currentObject).getIdentifier();
+-                		}
+-            		}
+-            		catch (Exception e)
+-            		{
+-                        currentObject = new FSUnknownObject(coder);            		
+-            		}
+-            	}
+-            	else 
+-            	{
+-                    currentObject = new FSUnknownObject(coder);            		
+-            	}
++            	currentObject = new FSUnknownObject(coder);            		
+                 break;
+         }
+ 
+@@ -625,26 +603,7 @@
+                 next = start + (length &lt;&lt; 3);
+                 break;
+             default:
+-            	Integer key = new Integer(type);
+-            
+-	        	if (actionTable.containsKey(key))
+-	        	{
+-	        		try
+-	        		{
+-	            		Class obj = (Class)typeTable.get(key);
+-	            		anAction = (FSActionObject)obj.newInstance();
+-	            		anAction.decode(coder);  		
+-		                length = anAction.getLength();
+-		                next = start + (length &lt;&lt; 3);
+-	        		}
+-	        		catch (Exception e)
+-	        		{
+-		                anAction = new FSUnknownAction(coder);
+-	        		}
+-	        	}
+-	        	else {
+-	                anAction = new FSUnknownAction(coder);
+-	        	}
++            	anAction = new FSUnknownAction(coder);
+                 break;
+         }
+ 
+@@ -720,75 +679,6 @@
+         return objects;
+     }
+ 
+-    private static HashMap typeTable = new HashMap();
+-    private static HashMap actionTable = new HashMap();
+-    
+-    /**
+-     * This method allows you to extend the Transform framework by adding new 
+-     * classes to decode the data structures that are not currently supported.
+-     * 
+-     * To add support for a new data structure simply sub-class FSMovieObject 
+- 	 * and implement the following methods:
+-     * 
+-     * public int length(FSCoder coder)
+-     * public void encode(FSCoder coder)
+-     * public void decode(FSCoder coder)
+-     * 
+-     * In addition you must implement the nullary or empty constructor so that
+-     * the object can be instantiated correctly.
+-     * 
+-     * When the FSMovie object encounters a data structure it does not support
+-     * it will use the type to perform a table lookup for any registered class.
+-     * If a class is found an object will be instantiated and then the data 
+-     * structure will be decoded by calling the decode() method.
+-     * 
+-     * If no class has been registered or if an error occurs while instantiating
+-     * the object then the data structure will be decoded as an FSUnknownObject.
+-     * 
+-     * @param type the type used to identify the type of data structure encoded
+-     * in the flash file.
+-     * 
+-     * @param aClass the class object that will be used to instantiate an object
+-     * and decode the data structure.
+-     */
+-    public static void registerClassForObject(int type, Class aClass)
+-    {
+-    	typeTable.put(new Integer(type), aClass);
+-    }
+-    
+-    /**
+-     * This method allows you to extend the Transform framework by adding new 
+-     * classes to decode the actions that are not currently supported.
+-     * 
+-     * To add support for a new action simply sub-class FSActionObject and 
+-     * implement the following methods:
+-     * 
+-     * public int length(FSCoder coder)
+-     * public void encode(FSCoder coder)
+-     * public void decode(FSCoder coder)
+-     * 
+-     * In addition you must implement the nullary or empty constructor so that
+-     * the object can be instantiated correctly.
+-     * 
+-     * When the FSMovie object encounters an action it does not support it will 
+-     * use the type to perform a table lookup for any registered class. If a 
+-     * class is found an object will be instantiated and then the data structure 
+-     * will be decoded by calling the decode() method.
+-     * 
+-     * If no object has been registered then the data structure will be decoded
+-     * as an FSUnknownAction.
+-     * 
+-     * @param type the type used to identify the type of action encoded
+-     * in the flash file.
+-     * 
+-     * @param aClass the Class object that will be instantiated and used to 
+-     * decode the action.
+-     */
+-    public static void registerClassForAction(int type, Class aClass)
+-    {
+-    	typeTable.put(new Integer(type), aClass);
+-    }
+-
+     private boolean decodeActions = true;
+     private boolean decodeShapes = true;
+     private boolean decodeGlyphs = true;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000280.html">[Transform-svn] r344 - dev
+</A></li>
+	<LI>Next message: <A HREF="000282.html">[Transform-svn] r346 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#281">[ date ]</a>
+              <a href="thread.html#281">[ thread ]</a>
+              <a href="subject.html#281">[ subject ]</a>
+              <a href="author.html#281">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

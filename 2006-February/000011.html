@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r70 - trunk/test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r70%20-%20trunk/test/suites&In-Reply-To=%3C200602211752.k1LHq19w027385%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000010.html">
+   <LINK REL="Next"  HREF="000012.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r70 - trunk/test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r70%20-%20trunk/test/suites&In-Reply-To=%3C200602211752.k1LHq19w027385%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r70 - trunk/test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 18:52:01 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000010.html">[Transform-svn] r69 - trunk/test/suites
+</A></li>
+        <LI>Next message: <A HREF="000012.html">[Transform-svn] r71 - in trunk: src/com/flagstone/transform/test test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#11">[ date ]</a>
+              <a href="thread.html#11">[ thread ]</a>
+              <a href="subject.html#11">[ subject ]</a>
+              <a href="author.html#11">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 18:51:50 +0100 (Tue, 21 Feb 2006)
+New Revision: 70
+
+Modified:
+   trunk/test/suites/FSTextConstructor.xml
+Log:
+Added a test for fonts installed on windows systems.
+
+Modified: trunk/test/suites/FSTextConstructor.xml
+===================================================================
+--- trunk/test/suites/FSTextConstructor.xml	2006-02-21 17:51:13 UTC (rev 69)
++++ trunk/test/suites/FSTextConstructor.xml	2006-02-21 17:51:50 UTC (rev 70)
+@@ -1,14 +1,14 @@
+ &lt;!DOCTYPE suite SYSTEM &quot;<A HREF="http://beust.com/testng/testng-1.0.dtd">http://beust.com/testng/testng-1.0.dtd</A>&quot; &gt;
+   
+-&lt;suite name=&quot;FSTextConstructorTest&quot; verbose=&quot;10&quot;&gt;
++&lt;suite name=&quot;FSTextConstructorTest&quot;&gt;
+ 
+ 	&lt;parameter name=&quot;srcDir&quot; value=&quot;&quot;/&gt;
+ 	&lt;parameter name=&quot;dstDir&quot; value=&quot;&quot;/&gt;
+ 	&lt;parameter name=&quot;ext&quot; value=&quot;&quot;/&gt;
+ 
+-    &lt;test name=&quot;TTF Fonts&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/files/ttf&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/ttf&quot;/&gt;
++    &lt;test name=&quot;TTF Fonts From OrgDot&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/fonts/orgdot&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/orgdot&quot;/&gt;
+ 		&lt;parameter name=&quot;ext&quot; value=&quot;ttf&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
+@@ -19,6 +19,32 @@
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+   	
++    &lt;test name=&quot;TTF Fonts From the Bitstream Vera collection&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/fonts/vera&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/vera&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;ttf&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayTrueTypeFont&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
++    &lt;test name=&quot;TTF Fonts Installed in Windows&quot;&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;/windows/fonts&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/windows&quot;/&gt;
++		&lt;parameter name=&quot;ext&quot; value=&quot;ttf&quot;/&gt;
++		&lt;classes&gt;
++      		&lt;class name=&quot;com.flagstone.transform.test.FSTextConstructorTest&quot;&gt;
++      		    &lt;methods&gt;
++      				&lt;include name=&quot;displayTrueTypeFont&quot; /&gt;
++    			&lt;/methods&gt;
++      		&lt;/class&gt;
++		&lt;/classes&gt;
++  	&lt;/test&gt;
++  	
+     &lt;test name=&quot;AWT Fonts&quot;&gt;
+ 		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSTextConstructor/awt&quot;/&gt;
+ 		&lt;classes&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000010.html">[Transform-svn] r69 - trunk/test/suites
+</A></li>
+	<LI>Next message: <A HREF="000012.html">[Transform-svn] r71 - in trunk: src/com/flagstone/transform/test test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#11">[ date ]</a>
+              <a href="thread.html#11">[ thread ]</a>
+              <a href="subject.html#11">[ subject ]</a>
+              <a href="author.html#11">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

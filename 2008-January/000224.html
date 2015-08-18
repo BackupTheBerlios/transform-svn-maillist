@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r288 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r288%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801281129.m0SBTF6Y018774%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000223.html">
+   <LINK REL="Next"  HREF="000225.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r288 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r288%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200801281129.m0SBTF6Y018774%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r288 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Mon Jan 28 12:29:15 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000223.html">[Transform-svn] r287 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000225.html">[Transform-svn] r289 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#224">[ date ]</a>
+              <a href="thread.html#224">[ thread ]</a>
+              <a href="subject.html#224">[ subject ]</a>
+              <a href="author.html#224">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-28 12:29:12 +0100 (Mon, 28 Jan 2008)
+New Revision: 288
+
+Modified:
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Added width and height attributes.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-01-28 11:28:03 UTC (rev 287)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage.java	2008-01-28 11:29:12 UTC (rev 288)
+@@ -92,6 +92,8 @@
+ public class FSDefineJPEGImage extends FSDefineObject
+ {
+     private byte[] image = null;
++    private int width;
++    private int height;
+     
+     /**
+      * Construct an FSDefineJPEGImage object, initalizing it with values decoded 
+@@ -123,9 +125,30 @@
+     public FSDefineJPEGImage(FSDefineJPEGImage obj)
+     {
+         super(obj);
++        width = obj.width;
++        height = obj.height;
+         image = Transform.clone(obj.image);
+     }
+ 
++    /** 
++     * Gets the width of the image in pixels. 
++     * 
++     * @return the width of the image.
++     */
++    public int getWidth()
++    {
++        return width; 
++    }    
++    /** 
++     * Gets the height of the image in pixels.
++     * 
++     * @return the height of the image in pixels.
++     */
++    public int getHeight()
++    {
++        return height;
++    }
++
+     /** Gets the image data.
+ 
+         @return the array of bytes containing the image data.
+@@ -141,6 +164,7 @@
+     public void setImage(byte[] bytes)
+     {
+         image = bytes;
++        decodeInfo();
+     }
+ 
+     public Object clone()
+@@ -148,6 +172,8 @@
+         FSDefineJPEGImage anObject = (FSDefineJPEGImage)super.clone();
+         
+         anObject.image = Transform.clone(image);
++        anObject.width = width;
++        anObject.height = height;
+         
+         return anObject;
+     }
+@@ -201,4 +227,32 @@
+         setImage(data);
+         coder.endObject(name());
+     }
++    private boolean decodeInfo()
++    {
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, image);
++                 
++        if (coder.readWord(2, false) != 0xffd8)
++            return false;
++
++        while (true) 
++        {
++            int marker = coder.readWord(2, false);
++            int size = coder.readWord(2, false);
++            
++            if ((marker &amp; 0xff00) != 0xff00) 
++                return false;
++            
++            if (marker &gt;= 0xffc0 &amp;&amp; marker &lt;= 0xffcf &amp;&amp; marker != 0xffc4 &amp;&amp; marker != 0xffc8) 
++            {
++                coder.readWord(1, false);
++                height = coder.readWord(2, false);
++                width = coder.readWord(2, false);
++                return true;
++            } 
++            else 
++            {
++                coder.adjustPointer((size - 2) &lt;&lt; 3);
++            }
++        }
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-01-28 11:28:03 UTC (rev 287)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2008-01-28 11:29:12 UTC (rev 288)
+@@ -103,6 +103,8 @@
+  */
+ public class FSDefineJPEGImage2 extends FSDefineObject
+ {
++    private int width;
++    private int height;
+     private byte[] image = null;
+     private byte[] encodingTable = null;
+ 
+@@ -150,9 +152,29 @@
+     {
+         super(obj);
+         image = Transform.clone(obj.image);
++        width = obj.width;
++        height = obj.height;
+         encodingTable = Transform.clone(obj.encodingTable);
+     }
+ 
++    /** 
++     * Gets the width of the image in pixels. 
++     * 
++     * @return the width of the image.
++     */
++    public int getWidth()
++    {
++        return width; 
++    }    
++    /** 
++     * Gets the height of the image in pixels.
++     * 
++     * @return the height of the image in pixels.
++     */
++    public int getHeight()
++    {
++        return height;
++    }
+     /** Gets the image data.
+ 
+         @return the array of bytes containing the image data.
+@@ -172,6 +194,7 @@
+     public void setImage(byte[] bytes)
+     {
+         image = bytes;
++        decodeInfo();
+     }
+ 
+     /** Sets the encoding table.
+@@ -191,6 +214,8 @@
+         FSDefineJPEGImage2 anObject = (FSDefineJPEGImage2)super.clone();
+ 
+         anObject.image = Transform.clone(image);
++        anObject.width = width;
++        anObject.height = height;
+         anObject.encodingTable = Transform.clone(encodingTable);
+ 
+         return anObject;
+@@ -280,4 +305,33 @@
+ 
+         return bytes;
+     }
++
++    private boolean decodeInfo()
++    {
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, image);
++                 
++        if (coder.readWord(2, false) != 0xffd8)
++            return false;
++
++        while (true) 
++        {
++            int marker = coder.readWord(2, false);
++            int size = coder.readWord(2, false);
++            
++            if ((marker &amp; 0xff00) != 0xff00) 
++                return false;
++            
++            if (marker &gt;= 0xffc0 &amp;&amp; marker &lt;= 0xffcf &amp;&amp; marker != 0xffc4 &amp;&amp; marker != 0xffc8) 
++            {
++                coder.readWord(1, false);
++                height = coder.readWord(2, false);
++                width = coder.readWord(2, false);
++                return true;
++            } 
++            else 
++            {
++                coder.adjustPointer((size - 2) &lt;&lt; 3);
++            }
++        }
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-01-28 11:28:03 UTC (rev 287)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2008-01-28 11:29:12 UTC (rev 288)
+@@ -126,6 +126,8 @@
+  */
+ public class FSDefineJPEGImage3 extends FSDefineObject
+ {
++    private int width;
++    private int height;
+     private byte[] image = null;
+     private byte[] encodingTable = null;
+     private byte[] alpha = null;
+@@ -166,6 +168,8 @@
+     {
+         super(obj);
+         image = Transform.clone(obj.image);
++        width = obj.width;
++        height = obj.height;
+         encodingTable = Transform.clone(obj.encodingTable);
+         alpha = Transform.clone(obj.alpha);
+     }
+@@ -176,6 +180,25 @@
+         */
+     public byte[] getEncodingTable()  { return encodingTable; }
+ 
++    /** 
++     * Gets the width of the image in pixels. 
++     * 
++     * @return the width of the image.
++     */
++    public int getWidth()
++    {
++        return width; 
++    }    
++    /** 
++     * Gets the height of the image in pixels.
++     * 
++     * @return the height of the image in pixels.
++     */
++    public int getHeight()
++    {
++        return height;
++    }
++
+     /** Gets the image data.
+ 
+         @return the array of bytes containing the image data.
+@@ -207,6 +230,7 @@
+     public void setImage(byte[] bytes)
+     {
+         image = bytes;
++        decodeInfo();
+     }
+ 
+     /** Sets the alpha channel data with the zlib compressed data.
+@@ -331,4 +355,32 @@
+ 
+         return bytes;
+     }
++    private boolean decodeInfo()
++    {
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, image);
++                 
++        if (coder.readWord(2, false) != 0xffd8)
++            return false;
++
++        while (true) 
++        {
++            int marker = coder.readWord(2, false);
++            int size = coder.readWord(2, false);
++            
++            if ((marker &amp; 0xff00) != 0xff00) 
++                return false;
++            
++            if (marker &gt;= 0xffc0 &amp;&amp; marker &lt;= 0xffcf &amp;&amp; marker != 0xffc4 &amp;&amp; marker != 0xffc8) 
++            {
++                coder.readWord(1, false);
++                height = coder.readWord(2, false);
++                width = coder.readWord(2, false);
++                return true;
++            } 
++            else 
++            {
++                coder.adjustPointer((size - 2) &lt;&lt; 3);
++            }
++        }
++    }
+ }
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000223.html">[Transform-svn] r287 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000225.html">[Transform-svn] r289 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#224">[ date ]</a>
+              <a href="thread.html#224">[ thread ]</a>
+              <a href="subject.html#224">[ subject ]</a>
+              <a href="author.html#224">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

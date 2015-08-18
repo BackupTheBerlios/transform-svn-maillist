@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r227 - trunk/doc
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r227%20-%20trunk/doc&In-Reply-To=%3C200609231012.k8NACmB1031385%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000163.html">
+   <LINK REL="Next"  HREF="000165.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r227 - trunk/doc</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r227%20-%20trunk/doc&In-Reply-To=%3C200609231012.k8NACmB1031385%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r227 - trunk/doc">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Sep 23 12:12:48 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000163.html">[Transform-svn] r225 - trunk/doc/releases
+</A></li>
+        <LI>Next message: <A HREF="000165.html">[Transform-svn] r228 - trunk/doc/web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#164">[ date ]</a>
+              <a href="thread.html#164">[ thread ]</a>
+              <a href="subject.html#164">[ subject ]</a>
+              <a href="author.html#164">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-23 12:12:46 +0200 (Sat, 23 Sep 2006)
+New Revision: 227
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/doc/README.txt
+Log:
+Added latest changes.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-09-23 10:04:00 UTC (rev 226)
++++ trunk/doc/CHANGES.txt	2006-09-23 10:12:46 UTC (rev 227)
+@@ -4,6 +4,18 @@
+       where the format attribute was being incorrectly checked for a valid format 
+       instead of the encoding argument passed to the method.
+ 
++    * Added readme files to the reports and results directories just in case 
++      anyone is astonished that they are empty.
++      
++    * Restructured the test/data directory to reduce the number of files shipped
++      with the release.
++      
++    * Removed the test suites for benchmarking as the included Flash files that
++      now only contain a sample of data structures for a given class are too small 
++      to create reliable benchmakr numbers.
++      
++    * Added bug 8866 to the list of issues.
++
+ 2006-09-12 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Transparent colours in indexed PNG images are now displayed correctly.
+
+Modified: trunk/doc/README.txt
+===================================================================
+--- trunk/doc/README.txt	2006-09-23 10:04:00 UTC (rev 226)
++++ trunk/doc/README.txt	2006-09-23 10:12:46 UTC (rev 227)
+@@ -106,31 +106,13 @@
+   |
+   +- data
+ 	   |
+-	   +- classes
+-	   |    |
+-	   |    +- swf4
+-	   |    +- swf5
+-	   |    +- swf6
+-	   |    +- swf7
+-	   |
+-	   +- fonts
+-	   |    |
+-	   |    + vera
+-	   |    ...
+-	   |
+-	   +- images
+-	   |    |
+-	   |    +- bmp
+-	   |    +- jpg
+-	   |    +- png
+-	   |
+-	   +- sounds (to be added)
+-	        |
+-	        + mp3
+-	        + wav
++	   +- swf
++	   +- ttf
++	   +- bmp
++	   +- png
++       
+         
+-        
+-The classes directory contain sample Flash files with a representative selection
++The swf directory contain sample Flash files with a representative selection
+ of encoded data structures for a particular class. These files were extracted
+ from 'real-world' Flash files and so provide a useful sanity check for Flash 
+ files that will be processed with the Transform framework.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000163.html">[Transform-svn] r225 - trunk/doc/releases
+</A></li>
+	<LI>Next message: <A HREF="000165.html">[Transform-svn] r228 - trunk/doc/web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#164">[ date ]</a>
+              <a href="thread.html#164">[ thread ]</a>
+              <a href="subject.html#164">[ subject ]</a>
+              <a href="author.html#164">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

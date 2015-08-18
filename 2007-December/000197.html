@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r261 - trunk
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r261%20-%20trunk&In-Reply-To=%3C200712221536.lBMFaMDq009204%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000196.html">
+   <LINK REL="Next"  HREF="000198.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r261 - trunk</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r261%20-%20trunk&In-Reply-To=%3C200712221536.lBMFaMDq009204%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r261 - trunk">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 22 16:36:22 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000196.html">[Transform-svn] r260 - trunk
+</A></li>
+        <LI>Next message: <A HREF="000198.html">[Transform-svn] r262 - trunk/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#197">[ date ]</a>
+              <a href="thread.html#197">[ thread ]</a>
+              <a href="subject.html#197">[ subject ]</a>
+              <a href="author.html#197">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-22 16:36:15 +0100 (Sat, 22 Dec 2007)
+New Revision: 261
+
+Modified:
+   trunk/developer.xml
+Log:
+Removed patch target and added test target to compile the unit test classes. Merged generation of class datasheets into the dest target. Also simplified the way releases are packaged.
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2007-12-22 15:33:37 UTC (rev 260)
++++ trunk/developer.xml	2007-12-22 15:36:15 UTC (rev 261)
+@@ -2,102 +2,103 @@
+ &lt;project name=&quot;transform-developer&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
+ 
+     &lt;description&gt;Developer targets
+-        
+-        This build file is used by the developers on  the Transform project.
++
++        This build file is used by the developers on the Transform project.
+         It contains the following major targets:
+-            
+-        debug      used to create a developer version of Transform. Debug flags 
+-                   in the source code are enabled and the classes are compiled 
++
++        debug      used to create a developer version of Transform. Debug flags
++                   in the source code are enabled and the classes are compiled
+                    with debug information and unoptimised.
+-         
+-        dist       creates a complete distribution of the Transform framework.
+-                
+-        patch      packages a list of classes as a source code only release.
+-                   The classes are listed in the first task of the target -
+-                   this allows classes from different packages to be easily 
+-                   listed.
+         
++        test       compile the classes used for unit testing.
++
++        dist       creates a distribution of the Transform framework.
++
+     &lt;/description&gt;
+-    
++
+     &lt;import file=&quot;build.xml&quot;/&gt;
+ 
++    &lt;property name=&quot;main.class&quot; value=&quot;Transform.java&quot;/&gt;
++
+     &lt;property name=&quot;dist.name&quot; value=&quot;${package.name}-${version}&quot;/&gt;
+-    &lt;property name=&quot;patch.name&quot; value=&quot;${dist.name}-patch-${patch.number}&quot;/&gt;
+-
++
+     &lt;property name=&quot;dist.root.dir&quot; location=&quot;dist&quot;/&gt;
+     &lt;property name=&quot;dist.dir&quot; value=&quot;${dist.root.dir}/${dist.name}&quot;/&gt;
+ 
+-    &lt;property name=&quot;patch.number&quot; value=&quot;1&quot;/&gt;
+-    &lt;property name=&quot;patch.dir&quot; value=&quot;${dist.root.dir}/${dist.name}-patch-${patch.number}&quot;/&gt;
+-
+ &lt;!-- *******************************************************************
+          Minor targets to compile and package different sets of classes.
+      ******************************************************************* --&gt;
+ 
+     &lt;target name=&quot;debug&quot; description=&quot;Compile debug versions of the classes&quot;&gt;
+-    
++
+         &lt;mkdir dir=&quot;${build.dir}&quot;/&gt;
+-        
++
+         &lt;replace dir=&quot;${src.dir}&quot; token=&quot;DEBUG = false&quot; value=&quot;DEBUG = true&quot;&gt;
+-            &lt;include name=&quot;${package.dir}/${package.main.class}&quot;/&gt;
++            &lt;include name=&quot;${package.dir}/${main.class}&quot;/&gt;
+         &lt;/replace&gt;
+-                
+-        &lt;javac srcdir=&quot;${src.dir}&quot; destdir=&quot;${build.dir}&quot; 
++
++        &lt;javac srcdir=&quot;${src.dir}&quot; destdir=&quot;${build.dir}&quot;
+             debug=&quot;on&quot; optimize=&quot;off&quot; source=&quot;1.4&quot;&gt;
+             &lt;include name=&quot;${package.dir}/*.java&quot; /&gt;
+-            &lt;include name=&quot;${package.util.dir}/*.java&quot; /&gt;
++            &lt;include name=&quot;${package.dir}/util/*.java&quot; /&gt;
+         &lt;/javac&gt;
+-        
++
+     &lt;/target&gt;
+-     
++
++    &lt;target name=&quot;test&quot; description=&quot;Compile the test classes&quot;&gt;
++
++        &lt;mkdir dir=&quot;${build.dir}&quot;/&gt;
++
++        &lt;javac srcdir=&quot;${src.dir}&quot; destdir=&quot;${build.dir}&quot; classpath=&quot;lib/junit.jar&quot;
++            debug=&quot;on&quot; optimize=&quot;off&quot; source=&quot;1.4&quot;&gt;
++            &lt;include name=&quot;${package.dir}/test/*.java&quot; /&gt;
++        &lt;/javac&gt;
++
++    &lt;/target&gt;
++
+ &lt;!-- ***************************************
+        Package the files for distribution.
+-     *************************************** --&gt; 
+-    &lt;target name=&quot;dist&quot; depends=&quot;build,docs&quot; description=&quot;Create a full distribution&quot;&gt;
+-        
++     *************************************** --&gt;
++    &lt;target name=&quot;dist&quot; depends=&quot;build&quot; description=&quot;Create a distribution&quot;&gt;
++
+         &lt;delete dir=&quot;${dist.dir}&quot; failonerror=&quot;false&quot;/&gt;
+ 
+         &lt;mkdir dir=&quot;${dist.dir}&quot;/&gt;
+-            
++
+         &lt;copy todir=&quot;${dist.dir}/src&quot; overwrite=&quot;true&quot;&gt;
+             &lt;fileset dir=&quot;${src.dir}&quot;&gt;
+-                &lt;include name=&quot;${package.dir}/*&quot; /&gt;
+-                &lt;include name=&quot;${package.dir}/doc-files/*&quot; /&gt;
+-                &lt;include name=&quot;${package.example.dir}/*&quot; /&gt;
+-                &lt;include name=&quot;${package.test.dir}/*&quot; /&gt;
+-                &lt;include name=&quot;${package.tool.dir}/*&quot; /&gt;
+-                &lt;include name=&quot;${package.util.dir}/*&quot; /&gt;
+-                &lt;include name=&quot;${package.contrib.dir}/*&quot; /&gt;
++                &lt;include name=&quot;${package.dir}/*.java&quot; /&gt;
++                &lt;include name=&quot;${package.dir}/util/*.java&quot; /&gt;
++                &lt;include name=&quot;${package.dir}/examples/*.java&quot; /&gt;
++                &lt;include name=&quot;${package.contrib.dir}/**&quot; /&gt;
+             &lt;/fileset&gt;
+         &lt;/copy&gt;
+ 
++        &lt;copy todir=&quot;${dist.dir}&quot; overwrite=&quot;true&quot;&gt;
++            &lt;fileset dir=&quot;doc&quot;&gt;
++                &lt;include name=&quot;*.txt&quot; /&gt;
++            &lt;/fileset&gt;
++        &lt;/copy&gt;
++
+         &lt;copy todir=&quot;${dist.dir}/doc&quot; overwrite=&quot;true&quot;&gt;
+             &lt;fileset dir=&quot;doc&quot;&gt;
+                 &lt;exclude name=&quot;css/**&quot; /&gt;
+-                &lt;exclude name=&quot;web/**&quot; /&gt;
++                &lt;exclude name=&quot;*.txt&quot; /&gt;
+             &lt;/fileset&gt;
+         &lt;/copy&gt;
+ 
+-        &lt;copy todir=&quot;${dist.dir}/test&quot; overwrite=&quot;true&quot;&gt;
+-            &lt;fileset dir=&quot;test&quot;&gt;
+-                &lt;include name=&quot;suites/*&quot; /&gt;
+-                &lt;include name=&quot;data/*&quot; /&gt;
+-                &lt;include name=&quot;results/readme.txt&quot; /&gt;
+-                &lt;include name=&quot;reports/readme.txt&quot; /&gt;
+-            &lt;/fileset&gt;
+-        &lt;/copy&gt;
+-
+-        &lt;copy todir=&quot;${dist.dir}/lib&quot; overwrite=&quot;true&quot;&gt;
+-            &lt;fileset dir=&quot;lib&quot;&gt;
+-                &lt;include name=&quot;testng-4.7-jdk14.jar&quot; /&gt;
+-                &lt;include name=&quot;testng-4.7-jdk15.jar&quot; /&gt;
+-            &lt;/fileset&gt;
+-        &lt;/copy&gt;
+-
++        &lt;mkdir dir=&quot;${dist.dir}/doc/datasheets&quot;/&gt;
++
++        &lt;javadoc destdir=&quot;${dist.dir}/doc/datasheets&quot; stylesheetfile=&quot;doc/css/datasheet.css&quot;&gt;
++            &lt;packageset dir=&quot;${src.dir}&quot; defaultexcludes=&quot;yes&quot;&gt;
++                &lt;include name=&quot;${package.dir}&quot; /&gt;
++                &lt;include name=&quot;${package.dir}/util&quot; /&gt;
++            &lt;/packageset&gt;
++        &lt;/javadoc&gt;
++
+         &lt;copy todir=&quot;${dist.dir}&quot; overwrite=&quot;true&quot;&gt;
+             &lt;fileset dir=&quot;.&quot;&gt;
+                 &lt;include name=&quot;build.xml&quot; /&gt;
+-                &lt;include name=&quot;test.xml&quot; /&gt;
+                 &lt;include name=&quot;${package.name}.jar&quot; /&gt;
+              &lt;/fileset&gt;
+         &lt;/copy&gt;
+@@ -106,13 +107,13 @@
+              basedir=&quot;${dist.dir}&quot;
+              compression=&quot;gzip&quot;
+         /&gt;
+-        
++
+         &lt;exec dir=&quot;${dist.root.dir}&quot; executable=&quot;md5sums&quot; output=&quot;${dist.root.dir}/${dist.name}.tar.md5&quot;&gt;
+             &lt;arg value=&quot;-n&quot; /&gt;
+             &lt;arg value=&quot;-b&quot; /&gt;
+             &lt;arg value=&quot;${dist.name}.tar.gz&quot; /&gt;
+         &lt;/exec&gt;
+-        
++
+         &lt;zip destfile=&quot;${dist.root.dir}/${dist.name}.zip&quot;
+              basedir=&quot;${dist.dir}&quot;
+         /&gt;
+@@ -122,11 +123,11 @@
+             &lt;arg value=&quot;-b&quot; /&gt;
+             &lt;arg value=&quot;${dist.name}.zip&quot; /&gt;
+         &lt;/exec&gt;
+-        
+-        &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;false&quot; 
++
++        &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;false&quot;
+             message=&quot;gpg --local-user support --armor --detach-sign --output ${dist.name}.tar.asc ${dist.name}.tar.gz${line.separator}&quot;/&gt;
+-        &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;true&quot; 
++        &lt;echo file=&quot;${dist.root.dir}/${dist.name}-gpg.txt&quot; append=&quot;true&quot;
+             message=&quot;gpg --local-user support --armor --detach-sign --output ${dist.name}.zip.asc ${dist.name}.zip&quot;/&gt;
+     &lt;/target&gt;
+- 
++
+ &lt;/project&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000196.html">[Transform-svn] r260 - trunk
+</A></li>
+	<LI>Next message: <A HREF="000198.html">[Transform-svn] r262 - trunk/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#197">[ date ]</a>
+              <a href="thread.html#197">[ thread ]</a>
+              <a href="subject.html#197">[ subject ]</a>
+              <a href="author.html#197">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

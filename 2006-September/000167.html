@@ -1,0 +1,974 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r230 - in trunk: . doc doc/releases doc/web
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r230%20-%20in%20trunk%3A%20.%20doc%20doc/releases%20doc/web&In-Reply-To=%3C200609240846.k8O8knjT031105%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000166.html">
+   <LINK REL="Next"  HREF="000168.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r230 - in trunk: . doc doc/releases doc/web</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r230%20-%20in%20trunk%3A%20.%20doc%20doc/releases%20doc/web&In-Reply-To=%3C200609240846.k8O8knjT031105%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r230 - in trunk: . doc doc/releases doc/web">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sun Sep 24 10:46:49 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000166.html">[Transform-svn] r229 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000168.html">[Transform-svn] r231 - trunk/doc/web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#167">[ date ]</a>
+              <a href="thread.html#167">[ thread ]</a>
+              <a href="subject.html#167">[ subject ]</a>
+              <a href="author.html#167">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-09-24 10:46:42 +0200 (Sun, 24 Sep 2006)
+New Revision: 230
+
+Added:
+   trunk/doc/releases/transform-2.1.4.txt
+Removed:
+   trunk/doc/releases/transform-pre-2.1.4.txt
+Modified:
+   trunk/build.xml
+   trunk/developer.xml
+   trunk/doc/CHANGES.txt
+   trunk/doc/web/downloads.html
+   trunk/doc/web/issues.html
+   trunk/doc/web/planned.html
+   trunk/doc/web/releases.html
+Log:
+Updated files for release 2.1.4 - due on Sept 28th.
+
+Modified: trunk/build.xml
+===================================================================
+--- trunk/build.xml	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/build.xml	2006-09-24 08:46:42 UTC (rev 230)
+@@ -37,7 +37,7 @@
+ 
+     &lt;/description&gt;
+ 
+-    &lt;property name=&quot;version&quot; value=&quot;2.1.3&quot;/&gt;
++    &lt;property name=&quot;version&quot; value=&quot;2.1.4&quot;/&gt;
+     
+     &lt;property name=&quot;src.dir&quot; location=&quot;src&quot;/&gt;
+     &lt;property name=&quot;lib.dir&quot; location=&quot;lib&quot;/&gt;
+
+Modified: trunk/developer.xml
+===================================================================
+--- trunk/developer.xml	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/developer.xml	2006-09-24 08:46:42 UTC (rev 230)
+@@ -80,9 +80,10 @@
+ 
+         &lt;copy todir=&quot;${dist.dir}/test&quot; overwrite=&quot;true&quot;&gt;
+             &lt;fileset dir=&quot;test&quot;&gt;
+-                &lt;include name=&quot;data/readme.txt&quot; /&gt;
+                 &lt;include name=&quot;suites/*&quot; /&gt;
+-                &lt;include name=&quot;benchmarks/*&quot; /&gt;
++                &lt;include name=&quot;data/*&quot; /&gt;
++                &lt;include name=&quot;results/readme.txt&quot; /&gt;
++                &lt;include name=&quot;reports/readme.txt&quot; /&gt;
+             &lt;/fileset&gt;
+         &lt;/copy&gt;
+ 
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/doc/CHANGES.txt	2006-09-24 08:46:42 UTC (rev 230)
+@@ -1,3 +1,7 @@
++2006-09-28 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++  
++    * Released version 2.1.4.
++
+ 2006-09-22 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * FSImageConstructor.java: fixed bug in setIndexedImage() and setColorImage()
+
+Copied: trunk/doc/releases/transform-2.1.4.txt (from rev 227, trunk/doc/releases/transform-pre-2.1.4.txt)
+
+Deleted: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-09-24 08:46:42 UTC (rev 230)
+@@ -1,106 +0,0 @@
+-------------------------------------------------------------
+-  Release Notes for Transform SWF for Java, Version 2.1.4.
+-------------------------------------------------------------
+-
+-The release will improve the test coverage by adding more TestNG suites and 
+-unit test classes. Bug fixes are also included.
+-
+-
+-Bug Fixes
+-    7936. Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
+-    8748. FSDefineFont[2] fails to handle buggy fonts
+-    8749. FSVideoFrame does not set identifier.
+-    8750. FSText does not encode records without style information.
+-    8751. FSTextConstructor.defineTextBlock() bounding box is incorrect.
+-    8866. FSImageConstructor: encoding argument is not checked.
+-        
+-Class Changes
+-    None
+-    
+-Testing Changes
+-    Restructured test data.
+-
+-Package Changes
+-    None
+-
+-  
+--------------
+-  Bug Fixes  
+--------------
+-
+-7936. Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
+-
+-When a null reference is passed to the setEncodingTable method on the classes
+-FSDefineJPEGImage2 and FSDefineJPEGImage3 an empty encoding table is created
+-and assigned to the instance variable. However a programming error meant that 
+-the table was create but not assigned correctly. This is now fixed.
+-
+-8748. FSDefineFont[2] fails to handle buggy fonts.
+-
+-In the FSDefineFont and FSDefineFont2 classes the index table whose entries 
+-point to the start of each glyph is now used rather than starting decoding a 
+-glyph from where the last one finished. The makes the process more robust in 
+-the face of errors.
+-
+-8749. FSVideoFrame does not set identifier.
+-
+-The identifier attribute was not using the value passed as an argument in the 
+-constructor: public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
+-Instead the attribute was being assigned to itself. This is now fixed.
+-
+-8750. FSText does not encode records without style information.
+-
+-If an FSText object did not contain any style information (font, color or x and
+-y offset) then the object was not encoded correctly. This is now fixed.
+-
+-8751. FSTextConstructor.defineTextBlock() bounding box is incorrect.
+-
+-The bounding box for a block of text was not taking into account the descent of
+-the last line of the block. The result was that the bounding did not completely 
+-enclose the text preventing it from being redrawn completely if the text was 
+-animated or placed close to or in front of another obect. This is now fixed.
+-
+-8776. Indexed PNG images lose alpha.
+-
+-When the FSImageConstructor is used to define a flash object for an indexed PNG
+-image any colours which are completely transparent are now set to black to
+-prevent the the alpha channel information from being ignored and an opaque 
+-colour displayed instead.
+-
+-8866. FSImageConstructor: encoding argument is not checked.
+-
+-The setIndexedImage() and setColorImage() methods each have an argument, encoding
+-which specified the format of the encoded data also passed as an argument. The 
+-encoding argument will be assigned to the format attribute. The methods now 
+-correctly check that the encoding argument is checked, previously they were
+-incorrectly checking the format (which was already set to a valid value). The 
+-logic of the test was flawed and an IllegalArgumentException was being thrown.
+-
+------------------
+-  Class Changes  
+------------------
+-
+-None
+-
+--------------------
+-  Testing Changes  
+--------------------
+-
+-1. Restructured test data
+-
+-The test/data directory was restructured to reduce the number of files shipped
+-with each release. Now specific test suites for each of different files types 
+-handled by the the constructor classes in the com.flagstone.transform.util are 
+-included.
+-
+-Sample flash files are also included. Each file contains a single type of data
+-structure and provide some examples extracted from real-world flash files. The 
+-formal testing of the classes in the com.flagstone.transform package will be 
+-carried out using classes located in com.flagstone.transform.test. The other 
+-classes will require on the test data sets.
+-
+--------------------
+-  Package Changes  
+--------------------
+-
+-None
+
+Modified: trunk/doc/web/downloads.html
+===================================================================
+--- trunk/doc/web/downloads.html	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/doc/web/downloads.html	2006-09-24 08:46:42 UTC (rev 230)
+@@ -101,4 +101,23 @@
+ &lt;/td&gt;
+ &lt;/tr&gt;
+ 
++&lt;tr&gt;
++&lt;td&gt;2.1.4&lt;/td&gt;
++&lt;td&gt;
++&lt;a href=&quot;transform-2.1.4.txt&quot;&gt;Notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;td style=&quot;padding-right:25px;&quot;&gt;
++&lt;a href=&quot;transform-2.1.4.tar.gz&quot;&gt;transform-2.1.4.tar.gz&lt;/a&gt;&lt;br/&gt;
++&lt;a href=&quot;transform-2.1.4.zip&quot;&gt;transform-2.1.4.zip&lt;/a&gt;&lt;br/&gt;
++&lt;/td&gt;
++&lt;td&gt;
++[&lt;a href=&quot;transform-2.1.4.tar.asc&quot;&gt;PGP&lt;/a&gt;]&lt;br/&gt;
++[&lt;a href=&quot;transform-2.1.4.zip.asc&quot;&gt;PGP&lt;/a&gt;]&lt;br/&gt;
++&lt;/td&gt;
++&lt;td&gt;
++[&lt;a href=&quot;transform-2.1.4.tar.md5&quot;&gt;MD5&lt;/a&gt;]&lt;br/&gt;
++[&lt;a href=&quot;transform-2.1.4.zip.md5&quot;&gt;MD5&lt;/a&gt;]&lt;br/&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
+ &lt;/table&gt;
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/doc/web/issues.html	2006-09-24 08:46:42 UTC (rev 230)
+@@ -46,13 +46,35 @@
+ &lt;TBODY&gt;
+ 
+ &lt;TR&gt;
+-&lt;TD&gt;8866&lt;/TD&gt;
+-&lt;TD&gt;FSImageConstructor: encoding argument is not checked.&lt;/TD&gt;
++&lt;TD&gt;6739&lt;/TD&gt;
++&lt;TD&gt;FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/TD&gt;
+ &lt;TD&gt;Open&lt;/TD&gt;
+-&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
+ &lt;/TR&gt;
+ 
++&lt;/TBODY&gt;
++&lt;/TABLE&gt;
++
++&lt;TABLE width=&quot;100%&quot;&gt;
++
++&lt;THEAD&gt;
++&lt;TR&gt;
++&lt;TH&gt;Recently Fixed&lt;/TH&gt;
++&lt;TH&gt;Status&lt;/TH&gt;
++&lt;TH&gt;Release&lt;/TH&gt;
++&lt;/TR&gt;
++&lt;/THEAD&gt;
++
++&lt;TBODY&gt;
++
+ &lt;TR&gt;
++&lt;TD&gt;8866&lt;/TD&gt;
++&lt;TD&gt;FSImageConstructor: encoding argument is not checked.&lt;/TD&gt;
++&lt;TD&gt;Open&lt;/TD&gt;
++&lt;TD&gt;2.1.4&lt;/TD&gt;
++&lt;/TR&gt;
++
++&lt;TR&gt;
+ &lt;TD&gt;8776&lt;/TD&gt;
+ &lt;TD&gt;Indexed PNG images lose alpha.&lt;/TD&gt;
+ &lt;TD&gt;Open&lt;/TD&gt;
+@@ -93,552 +115,111 @@
+ &lt;TD&gt;Open&lt;/TD&gt;
+ &lt;TD&gt;2.1.4&lt;/TD&gt;
+ &lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;6739&lt;/TD&gt;
+-&lt;TD&gt;FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
+-&lt;TD&gt;Open&lt;/TD&gt;
+-&lt;/TR&gt;
+ 
+ &lt;/TBODY&gt;
+ &lt;/TABLE&gt;
+ 
+-&lt;TABLE width=&quot;100%&quot;&gt;
+-
+-&lt;THEAD&gt;
+-&lt;TR&gt;
+-&lt;TH&gt;Recently Fixed&lt;/TH&gt;
+-&lt;TH&gt;Status&lt;/TH&gt;
+-&lt;TH&gt;Release&lt;/TH&gt;
+-&lt;/TR&gt;
+-&lt;/THEAD&gt;
+-
+-&lt;TBODY&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;1. TextDump Tool decodes NewFunction and NewFunction2 actions correctly.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;2. FSDefineJPEG2 and FSDefineJPEG3 allows null encoding tables.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;3. FSCoder resize buffer correctly when writing binary data.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;4. FSButtonSound RollOver and RollOut sounds now in the correct order.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;5. The equals method on FSPlaceObject2 now compares encoded clip events.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;6. The copy constructor on FSProtect now works with null passwords.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.3&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;7. FSSoundConstructor goes into infinite loop when decoding MP3 files.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1.1&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;TR&gt;
+-&lt;TD&gt;8. FSTextConstructor does not sort font codes.&lt;/TD&gt;
+-&lt;TD&gt;Fixed&lt;/TD&gt;
+-&lt;TD&gt;2.1&lt;/TD&gt;
+-&lt;/TR&gt;
+-
+-&lt;/TBODY&gt;
+-&lt;/TABLE&gt;
+-
+ &lt;br/&gt;
+ 
+ &lt;h2&gt;Current Issues&lt;/h2&gt;
+ 
+-&lt;H3&gt;8866. FSImageConstructor: encoding argument is not checked..&lt;/H3&gt;
++&lt;H3&gt;6739. FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/H3&gt;
+ 
+-&lt;P&gt;The setIndexedImage() and setColorImage() methods incorrectly check the format 
+-attribute rather than the argument passed to the method. The logic of the check 
+-is flawed and an IllegalargumentException will be thrown.&lt;/P&gt;
++&lt;P&gt;The OpenType format for defining fonts allows new glyphs to be defined by 
++combining existing glyphs to form complex shapes. The FSTextConstructor class 
++in the current release of Transform Utilities does not currently decode complex 
++glyphs. Instead the missing character is substituted which will display a space 
++or empty box. This is currently only a major problem for eastern languages. 
++Western character sets will be displayed correctly - only rarely used symbols 
++will most likely be affected.&lt;/P&gt;
+ 
+ &lt;H4&gt;Root Cause&lt;/H4&gt;
+ 
+-&lt;P&gt;Programming error.&lt;/P&gt;
++&lt;P&gt;The FSTextConstructor code is not implemented to handle complex glyphs.&lt;/P&gt;
+ 
+ &lt;H4&gt;Workaround?&lt;/H4&gt;
+ 
+-&lt;P&gt;In the file, FSImageConstructor.java replace line 568:&lt;/P&gt;
++&lt;P&gt;For standard ASCII characters the glyphs are displayed correctly. However for 
++characters with accents are not displayed correctly. The solution is to use 
++generate fonts using Java's AWT font objects &ndash; though decoding these fonts 
++takes significantly more time.&lt;/P&gt;
+ 
+-&lt;pre&gt;        if (format != IDX8 || format != IDXA)&lt;/pre&gt;
++&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+ 
+-&lt;p&gt;with:&lt;/p&gt;
+- 
+-&lt;pre&gt;        if (encoding != IDX8 &amp;&amp; encoding != IDXA)&lt;/pre&gt;
++&lt;P&gt;Although Java AWT fonts are also based on font definitions from OpenType 
++files the advantages of being able to decode the font directly from the OpenType 
++file is one of performance. The OpenType font definition is complex and if the
++specification can be deciphered then support for complete glyphs will be added 
++to the current code base. No date for implementation is available at the moment.
++&lt;/P&gt;
+ 
+-and replace line 605
++&lt;P&gt;In the long term creating a font library using Flash files is the preferred 
++solution. &ldquo;Compiling&rdquo; font definitions into a library of Flash files 
++provides the fastest possible option for creating font objects since there is no
++conversion between the way the font is encoded. This option is planned for 
++release in the next version of Transform Utilities.&lt;/P&gt;
+ 
+-&lt;pre&gt;        if (format != RGB5 || format != RGB8 || format != RGBA)&lt;/pre&gt;
++&lt;br/&gt;
+ 
+-&lt;p&gt;with:&lt;/p&gt;
+- 
+-&lt;pre&gt;        if (encoding != RGB5 &amp;&amp; encoding != RGB8 &amp;&amp; encoding != RGBA)&lt;/pre&gt;
++&lt;H2&gt;Recently Fixed&lt;/H2&gt;
+ 
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This fix will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
++&lt;H3&gt;8866. FSImageConstructor: encoding argument is not checked.&lt;/H3&gt;
++
++&lt;P&gt;The setIndexedImage() and setColorImage() methods incorrectly checked the 
++format attribute rather than the argument passed to the method. The logic of the 
++check caused an IllegalargumentException will be thrown.&lt;/P&gt;
++
++&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
++
+ &lt;H3&gt;8751. Indexed PNG images lose alpha.&lt;/H3&gt;
+ 
+ &lt;P&gt;If an indexed PNG image is loaded into the FSImageConstructor class then any 
+-alpha channel information is not used by the Flash Player and an opaque colour
++alpha channel information was not used by the Flash Player and an opaque colour
+ is displayed.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The problem is that any fully transparent colour must have the red, green and
+-blue set to zero (transparent black) otherwise the Flash Player will ignore the 
+-alpha channel information.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;In the file, FSImageConstructor.java replace lines 1292-1294:&lt;/P&gt;
+-
+-&lt;pre&gt;
+-     for (int i=0; i&lt;length; i++) {
+-         colourTable[i][3] = (byte)coder.readWord(1, false);
+-     }
+-&lt;/pre&gt;
+-
+-&lt;p&gt;with:&lt;/p&gt;
+- 
+-&lt;pre&gt;
+-     for (int i=0; i&lt;length; i++) 
+-     {
+-         colourTable[i][3] = (byte)coder.readWord(1, false);
+-
+-         if (colourTable[i][3] == 0) {
+-             colourTable[i][0] = 0;
+-             colourTable[i][1] = 0;
+-             colourTable[i][2] = 0;
+-         }
+-     }
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This patch will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+ &lt;H3&gt;8751. defineTextBlock() bounding box is incorrect.&lt;/H3&gt;
+ 
+ &lt;P&gt;The size of the bounding box that encloses the block of text created using 
+-the defineTextBlock() method in the FSTextConstructor class is not calculated
+-correctly. The block fails to account for the descent of the last line in the 
+-block. The result is that the bounding box is too short so if the text is 
++the defineTextBlock() method in the FSTextConstructor class was not calculated
++correctly. The block failed to account for the descent of the last line in the 
++block. The result was that the bounding box is too short so if the text is 
+ animated or placed next to another object it will not be redrawn correctly.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The root cause is a an error in the way the dimensions of the box are
+-calculated.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;Replace lines 598-608:&lt;/P&gt;
+-
+-&lt;pre&gt;
+-    if (n==0) {
+-        yMin = bounds.getMinY();
+-        yMax = bounds.getMaxY();
+-    }
+-    else if (n==lines.size()) {
+-        yMax += bounds.getMaxY();
+-    }
+-    else {
+-        yMax += lineSpacing;
+-    }
+-&lt;/pre&gt;
+-
+-&lt;p&gt;with:&lt;/p&gt;
+- 
+-&lt;pre&gt;
+-    if (n==0) {
+-        yMin = bounds.getMinY();
+-        yMax = bounds.getMaxY();
+-    }
+-    else {
+-        yMax += lineSpacing;
+-    }
+-    
+-    if (n==lines.size()-1)
+-        yMax += bounds.getHeight();
+-&lt;/pre&gt;
+-
+-&lt;p&gt;This is a patch. It works but the code that creates text blocks needs to be
+-improved so the bounding box can be used to provide more precise positioning of
+-the text.&lt;/p&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This patch will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+ &lt;H3&gt;8750. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/H3&gt;
+ 
+-&lt;P&gt;If an FSText object does not contain any style information (font, colour, x 
+-or y offets) then it is not encoded correctly - the first byte which contains 
+-type and flags indicating which fields are included is not encoded.&lt;/P&gt;
++&lt;P&gt;If an FSText object did not contain any style information (font, colour, x 
++or y offets) then it was not encoded correctly - the first byte which contains 
++type and flags indicating which fields are included was not encoded.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The problem was introduced in Transform version 1 when two classes, 
+-FSTextStyle and FSTextRecord were merged to create FSText.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;Replace the length() and encode() methods with the following:&lt;/P&gt;
+-
+-&lt;pre&gt;
+-    public int length(FSCoder coder)
+-    {
+-        boolean _containsFont = containsFont();
+-        boolean _containsColor = containsColor();
+-        boolean _containsOffsetX = containsOffsetX();
+-        boolean _containsOffsetY = containsOffsetY();
+-        
+-        int length = 1;
+-    
+-        if (containsStyle())
+-        {
+-            length += (_containsFont) ? 2 : 0;
+-            length += (_containsColor) ? color.length(coder) : 0;
+-            length += (_containsOffsetY) ? 2 : 0;
+-            length += (_containsOffsetX) ? 2 : 0;
+-            length += (_containsFont) ? 2 : 0;
+-        }
+-        
+-        length += 1;
+-
+-        if (characters.size() &gt; 0)
+-        {
+-            int numberOfBits = 0;
+-            int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
+-            int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+-            
+-            numberOfBits = (numberOfGlyphBits + numberOfAdvanceBits)*characters.size();
+-            numberOfBits += (numberOfBits % 8 &gt; 0) ? 8 - (numberOfBits % 8) : 0;
+-
+-            length += numberOfBits &gt;&gt; 3;
+-        }
+-        return length;
+-    }
+-
+-    public void encode(FSCoder coder)
+-    {
+-        boolean _containsFont = containsFont();
+-        boolean _containsColor = containsColor();
+-        boolean _containsOffsetY = containsOffsetY();
+-        boolean _containsOffsetX = containsOffsetX();
+-
+-        coder.writeBits(1, 1);
+-        coder.writeBits(0, 3);
+-        coder.writeBits(_containsFont ? 1 : 0, 1);
+-        coder.writeBits(_containsColor ? 1 : 0, 1);
+-        coder.writeBits(_containsOffsetY ? 1 : 0, 1);
+-        coder.writeBits(_containsOffsetX ? 1 : 0, 1);
+-    
+-        if (_containsFont)
+-            coder.writeWord(identifier, 2);
+-    
+-        if (_containsColor)
+-            color.encode(coder);
+-    
+-        if (_containsOffsetX)
+-            coder.writeWord(offsetX, 2);
+-    
+-        if (_containsOffsetY)
+-            coder.writeWord(offsetY, 2);
+-    
+-        if (_containsFont)
+-            coder.writeWord(height, 2);
+-
+-        coder.writeWord(characters.size(), 1);
+-        
+-        for (Iterator charIter = characters.iterator(); charIter.hasNext();) 
+-            ((FSTransformObject)charIter.next()).encode(coder);
+-            
+-        coder.alignToByte();
+-    }
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+ &lt;H3&gt;8749. FSVideoFrame does not set identifier.&lt;/H3&gt;
+ 
+-&lt;P&gt;The identifier attribute is not set correctly in the constructor:&lt;/P&gt;
++&lt;P&gt;The identifier attribute was not set correctly in the constructor.&lt;/P&gt;
+ 
+-&lt;pre&gt;
+-    public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The attribute assigns a value to itself rather than using the argument passed
+-to the constructor.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;Replace the constructor with the following method:&lt;/P&gt;
+-
+-&lt;pre&gt;
+-    public FSVideoFrame(int anIdentifier, int frameNumber, byte[] data)
+-    {
+-        super(VideoFrame);
+-        setIdentifier(anIdentifier);
+-        setFrameNumber(frameNumber);
+-        setData(data);
+-    }
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+ &lt;H3&gt;8748. FSDefineFont[2] fails to handle buggy fonts.&lt;/H3&gt;
+ 
+ &lt;P&gt;Both the DefineFont and DefineFont2 data structures contain a table where the
+-each entry points to the start of an encoded glyph. The current version of the
+-FSDefineFont and FSDefineFont2 classes do not use this table. They assume each 
+-glyph will be decoded correctly and so the decoding of the next glyph can start
+-where the last glyph finished. This makes the process sensitive to errors.&lt;/P&gt;
++each entry points to the start of an encoded glyph. The table was not used. 
++The assumption was that each glyph would be decoded correctly and so the decoding 
++of the next glyph can start where the last glyph finished. This made the process 
++sensitive to errors.&lt;/P&gt;
+ 
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The root cause is simply the way the Flash file format specification was 
+-interpreted. The assumption was made that files decoded using Transform would 
+-be correctly encoded.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;p&gt;This issue is only affecting one user of the framework and so a workaround will
+-not be posted, particularly since the next release will formally address the 
+-problem.&lt;/p&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+ &lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+ 
+ &lt;H3&gt;7936. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.&lt;/H3&gt;
+ 
+ &lt;P&gt;The setEncodingTable() method in each class checks for a null argument and 
+ creates an empty encodeing table so the object can be successfully encoded.
+-However the null argument is assigned to the instance variable and not the newly
+-created table:&lt;/P&gt;
++However the null argument was assigned to the instance variable and not the newly
++created table.&lt;/P&gt;
+ 
+-&lt;pre&gt;
+-    public void setEncodingTable(byte[] bytes)
+-    {
+-        if (bytes == null) {
+-            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+-        }
+-        encodingTable = bytes;
+-    }
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;Simple programming error.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;Correct the method so the table is assigned to the instance variable:&lt;/P&gt;
+-
+-&lt;pre&gt;
+-    public void setEncodingTable(byte[] bytes)
+-    {
+-        if (bytes == null) {
+-            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+-        }
+-        encodingTable = bytes;
+-    }
+-&lt;/pre&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;This will be released in version 2.1.4 due at the end of September.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;6739. FSTextConstructor does not decode complex glyphs from OpenType fonts.&lt;/H3&gt;
+-
+-&lt;P&gt;The OpenType format for defining fonts allows new glyphs to be defined by 
+-combining existing glyphs to form complex shapes. The FSTextConstructor class 
+-in the current release of Transform Utilities does not currently decode complex 
+-glyphs. Instead the missing character is substituted which will display a space 
+-or empty box. This is currently only a major problem for eastern languages. 
+-Western character sets will be displayed correctly - only rarely used symbols 
+-will most likely be affected.&lt;/P&gt;
+-
+-&lt;H4&gt;Root Cause&lt;/H4&gt;
+-
+-&lt;P&gt;The FSTextConstructor code is not implemented to handle complex glyphs.&lt;/P&gt;
+-
+-&lt;H4&gt;Workaround?&lt;/H4&gt;
+-
+-&lt;P&gt;For standard ASCII characters the glyphs are displayed correctly. However for 
+-characters with accents are not displayed correctly. The solution is to use 
+-generate fonts using Java's AWT font objects &ndash; though decoding these fonts 
+-takes significantly more time.&lt;/P&gt;
+-
+-&lt;H4&gt;When will it be fixed?&lt;/H4&gt;
+-
+-&lt;P&gt;Although Java AWT fonts are also based on font definitions from OpenType 
+-files the advantages of being able to decode the font directly from the OpenType 
+-file is one of performance. The OpenType font definition is complex and if the
+-specification can be deciphered then support for complete glyphs will be added 
+-to the current code base. No date for implementation is available at the moment.
+-&lt;/P&gt;
+-
+-&lt;P&gt;In the long term creating a font library using Flash files is the preferred 
+-solution. &ldquo;Compiling&rdquo; font definitions into a library of Flash files 
+-provides the fastest possible option for creating font objects since there is no
+-conversion between the way the font is encoded. This option is planned for 
+-release in the next version of Transform Utilities.&lt;/P&gt;
+-
+-&lt;br/&gt;
+-
+-&lt;H2&gt;Recently Fixed&lt;/H2&gt;
+-
+-&lt;H3&gt;1. TextDump Tool decodes NewFunction and NewFunction2 actions correctly.&lt;/H3&gt;
+-
+-&lt;P&gt;In Transform the actions NewFunction and NewFunction2 contain arrays of the 
+-actions that make up the function definition. This is different from the 
+-official definition from Macromedia where instead the NewFunction and 
+-NewFunction2 actions contain a field giving the number of bytes following that 
+-make up the function definition.&lt;/P&gt;
+-
+-&lt;P&gt;The actions are now reported as only being part of the NewFunction[2] data 
+-structure, previously the actions were decoded twice, first as if they were part 
+-of the NewFunction[2] action and then again as a series of actions following 
+-the function definition.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;2. FSDefineJPEG2 and FSDefineJPEG3 allows null encoding tables.&lt;/H3&gt;
+-
+-&lt;P&gt;The documentation for the FSDefineJPEG2 and FSDefineJPEG3 classes state that 
+-the encoding table may be set to null and the image will be displayed correctly. 
+-However any object with a null encoding table will throw a NullPointerException 
+-when it is encoded.&lt;/P&gt;
+-
+-&lt;P&gt;The code now allows null arguments to be specified for encoding tables. If a 
+-null reference is used then an empty encoding table is generated to ensure that
+-the image will be encoded correctly.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;3. FSCoder resize buffer correctly when writing binary data.&lt;/H3&gt;
+-
+-&lt;P&gt;The FSCoder now takes the size of the data being written when calculating 
+-the extra capacity to add to its internal buffer. This avoids a potential
+-overflow if data was being encoded that was larger than half the current 
+-buffer size.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;4. FSButtonSound RollOver and RollOut sounds now in the correct order.&lt;/H3&gt;
+-
+-&lt;P&gt;The FSSound objects played when the mouse rolls over or out of the active 
+-area of a button are now encoded in the correct order. Previously the order
+-was swapped so if an FSSound object was created to play a sound when the mouse
+-moved over a button then the sound was played only when the mouse moved outside
+-of the button's active area and vice versa.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;5. The equals method on FSPlaceObject2 now compares encoded clip events.&lt;/H3&gt;
+-
+-&lt;P&gt;Determining whether two objects, containing encoded clip events, now takes 
+-account of all the attributes of the objects. Previously the result returned
+-was only based on a comparison of the encoded clip events.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;6. The copy constructor on FSProtect now works with null passwords.&lt;/H3&gt;
+-
+-&lt;P&gt;For Flash 4 and earlier Protect was used to prevent a file being loaded into
+-Macromedia Flash. From Flash 5 a string attribute was added that contains an 
+-MD5 hash of a password that could be used to provide access to the file. For 
+-versions earlier than Flash 5 the password string would be set to null so it 
+-was not included when the object was encoded.&lt;/P&gt;
+-
+-&lt;p&gt;The copy constructor now correctly tests the password attribute to see if 
+-it is null before creating a copy of the String.&lt;/p&gt;
+-
+-&lt;H3&gt;7. FSSoundConstructor goes into infinite loop when decoding MP3 files.&lt;/H3&gt;
+-
+-&lt;P&gt;With the release of Transform 2.1.1 the infinite loop problem caused by meta 
+-data at the end of an MP3 being incorrectly interpreted is now fixed.&lt;/P&gt;
+-
+-&lt;P&gt;MP3 files with ID3 version 1 meta data was defeating the findBits method 
+-which was searching for the start of frame marker (0x7FF). In combination with 
+-a bug in FSCoder which prevent buffer overflows when reading the data, the 
+-search would get stuck at the end of the buffer with no way of terminating.&lt;/P&gt;
+-
+-&lt;P&gt;The FSSoundConstructor is now able to deal with the different ID3 versions.&lt;/P&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;H3&gt;8. TextConstructor now sorts font codes.&lt;/H3&gt;
+-
+-&lt;P&gt;With the release of Transform SWF 2.1 the FSTextConstructor class now 
+-generated characters codes sorted correctly in ascending order.&lt;/P&gt;
+-
+-&lt;P&gt;The willDisplay(char[]) method was added to FSTextConstructor to allow the 
+-characters that will be used to be declared before any text or font objects are 
+-generated. The new FSCharacterTable provides predefined character sets to make 
+-it easy to use the new method:&lt;/P&gt;
+-
+-&lt;PRE&gt;
+-    FSTextConstructor generator = new FSTextConstructor(...);
+-    
+-    char[] chars = FSCharacterTable.characterSet(FSCharacterTable.iso_8859_1);
+-
+-    generator.willDisplay(chars);
+-    font.defineText(string, fontSize, fontColor);
+-&lt;/PRE&gt;
+-
+-&lt;div class=&quot;hr&quot;&gt;&lt;hr/&gt;&lt;/div&gt;
+-
+-&lt;/div&gt;
+ &lt;div class=&quot;footer&quot;&gt;
+ Copyright 2001-2006, Flagstone Software. All rights reserved. 
+ Please read our &lt;a href=&quot;/privacy.html&quot;&gt;Privacy Policy&lt;/a&gt; and 
+
+Modified: trunk/doc/web/planned.html
+===================================================================
+--- trunk/doc/web/planned.html	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/doc/web/planned.html	2006-09-24 08:46:42 UTC (rev 230)
+@@ -9,17 +9,17 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;30th Sept 2006&lt;/td&gt;
+-&lt;td class=&quot;date&quot;&gt;10th Sept 2006&lt;/td&gt;
+-&lt;td class=&quot;version&quot;&gt;2.1.4&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;31st Oct 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;24th Sept 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.5&lt;/td&gt;
+ &lt;td class=&quot;description&quot;&gt;Add more unit test suites. Bug Fixes&lt;/td&gt;
+-&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-2.1.4.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-2.1.5.txt&quot;&gt;release notes&lt;/a&gt;
+ &lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr class=&quot;even&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;Q3 2006&lt;/td&gt;
+-&lt;td class=&quot;date&quot;&gt;2nd July 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;31st Dec 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;24th Sept 2006&lt;/td&gt;
+ &lt;td class=&quot;version&quot;&gt;2.2.0&lt;/td&gt;
+ &lt;td class=&quot;description&quot;&gt;New classes to simplify creating and organiding movies; 
+ JPEG images have width and height; Bug Fixes.&lt;/td&gt;
+@@ -28,8 +28,8 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr class=&quot;odd&quot;&gt;
+-&lt;td class=&quot;date&quot;&gt;Q4 2006&lt;/td&gt;
+-&lt;td class=&quot;date&quot;&gt;2nd July 2006&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;Q1 2007&lt;/td&gt;
++&lt;td class=&quot;date&quot;&gt;24th Sept 2006&lt;/td&gt;
+ &lt;td class=&quot;version&quot;&gt;3.0.0&lt;/td&gt;
+ &lt;td class=&quot;description&quot;&gt;Improved design.&lt;/td&gt;
+ &lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-pre-3.0.0.txt&quot;&gt;release notes&lt;/a&gt;
+
+Modified: trunk/doc/web/releases.html
+===================================================================
+--- trunk/doc/web/releases.html	2006-09-24 08:03:02 UTC (rev 229)
++++ trunk/doc/web/releases.html	2006-09-24 08:46:42 UTC (rev 230)
+@@ -7,6 +7,14 @@
+ &lt;th class=&quot;release&quot;&gt;Details&lt;/th&gt;
+ &lt;/tr&gt;
+ 
++&lt;tr class=&quot;odd&quot;&gt;
++&lt;td class=&quot;date&quot;&gt;28th Sept 2006&lt;/td&gt;
++&lt;td class=&quot;version&quot;&gt;2.1.4&lt;/td&gt;
++&lt;td class=&quot;description&quot;&gt;Bugs fixes, improved test suites.&lt;/td&gt;
++&lt;td class=&quot;release&quot;&gt;&lt;a href=&quot;/downloads/transform-2.1.4.txt&quot;&gt;release notes&lt;/a&gt;
++&lt;/td&gt;
++&lt;/tr&gt;
++
+ &lt;tr class=&quot;odd&quot;&gt;
+ &lt;td class=&quot;date&quot;&gt;30th June 2006&lt;/td&gt;
+ &lt;td class=&quot;version&quot;&gt;2.1.3&lt;/td&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000166.html">[Transform-svn] r229 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000168.html">[Transform-svn] r231 - trunk/doc/web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#167">[ date ]</a>
+              <a href="thread.html#167">[ thread ]</a>
+              <a href="subject.html#167">[ subject ]</a>
+              <a href="author.html#167">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

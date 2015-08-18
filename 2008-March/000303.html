@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r367 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r367%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181627.m2IGRjOo007944%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000302.html">
+   <LINK REL="Next"  HREF="000304.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r367 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r367%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181627.m2IGRjOo007944%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r367 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 17:27:45 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000302.html">[Transform-svn] r366 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000304.html">[Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#303">[ date ]</a>
+              <a href="thread.html#303">[ thread ]</a>
+              <a href="subject.html#303">[ subject ]</a>
+              <a href="author.html#303">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 17:27:43 +0100 (Tue, 18 Mar 2008)
+New Revision: 367
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSFillStyle.java
+Log:
+Added method to decode styles, corrected errors.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSFillStyle.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSFillStyle.java	2008-03-18 16:26:14 UTC (rev 366)
++++ dev/dev-2-4/src/com/flagstone/transform/FSFillStyle.java	2008-03-18 16:27:43 UTC (rev 367)
+@@ -30,102 +30,213 @@
+ 
+ package com.flagstone.transform;
+ 
+-/** 
+-FSFillStyle is an abstract base class for the different types of fill style that 
+-can be applied to shapes.
+-*/
+-public abstract class FSFillStyle extends FSTransformObject
++import java.util.HashMap;
++
++/**
++ * FSFillStyle is an abstract base class for the different types of fill style
++ * that can be applied to shapes.
++ */
++public abstract class FSFillStyle implements Cloneable, Codeable
+ {
+-    /** Defines the type for a solid fill style. */
+-    public static final int Solid = 0;
+-    /** Defines the type for a linear gradient fill style. */
+-    public static final int Linear  = 16;
+-    /** Defines the type for a radial gradient fill style. */
+-    public static final int Radial  = 18;
+-    /** Defines the type for a tiled bitmap fill style. */
+-    public static final int Tiled = 64;
+-    /** Defines the type for a clipped bitmap fill style. */
+-    public static final int Clipped = 65;
+-    /** Defines the type for a tiled bitmap fill style - added in Flash 7. */
+-    public static final int Unsmoothed_Tiled = 66;
+-    /** Defines the type for a clipped bitmap fill style - added in Flash 7. */
+-    public static final int Unsmoothed_Clipped = 67;
+-    
+-    protected int type = 0;
+-    
+-    FSFillStyle()
+-    {
+-    }
++	/** Defines the type for a solid fill style. */
++	public static final int Solid = 0;
+ 
+-    protected FSFillStyle(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    protected FSFillStyle(FSFillStyle obj)
+-    {
+-        type = obj.type;
+-    }
+-    protected FSFillStyle(int aType)
+-    {
+-        setType(aType);
+-    }
++	/** Defines the type for a linear gradient fill style. */
++	public static final int Linear = 16;
+ 
+-    /** 
+-     * Gets the type of the fill style. The type attribute is read-only and may be used 
+-     * when iterating through an array of fill style objects to identify the type of 
+-     * fill style without using run-time type checking provided by the compiler.
++	/** Defines the type for a radial gradient fill style. */
++	public static final int Radial = 18;
+ 
+-        @return the type of fill.
+-        */
+-    public int getType() 
+-    { 
+-        return type;
+-    }
++	/** Defines the type for a tiled bitmap fill style. */
++	public static final int Tiled = 64;
+ 
+-    /** Sets the type of the fill style.
++	/** Defines the type for a clipped bitmap fill style. */
++	public static final int Clipped = 65;
+ 
+-        @param aType the type of fill.
+-        */
+-    public void setType(int aType)
+-    { 
+-        type = aType; 
+-    }
++	/** Defines the type for a tiled bitmap fill style - added in Flash 7. */
++	public static final int Unsmoothed_Tiled = 66;
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSFillStyle typedObject = (FSFillStyle)anObject;
+-            
+-            result = type == typedObject.type;
+-        }
+-        
+-        return result;
+-    }
++	/** Defines the type for a clipped bitmap fill style - added in Flash 7. */
++	public static final int Unsmoothed_Clipped = 67;
+ 
+-    public int length(FSCoder coder)
+-    {
+-        int length = 1;
+-    
+-         return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        coder.writeWord(type, 1);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        type = coder.readWord(1, false);
+-    }
++	static FSFillStyle decodeStyle(FSCoder coder)
++	{
++		FSFillStyle style = null;
++
++		int type = coder.scanWord(1, false);
++
++		switch (type)
++		{
++			case Solid:
++				style = new FSSolidFill(coder);
++				break;
++			case Linear:
++				style = new FSGradientFill(coder);
++				break;
++			case Radial:
++				style = new FSGradientFill(coder);
++				break;
++			case Tiled:
++				style = new FSBitmapFill(coder);
++				break;
++			case Clipped:
++				style = new FSBitmapFill(coder);
++				break;
++			case Unsmoothed_Tiled:
++				style = new FSBitmapFill(coder);
++				break;
++			case Unsmoothed_Clipped:
++				style = new FSBitmapFill(coder);
++				break;
++			default:
++				Integer key = new Integer(type);
++
++				if (table.containsKey(key))
++				{
++					try
++					{
++						Class&lt;FSFillStyle&gt; obj = table.get(key);
++						style = (FSFillStyle) obj.newInstance();
++						style.decode(coder);
++					} catch (Exception e)
++					{
++						style = null;
++					}
++				}
++				break;
++		}
++		return style;
++	}
++
++	private static HashMap&lt;Integer, Class&lt;FSFillStyle&gt;&gt; table = new HashMap&lt;Integer, Class&lt;FSFillStyle&gt;&gt;();
++
++	/**
++	 * This method allows you to extend the Transform framework by adding new
++	 * classes to decode the data structures that are not currently supported.
++	 * 
++	 * To add support for a new data structure simply sub-class FSFillStyle and
++	 * implement the following methods:
++	 * 
++	 * public int length(FSCoder coder) public void encode(FSCoder coder) public
++	 * void decode(FSCoder coder)
++	 * 
++	 * In addition you must implement the nullary or empty constructor so that
++	 * the object can be instantiated correctly.
++	 * 
++	 * When the FSFillStyle object encounters a data structure it does not
++	 * support it will use the type to perform a table lookup for any registered
++	 * class. If a class is found an object will be instantiated and then the
++	 * data structure will be decoded by calling the decode() method.
++	 * 
++	 * If no class has been registered or if an error occurs while instantiating
++	 * the object then the data structure will be NOT decoded and an
++	 * FSCoderException will be thrown by the parent object.
++	 * 
++	 * @param type
++	 *            the type used to identify the type of data structure encoded
++	 *            in the flash file.
++	 * 
++	 * @param aClass
++	 *            the class object that will be used to instantiate an object
++	 *            and decode the data structure for the fill style.
++	 */
++	public static void registerClass(int type, Class&lt;FSFillStyle&gt; aClass)
++	{
++		table.put(new Integer(type), aClass);
++	}
++
++	protected int type = 0;
++
++	protected FSFillStyle(int aType)
++	{
++		setType(aType);
++	}
++
++	/**
++	 * Gets the type of the fill style. The type attribute is read-only and may
++	 * be used when iterating through an array of fill style objects to identify
++	 * the type of fill style without using run-time type checking provided by
++	 * the compiler.
++	 * 
++	 * @return the type of fill.
++	 */
++	public int getType()
++	{
++		return type;
++	}
++
++	/**
++	 * Sets the type of the fill style.
++	 * 
++	 * @param aType
++	 *            the type of fill.
++	 */
++	public void setType(int aType)
++	{
++		type = aType;
++	}
++
++	public Object clone()
++	{
++		Object anObject = null;
++
++		try
++		{
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e)
++		{
++			throw new InternalError();
++		}
++		return anObject;
++	}
++
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
++
++		if (obj == null) {
++			return false;
++		}
++
++		if (obj == this) {
++			return true;
++		}
++
++		if (obj instanceof FSFillStyle)
++		{
++			FSFillStyle fill = (FSFillStyle)obj;
++
++			result = type == fill.type;
++		}
++
++		return result;
++	}
++
++	public int length(FSCoder coder)
++	{
++		int length = 1;
++
++		return length;
++	}
++
++	public void encode(FSCoder coder)
++	{
++		coder.writeByte(type);
++	}
++
++	public void decode(FSCoder coder)
++	{
++		type = coder.readByte();
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000302.html">[Transform-svn] r366 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000304.html">[Transform-svn] r368 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#303">[ date ]</a>
+              <a href="thread.html#303">[ thread ]</a>
+              <a href="subject.html#303">[ subject ]</a>
+              <a href="author.html#303">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

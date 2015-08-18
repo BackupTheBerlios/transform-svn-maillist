@@ -1,0 +1,1802 @@
+From smackay at berlios.de  Sat Jul  1 13:50:55 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Jul 2006 13:50:55 +0200
+Subject: [Transform-svn] r202 - trunk/doc/web
+Message-ID: <200607011150.k61Bot06018914@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-01 13:50:50 +0200 (Sat, 01 Jul 2006)
+New Revision: 202
+
+Added:
+   trunk/doc/web/releases.html
+Removed:
+   trunk/doc/web/index.html
+Log:
+Moved static pages back to the web site project.
+
+Deleted: trunk/doc/web/index.html
+===================================================================
+--- trunk/doc/web/index.html	2006-06-30 16:46:56 UTC (rev 201)
++++ trunk/doc/web/index.html	2006-07-01 11:50:50 UTC (rev 202)
+@@ -1,218 +0,0 @@
+-<html>
+<head>
+<meta http-equiv=content-type content="text/html;  charset=ISO-8859-1">
+<title>Flagstone Software :: Transform SWF Overview</title>
+<link rel="stylesheet" type="text/css" href="/flagstone.css">
+<script language="JavaScript" src="/js/imageload.js"></script>
+<script language="JavaScript" src="/js/imageswap.js"></script>
+</head>
+
+<body>
+<script type='text/javascript'>function Go(){return}</script>
+<script type="text/javascript" src="/js/menu_var.js"></script>
+<script type="text/javascript" src="/js/menu_com.js"></script>
+<noscript>Your browser does not support script</noscript>
+
+<div class="page">
+
+<div class="header">
+<img src="/images/flagstone_header.gif" alt="Flagstone Software" width=760 height=77>
+<table cellpadding="0" cellspacing="0" border="0" class="sitemenu">
+<tr>
+<td width=150 bgcolor="#9A1F31"><a href="/index.html" onmouseover="imageSwap('home', 'homeOn');" onmouseout="imageSwap('home', 'homeOff');"><img src="/images/home_off.gif" alt="[Home]" width=!
+ 77 height=29 border=0 name="home"></a></td>
+<td width=29><img src="/images/diagonal_divider.gif" alt="" width=29 height=29></td>
+<td bgcolor="#C43F52"><div id='MenuPos' style='position:left; width:440; height:27;'><img src='/images/spacer.gif' width='440' height='27'></div></td>
+<td bgcolor="#C43F52"><img src='/images/spacer.gif' width='141' height='27'></td>
+</tr>
+</table>
+</div>
+
+<div class="content">
+-
+-<h1>Transform SWF</h1>
+-
+-<div class="sidenav">
+-<img src="/images/javanet_button_90.gif"><br />
+-<img src="/images/spacer" width="1" height="5"><br />
+-<a href="http://developer.berlios.de" title="BerliOS Developer"><img src="http://developer.berlios.de/bslogo.php?group_id=5974" width="93px" height="24px" border="0" alt="BerliOS Developer Logo"></a><br />
+-<img src="/images/spacer" width="1" height="5"><br />
+-<a href="whatsnew.html">What's New</a><br />
+-<a href="roadmap.html">Road Map</a><br />
+-<a href="issues.html">Issues &amp; Bugs</a><br />
+-<a href="/examples.html#transform">Example Code</a><br />
+-</div>
+-
+-<P>The Transform SWF framework is a collection of classes for each of the tags 
+-and data structures that make up the Flash (SWF) File Format Specification from 
+-Macromedia. The classes provide a completely object-based API for parsing, 
+-manipulating and generating Flash files. This allows Java based applications 
+-to dynamically generate and update files that represent animations and documents 
+-which can be easily distributed and displayed on any platform that supports a 
+-graphical web browser.</P>
+-
+-<p>In addition to the classes supporting the core API several classes provide a 
+-higher level interface to reduce the level of effort required to implement 
+-applications. These simplify the integration of sound and images into Flash file 
+-while text can be displayed using external font files allowing presentations to 
+-be localized for any spoken language.</P>
+-
+-<h2>Features</h2>
+-
+-<ul>
+-<li>Fully supports the latest version of Flash - MX 2004.</li>
+-<li>Object-based API is easily expanded to support future Flash versions.</li>
+-<li>Generate files for any version of Flash.</li>
+-<li>Parse existing Flash files to deliver customised presentations.</li>
+-<li>Generate images using JPEG, PNG and BMP files.</li>
+-<li>Generate event and soundtracks from WAV and MP3 files.</li>
+-<li>Display text from AWT, OpenType or TrueType font definitions.</li>
+-<li>Comprehensive 2-D drawing API to create shapes from arbitrary complex paths.</li>
+-<li>Java 2 Standard Edition code easily integrates with web application servers.</li> 
+-<li>Frameworks are available with <strong>Open Source</strong> licensing.</li>
+-</ul>
+-
+-<div class="underline"></div>
+-
+-<h2>Core API Examples</h2>
+-
+-<p>Flash files can be built from scratch by simply constructing instances 
+-of objects that represent the respective Flash data structure and adding 
+-them to an FSMovie object in the order they will be executed by the 
+-Flash player.</p>
+-
+-<pre>
+-	FSMovie movie = new FSMovie();
+-	
+-	movie.setFrameSize(new FSBounds(0, 0, 400, 400));
+-	movie.setFrameRate(1.0);
+-	
+-	movie.add(new FSSetBackgroundColor(FSColor.lightblue()));
+-	movie.add(new FSDefineShape(shapeId, ....));
+-	movie.add(new FSPlaceObject2(shapeId, layer, x, y));
+-	movie.add(new FSShowFrame());
+-</pre>
+-
+-<p>Complex animations are created in exactly the same way: defining the objects
+-to be displayed then adding, updating or removing them from the display list.</p>
+-
+-<p>The movie is then encoded to transform the objects into the binary 
+-representation that will be decoded and executed by the Flash Player:</p>
+-
+-<pre>
+-	try {
+-	    movie.encodeToFile(filename);
+-	}
+-	catch (Exception e) {
+-	    ... Process Exception ...
+-	}
+-</pre>
+-
+-<p>Transform SWF can also be used to parse existing Flash files and create 
+-objects for each of the data structures decoded from the file.
+-
+-<pre>
+-	try {
+-	    FSMovie movie = new FSMovie(filename);
+-	}
+-	catch (Exception e) {
+-	    ... Process Exception ...
+-	}
+-</pre>
+-
+-<p>The objects may be inspected and their attributes changed accordingly 
+-allowing Flash files to be used as templates to deliver customised 
+-presentations.</p>
+-
+-<p>More detailed <a href="/examples.html">examples</a> are available to get you 
+-started with the Transform SWF framework and how to use the concepts supported 
+-in Flash.</P>
+-
+-<h2>High Level Examples</h2>
+-
+-<p>The classes in the framework are designed to make it easy to load images, 
+- sounds and fonts stored in files and generate the objects required to 
+- display them in a movie.</p>
+-
+-<pre>
+-    FSImageConstructor generator = new FSImageConstructor("image.png");
+-    /*
+-     * Generate the object containing the shape definition.
+-     */  
+-    FSDefineObject image = generator.defineImage(imageId);
+-    /*
+-     * All images are displayed as a bitmap fill inside a shape.
+-     */
+-    FSDefineShape3 shape = generator.defineEnclosingShape(shapeId, imageId, 
+-        -xOrigin, -yOrigin, new FSSolidLine(borderWidth, borderColor));
+-    /* 
+-     * Add all the objects together to display the image.
+-     */
+-    movie.add(image);
+-    movie.add(shape);
+-    movie.add(new FSPlaceObject2(shapeId, layer, x, y));
+-    movie.add(new FSShowFrame());
+-</pre>
+-
+-<p>Sounds can be played in response to events, such as a button being clicked:</P>
+-
+-<pre>
+-    FSSoundConstructor generator = new FSSoundConstructor("beep.wav");
+-    /*
+-     * Add the sound definition and start playing it immediately.
+-     */
+-    movie.add(generator.defineSound(soundId));
+-    movie.add(new FSStartSound(new FSSound(soundId, FSSound.Start)));
+-</pre>
+-
+-<P>The FSSoundConstructor class can also be used to stream sounds 
+-allowing a sound track to be easily added to a movie:</P>
+-
+-<pre>
+-    FSSoundConstructor generator = new FSSoundConstructor("soundtrack.mp3");
+-    /* 
+-     * Generate the header that describes the streaming sound.
+-     */
+-    movie.add(generator.streamHeader(samplesPerBlock));
+-    /* 
+-     * Play a block of sound for each frame shown.
+-     */
+-    for (int i=0; i&lt;numberOfBlocks; i++)
+-    {
+-        movie.add(generator.streamBlock(i, samplesPerBlock));
+-        movie.add(new FSShowFrame());
+-    }
+-</pre>
+-
+-<p>Displaying text is greatly simplified using the FSTextConstructor.
+-The class may be used to generate simple strings using TrueType, Flash
+-or AWT font files. Support for blocks of text and also Unicode strings is included.</p>
+-
+-<pre>
+-    FSTextConstructor generator = new FSTextConstructor(fontId, "Arial.ttf");
+-    
+-    String message = "Display this string.";
+-    
+-    FSDefineText2 text = generator.defineText(textId, message, size, color);    
+-    FSDefineFont2 font = generator.defineFont();
+-    
+-    movie.add(font);
+-    movie.add(text);
+-    movie.add(new FSPlaceObject2(textId, layer, x , y));
+-    movie.add(new FSShowFrame());
+-</pre>
+-
+-<p>The FSShapeConstructor class adds a powerful tool for drawing 
+-arbitrary paths and complex shapes. A full range of drawing commands
+-is supported including quadratic and Bezier curves. The class also
+-supports commands for drawing simple geometric shapes.</p>
+-
+-<pre>
+-    FSShapeConstructor path = new FSShapeConstructor();
+-    /* 
+-     * The line and fill styles used to render the shapes should be 
+-     * specified before drawing starts.
+-     */
+-    path.add(new FSSolidLine(borderWidth, borderColor));
+-    path.add(new FSSolidFill(fillColor));
+-    /* 
+-     * Draw a rectangle with the origin at the centre of the shape.
+-     */
+-    newPath();
+-    setStyle(0, 0);
+-    move(xOrigin-width/2, yOrigin-height/2);
+-    rline(width, 0);
+-    rline(0, height);
+-    rline(-width, 0);
+-    rline(0, -height);
+-    closePath();
+-
+-    movie.add(path.defineShape(identifier));
+-</pre>
+-
+-<P>The simplified examples shown are to illustrate how each of the classes 
+-in the framework are used. Detailed, working code is included 
+-on the <a href="/examples.html">Examples</a> page.</p>
+-
+-<div class="underline"></div>
+-
+-<h2>Licensing</h2>
+-
+-<p>Transform SWF framework is covered by the 
+-<a href="/licences/bsd.html">Berkeley Software Distribution (BSD)</a> 
+-license. This allows you to release applications that use the framework 
+-in source or binary form. The only restriction when developing Open 
+-Source or commercial applications is that you acknowledge that Flagstone 
+-Software Ltd. retains the copyright to the code.</p>
+-</div>
+-
+<div class="footer">
+Copyright 2001-2006, Flagstone Software. All rights reserved. 
+Please read our <a href="/privacy.html">Privacy Policy</a> and 
+<a href="/legal.html">Legal Notices</a>.
+</div>
+</div>
+
+</body>
+</html>
+\ No newline at end of file
+
+Added: trunk/doc/web/releases.html
+===================================================================
+--- trunk/doc/web/releases.html	2006-06-30 16:46:56 UTC (rev 201)
++++ trunk/doc/web/releases.html	2006-07-01 11:50:50 UTC (rev 202)
+@@ -0,0 +1,104 @@
++<table style="margin-left:25px; margin-top:15px;">
++<tr>
++<th>Version</th>
++<th>Release Notes</th>
++<th>Files</th>
++<th colspan="2">Signatures</th>
++</tr>
++
++<tr>
++<td>2.0.5</td>
++<td>
++<a href="transform-2.0.5.txt">Notes</a>
++</td>
++<td style="padding-right:25px;">
++<a href="transform-2.0.5.tar.gz">transform-2.0.5.tar.gz</a><br/>
++<a href="transform-2.0.5.zip">transform-2.0.5.zip</a><br/>
++</td>
++<td>
++[<a href="transform-2.0.5.tar.asc">PGP</a>]<br/>
++[<a href="transform-2.0.5.zip.asc">PGP</a>]<br/>
++</td>
++<td>
++[<a href="transform-2.0.5.tar.md5">MD5</a>]<br/>
++[<a href="transform-2.0.5.zip.md5">MD5</a>]<br/>
++</td>
++</tr>
++
++<tr>
++<td>2.1</td>
++<td>
++<a href="transform-2.1.txt">Notes</a>
++</td>
++<td style="padding-right:25px;">
++<a href="transform-2.1.tar.gz">transform-2.1.tar.gz</a><br/>
++<a href="transform-2.1.zip">transform-2.1.zip</a><br/>
++</td>
++<td>
++[<a href="transform-2.1.tar.asc">PGP</a>]<br/>
++[<a href="transform-2.1.zip.asc">PGP</a>]<br/>
++</td>
++<td>
++[<a href="transform-2.1.tar.md5">MD5</a>]<br/>
++[<a href="transform-2.1.zip.md5">MD5</a>]<br/>
++</td>
++</tr>
++
++<tr>
++<td>2.1.1</td>
++<td>
++<a href="transform-2.1.1.txt">Notes</a>
++</td>
++<td style="padding-right:25px;">
++<a href="transform-2.1.1.tar.gz">transform-2.1.1.tar.gz</a><br/>
++<a href="transform-2.1.1.zip">transform-2.1.1.zip</a><br/>
++</td>
++<td>
++[<a href="transform-2.1.1.tar.asc">PGP</a>]<br/>
++[<a href="transform-2.1.1.zip.asc">PGP</a>]<br/>
++</td>
++<td>
++[<a href="transform-2.1.1.tar.md5">MD5</a>]<br/>
++[<a href="transform-2.1.1.zip.md5">MD5</a>]<br/>
++</td>
++</tr>
++
++<tr>
++<td>2.1.2</td>
++<td>
++<a href="transform-2.1.2.txt">Notes</a>
++</td>
++<td style="padding-right:25px;">
++<a href="transform-2.1.2.tar.gz">transform-2.1.2.tar.gz</a><br/>
++<a href="transform-2.1.2.zip">transform-2.1.2.zip</a><br/>
++</td>
++<td>
++[<a href="transform-2.1.2.tar.asc">PGP</a>]<br/>
++[<a href="transform-2.1.2.zip.asc">PGP</a>]<br/>
++</td>
++<td>
++[<a href="transform-2.1.2.tar.md5">MD5</a>]<br/>
++[<a href="transform-2.1.2.zip.md5">MD5</a>]<br/>
++</td>
++</tr>
++
++<tr>
++<td>2.1.3</td>
++<td>
++<a href="transform-2.1.3.txt">Notes</a>
++</td>
++<td style="padding-right:25px;">
++<a href="transform-2.1.3.tar.gz">transform-2.1.3.tar.gz</a><br/>
++<a href="transform-2.1.3.zip">transform-2.1.3.zip</a><br/>
++</td>
++<td>
++[<a href="transform-2.1.3.tar.asc">PGP</a>]<br/>
++[<a href="transform-2.1.3.zip.asc">PGP</a>]<br/>
++</td>
++<td>
++[<a href="transform-2.1.3.tar.md5">MD5</a>]<br/>
++[<a href="transform-2.1.3.zip.md5">MD5</a>]<br/>
++</td>
++</tr>
++
++</table>
+
+
+
+From smackay at berlios.de  Sat Jul  1 14:10:18 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Jul 2006 14:10:18 +0200
+Subject: [Transform-svn] r203 - trunk/doc/web
+Message-ID: <200607011210.k61CAIxY025043@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-01 14:10:11 +0200 (Sat, 01 Jul 2006)
+New Revision: 203
+
+Added:
+   trunk/doc/web/downloads.html
+Removed:
+   trunk/doc/web/releases.html
+Log:
+Renames releases.html to downloads.html.
+
+Copied: trunk/doc/web/downloads.html (from rev 202, trunk/doc/web/releases.html)
+
+Deleted: trunk/doc/web/releases.html
+===================================================================
+--- trunk/doc/web/releases.html	2006-07-01 11:50:50 UTC (rev 202)
++++ trunk/doc/web/releases.html	2006-07-01 12:10:11 UTC (rev 203)
+@@ -1,104 +0,0 @@
+-<table style="margin-left:25px; margin-top:15px;">
+-<tr>
+-<th>Version</th>
+-<th>Release Notes</th>
+-<th>Files</th>
+-<th colspan="2">Signatures</th>
+-</tr>
+-
+-<tr>
+-<td>2.0.5</td>
+-<td>
+-<a href="transform-2.0.5.txt">Notes</a>
+-</td>
+-<td style="padding-right:25px;">
+-<a href="transform-2.0.5.tar.gz">transform-2.0.5.tar.gz</a><br/>
+-<a href="transform-2.0.5.zip">transform-2.0.5.zip</a><br/>
+-</td>
+-<td>
+-[<a href="transform-2.0.5.tar.asc">PGP</a>]<br/>
+-[<a href="transform-2.0.5.zip.asc">PGP</a>]<br/>
+-</td>
+-<td>
+-[<a href="transform-2.0.5.tar.md5">MD5</a>]<br/>
+-[<a href="transform-2.0.5.zip.md5">MD5</a>]<br/>
+-</td>
+-</tr>
+-
+-<tr>
+-<td>2.1</td>
+-<td>
+-<a href="transform-2.1.txt">Notes</a>
+-</td>
+-<td style="padding-right:25px;">
+-<a href="transform-2.1.tar.gz">transform-2.1.tar.gz</a><br/>
+-<a href="transform-2.1.zip">transform-2.1.zip</a><br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.tar.asc">PGP</a>]<br/>
+-[<a href="transform-2.1.zip.asc">PGP</a>]<br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.tar.md5">MD5</a>]<br/>
+-[<a href="transform-2.1.zip.md5">MD5</a>]<br/>
+-</td>
+-</tr>
+-
+-<tr>
+-<td>2.1.1</td>
+-<td>
+-<a href="transform-2.1.1.txt">Notes</a>
+-</td>
+-<td style="padding-right:25px;">
+-<a href="transform-2.1.1.tar.gz">transform-2.1.1.tar.gz</a><br/>
+-<a href="transform-2.1.1.zip">transform-2.1.1.zip</a><br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.1.tar.asc">PGP</a>]<br/>
+-[<a href="transform-2.1.1.zip.asc">PGP</a>]<br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.1.tar.md5">MD5</a>]<br/>
+-[<a href="transform-2.1.1.zip.md5">MD5</a>]<br/>
+-</td>
+-</tr>
+-
+-<tr>
+-<td>2.1.2</td>
+-<td>
+-<a href="transform-2.1.2.txt">Notes</a>
+-</td>
+-<td style="padding-right:25px;">
+-<a href="transform-2.1.2.tar.gz">transform-2.1.2.tar.gz</a><br/>
+-<a href="transform-2.1.2.zip">transform-2.1.2.zip</a><br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.2.tar.asc">PGP</a>]<br/>
+-[<a href="transform-2.1.2.zip.asc">PGP</a>]<br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.2.tar.md5">MD5</a>]<br/>
+-[<a href="transform-2.1.2.zip.md5">MD5</a>]<br/>
+-</td>
+-</tr>
+-
+-<tr>
+-<td>2.1.3</td>
+-<td>
+-<a href="transform-2.1.3.txt">Notes</a>
+-</td>
+-<td style="padding-right:25px;">
+-<a href="transform-2.1.3.tar.gz">transform-2.1.3.tar.gz</a><br/>
+-<a href="transform-2.1.3.zip">transform-2.1.3.zip</a><br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.3.tar.asc">PGP</a>]<br/>
+-[<a href="transform-2.1.3.zip.asc">PGP</a>]<br/>
+-</td>
+-<td>
+-[<a href="transform-2.1.3.tar.md5">MD5</a>]<br/>
+-[<a href="transform-2.1.3.zip.md5">MD5</a>]<br/>
+-</td>
+-</tr>
+-
+-</table>
+
+
+
+From smackay at berlios.de  Sat Jul  1 14:24:50 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sat, 1 Jul 2006 14:24:50 +0200
+Subject: [Transform-svn] r204 - trunk/doc/web
+Message-ID: <200607011224.k61COo8M029399@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-01 14:24:42 +0200 (Sat, 01 Jul 2006)
+New Revision: 204
+
+Added:
+   trunk/doc/web/releases.html
+Removed:
+   trunk/doc/web/whatsnew.html
+Log:
+Changed whatsnew to individual table that will be included on main page.
+
+Copied: trunk/doc/web/releases.html (from rev 200, trunk/doc/web/whatsnew.html)
+===================================================================
+--- trunk/doc/web/whatsnew.html	2006-06-30 11:31:39 UTC (rev 200)
++++ trunk/doc/web/releases.html	2006-07-01 12:24:42 UTC (rev 204)
+@@ -0,0 +1,89 @@
++<table class="release">
++
++<tr>
++<th class="date">Date</th>
++<th class="version">Version</th>
++<th>Description</th>
++<th class="release">Details</th>
++</tr>
++
++<tr class="odd">
++<td class="date">30th June 2006</td>
++<td class="version">2.1.3</td>
++<td class="description">Bugs fixes, updates to the test suites. JAR files for 
++TestNG are also included.</td>
++<td class="release"><a href="/downloads/transform-2.1.3.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="even">
++<td class="date">3rd April 2006</td>
++<td class="version">2.1.2</td>
++<td class="description">Bugs fixes, mostly to the FSTextConstructor class.</td>
++<td class="release"><a href="/downloads/transform-2.1.2.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="odd">
++<td class="date">13th March 2006</td>
++<td class="version">2.1.1</td>
++<td class="description">Bug fix for the infinite loop problem when decoding MP3 files.</td>
++<td class="release"><a href="/downloads/transform-2.1.1.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="even">
++<td class="date">7th March 2006</td>
++<td class="version">2.1</td>
++<td class="description">Release now integrates Transform Utilities. Brought forward several improvements planned for version 3.0.</td>
++<td class="release"><a href="/downloads/transform-2.1.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="odd">
++<td class="date">20th February 2006</td>
++<td class="version">2.0.5</td>
++<td class="description">More bug fixes discovered using new test suites.</td>
++<td class="release"><a href="/downloads/transform-2.0.5.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="even">
++<td class="date">4th October 2005</td>
++<td class="version">2.0.4</td>
++<td>Simplified package organisation and fixed coordinate transform bug.</td>
++<td class="release"><a href="/downloads/transform-java-2.0.4.txt">release notes</a></td>
++</tr>
++
++<tr class="odd">
++<td class="date">12th October 2004</td>
++<td class="version">2.0.3</td>
++<td>Transform SWF is now covered by a BSD license.</td>
++<td><a href="/downloads/transform-java-2.0.3.txt">release notes</a></td>
++</tr>
++
++<tr class="even">
++<td class="date">14th June 2004</td>
++<td class="version">2.0.2</td>
++<td>Sets the default signature for the FSMovie class correctly. Adds methods to 
++classes containing actions so binary encoded actions, generated by Translate 
++AS1, can be added to movies.</td>
++<td class="release"><a href="/downloads/transform-java-2.0.2.txt">release notes</a></td>
++</tr>
++
++<tr class="odd">
++<td class="date">6th June 2004</td>
++<td class="version">2.0.1</td>
++<td>Fixes a bug in the FSProtect, FSEnableDebugger and FSEnableDebugger2 classes 
++which fails to decode the password field correctly.</td>
++<td class="release"><a href="/downloads/transform-java-2.0.1.txt">release notes</a></td>
++</tr>
++
++<tr class="even">
++<td class="date">6th April 2004</td>
++<td class="version">2.0.0</td>
++<td>Completely restructured and overhauled the entire framework to boost performance 
++and reduce code size.</td>
++<td class="release"><a href="/downloads/transform-java-2.0.0.txt">release notes</a></td>
++</tr>
++</table>
+
+Deleted: trunk/doc/web/whatsnew.html
+===================================================================
+--- trunk/doc/web/whatsnew.html	2006-07-01 12:10:11 UTC (rev 203)
++++ trunk/doc/web/whatsnew.html	2006-07-01 12:24:42 UTC (rev 204)
+@@ -1,99 +0,0 @@
+-<html>
+<head>
+<meta http-equiv=content-type content="text/html;  charset=ISO-8859-1">
+<title>Flagstone Software :: What's New With Transform SWF</title>
+<link rel="stylesheet" type="text/css" href="/flagstone.css">
+<script language="JavaScript" src="/js/imageload.js"></script>
+<script language="JavaScript" src="/js/imageswap.js"></script>
+</head>
+
+<body>
+<script type='text/javascript'>function Go(){return}</script>
+<script type="text/javascript" src="/js/menu_var.js"></script>
+<script type="text/javascript" src="/js/menu_com.js"></script>
+<noscript>Your browser does not support script</noscript>
+
+<div class="page">
+
+<div class="header">
+<img src="/images/flagstone_header.gif" alt="Flagstone Software" width=760 height=77>
+<table cellpadding="0" cellspacing="0" border="0" class="sitemenu">
+<tr>
+<td width=150 bgcolor="#9A1F31"><a href="/index.html" onmouseover="imageSwap('home', 'homeOn');" onmouseout="imageSwap('home', 'homeOff');"><img src="/images/home_off.gif" alt="[Home]"!
+  width=77 height=29 border=0 name="home"></a></td>
+<td width=29><img src="/images/diagonal_divider.gif" alt="" width=29 height=29></td>
+<td bgcolor="#C43F52"><div id='MenuPos' style='position:left; width:440; height:27;'><img src='/images/spacer.gif' width='440' height='27'></div></td>
+<td bgcolor="#C43F52"><img src='/images/spacer.gif' width='141' height='27'></td>
+</tr>
+</table>
+</div>
+
+<div class="content">
+-
+-<h1>What's New With Transform SWF</h1>
+-
+-<p>Here is a brief summary of all the releases of the Transform SWF framework.
+-The release notes link describe all the features, update and bug fixes included
+-in each release.</P>
+-
+-<table class="release">
+-
+-<tr>
+-<th class="date">Date</th>
+-<th class="version">Version</th>
+-<th>Description</th>
+-<th class="release">Details</th>
+-</tr>
+-
+-<tr class="odd">
+-<td class="date">30th June 2006</td>
+-<td class="version">2.1.3</td>
+-<td class="description">Bugs fixes, updates to the test suites. JAR files for 
+-TestNG are also included.</td>
+-<td class="release"><a href="/downloads/transform-2.1.3.txt">release notes</a>
+-</td>
+-</tr>
+-
+-<tr class="even">
+-<td class="date">3rd April 2006</td>
+-<td class="version">2.1.2</td>
+-<td class="description">Bugs fixes, mostly to the FSTextConstructor class.</td>
+-<td class="release"><a href="/downloads/transform-2.1.2.txt">release notes</a>
+-</td>
+-</tr>
+-
+-<tr class="odd">
+-<td class="date">13th March 2006</td>
+-<td class="version">2.1.1</td>
+-<td class="description">Bug fix for the infinite loop problem when decoding MP3 files.</td>
+-<td class="release"><a href="/downloads/transform-2.1.1.txt">release notes</a>
+-</td>
+-</tr>
+-
+-<tr class="even">
+-<td class="date">7th March 2006</td>
+-<td class="version">2.1</td>
+-<td class="description">Release now integrates Transform Utilities. Brought forward several improvements planned for version 3.0.</td>
+-<td class="release"><a href="/downloads/transform-2.1.txt">release notes</a>
+-</td>
+-</tr>
+-
+-<tr class="odd">
+-<td class="date">20th February 2006</td>
+-<td class="version">2.0.5</td>
+-<td class="description">More bug fixes discovered using new test suites.</td>
+-<td class="release"><a href="/downloads/transform-2.0.5.txt">release notes</a>
+-</td>
+-</tr>
+-
+-<tr class="even">
+-<td class="date">4th October 2005</td>
+-<td class="version">2.0.4</td>
+-<td>Simplified package organisation and fixed coordinate transform bug.</td>
+-<td class="release"><a href="/downloads/transform-java-2.0.4.txt">release notes</a></td>
+-</tr>
+-
+-<tr class="odd">
+-<td class="date">12th October 2004</td>
+-<td class="version">2.0.3</td>
+-<td>Transform SWF is now covered by a BSD license.</td>
+-<td><a href="/downloads/transform-java-2.0.3.txt">release notes</a></td>
+-</tr>
+-
+-<tr class="even">
+-<td class="date">14th June 2004</td>
+-<td class="version">2.0.2</td>
+-<td>Sets the default signature for the FSMovie class correctly. Adds methods to 
+-classes containing actions so binary encoded actions, generated by Translate 
+-AS1, can be added to movies.</td>
+-<td class="release"><a href="/downloads/transform-java-2.0.2.txt">release notes</a></td>
+-</tr>
+-
+-<tr class="odd">
+-<td class="date">6th June 2004</td>
+-<td class="version">2.0.1</td>
+-<td>Fixes a bug in the FSProtect, FSEnableDebugger and FSEnableDebugger2 classes 
+-which fails to decode the password field correctly.</td>
+-<td class="release"><a href="/downloads/transform-java-2.0.1.txt">release notes</a></td>
+-</tr>
+-
+-<tr class="even">
+-<td class="date">6th April 2004</td>
+-<td class="version">2.0.0</td>
+-<td>Completely restructured and overhauled the entire framework to boost performance 
+-and reduce code size.</td>
+-<td class="release"><a href="/downloads/transform-java-2.0.0.txt">release notes</a></td>
+-</tr>
+-</table>
+-
+-</div>
+<div class="footer">
+Copyright 2001-2006, Flagstone Software. All rights reserved. 
+Please read our <a href="/privacy.html">Privacy Policy</a> and 
+<a href="/legal.html">Legal Notices</a>.
+</div>
+</div>
+
+</body>
+</html>
+\ No newline at end of file
+
+
+
+From smackay at berlios.de  Sun Jul  2 13:03:10 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Sun, 2 Jul 2006 13:03:10 +0200
+Subject: [Transform-svn] r205 - in trunk/doc: releases web
+Message-ID: <200607021103.k62B3ALO001900@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-02 13:02:50 +0200 (Sun, 02 Jul 2006)
+New Revision: 205
+
+Added:
+   trunk/doc/releases/transform-pre-2.1.4.txt
+   trunk/doc/releases/transform-pre-2.2.0.txt
+   trunk/doc/releases/transform-pre-3.0.0.txt
+   trunk/doc/web/planned.html
+Removed:
+   trunk/doc/web/roadmap.html
+Log:
+Added table for web site that will contain release notes for upcoming releases.
+
+Added: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,43 @@
++------------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.1.4.
++------------------------------------------------------------
++
++The release will improve the test coverage by adding more TestNG suites and 
++unit test classes.
++
++
++Bug Fixes
++    None scheduled
++
++Class Changes
++    None scheduled
++    
++Testing Changes
++    New unit test classes and suites.
++
++Package Changes
++    Non scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++-----------------
++  Class Changes  
++-----------------
++
++-------------------
++  Testing Changes  
++-------------------
++
++1. New unit test classes and suites.
++
++Test coverage will be improved with classes and suites to perform unit testing 
++for the following classes:
++
++
++-------------------
++  Package Changes  
++-------------------
++
+
+Added: trunk/doc/releases/transform-pre-2.2.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.2.0.txt	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/releases/transform-pre-2.2.0.txt	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,70 @@
++----------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.2.
++----------------------------------------------------------
++
++The release will improve the test coverage by adding more TestNG suites and 
++unit test classes.
++
++
++Bug Fixes
++    None scheduled
++
++Class Changes
++    JPEG Images have width and height.
++    FSFrame - a new class for organizing the timeline within movies.
++    FSLayer - a new class for organizing the animation of objects within movies.
++    
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++-----------------
++  Class Changes  
++-----------------
++
++1. JPEG Images have width and height.
++
++Accessor methods to get the width and height of a JPEG encoded image are 
++added to the FSDefineJPEGImage, FSDefineJPEGImage2 and FSDefineJPEGImage3
++classes.
++
++    public int getWidth();
++    public int getHeight();
++
++No set methods are added, the width and height are decoded from the image data 
++whenver the object is decoded or the setImage() method is used.
++
++2. FSFrame - a new class for organizing the timeline within movies.
++
++FSFrame is an upgraded version of the Frame class currently available on the 
++Useful Code page with the addition of a frame number attribute. 
++
++Grouping together all the objects associated with a frame simplifies greatly the 
++task of creation and editing a movie. However supported numbered frames becomes
++really useful when combined with the new FSLayer class.
++
++3. FSLayer - a new class for organizing the animation of objects within movies.
++
++Currently all the objects must be created and positioned for successive frames.
++This makes creating of complex animations with Transform next to impossible 
++without careful coding.
++
++With the FSLayer class, separate timelines can be created for each object. With
++each frame numbered using the FSFrame class all the layers can easily be aligned 
++and flattened to create the final animation. 
++
++-------------------
++  Testing Changes  
++-------------------
++
++-------------------
++  Package Changes  
++-------------------
++
+
+Added: trunk/doc/releases/transform-pre-3.0.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-3.0.0.txt	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/releases/transform-pre-3.0.0.txt	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,177 @@
++-------------------------------------------------
++  Release Notes for Transform SWF, Version 3.0. 
++-------------------------------------------------
++
++IMPORTANT: This document contains the set of proposed changes for version 3.0 
++of the Transfrom SWF framework. This document will be updated regularly and 
++everything is, of course, subject to change.
++ 
++Introduction
++Over the past year I have been involved in projects that used existing Flash 
++files as a template. Transform was used to decode the file then update or 
++replace objects to create a customised version.
++
++The changes proposed for Transform 3.0 will update the code to include all 
++the lessons learned from this work and also generally clean up the code base - 
++fixing mistakes, dumb decisions and generally making the framework easier to 
++use.
++
++Architecturally the changes should be minor - the same philosophy of 
++providing a low-level API which exposes all the data structures in a Flash file 
++as objects will be maintained. Files will still be generated and parsed in the 
++same way. Most of the changes will essentially be cosmetic - fixing code that 
++simply bad or poorly implemented. As a result migrating code from Transform 2 
++to Transform 3 should be very simple and extensive rewrites will not be 
++necessary.
++
++Class Changes
++
++    Flatten class hierarchy and use interfaces to identify object types.
++    Enforce encapsulation and add support for references.
++    Add factory methods.
++    More use of Java 'native' classes.
++    
++    Rename existing classes:
++    
++        Rename FSGradient to FSGradientColor.
++        Rename FSEnvelope to FSSoundLevel.
++        Rename FSShapeStyle to FSStyle.
++        Rename FSUnknownObject to FSBinaryObject.
++
++    New Classes:
++
++        FSScript - a wrapper for encoded actions generated by Translate.
++        FSEnvelope - a collection class for FSSoundLevels.
++        FSGradient - a collection class for FSGradientColors.
++        FSGlyph - a collection class for font information.
++
++Internal Class Changes
++
++    To be defined
++
++Package Changes
++
++    None planned.
++
++
++-----------------
++  Class Changes
++-----------------
++
++1. Flatten class hierarchy and use interfaces to identify object types.
++
++In short the current class hierarchy: 
++
++    FSTransformObject -> FSMovieObject -> FSDefineObject 
++    
++adds very little to the project. Code reuse is minimal and the overhead slows 
++down the encoding and decoding of files.
++
++To fix this the hierarchy will be flattened to a single level. For code that 
++need to identify where an object was a definition or a display list command Java 
++interfaces will be used to effectively create types of object. For example 
++rather than inheriting from FSTransformObject objects will implement the 
++FSTransformable interface which defines where an object knows how to encode and 
++decode itself from binary data.
++
++Examples of the interfaces that will be defined include:
++
++    public interface Transformable
++    {
++        public int decode(FSCoder coder);
++        public void precode(FSCoder coder);
++        public int encode(FSCoder coder);
++    }
++
++    public interface MovieObject
++    {
++        public int getType();
++        public boolean isDefinition();
++        public boolean isShape();
++        public boolean isImage();
++        public boolean isSound();
++        public boolean isFont();
++        public boolean isText();
++    }
++    
++    public interface DefinitionObject
++    {
++        public int getIdentifier();
++        public void setIdentifier(int identifier);
++    }
++
++The methods, of course, is all subject to change should a better idea come 
++to light.
++
++
++2. Enforce encapsulation and add support for references.
++
++Flash files are simply large data structures. An object in Transform is 
++simply a data structure that knows how to encode and decode itself. As a result 
++a deliberate decision was taken to break encapsulation and support accessor 
++methods that simply used references rather than copies. This avoided the 
++overhead of creating trees of objects whenever the objects in a Flash file were 
++traversed. Enforcing encapsulation would have required creating several trees 
++of objects as the graph was traversed to change for example a small-grained 
++object such as a shape's colour.
++
++The move to use lazily decoded arrays potentially requires encapsulation to 
++be enforced since it would make it explicitly clear when an array of objects 
++was modified and required encoding when a files was saved.
++
++For the 3.0 release the default policy will most likely be that normal 
++get/set accessor methods create copies of objects. Methods will be added to 
++return references so that excessive copying when traversing the object tree is 
++avoided.
++
++
++3. Add factory methods.
++
++Constructors for simple objects such as shape definitions and some display 
++list commands are easy to use. However for multipurpose objects which have 
++optional attributes including constructors for every option is tedious and 
++confusing, FSPlaceObject2 is the obvious culprit. The basic set of constructors
++was standardised in version 2.1. For version 3.0 the factory methods will be
++updated.
++
++
++4. More use of Java 'native' classes.
++
++The FSMovie class is the obvious example of how classes in Transform fail to 
++make use of Java classes. Rather than using File objects the names of Flash 
++files are presented using Strings - which are used internally to create File 
++objects. This situation arose as I wanted to keep the API for the Java and C++ 
++versions as close as possible to minimise the effort of maintaining the code - 
++a poor decision. So Transform 3.0 will make better use of Java objects to provide 
++a more 'natural' API.
++
++
++5. Rename existing classes.
++
++With a new version comes a chance to clean up and ugliness. The following 
++classes will be renamed to make their role clearer and hopefully more intuitive:
++
++Rename FSGradient to FSGradientColor to support the new FSGradient collection 
++class for FSGradientColours - specifying how the colour of a shape changes 
++across the Gradient Square.
++
++Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class 
++for a FSSoundLevels which describes the waveform applied to a sound.
++
++Rename FSShapeStyle to FSStyle - easier to type.
++
++Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly 
++by Transform Utilities classes to generate encoded version of objects.
++
++ 
++6. New Classes
++
++The new classes that will be added in Transform 3.0 are designed to support 
++lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
++FSGradient are  simple collection classes.
++
++FSGlyph is more complicated as it will support all the information that 
++describes a font glyph: shape, advance, character code and bounding box. This 
++will simply the use of the FSTextConstructor class in Tranform Utilities and 
++handling of the FSDefineFont2 class in Transform.
++
+
+Added: trunk/doc/web/planned.html
+===================================================================
+--- trunk/doc/web/planned.html	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/web/planned.html	2006-07-02 11:02:50 UTC (rev 205)
+@@ -0,0 +1,39 @@
++<table class="release">
++
++<tr>
++<th class="date">Planned Date</th>
++<th class="date">Last Updated</th>
++<th class="version">Version</th>
++<th>Description</th>
++<th class="release">Details</th>
++</tr>
++
++<tr class="odd">
++<td class="date">31st July 2006</td>
++<td class="date">2nd July 2006</td>
++<td class="version">2.1.4</td>
++<td class="description">Add more unit test suites. Bug Fixes</td>
++<td class="release"><a href="/downloads/transform-pre-2.1.4.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="even">
++<td class="date">Q3 2006</td>
++<td class="date">2nd July 2006</td>
++<td class="version">2.2.0</td>
++<td class="description">New classes to simplify creating and organiding movies; 
++JPEG images have width and height; Bug Fixes.</td>
++<td class="release"><a href="/downloads/transform-pre-2.2.0.txt">release notes</a>
++</td>
++</tr>
++
++<tr class="odd">
++<td class="date">Q4 2006</td>
++<td class="date">2nd July 2006</td>
++<td class="version">3.0.0</td>
++<td class="description">Improved design.</td>
++<td class="release"><a href="/downloads/transform-pre-3.0.0.txt">release notes</a>
++</td>
++</tr>
++
++</table>
+
+Deleted: trunk/doc/web/roadmap.html
+===================================================================
+--- trunk/doc/web/roadmap.html	2006-07-01 12:24:42 UTC (rev 204)
++++ trunk/doc/web/roadmap.html	2006-07-02 11:02:50 UTC (rev 205)
+@@ -1,289 +0,0 @@
+-<html>
+<head>
+<meta http-equiv=content-type content="text/html;  charset=ISO-8859-1">
+<title>Flagstone Software :: Road Map for Transform SWF</title>
+<link rel="stylesheet" type="text/css" href="/flagstone.css">
+<script language="JavaScript" src="/js/imageload.js"></script>
+<script language="JavaScript" src="/js/imageswap.js"></script>
+</head>
+
+<body>
+<script type='text/javascript'>function Go(){return}</script>
+<script type="text/javascript" src="/js/menu_var.js"></script>
+<script type="text/javascript" src="/js/menu_com.js"></script>
+<noscript>Your browser does not support script</noscript>
+
+<div class="page">
+
+<div class="header">
+<img src="/images/flagstone_header.gif" alt="Flagstone Software" width=760 height=77>
+<table cellpadding="0" cellspacing="0" border="0" class="sitemenu">
+<tr>
+<td width=150 bgcolor="#9A1F31"><a href="/index.html" onmouseover="imageSwap('home', 'homeOn');" onmouseout="imageSwap('home', 'homeOff');"><img src="/images/home_off.gif" alt="[Home]" wi!
+ dth=77 height=29 border=0 name="home"></a></td>
+<td width=29><img src="/images/diagonal_divider.gif" alt="" width=29 height=29></td>
+<td bgcolor="#C43F52"><div id='MenuPos' style='position:left; width:440; height:27;'><img src='/images/spacer.gif' width='440' height='27'></div></td>
+<td bgcolor="#C43F52"><img src='/images/spacer.gif' width='141' height='27'></td>
+</tr>
+</table>
+</div>
+
+<div class="content">
+-
+-<h1>Road Map for Transform SWF</h1>
+-
+-<p><b>Last Updated: </b>4th March 2006</p>
+-
+-<p> Here is the proposed sets of changes to the existing release and plans for 
+-features that will be included in the next major release of Transform. As always, 
+-plans are subject to change. Any suggestions, good ideas or complaints are 
+-welcome.</p>
+-
+-<h2>Planned Changes for Transform 2.1 (Released 7th March 2006)</h2>
+-
+-<ol>
+-<li>Deprecate the MovieListener interface and classes.</li>
+-<li>Integrate Transform Utilties classes to create a unified release.</li>
+-<li>A new class, FSCoderException will report errors when encoding and decoding files.</li>
+-<li>Lazy decoding of arrays.</li>
+-<li>Create canonical versions of simple objects.</li>
+-</ol>
+-   
+-<h3>Deprecate the Movie Listener interface and classes.</h3>
+-<p>The FSMovieListener interface was originally used to support Describe. When a 
+-movie was parsed the values decoded were reported to a FSMovieListener. This 
+-allowed Describe to build a tree of objects so the contents of a Flash file 
+-could be browsed.</p>
+-
+-<p>The interface also allowed errors to be reported so a file could be decoded 
+-even if part of it was corrupted - some third-party tools are known to contain 
+-bugs that generate errors. The Flash Player is robust when encountering this 
+-type of error so the Movie Listener interface was an attempt to introduce 
+-robustness into Transform.</p>
+-
+-<p>In practice the value of the interface was limited. Files containing errors 
+-which would cause errors were relatively unusual and when an error was detected 
+-it was not obvious that recovering form the error was useful.</p>
+-
+-<p>The Movie Listener interface will be deprecated for version 2.1 then removed 
+-in version 2.2. The classes affected are FSCoder, FSMovie, FSMovieListener and 
+-FSMovieEvent.</p>
+-
+-<h3>Integrate Transform Utilities classes to create a unified release.</h3>
+-
+-<p>For Transform 2.1 the Transform Utilities classes will be included into 
+-releases of the Transform framework. Previous editions of the roadmap proposed
+-merging the packages together however the benefits do not justify the changes
+-to existing code - though only import statements would be affected.</p>
+-
+-<h3>A new class, FSCoderException will report errors when encoding and decoding files.</h3>
+-
+-<p>If an error occurs when encoding or decoding a movie then an IOException is 
+-reported (in methods where MovieListener is not used). A new exception class 
+-FSCoderException will be used to report the object and location in the file 
+-that causes the error. This will give the benefits that the MovieListener
+-interface provided by accurately reporting the location in a file so that the 
+-error can be debugged. The exception will be a subclass of IOException so no API
+-changes are required.</P>
+-
+-<h3>Lazy decoding of arrays.</h3>
+-
+-<p>When using a Flash file as a template the changes are at a high level, for 
+-example replacing images, sounds, shapes and text. As a result decoding the 
+-small-grain objects in a file is a waste of resources. Examples of small grain 
+-objects are:
+-
+-<ul>
+-<li>Actions</li>
+-<li>Line and fill styles</li>
+-<li>Shape elements: FSLine, FSCurve and FSShapeStyle</li>
+-<li>Sound envelopes</li>
+-<li>Gradient Fills</li>
+-<li>Text Characters</li>
+-</ul>
+-</p>
+-
+-<p>Arrays containing small-grained objects will be lazily decoded when an 
+-accessor method is used for the first time to access the array. The decoding 
+-process will be completely hidden and the use of some of the new collection 
+-classes, see below should simplify the process.</p>
+-
+-<p>Originally this idea was planned for Transform 3.0 however in a quiet moment
+-I tried it for actions and shapes (in shape definitions and fonts). The 
+-performance gains are enormous. Benchmarked on a suite of nearly 400 "real-world"
+-Flash files the speed of decoding a file was between 0 and 420 times faster!!! 
+-The larger the file the more impressive the figure. The average improvement was 
+-still 15 times.</p>
+-
+-<P>So lazy decoding of actions and shapes are in for release 2.1. Lazy decoding
+-of line and fill styles, gradients and text are probably not worth it given 
+-that the number of objects involved is small - it might not be worthwhile even
+-for version 3.0.</p>
+-
+-<h3>Create canonical versions of simple objects.</h3>
+-
+-<p>Another optimisation that should speed up the process of decoding Flash files 
+-is to replace constant objects with canonical versions. Byte-code actions, 
+-created using the FSAction class are the obvious example. Rather than creating 
+-repeated copies of objects representing simple operations such as additions, 
+-class methods such as FSAction.Add() will return a reference to a constant 
+-singleton.</p>
+-
+-<p>This update is trivial in comparison to lazy decoding of actions but it 
+-should make a difference if only in Translate which deals with nothing but
+-actions, particularly if the compiler is being used on a server to compile 
+-large numbers of scripts.</p>
+-
+-<h2>Proposed Changes for Transform 3.0</h2>
+-<p>Over the past year I have been involved in projects that used existing Flash 
+-files as a template. Transform was used to decode the file then update or 
+-replace objects to create a customised version.</p>
+-
+-<p>The changes proposed for Transform 3.0 will update the code to include all 
+-the lessons learned from this work and also generally clean up the code base - 
+-fixing mistakes, dumb decisions and generally making the framework easier to 
+-use.</p>
+-
+-<p>Architecturally the changes should be minor - the same philosophy of 
+-providing a low-level API which exposes all the data structures in a Flash file 
+-as objects will be maintained. Files will still be generated and parsed in the 
+-same way. Most of the changes will essentially be cosmetic - fixing code that 
+-simply bad or poorly implemented. As a result migrating code from Transform 2 
+-to Transform 3 should be very simple and extensive rewrites will not be 
+-necessary.</p>
+-
+-<p>The current list of changes are:
+-
+-<ul>
+-<li>Flatten class hierarchy and use interfaces to identify object types.</li>
+-<li>Enforce encapsulation and add support for references.</li>
+-<li>Simplify constructors and add factory methods.</li>
+-<li>More use of Java 'native' classes.</li>
+-<li>Changes to existing classes.
+-<ul>
+-<li>Rename FSGradient to FSGradientColor.</li>
+-<li>Rename FSEnvelope to FSSoundLevel.</li>
+-<li>Rename FSShapeStyle to FSStyle.</li>
+-<li>Rename FSUnknownObject to FSBinaryObject.</li>
+-</ul>
+-</li>
+-<li>New Classes
+-<ul>
+-<li>FSFrame - similar to the Frame class on the Useful Code page.</li>
+-<li>FSLayer - a collection class for Frames.</li>
+-<li>FSScript - a wrapper for encoded actions generated by Translate.</li>
+-<li>FSEnvelope - a collection class for FSSoundLevels.</li>
+-<li>FSGradient - a collection class for FSGradientColors.</li>
+-<li>FSGlyph - a collection class for font information.</li>
+-</ul>
+-</li>
+-</ul>
+-      
+-<h3>Flatten class hierarchy and use interfaces to identify object types.</h3>
+-
+-<p>In short the current class hierarchy: FSTransformObject -> FSMovieObject -> 
+-FSDefineObject adds very little to the project. Code reuse is minimal and the 
+-overhead slows down the encoding and decoding of files.</p>
+-
+-<p>To fix this the hierarchy will be flattened to a single level. For code that 
+-need to identify where an object was a definition or a display list command Java 
+-interfaces will be used to effectively create types of object. For example 
+-rather than inheriting from FSTransformObject objects will implement the 
+-FSTransformable interface which defines where an object knows how to encode and 
+-decode itself from binary data.</p>
+-
+-<p>Examples of the interfaces that will be defined include:
+-
+-<pre>
+-public interface Transformable
+-{
+-    public int decode(FSCoder coder);
+-    public void precode(FSCoder coder);
+-    public int encode(FSCoder coder);
+-}
+-
+-public interface MovieObject
+-{
+-    public int getType();
+-    public boolean isDefinition();
+-    public boolean isShape();
+-    public boolean isImage();
+-    public boolean isSound();
+-    public boolean isFont();
+-    public boolean isText();
+-}
+-public interface DefinitionObject
+-{
+-    public int getIdentifier();
+-    public void setIdentifier(int identifier);
+-}
+-</pre>
+-</P>
+-
+-<p>The methods, of course, is all subject to change should a better idea come 
+-to light.</p>
+-
+-<h3>Enforce encapsulation and add support for references.</h3>
+-
+-<p>Flash files are simply large data structures. An object in Transform is 
+-simply a data structure that knows how to encode and decode itself. As a result 
+-a deliberate decision was taken to break encapsulation and support accessor 
+-methods that simply used references rather than copies. This avoided the 
+-overhead of creating trees of objects whenever the objects in a Flash file were 
+-traversed. Enforcing encapsulation would have required creating several trees 
+-of objects as the graph was traversed to change for example a small-grained 
+-object such as a shape's colour.</p>
+-
+-<p>The move to use lazily decoded arrays potentially requires encapsulation to 
+-be enforced since it would make it explicitly clear when an array of objects 
+-was modified and required encoding when a files was saved.</p>
+-
+-<p>For the 3.0 release the default policy will most likely be that normal 
+-get/set accessor methods create copies of objects. Methods will be added to 
+-return references so that excessive copying when traversing the object tree is 
+-avoided.</p>
+-
+-<h3>Simplify constructors and add factory methods.</h3>
+-
+-<p>Constructors for simple objects such as shape definitions and some display 
+-list commands are easy to use. However for multipurpose objects which have 
+-optional attributes including constructors for every option is tedious and 
+-confusing, FSPlaceObject2 is the obvious culprit.</p>
+-
+-<p>For Transform 3.0 it is proposed to include a fixed, basic set of 
+-constructors then add factory methods to generate objects with specific set of 
+-attributes. The current basic set of constructors includes:</p>
+-
+-<pre>
+-   FSObject()                 /* create with default values */
+-   FSObject(values...)        /* create with a specific set of values */
+-   FSObject(FSCoder coder)    /* initialise from binary encoded data */
+-   FSObject(FSObject object)  /* copy constructor */
+-</pre>
+-
+-<p>The copy constructor will be used to replace the clone() method, largely for 
+-aesthetic reasons.</p>
+-
+-<h3>More use of Java 'native' classes.</h3>
+-
+-<p>The FSMovie class is the obvious example of how classes in Transform fail to 
+-make use of Java classes. Rather than using File objects the names of Flash 
+-files are presented using Strings - which are used internally to create File 
+-objects. This situation arose as I wanted to keep the API for the Java and C++ 
+-versions as close as possible to minimise the effort of maintaining the code - 
+-a poor decision. So Transform 3.0 will make better use of Java objects to provide 
+-a more 'natural' API.</p>
+-
+-<h3>Changes to existing classes.</h3>
+-
+-<p>With a new version comes a chance to clean up and ugliness. The following 
+-classes will be renamed to make their role clearer and hopefully more intuitive:</p>
+-
+-<ul>
+-<li>Rename FSGradient to FSGradientColor to support the new FSGradient collection class for FSGradientColours - specifying how the colour of a shape changes across the Gradient Square.</li>
+-<li>Rename FSEnvelope to FSSoundLevel to support the new FSEnvelope collection class for a FSSoundLevels which describes the waveform applied to a sound.</li>
+-<li>Rename FSShapeStyle to FSStyle - easier to type.</li>
+-<li>Rename FSUnknownObject to FSBinaryObject - binary objects can be used explicitly by Transform Utilities classes to generate encoded version of objects.</li>
+-</ul>
+- 
+-<h3>New Classes</h3>
+-
+-<p>The new classes that will be added in Transform 3.0 are designed to support 
+-lazy decoding of arrays of small-grained objects.  FSScript, FSEnvelope, 
+-FSGradient are  simple collection classes.</p>
+-
+-<p>FSGlyph is more complicated as it will support all the information that 
+-describes a font glyph: shape, advance, character code and bounding box. This 
+-will simply the use of the FSTextConstructor class in Tranform Utilities and 
+-handling of the FSDefineFont2 class in Transform.</p>
+-
+-<p>The two most interesting new classes are FSFrame and FSLayer. FSFrame is an 
+-upgraded version of the Frame class currently available on the Useful Code page. 
+-Adding a frame number attribute increases the potential uses of Transform 
+-enormously:</p>
+-
+-<ul>
+-<li>Adding code to Transform to support animation of objects now becomes much 
+-easier: simply create two frames defining the start and final positions of an 
+-object then pass then to a method (yet to be defined) to interpolate the 
+-object's position as the animation is played frame-by-frame.</li>
+-<li>When combined with the Layer object it simplifies creating animations. 
+-Separate layers for each object to be animated can be created. Including the 
+-number in each frame object allows a collection of Layers to be easily 
+-flattened to create the final animation. Currently all the objects must be 
+-created and positioned for successive frames - this makes creating of complex 
+-animations with Transform next to impossible without careful coding.</li>
+-</ul>
+-
+-    
+-      </div>
+<div class="footer">
+Copyright 2001-2005, Flagstone Software. All rights reserved. 
+Please read our <a href="/privacy.html">Privacy Policy</a> and 
+<a href="/legal.html">Legal Notices</a>.
+</div>
+</div>
+
+</body>
+</html>
+\ No newline at end of file
+
+
+
+From smackay at berlios.de  Mon Jul  3 10:40:24 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Mon, 3 Jul 2006 10:40:24 +0200
+Subject: [Transform-svn] r206 - trunk/doc/web
+Message-ID: <200607030840.k638eOE1022636@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-03 10:40:20 +0200 (Mon, 03 Jul 2006)
+New Revision: 206
+
+Modified:
+   trunk/doc/web/issues.html
+Log:
+Correct summaries of bug to past tense.
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-07-02 11:02:50 UTC (rev 205)
++++ trunk/doc/web/issues.html	2006-07-03 08:40:20 UTC (rev 206)
+@@ -30,7 +30,7 @@
+ <div class="content">
+ 
+ <H1>Transform SWF: Known Issues &amp; Bugs</H1>
+-<P>Version: 2.1.2<BR/>Updated: 28th June 2006</P>
++<P>Version: 2.1.3<BR/>Updated: 3rd July 2006</P>
+ 
+ <TABLE width="100%">
+ 
+@@ -66,51 +66,51 @@
+ <TBODY>
+ 
+ <TR>
+-<TD>1. TextDump Tool does not decode NewFunction and NewFunction2 actions correctly.</TD>
++<TD>1. TextDump Tool decodes NewFunction and NewFunction2 actions correctly.</TD>
+ <TD>Fixed</TD>
+ <TD>2.1.3</TD>
+ </TR>
+ 
+ <TR>
+-<TD>2. FSDefineJPEG2 and FSDefineJPEG3 do not allow null encoding tables.</TD>
++<TD>2. FSDefineJPEG2 and FSDefineJPEG3 allows null encoding tables.</TD>
+ <TD>Fixed</TD>
+ <TD>2.1.3</TD>
+ </TR>
+ 
+ <TR>
+-<TD>3. FSCoder throws exception when adding bytes longer than the current buffer size.</TD>
++<TD>3. FSCoder resize buffer correctly when writing binary data.</TD>
+ <TD>Fixed</TD>
+ <TD>2.1.3</TD>
+ </TR>
+ 
+ <TR>
+-<TD>4. FSButtonSound RollOver and RollOut sounds are swapped.</TD>
++<TD>4. FSButtonSound RollOver and RollOut sounds now in the correct order.</TD>
+ <TD>Fixed</TD>
+ <TD>2.1.3</TD>
+ </TR>
+ 
+ <TR>
+-<TD>5. The equals() method on FSPlaceObject2 objects with encoded clip event is not accurate.</TD>
++<TD>5. The equals method on FSPlaceObject2 now compares encoded clip events.</TD>
+ <TD>Fixed</TD>
+ <TD>2.1.3</TD>
+ </TR>
+ 
+ <TR>
+-<TD>6. The copy constructor on FSProtect can cause a NullPointerException.</TD>
++<TD>6. The copy constructor on FSProtect now works with null passwords.</TD>
+ <TD>Fixed</TD>
+ <TD>2.1.3</TD>
+ </TR>
+ 
+ <TR>
+-<TD>7. FSTextConstructor does not sort font codes.</TD>
++<TD>7. FSSoundConstructor goes into infinite loop when decoding MP3 files.</TD>
+ <TD>Fixed</TD>
+-<TD>2.1</TD>
++<TD>2.1.1</TD>
+ </TR>
+ 
+ <TR>
+-<TD>8. FSSoundConstructor goes into infinite loop when decoding MP3 files.</TD>
++<TD>8. FSTextConstructor does not sort font codes.</TD>
+ <TD>Fixed</TD>
+-<TD>2.1.1</TD>
++<TD>2.1</TD>
+ </TR>
+ 
+ </TBODY>
+@@ -226,9 +226,21 @@
+ <p>The copy constructor now correctly tests the password attribute to see if 
+ it is null before creating a copy of the String.</p>
+ 
++<H3>7. FSSoundConstructor goes into infinite loop when decoding MP3 files.</H3>
++
++<P>With the release of Transform 2.1.1 the infinite loop problem caused by meta 
++data at the end of an MP3 being incorrectly interpreted is now fixed.</P>
++
++<P>MP3 files with ID3 version 1 meta data was defeating the findBits method 
++which was searching for the start of frame marker (0x7FF). In combination with 
++a bug in FSCoder which prevent buffer overflows when reading the data, the 
++search would get stuck at the end of the buffer with no way of terminating.</P>
++
++<P>The FSSoundConstructor is now able to deal with the different ID3 versions.</P>
++
+ <div class="hr"><hr/></div>
+ 
+-<H3>7. TextConstructor now sorts font codes.</H3>
++<H3>8. TextConstructor now sorts font codes.</H3>
+ 
+ <P>With the release of Transform SWF 2.1 the FSTextConstructor class now 
+ generated characters codes sorted correctly in ascending order.</P>
+@@ -249,20 +261,6 @@
+ 
+ <div class="hr"><hr/></div>
+ 
+-<H3>8. FSSoundConstructor goes into infinite loop when decoding MP3 files.</H3>
+-
+-<P>With the release of Transform 2.1.1 the infinite loop problem caused by meta 
+-data at the end of an MP3 being incorrectly interpreted is now fixed.</P>
+-
+-<H4>Root Cause</H4>
+-
+-<P>MP3 files with ID3 version 1 meta data was defeating the findBits method 
+-which was searching for the start of frame marker (0x7FF). In combination with 
+-a bug in FSCoder which prevent buffer overflows when reading the data, the 
+-search would get stuck at the end of the buffer with no way of terminating.</P>
+-
+-<P>The FSSoundConstructor is now able to deal with the different ID3 versions.</P>
+-
+ </div>
+ <div class="footer">
+ Copyright 2001-2006, Flagstone Software. All rights reserved. 
+
+
+
+From smackay at berlios.de  Fri Jul  7 11:35:00 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Fri, 7 Jul 2006 11:35:00 +0200
+Subject: [Transform-svn] r207 - trunk/src/com/flagstone/transform
+Message-ID: <200607070935.k679Z0vq022999@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-07 11:34:57 +0200 (Fri, 07 Jul 2006)
+New Revision: 207
+
+Modified:
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+   trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+Log:
+Fixed bug when setting the encoding table.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-07-03 08:40:20 UTC (rev 206)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage2.java	2006-07-07 09:34:57 UTC (rev 207)
+@@ -181,7 +181,7 @@
+     public void setEncodingTable(byte[] bytes)
+     {
+         if (bytes == null) {
+-            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+         }
+         encodingTable = bytes;
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-07-03 08:40:20 UTC (rev 206)
++++ trunk/src/com/flagstone/transform/FSDefineJPEGImage3.java	2006-07-07 09:34:57 UTC (rev 207)
+@@ -195,7 +195,7 @@
+     public void setEncodingTable(byte[] bytes)
+     {
+         if (bytes == null) {
+-            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
+         }
+         encodingTable = bytes;
+     }
+
+
+
+From smackay at berlios.de  Fri Jul  7 11:35:46 2006
+From: smackay at berlios.de (smackay at berlios.de)
+Date: Fri, 7 Jul 2006 11:35:46 +0200
+Subject: [Transform-svn] r208 - in trunk/doc: releases web
+Message-ID: <200607070935.k679ZkpZ023149@sheep.berlios.de>
+
+Author: smackay
+Date: 2006-07-07 11:35:41 +0200 (Fri, 07 Jul 2006)
+New Revision: 208
+
+Modified:
+   trunk/doc/releases/transform-pre-2.1.4.txt
+   trunk/doc/web/issues.html
+Log:
+Posted report of encoding table bug, work around and updated release notes for 2.1.4 listing fix.
+
+Modified: trunk/doc/releases/transform-pre-2.1.4.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.1.4.txt	2006-07-07 09:34:57 UTC (rev 207)
++++ trunk/doc/releases/transform-pre-2.1.4.txt	2006-07-07 09:35:41 UTC (rev 208)
+@@ -7,7 +7,7 @@
+ 
+ 
+ Bug Fixes
+-    None scheduled
++    Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
+ 
+ Class Changes
+     None scheduled
+@@ -23,6 +23,13 @@
+   Bug Fixes  
+ -------------
+ 
++1. Error in setting encoding table for FSDefineJPEGImage2 and FSDefineJPEGImage3.
++
++When a null reference is passed to the setEncodingTable method on the classes
++FSDefineJPEGImage2 and FSDefineJPEGImage3 an empty encoding table is created
++and assigned to the instance variable. However a programming error meant that 
++the table was create but not assigned correctly. This is now fixed.
++
+ -----------------
+   Class Changes  
+ -----------------
+
+Modified: trunk/doc/web/issues.html
+===================================================================
+--- trunk/doc/web/issues.html	2006-07-07 09:34:57 UTC (rev 207)
++++ trunk/doc/web/issues.html	2006-07-07 09:35:41 UTC (rev 208)
+@@ -30,7 +30,7 @@
+ <div class="content">
+ 
+ <H1>Transform SWF: Known Issues &amp; Bugs</H1>
+-<P>Version: 2.1.3<BR/>Updated: 3rd July 2006</P>
++<P>Version: 2.1.3<BR/>Updated: 7th July 2006</P>
+ 
+ <TABLE width="100%">
+ 
+@@ -44,8 +44,14 @@
+ 
+ <TBODY>
+ 
++<TR>
++<TD>1. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.</TD>
++<TD>Open</TD>
++<TD>2.1.4</TD>
++</TR>
++
+ <TR>
+-<TD>1. FSTextConstructor does not decode complex glyphs from OpenType fonts.</TD>
++<TD>2. FSTextConstructor does not decode complex glyphs from OpenType fonts.</TD>
+ <TD>Open</TD>
+ <TD>Open</TD>
+ </TR>
+@@ -120,7 +126,48 @@
+ 
+ <h2>Current Issues</h2>
+ 
+-<H3>1. FSTextConstructor does not decode complex glyphs from OpenType fonts.</H3>
++<H3>1. Error setting encoding table in FSDefineJPEGImage2 and FSDefineJPEGImage3.</H3>
++
++<P>The setEncodingTable() method in each class checks for a null argument and 
++creates an empty encodeing table so the object can be successfully encoded.
++However the null argument is assigned to the instance variable and not the newly
++created table:</P>
++
++<pre>
++    public void setEncodingTable(byte[] bytes)
++    {
++        if (bytes == null) {
++            encodingTable = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++        }
++        encodingTable = bytes;
++    }
++</pre>
++
++<H4>Root Cause</H4>
++
++<P>Simple programming error.</P>
++
++<H4>Workaround?</H4>
++
++<P>Correct the method so the table is assigned to the instance variable:</P>
++
++<pre>
++    public void setEncodingTable(byte[] bytes)
++    {
++        if (bytes == null) {
++            bytes = new byte[] { (byte)0xFF, (byte)0xD8, (byte)0xFF, (byte)0xD9 };
++        }
++        encodingTable = bytes;
++    }
++</pre>
++
++<H4>When will it be fixed?</H4>
++
++<P>This will be released in version 2.1.4 due at the end of July.</P>
++
++<div class="hr"><hr/></div>
++
++<H3>2. FSTextConstructor does not decode complex glyphs from OpenType fonts.</H3>
+ 
+ <P>The OpenType format for defining fonts allows new glyphs to be defined by 
+ combining existing glyphs to form complex shapes. The FSTextConstructor class 
+
+
+

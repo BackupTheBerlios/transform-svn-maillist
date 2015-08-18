@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r255 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r255%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200701051723.l05HNeCD031478%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000190.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r255 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r255%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200701051723.l05HNeCD031478%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r255 - trunk/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Fri Jan  5 18:23:40 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000190.html">[Transform-svn] r254 - dev/dev-2-2
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#191">[ date ]</a>
+              <a href="thread.html#191">[ thread ]</a>
+              <a href="subject.html#191">[ subject ]</a>
+              <a href="author.html#191">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-01-05 18:23:34 +0100 (Fri, 05 Jan 2007)
+New Revision: 255
+
+Modified:
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+Log:
+Added main() method to FSMovieTest to allow tests to be run from
+the command line.
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2007-01-03 15:40:51 UTC (rev 254)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2007-01-05 17:23:34 UTC (rev 255)
+@@ -30,6 +30,7 @@
+ package com.flagstone.transform.test;
+ 
+ import java.io.*;
++import java.lang.reflect.*;
+ 
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.tools.*;
+@@ -39,6 +40,65 @@
+     private static String newline = System.getProperty(&quot;line.separator&quot;);
+     private static int iterations = 100;
+     
++    /**
++     * The main method allows the tests to be run outside of the TestNG 
++     * environment. Usage:
++     * 
++     *  FSMovieTest --test &lt;name&gt; --src &lt;path&gt; [--dst &lt;path&gt;] [--log &lt;path&gt;]
++     *  
++     *  where,
++     * 
++     *   --tst &lt;name&gt; - the name of the test to be executed.
++     *   --src &lt;path&gt; - the source directory where the flash files may be found.
++     *   --dst &lt;path&gt; - the destination directory where files will be written to.
++     *   --log &lt;path&gt; - the path to a log file where information about the test is recorded. optional.
++     *   
++     * The --dst option is not used when tests decoding Flash files are run.
++     * The --log option is only used when running the benchmark tests.
++     *   
++     * @param args arguments passed to the class when executed.
++     */
++    public static void main(String[] args)
++    {
++        try
++        {
++            String testName = null;
++            String srcPath = null;
++            String dstPath = null;
++            String logPath = null;
++            
++            int count = args.length-1;
++            
++            for (int i=0; i&lt;count; i++)
++            {
++                if (args[i].equals(&quot;--tst&quot;))
++                    testName = args[i+1];
++                else if (args[i].equals(&quot;--src&quot;))
++                    srcPath = args[i+1];
++                else if (args[i].equals(&quot;--dest&quot;))
++                    dstPath = args[i+1];
++                else if (args[i].equals(&quot;--log&quot;))
++                    logPath = args[i+1];
++            }
++            
++            FSMovieTest test = new FSMovieTest();
++            Method method = test.getClass().getMethod(testName, new Class[] { String.class });        
++            
++            test.configure(srcPath, dstPath, logPath);
++            Object[][] files = test.findFiles();
++    
++            for (int i=0; i&lt;files.length; i++) {
++                method.invoke(test, files[i]);
++            }
++            
++            test.finish();
++        }
++        catch (Throwable t)
++        {
++            System.err.println(t);
++        }
++    }
++    
+     private File sourceDir = null;
+     private File destDir = null;
+     private File log = null;
+@@ -56,13 +116,19 @@
+      */
+     public void configure(String srcDir, String dstDir, String logFile)
+     {
++        assert srcDir != null &amp;&amp; srcDir.length() &gt; 0 : &quot;No source directory specified&quot;;
++        
+         sourceDir = new File(srcDir);
+-        destDir = new File(dstDir);
+-        
+-        if (destDir.getPath().length() &gt; 0 &amp;&amp; destDir.exists() == false)
+-            assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++
++        if (dstDir != null &amp;&amp; dstDir.length() &gt; 0)
++        {
++            destDir = new File(dstDir);
+             
+-        if (logFile.length() &gt; 0)
++            if (destDir.exists() == false)
++                assert destDir.mkdirs() : &quot;Count not create destination directory: &quot;+destDir;
++        }
++            
++        if (logFile != null &amp;&amp; logFile.length() &gt; 0)
+         {
+             log = new File(logFile);
+             buffer = new StringBuffer();
+@@ -73,7 +139,7 @@
+      */
+     public void finish()
+     {
+-        if (buffer != null)
++        if (log != null)
+         {
+             try
+             {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000190.html">[Transform-svn] r254 - dev/dev-2-2
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#191">[ date ]</a>
+              <a href="thread.html#191">[ thread ]</a>
+              <a href="subject.html#191">[ subject ]</a>
+              <a href="author.html#191">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

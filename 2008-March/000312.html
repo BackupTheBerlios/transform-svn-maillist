@@ -1,0 +1,492 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r376%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182128.m2ILSH3P031752%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000311.html">
+   <LINK REL="Next"  HREF="000313.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r376%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182128.m2ILSH3P031752%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r376 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 22:28:17 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000311.html">[Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000313.html">[Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#312">[ date ]</a>
+              <a href="thread.html#312">[ thread ]</a>
+              <a href="subject.html#312">[ subject ]</a>
+              <a href="author.html#312">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 22:28:14 +0100 (Tue, 18 Mar 2008)
+New Revision: 376
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSKerning.java
+Log:
+updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSKerning.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSKerning.java	2008-03-18 21:20:27 UTC (rev 375)
++++ dev/dev-2-4/src/com/flagstone/transform/FSKerning.java	2008-03-18 21:28:14 UTC (rev 376)
+@@ -31,183 +31,263 @@
+ package com.flagstone.transform;
+ 
+ /**
+-FSKerning describes the spacing between a pair of glyphs. 
++ * FSKerning describes the spacing between a pair of glyphs.
++ * 
++ * &lt;p&gt;
++ * The kerning is used to fine-tune the spacing between specific pairs of
++ * characters to make them visually more appealing. The glyphs are identified by
++ * an index into the glyph table for the font. The adjustment is specified
++ * relative to the advance define for the left glyph.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;leftIndex&lt;/td&gt;
++ * &lt;td&gt;The index into the code table that identifies the glyph on the left side
++ * of the pair.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;rightIndex&lt;/td&gt;
++ * &lt;td&gt;The index into a code table that identifies the glyph on the right side
++ * of the pair.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;adjustment&lt;/td&gt;
++ * &lt;td&gt;The adjustment in twips that will be added to the advance for the glyph
++ * on the left side of the pair to obtain the final spacing between the glyphs.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * FSKerning objects are only used within FSDefineFont2 objects and provide more
++ * precise control over the layout of a font's glyph than was possible using the
++ * FSDefineFont and FSFontInfo objects.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * FSKerning class represents the KerningRecord from the Macromedia Flash (SWF)
++ * File Format Specification. It was introduced in Flash 2.
++ * &lt;/p&gt;
++ */
++public class FSKerning implements Cloneable, Codeable
++{
++	private int leftIndex = 0;
++	private int rightIndex = 0;
++	private int adjustment = 0;
+ 
+-&lt;p&gt;The kerning is used to fine-tune the spacing between specific pairs of characters to make them visually more appealing. The glyphs are identified by an index into the glyph table for the font. The adjustment is specified relative to the advance define for the left glyph.&lt;/p&gt;
++	/**
++	 * Construct an FSKerning object, initialising it with values decoded from an
++	 * encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSKerning(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Constructs an FSKerning object specifying the glyph indexes and
++	 * adjustment. The value for the adjustment must be specified in twips.
++	 * 
++	 * @param leftIndex
++	 *            the index in a code table for the glyph on the left side of
++	 *            the pair.
++	 * @param rightIndex
++	 *            the index in a code table for the glyph on the right side of
++	 *            the pair.
++	 * @param adjust
++	 *            the adjustment that will be added to the advance defined for
++	 *            the left glyph.
++	 */
++	public FSKerning(int leftIndex, int rightIndex, int adjust)
++	{
++		setLeftGlyphIndex(leftIndex);
++		setRightGlyphIndex(rightIndex);
++		setAdjustment(adjust);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSKerning object by copying values from an existing object.
++	 * 
++	 * @param obj
++	 *            an FSKerning object.
++	 */
++	public FSKerning(FSKerning obj)
++	{
++		leftIndex = obj.leftIndex;
++		rightIndex = obj.rightIndex;
++		adjustment = obj.adjustment;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSKerning_0&quot;&gt;leftGlyphIndex&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The index into the code table that identifies the glyph on the left side of the pair.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the index of the left glyph in the kerning pair.
++	 * 
++	 * @return the index in a code table for the glyph on the left side of the
++	 *         pair.
++	 */
++	public int getLeftGlyphIndex()
++	{
++		return leftIndex;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSKerning_1&quot;&gt;rightGlyphIndex&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The index into a code table that identifies the glyph on the right side of the pair.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the index of the right glyph in the kerning pair.
++	 * 
++	 * @return the index in a code table for the glyph on the right side of the
++	 *         pair.
++	 */
++	public int getRightGlyphIndex()
++	{
++		return rightIndex;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSKerning_2&quot;&gt;adjustment&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The adjustment in twips that will be added to the advance for the glyph on the left side of the pair to obtain the final spacing between the glyphs.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Gets the adjustment, in twips, to the advance of the left glyph.
++	 * 
++	 * @return the adjustment that will be added to the advance defined for the
++	 *         left glyph.
++	 */
++	public int getAdjustment()
++	{
++		return adjustment;
++	}
+ 
+-&lt;/table&gt;
++	/**
++	 * Sets the index of the left glyph in the kerning pair.
++	 * 
++	 * @param anIndex
++	 *            the index in a code table for the glyph on the left side of
++	 *            the pair.
++	 */
++	public void setLeftGlyphIndex(int anIndex)
++	{
++		leftIndex = anIndex;
++	}
+ 
+-&lt;p&gt;FSKerning objects are only used within FSDefineFont2 objects and provide more precise control over the layout of a font's glyph than was possible using the FSDefineFont and FSFontInfo objects.&lt;/p&gt;
++	/**
++	 * Sets the index of the right glyph in the kerning pair.
++	 * 
++	 * @param anIndex
++	 *            the index in a code table for the glyph on the right side of
++	 *            the pair.
++	 */
++	public void setRightGlyphIndex(int anIndex)
++	{
++		rightIndex = anIndex;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	/**
++	 * Sets the adjustment, in twips, to the advance of the left glyph.
++	 * 
++	 * @param aNumber
++	 *            the adjustment that will be added to the advance defined for
++	 *            the left glyph.
++	 */
++	public void setAdjustment(int aNumber)
++	{
++		adjustment = aNumber;
++	}
+ 
+-&lt;p&gt;FSKerning class represents the KerningRecord from the Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 2.&lt;/p&gt;
+- */
+-public class FSKerning extends FSTransformObject
+-{
+-    private int leftGlyphIndex = 0;
+-    private int rightGlyphIndex = 0;
+-    private int adjustment = 0;
+-    
+-    /**
+-     * Construct an FSKerning object, initalizing it with values decoded from
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSKerning(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** Constructs an FSKerning object specifying the glyph indexes and adjustment. The value for the adjustment must be specified in twips.
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @param obj
++	 *            the reference object with which to compare.
++	 *            
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object obj)
++	{
++		boolean result = false;
+ 
+-        @param leftIndex the index in a code table for the glyph on the left side of the pair.
+-        @param rightIndex the index in a code table for the glyph on the right side of the pair.
+-        @param adjust the adjustment that will be added to the advance defined for the left glyph.
+-        */
+-    public FSKerning(int leftIndex, int rightIndex, int adjust)
+-    {
+-        setLeftGlyphIndex(leftIndex);
+-        setRightGlyphIndex(rightIndex);
+-        setAdjustment(adjust);
+-    }
+-    /**
+-     * Constructs an FSKerning object by copying values from an existing 
+-     * object.
+-     *
+-     * @param obj an FSKerning object.
+-     */
+-    public FSKerning(FSKerning obj)
+-    {
+-        leftGlyphIndex = obj.leftGlyphIndex;
+-        rightGlyphIndex = obj.rightGlyphIndex;
+-        adjustment = obj.adjustment;
+-    }    
++		if (obj == null) {
++			return false;
++		}
+ 
+-    /** Gets the index of the left glyph in the kerning pair.
++		if (obj == this) {
++			return true;
++		}
+ 
+-        @return the index in a code table for the glyph on the left side of the pair.
+-        */
+-    public int getLeftGlyphIndex()  { return leftGlyphIndex; }
++		if (obj instanceof FSKerning)
++		{
++			FSKerning kerning = (FSKerning) obj;
+ 
+-    /** Gets the index of the right glyph in the kerning pair.
++			result = leftIndex == kerning.leftIndex;
++			result = result &amp;&amp; rightIndex == kerning.rightIndex;
++			result = result &amp;&amp; adjustment == kerning.adjustment;
++		}
++		return result;
++	}
+ 
+-        @return the index in a code table for the glyph on the right side of the pair.
+-        */
+-    public int getRightGlyphIndex()  { return rightGlyphIndex; }
++	/**
++	 * Creates a copy of the object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
+ 
+-    /** Gets the adjustment, in twips, to the advance of the left glyph.
++		try {
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
+ 
+-        @return the adjustment that will be added to the advance defined for the left glyph.
+-        */
+-    public int getAdjustment() { return adjustment; }
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-    /** Sets the index of the left glyph in the kerning pair.
++		buffer.append(&quot;FSKerning: { &quot;);
++		buffer.append(&quot;leftIndex = &quot;).append(leftIndex).append(&quot;;&quot;);
++		buffer.append(&quot;rightIndex = &quot;).append(rightIndex).append(&quot;;&quot;);
++		buffer.append(&quot;adjustment = &quot;).append(adjustment).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-        @param anIndex the index in a code table for the glyph on the left side of the pair.
+-        */
+-    public void setLeftGlyphIndex(int anIndex)
+-    {
+-        leftGlyphIndex = anIndex;
+-    }
++		return buffer.toString();
++	}
+ 
+-    /** Sets the index of the right glyph in the kerning pair.
++	public int length(FSCoder coder)
++	{
++		int length = (coder.context[FSCoder.WideCodes] != 0) ? 4 : 2;
+ 
+-        @param anIndex the index in a code table for the glyph on the right side of the pair.
+-        */
+-    public void setRightGlyphIndex(int anIndex)
+-    {
+-        rightGlyphIndex = anIndex;
+-    }
++		length += 2;
+ 
+-    /** Sets the adjustment, in twips, to the advance of the left glyph.
++		return length;
++	}
+ 
+-        @param aNumber the adjustment that will be added to the advance defined for the left glyph.
+-        */
+-    public void setAdjustment(int aNumber) 
+-    {
+-        adjustment = aNumber;
+-    }
++	public void encode(FSCoder coder)
++	{
++		int numberOfBytes = (coder.context[FSCoder.WideCodes] != 0) ? 2 : 1;
+ 
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSKerning typedObject = (FSKerning)anObject;
+-            
+-            result = leftGlyphIndex == typedObject.leftGlyphIndex;
+-            result = result &amp;&amp; rightGlyphIndex == typedObject.rightGlyphIndex;
+-            result = result &amp;&amp; adjustment == typedObject.adjustment;
+-        }
+-        return result;
+-    }
++		coder.writeWord(leftIndex, numberOfBytes);
++		coder.writeWord(rightIndex, numberOfBytes);
++		coder.writeWord(adjustment, 2);
++	}
+ 
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-        
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;leftGlyphIndex&quot;, leftGlyphIndex);
+-            Transform.append(buffer, &quot;rightGlyphIndex&quot;, rightGlyphIndex);
+-            Transform.append(buffer, &quot;adjustment&quot;, adjustment);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
++	public void decode(FSCoder coder)
++	{
++		int numberOfBytes = (coder.context[FSCoder.WideCodes] != 0) ? 2 : 1;
+ 
+-    public int length(FSCoder coder)
+-    {
+-        int length = (coder.context[FSCoder.WideCodes] != 0) ? 4 : 2;
+-    
+-        length += 2;
+-    
+-        return length;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        int numberOfBytes = (coder.context[FSCoder.WideCodes] != 0) ? 2 : 1;
+-    
+-        coder.writeWord(leftGlyphIndex, numberOfBytes);
+-        coder.writeWord(rightGlyphIndex, numberOfBytes);
+-        coder.writeWord(adjustment, 2);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        int numberOfBytes = (coder.context[FSCoder.WideCodes] != 0) ? 2 : 1;
+-
+-        leftGlyphIndex = coder.readWord(numberOfBytes, false);
+-        rightGlyphIndex = coder.readWord(numberOfBytes, false);
+-        adjustment = coder.readWord(2, true);
+-    }
++		leftIndex = coder.readWord(numberOfBytes, false);
++		rightIndex = coder.readWord(numberOfBytes, false);
++		adjustment = coder.readWord(2, true);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000311.html">[Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000313.html">[Transform-svn] r377 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#312">[ date ]</a>
+              <a href="thread.html#312">[ thread ]</a>
+              <a href="subject.html#312">[ subject ]</a>
+              <a href="author.html#312">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

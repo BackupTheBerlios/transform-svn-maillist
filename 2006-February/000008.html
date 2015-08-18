@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r67 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r67%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200602211749.k1LHneaP024555%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000005.html">
+   <LINK REL="Next"  HREF="000009.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r67 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r67%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200602211749.k1LHneaP024555%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r67 - trunk/src/com/flagstone/transform/test">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 18:49:40 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000005.html">[Transform-svn] r66 - trunk/test/data
+</A></li>
+        <LI>Next message: <A HREF="000009.html">[Transform-svn] r68 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#8">[ date ]</a>
+              <a href="thread.html#8">[ thread ]</a>
+              <a href="subject.html#8">[ subject ]</a>
+              <a href="author.html#8">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 18:49:30 +0100 (Tue, 21 Feb 2006)
+New Revision: 67
+
+Modified:
+   trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+Log:
+Updated findFiles so files with upper case extensions are caught.
+Also able return cleanly if the source directory does not exist.
+
+Modified: trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java	2006-02-21 14:49:54 UTC (rev 66)
++++ trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java	2006-02-21 17:49:30 UTC (rev 67)
+@@ -54,17 +54,25 @@
+     {
+         FilenameFilter filter = new FilenameFilter() 
+         {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(extension);
++            public boolean accept(File directory, String name) 
++            {
++                String ext = name.substring(name.length()-extension.length()).toLowerCase();
++                
++                return ext.equals(extension);
+             }
+         };
+         
+-        String[] files = sourceDir.list(filter);
+-        Object[][] parameters = new Object[files.length][1];
++        Object[][] parameters = new Object[0][0];
+         
+-        for (int i=0; i&lt;files.length; i++)
+-            parameters[i] = new Object[] { new File(sourceDir, files[i]) };
+-        
++        if (sourceDir.exists())
++        {
++            String[] files = sourceDir.list(filter);
++            
++            parameters = new Object[files.length][1];
++            
++            for (int i=0; i&lt;files.length; i++)
++                parameters[i] = new Object[] { new File(sourceDir, files[i]) };
++        }
+         return parameters;
+     }
+     private void encodeImageToFile(FSImageConstructor generator, File file) throws Exception
+
+Modified: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-02-21 14:49:54 UTC (rev 66)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2006-02-21 17:49:30 UTC (rev 67)
+@@ -81,17 +81,25 @@
+     {
+         FilenameFilter filter = new FilenameFilter() 
+         {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(extension);
++            public boolean accept(File directory, String name) 
++            {
++                String ext = name.substring(name.length()-extension.length()).toLowerCase();
++                
++                return ext.equals(extension);
+             }
+         };
+         
+-        String[] files = sourceDir.list(filter);       
+-
+-        Object[][] parameters = new Object[files.length][1];
++        Object[][] parameters = new Object[0][0];
+         
+-        for (int i=0; i&lt;files.length; i++)
+-            parameters[i] = new Object[] { files[i] };
++        if (sourceDir.exists())
++        {
++            String[] files = sourceDir.list(filter);       
++    
++            parameters = new Object[files.length][1];
++            
++            for (int i=0; i&lt;files.length; i++)
++                parameters[i] = new Object[] { files[i] };
++        }
+         
+         return parameters;
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000005.html">[Transform-svn] r66 - trunk/test/data
+</A></li>
+	<LI>Next message: <A HREF="000009.html">[Transform-svn] r68 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#8">[ date ]</a>
+              <a href="thread.html#8">[ thread ]</a>
+              <a href="subject.html#8">[ subject ]</a>
+              <a href="author.html#8">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

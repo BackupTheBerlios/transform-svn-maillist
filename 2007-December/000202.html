@@ -1,0 +1,3693 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r266 - trunk/src/com/flagstone/transform/test
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r266%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200712221541.lBMFfXBV009429%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000201.html">
+   <LINK REL="Next"  HREF="000203.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r266 - trunk/src/com/flagstone/transform/test</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r266%20-%20trunk/src/com/flagstone/transform/test&In-Reply-To=%3C200712221541.lBMFfXBV009429%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r266 - trunk/src/com/flagstone/transform/test">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 22 16:41:33 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000201.html">[Transform-svn] r265 - trunk/doc
+</A></li>
+        <LI>Next message: <A HREF="000203.html">[Transform-svn] r267 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#202">[ date ]</a>
+              <a href="thread.html#202">[ thread ]</a>
+              <a href="subject.html#202">[ subject ]</a>
+              <a href="author.html#202">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-22 16:41:10 +0100 (Sat, 22 Dec 2007)
+New Revision: 266
+
+Added:
+   trunk/src/com/flagstone/transform/test/AllTests.java
+   trunk/src/com/flagstone/transform/test/ConstructorTests.java
+   trunk/src/com/flagstone/transform/test/DataTypeTests.java
+   trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java
+   trunk/src/com/flagstone/transform/test/MovieObjectTests.java
+   trunk/src/com/flagstone/transform/test/MovieTests.java
+Removed:
+   trunk/src/com/flagstone/transform/test/FSClassTest.java
+   trunk/src/com/flagstone/transform/test/TextDumpTest.java
+Modified:
+   trunk/src/com/flagstone/transform/test/FSColorTest.java
+   trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java
+   trunk/src/com/flagstone/transform/test/FSMovieTest.java
+   trunk/src/com/flagstone/transform/test/FSProtectTest.java
+   trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+   trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java
+   trunk/src/com/flagstone/transform/test/FSShowFrameTest.java
+   trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+   trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+Log:
+Refactored test package classes to use JUnit.
+
+Added: trunk/src/com/flagstone/transform/test/AllTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/AllTests.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/AllTests.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -0,0 +1,17 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class AllTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTest(DataTypeTests.suite());
++        suite.addTest(MovieObjectTests.suite());
++        suite.addTest(MovieTests.suite());
++        suite.addTest(ConstructorTests.suite());
++        return suite;
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/test/ConstructorTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/ConstructorTests.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/ConstructorTests.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -0,0 +1,17 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class ConstructorTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSImageConstructorTest.class);
++        suite.addTestSuite(FSShapeConstructorTest.class);
++        suite.addTestSuite(FSSoundConstructorTest.class);
++        suite.addTestSuite(FSTextConstructorTest.class);
++        return suite;
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/test/DataTypeTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/DataTypeTests.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/DataTypeTests.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -0,0 +1,14 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class DataTypeTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSColorTest.class);
++        return suite;
++    }
++}
+
+Deleted: trunk/src/com/flagstone/transform/test/FSClassTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSClassTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSClassTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,128 +0,0 @@
+-/*
+- * FSSetBackgroundColorTest.java
+- * Transform
+- * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-package com.flagstone.transform.test;
+-
+-import com.flagstone.transform.*;
+-
+-public abstract class FSClassTest 
+-{               
+-    public FSClassTest()
+-    {        
+-    }
+-    
+-    protected void checkType(int expected, int actual)
+-    {
+-        assert expected == actual : &quot;Types are not identical.&quot;;    
+-    }
+-
+-    protected void checkIdentical(Object expected, Object actual)
+-    {
+-        assert expected == actual : &quot;References are not to the same object.&quot;;    
+-    }
+-
+-    protected void checkNotIdentical(Object expected, Object actual)
+-    {
+-        assert expected != actual : &quot;References are to the same object.&quot;;    
+-    }
+-
+-    protected void checkEqual(Object expected, Object actual)
+-    {
+-        if (expected == null &amp;&amp; actual != null)
+-            assert false : &quot;Objects do not match.&quot;;    
+-        else if (expected != null &amp;&amp; actual == null)
+-            assert false : &quot;Objects do not match.&quot;;            
+-        else if (expected != null &amp;&amp; actual != null)
+-            assert actual.equals(expected) : &quot;Objects do not match.&quot;;    
+-    }
+-
+-    protected void checkNotEqual(Object expected, Object actual)
+-    {
+-        if (expected == null &amp;&amp; actual == null)
+-            assert false : &quot;Objects should not match.&quot;;    
+-        else if (expected != null &amp;&amp; actual != null)
+-            assert actual.equals(expected) == false : &quot;Objects should not match.&quot;;    
+-    }
+-
+-    protected void checkEncode(FSTransformObject obj, int[] bytes)
+-    {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes.length);
+-        
+-        checkEncode(coder, obj, bytes);
+-    }
+-    
+-    protected void checkEncode(FSCoder coder, FSTransformObject obj, int[] bytes)
+-    {
+-        int length = obj.length(coder);
+-        
+-        if (obj instanceof FSMovieObject)
+-            length += (length &lt; 63) ? 2 : 6;
+-        
+-        coder.setPointer(0);
+-        obj.encode(coder);
+-        
+-        assert (length == bytes.length) : &quot;Calculated length does not match expected.&quot;;
+-
+-        compareData(coder.getData(), bytes);
+-    }
+-    
+-    protected void checkDecode(FSCoder coder, int length)
+-    {
+-        int delta = (coder.getPointer() &gt;&gt;&gt; 3) - length;
+-        
+-        if (delta &lt; 0)
+-            assert false : &quot;Actual length is less than expected by &quot;+(-delta)+&quot; bytes.&quot;;
+-        else if (delta &gt; 0)
+-            assert false : &quot;Actual length is greater than expected by &quot;+delta+&quot; bytes.&quot;;
+-    }
+-    
+-    protected void compareData(byte[] actual, int[] expected)
+-    {
+-        int delta = actual.length - expected.length;
+-        
+-        if (delta &lt; 0)
+-            assert false : &quot;Actual length is less than expected by &quot;+(-delta)+&quot; bytes.&quot;;
+-        else if (delta &gt; 0)
+-            assert false : &quot;Actual length is greater than expected by &quot;+delta+&quot; bytes.&quot;;
+-        
+-        for (int i=0; i&lt;expected.length; i++) {
+-            assert(actual[i] == (byte)expected[i]) : &quot;Encoded byte does not match expected value&quot;;
+-        }
+-    }
+-
+-    protected byte[] compact(int[] ints)
+-    {
+-        byte[] bytes = new byte[ints.length];
+-        
+-        for (int i=0; i&lt;ints.length; i++)
+-            bytes[i] = (byte)ints[i];
+-        
+-        return bytes;
+-    }
+-}
+
+Modified: trunk/src/com/flagstone/transform/test/FSColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSColorTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSColorTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,302 +1,209 @@
+ /*
+  * FSColorTest.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package com.flagstone.transform.test;
+ 
+-import com.flagstone.transform.*;
++import com.flagstone.transform.FSColor;
++import com.flagstone.transform.FSCoder;
+ 
+-public class FSColorTest extends FSClassTest
+-{    
+-    private static int[][] opaque = new int[][] {
+-        {  0,   0,   0},
+-        { 51,   0,   0},
+-        { 51, 102,   0},
+-        {  0, 102,   0},
+-        {  0, 102, 153},
+-        {  0,   0, 153},
+-        { 51,   0, 153},
+-        { 51, 102, 153},
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++public class FSColorTest extends TestCase
++{
++    private static int[][] rgb = new int[][] {
++        {0x00, 0x00, 0x00},
++        {0x33, 0x00, 0x00},
++        {0x33, 0x66, 0x00},
++        {0x00, 0x66, 0x00},
++        {0x00, 0x66, 0xCC},
++        {0x00, 0x00, 0xCC},
++        {0x33, 0x00, 0xCC},
++        {0x33, 0x66, 0xCC},
+     };
+-    
+-    private static int[][] alpha = new int[][] {
+-        { 51, 102, 153,   0},
+-        { 51, 102, 153, 204},
+-        { 51,   0, 153, 204},
+-        { 51,   0, 153,   0},
+-        {  0,   0, 153,   0},
+-        {  0,   0, 153, 204},
+-        {  0, 102, 153, 204},
+-        {  0, 102, 153,   0},
+-        {  0, 102,   0,   0},
+-        {  0, 102,   0, 204},
+-        { 51, 102,   0, 204},
+-        { 51, 102,   0,   0},
+-        { 51,   0,   0,   0},
+-        { 51,   0,   0, 204},
+-        {  0,   0,   0, 204},
+-        {  0,   0,   0,   0},
++
++    private static int[][] rgba = new int[][] {
++        { 0x33, 0x66, 0x99, 0x00},
++        { 0x33, 0x66, 0x99, 0x22},
++        { 0x33, 0x66, 0x99, 0x44},
++        { 0x33, 0x66, 0x99, 0x88},
+     };
+-    
+-    private static FSColor[] colours = null;
+-    private static FSColor[] coloursWithAlpha = null;
+-    
+-    public static FSColor[] colours()
++
++    public void testConstructors()
+     {
+-        if (colours == null)
+-        {
+-            colours = new FSColor[opaque.length];
+-            
+-            for (int i=0; i&lt;opaque.length; i++) {
+-                colours[i] = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
+-            }       
+-       }
+-       return colours;
+-    }
+-    
+-    public static int[][] encodedColours()
+-    {
+-        int[][] data = new int[opaque.length][];
+-        
+-        for (int i=0; i&lt;opaque.length; i++)
+-        {
+-            data[i] = new int[opaque[i].length];
+-            
+-            for (int j=0; j&lt;opaque[i].length; j++) {
+-                data[i][j] = opaque[i][j];
+-            }
++        for (int i=0; i&lt;rgb.length; i++) {
++            checkColours(new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]), rgb[i]);
+         }
+-        return data;
++
++        for (int i=0; i&lt;rgba.length; i++) {
++            checkColours(new FSColor(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]), rgba[i]);
++        }
+     }
+-    
+-    public static FSColor[] coloursWithAlpha()
++
++    public void testCopyConstructors()
+     {
+-        if (coloursWithAlpha == null)
++        for (int i=0; i&lt;rgb.length; i++)
+         {
+-            coloursWithAlpha = new FSColor[alpha.length];
+-            
+-            for (int i=0; i&lt;alpha.length; i++) 
+-            {
+-                coloursWithAlpha[i] = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
+-            }       
+-       }
+-       return colours;
+-    }
+-    
+-    /**
+-     * @testng.test groups=&quot;color, constructors&quot;
+-     */
+-    public void checkConstructors()
+-    {
+-        FSColor colour = null;
+-        
+-        for (int i=0; i&lt;opaque.length; i++) 
+-        {
+-            colour = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
+-            
+-            checkColours(colour, opaque[i]);
++            FSColor colour = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
++            checkColours(new FSColor(colour), rgb[i]);
+         }
+-    }   
+-    /**
+-     * @testng.test groups=&quot;color, constructors&quot;
+-     */
+-    public void checkConstructorsWithAlpha()
+-    {
+-        FSColor colour = null;
+-        
+-        for (int i=0; i&lt;alpha.length; i++) 
++
++        for (int i=0; i&lt;rgba.length; i++)
+         {
+-            colour = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
+-            
+-            checkColours(colour, alpha[i]);
++            FSColor colour = new FSColor(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]);
++            checkColours(new FSColor(colour), rgba[i]);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;color, constructors&quot;
+-     */
+-    public void checkCopyConstructors()
++
++    public void testAccessors()
+     {
+-        for (int i=0; i&lt;opaque.length; i++) 
+-        {
+-            FSColor colour = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
+-            
+-            checkColours(new FSColor(colour), opaque[i]);
+-        }
+-   }    
+-    /**
+-     * @testng.test groups=&quot;color, constructors&quot;
+-     */
+-    public void checkCopyConstructorsWithAlpha()
+-    {
+-        for (int i=0; i&lt;alpha.length; i++) 
+-        {
+-            FSColor colour = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
+-            
+-            checkColours(new FSColor(colour), alpha[i]);
+-        }
+-    }    
+-    /**
+-     * @testng.test groups=&quot;color, accessors&quot;
+-     */
+-    public void checkAccessors()
+-    {
+         FSColor colour = new FSColor(-1, -1, -1);
+-        
+-        for (int i=0; i&lt;opaque.length; i++) 
++
++        for (int i=0; i&lt;rgb.length; i++)
+         {
+-            colour.setRed(opaque[i][0]);
+-            colour.setGreen(opaque[i][1]);
+-            colour.setBlue(opaque[i][2]);
+-            
+-            checkColours(colour, opaque[i]);
++            colour.setRed(rgb[i][0]);
++            colour.setGreen(rgb[i][1]);
++            colour.setBlue(rgb[i][2]);
++
++            checkColours(colour, rgb[i]);
++
++            colour.setChannels(rgb[i][0], rgb[i][1], rgb[i][2]);
++
++            checkColours(colour, rgb[i]);
+         }
+ 
+-        colour = new FSColor(-1, -1, -1);
+-        
+-        for (int i=0; i&lt;opaque.length; i++) 
++        for (int i=0; i&lt;rgba.length; i++)
+         {
+-            colour.setChannels(opaque[i][0], opaque[i][1], opaque[i][2]);            
+-            
+-            checkColours(colour, opaque[i]);
++            colour.setRed(rgba[i][0]);
++            colour.setGreen(rgba[i][1]);
++            colour.setBlue(rgba[i][2]);
++            colour.setAlpha(rgba[i][3]);
++            checkColours(colour, rgba[i]);
++
++            colour.setChannels(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]);
++            checkColours(colour, rgba[i]);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;color, accessors&quot;
+-     */
+-    public void checkAccessorsWithAlpha()
++
++    public void testEquals()
+     {
+-        FSColor colour = new FSColor(-1, -1, -1, -1);
+-        
+-        for (int i=0; i&lt;alpha.length; i++) 
++        for (int i=0; i&lt;rgb.length; i++)
+         {
+-            colour.setRed(alpha[i][0]);
+-            colour.setGreen(alpha[i][1]);
+-            colour.setBlue(alpha[i][2]);
+-            colour.setAlpha(alpha[i][3]);
+-            
+-            checkColours(colour, alpha[i]);
+-        }
++            int next = (i+1)%rgb.length;
+ 
+-        colour = new FSColor(-1, -1, -1, -1);
+-        
+-        for (int i=0; i&lt;alpha.length; i++) 
+-        {
+-            colour.setChannels(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
+-            
+-            checkColours(colour, alpha[i]);
++            FSColor a = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
++
++            FSColor b = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
++            FSColor c = new FSColor(rgb[next][0], rgb[next][1], rgb[next][2]);
++            FSColor d = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2], 0xFF);
++            FSColor e = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2], 0x80);
++
++            assertEquals(a,b);
++            assertTrue(!a.equals(c));
++            assertEquals(a,d);
++            assertTrue(!a.equals(e));
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;color, utilities&quot;
+-     */
+-    public void checkEquals()
++
++    public void testEncode()
+     {
+-       for (int i=0; i&lt;opaque.length; i++)
++        FSCoder coder;
++        FSColor colour;
++
++        for (int i=0; i&lt;rgb.length; i++)
+         {
+-            int next = (i+1)%opaque.length;
+-            
+-            FSColor a = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
+-            FSColor b = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
+-            FSColor c = new FSColor(opaque[next][0], opaque[next][1], opaque[next][2]);
+-            FSColor d = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2], 255);
+-            FSColor e = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2], 128);
+-            
+-            checkEqual(a, b);
+-            checkNotEqual(a, c);
+-            checkEqual(a, d);
+-            checkNotEqual(a, e);
++        	coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++
++            colour = new FSColor(rgb[i][0], rgb[i][1], rgb[i][2]);
++            colour.encode(coder);
++
++            assertTrue(coder.equals(initCoder(rgb[i], true)));
++            checkColours(colour, rgb[i]);
+         }
+-    }
+-    /**
+-     * @testng.test groups=&quot;color, encode&quot;
+-     */
+-    public void checkEncode()
+-    {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
+-             
+-        for (int i=0; i&lt;opaque.length; i++) 
++
++        for (int i=0; i&lt;rgba.length; i++)
+         {
+-            FSColor colour = new FSColor(opaque[i][0], opaque[i][1], opaque[i][2]);
+-            
+-            checkEncode(coder, colour, opaque[i]);
+-            checkColours(colour, opaque[i]);
++        	coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++            coder.setContext(FSCoder.TransparentColors, 1);
++
++            colour = new FSColor(rgba[i][0], rgba[i][1], rgba[i][2], rgba[i][3]);
++            colour.encode(coder);
++
++            assertTrue(coder.equals(initCoder(rgba[i], true)));
++            checkColours(colour, rgba[i]);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;color, encode&quot;
+-     */
+-    public void checkEncodeWithAlpha()
++
++    public void testDecode()
+     {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
+-        coder.setContext(FSCoder.TransparentColors, 1);
+-             
+-        for (int i=0; i&lt;alpha.length; i++) 
++        for (int i=0; i&lt;rgb.length; i++)
+         {
+-            FSColor colour = new FSColor(alpha[i][0], alpha[i][1], alpha[i][2], alpha[i][3]);
+-            
+-            checkEncode(coder, colour, alpha[i]);
+-            checkColours(colour, alpha[i]);
++            FSCoder coder = initCoder(rgb[i], false);
++            FSColor colour = new FSColor(coder);
++
++            assertEquals(coder.getPointer() &gt;&gt; 3, rgb[i].length);
++            checkColours(colour, rgb[i]);
+         }
+-    }
+-    /**
+-     * @testng.test groups=&quot;color, decode&quot;
+-     */
+-    public void checkDecode()
+-    {
+-        for (int i=0; i&lt;opaque.length; i++) 
++
++        for (int i=0; i&lt;rgba.length; i++)
+         {
+-            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(opaque[i]));            
+-            checkColours(new FSColor(coder), opaque[i]);
+-            checkDecode(coder, opaque[i].length);
++            FSCoder coder = initCoder(rgba[i], false);
++            coder.setContext(FSCoder.TransparentColors, 1);
++            FSColor colour = new FSColor(coder);
++
++            assertEquals(coder.getPointer() &gt;&gt; 3, rgba[i].length);
++            checkColours(colour, rgba[i]);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;color, decode&quot;
+-     */
+-    public void checkDecodeWithAlpha()
++
++    private void checkColours(FSColor colour, int[] expected)
+     {
+-        for (int i=0; i&lt;opaque.length; i++) 
+-        {
+-            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(alpha[i]));            
+-            coder.setContext(FSCoder.TransparentColors, 1);
++    	assertTrue(&quot;Red channel does not match expected value&quot;, colour.getRed() == expected[0]);
++    	assertTrue(&quot;Green channel does not match expected value&quot;, colour.getGreen() == expected[1]);
++    	assertTrue(&quot;Blue channel does not match expected value&quot;, colour.getBlue() == expected[2]);
+ 
+-            checkColours(new FSColor(coder), alpha[i]);
+-            checkDecode(coder, alpha[i].length);
++        if (expected.length == 4) {
++        	assertTrue(&quot;Alpha channel does not match expected value&quot;, colour.getAlpha() == expected[3]);
+         }
+     }
+     
+-    private void checkColours(FSColor colour, int[] expected)
++    private FSCoder initCoder(int[] data, boolean atEnd)
+     {
+-        assert(colour.getRed() == expected[0]) : &quot;Red channel does not match expected value&quot;;
+-        assert(colour.getGreen() == expected[1]) : &quot;Green channel does not match expected value&quot;;
+-        assert(colour.getBlue() == expected[2]) : &quot;Blue channel does not match expected value&quot;;
+-        
+-        if (expected.length == 4)
+-            assert(colour.getAlpha() == expected[3]) : &quot;Alpha channel does not match expected value&quot;;
++    	FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++
++        for (int i=0; i&lt;data.length; i++) {
++            coder.writeWord(data[i], 1);
++        }
++
++        if (!atEnd) {
++        	coder.setPointer(0);
++        }
++        return coder;
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSImageConstructorTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,96 +1,103 @@
+ package com.flagstone.transform.test;
+ 
+-import java.io.*;
++import java.io.File;
++import java.io.FilenameFilter;
++import java.util.zip.DataFormatException;
+ 
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.util.*;
+ 
+-public class FSImageConstructorTest
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++public class FSImageConstructorTest extends TestCase
+ {
+     private File sourceDir = null;
+     private File destDir = null;
+     private String extension = null;
+-    
+-    public FSImageConstructorTest()
++
++    public void testBMP()
+     {
++		sourceDir = new File(&quot;test/data/bmp&quot;);
++		destDir = new File(&quot;test/results/FSImageConstructor/bmp&quot;);
++		extension = &quot;bmp&quot;;
++
++		displayImage();
+     }
+-    /**
+-     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     * @testng.parameters value = &quot;srcDir dstDir ext&quot;
+-     */
+-    public void configure(String srcDir, String dstDir, String ext)
++
++    public void testPNG()
+     {
+-        sourceDir = new File(srcDir);
+-        destDir = new File(dstDir);
+-        extension = ext;
++		sourceDir = new File(&quot;test/data/png&quot;);
++		destDir = new File(&quot;test/results/FSImageConstructor/png&quot;);
++		extension = &quot;png&quot;;
++
++		displayImage();
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void displayImage(File imageFile)
++
++    public void displayImage()
+     {
+-        try 
++        File sourceFile = null;
++        File destFile = null;
++
++        try
+         {
+-            String fileName = imageFile.getName();
+-            fileName = fileName.substring(0, fileName.lastIndexOf('.')) + &quot;.swf&quot;;
+-    
+-            File destFile = new File(destDir, fileName);
+- 
++            FilenameFilter filter = new FilenameFilter()
++            {
++                public boolean accept(File directory, String name)
++                {
++                    String ext = name.substring(name.length()-extension.length()).toLowerCase();
++
++                    return ext.equals(extension);
++                }
++            };
++
++            assertTrue(sourceDir.exists());
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            FSImageConstructor imageConstructor = new FSImageConstructor(imageFile.getPath());
+-            encodeImageToFile(imageConstructor, destFile);
++                assertTrue(&quot;Count not create directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	try
++            	{
++	                sourceFile = new File(sourceDir, files[i]);
++	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++	
++	                FSImageConstructor imageConstructor = new FSImageConstructor(sourceFile.getPath());
++	                encodeImageToFile(imageConstructor, destFile);
++            	}
++            	catch (DataFormatException e)
++            	{
++            		if (!sourceFile.getName().startsWith(&quot;x&quot;)) {
++                        fail(&quot;Cannot decode file: &quot;+sourceFile.getName() + &quot;, &quot;+e.toString());
++            		}      		
++            	}
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++        	fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.data-provider name=&quot;files&quot;
+-     */
+-    public Object[][] findFiles()
+-    {
+-        FilenameFilter filter = new FilenameFilter() 
+-        {
+-            public boolean accept(File directory, String name) 
+-            {
+-                String ext = name.substring(name.length()-extension.length()).toLowerCase();
+-                
+-                return ext.equals(extension);
+-            }
+-        };
+-        
+-        Object[][] parameters = new Object[0][0];
+-        
+-        if (sourceDir.exists())
+-        {
+-            String[] files = sourceDir.list(filter);
+-            
+-            parameters = new Object[files.length][1];
+-            
+-            for (int i=0; i&lt;files.length; i++)
+-                parameters[i] = new Object[] { new File(sourceDir, files[i]) };
+-        }
+-        return parameters;
+-    }
++
+     private void encodeImageToFile(FSImageConstructor generator, File file) throws Exception
+     {
+         FSMovie movie = new FSMovie();
+-        
++
+         int imageId = movie.newIdentifier();
+         int shapeId = movie.newIdentifier();
+-        
++
+         int xOrigin = generator.getWidth()/2;
+         int yOrigin = generator.getHeight()/2;
+-        
++
+         FSSolidLine borderStyle = new FSSolidLine(20, FSColorTable.black());
+-        
++
+         FSDefineObject image = generator.defineImage(imageId);
+-        FSDefineShape3 shape = generator.defineEnclosingShape(shapeId, imageId, 
++        FSDefineShape3 shape = generator.defineEnclosingShape(shapeId, imageId,
+             -xOrigin, -yOrigin, borderStyle);
+-        
++
+         movie.setFrameRate(1.0f);
+         movie.setFrameSize(shape.getBounds());
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+@@ -98,7 +105,7 @@
+         movie.add(shape);
+         movie.add(new FSPlaceObject2(shapeId, 1, 0, 0));
+         movie.add(new FSShowFrame());
+-        
++
+         movie.encodeToFile(file.getPath());
+     }
+ }
+
+Added: trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSMovieBenchmark.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -0,0 +1,309 @@
++/*
++ * FSMovieTest.java
++ * Transform
++ *
++ * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without modification,
++ * are permitted provided that the following conditions are met:
++ *
++ *  * Redistributions of source code must retain the above copyright notice, this
++ *    list of conditions and the following disclaimer.
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
++ *    and/or other materials provided with the distribution.
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
++ *    without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++package com.flagstone.transform.test;
++
++import java.io.*;
++
++import junit.framework.Test;
++import junit.framework.TestCase;
++import junit.framework.TestSuite;
++
++import com.flagstone.transform.*;
++
++public class FSMovieBenchmark extends TestCase
++{
++    private static String newline = System.getProperty(&quot;line.separator&quot;);
++    private static int iterations = 1000;
++
++    /**
++     * The main method allows the tests to be run outside of the JUnit
++     * environment. Usage:
++     *
++     *  FSMovieBenchmark &lt;source&gt; &lt;dest&gt;
++     *
++     *  where,
++     *
++     *   &lt;source&gt; - the source directory where the flash files may be found.
++     *   &lt;dest&gt; - the destination directory where files will be written to.
++     *
++     * @param args arguments passed to the class when executed.
++     */
++    public static void main(String[] args)
++    {
++        junit.textui.TestRunner.run(suite(args[0], args[1]));
++    }
++
++    public static Test suite(String source, String dest)
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTest(new FSMovieBenchmark(source, dest, &quot;testDecode&quot;));
++        suite.addTest(new FSMovieBenchmark(source, dest, &quot;testEncode&quot;));
++        suite.addTest(new FSMovieBenchmark(source, dest, &quot;testClone&quot;));
++        suite.addTest(new FSMovieBenchmark(source, dest, &quot;testLazyDecode&quot;));
++        suite.addTest(new FSMovieBenchmark(source, dest, &quot;testLazyEncode&quot;));
++        return suite;
++    }
++
++    private File sourceDir;
++    private File destDir;
++    
++    private String[] files;
++    private File log;
++    private StringBuffer buffer;
++
++    public FSMovieBenchmark()
++    {
++        sourceDir = new File(&quot;test/data/swf&quot;);
++        destDir = new File(&quot;test/results/Benchmark&quot;);
++    }
++
++    public FSMovieBenchmark(String srcDir, String dstDir, String method)
++    {
++    	super(method);
++
++    	sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++    }
++
++    protected void setUp()
++    {
++        FilenameFilter filter = new FilenameFilter()
++        {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.swf&quot;);
++            }
++        };
++
++        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
++
++        files = sourceDir.list(filter);
++
++        if (!destDir.exists()) {
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++        }
++
++        buffer = new StringBuffer();
++    }
++
++    protected void tearDown()
++    {
++        if (log != null)
++        {
++            try
++            {
++                FileOutputStream stream = new FileOutputStream(log);
++                stream.write(buffer.toString().getBytes());
++                stream.close();
++            }
++            catch (IOException e)
++            {
++                fail(&quot;Cannot write log file: &quot;+log.getPath());
++            }
++        }
++    }
++
++    public void testBenchmarkDecode()
++    {       
++        log = new File(destDir, &quot;decode.log&quot;);
++
++        for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File swfFile = new File(sourceDir, files[i]);
++
++                byte[] bytes = new byte[(int)swfFile.length()];
++
++                FileInputStream stream = new FileInputStream(swfFile);
++                stream.read(bytes);
++                stream.close();
++
++                System.gc();
++
++                double before = (double)System.currentTimeMillis();
++
++                for (int j=0; j&lt;iterations; j++)
++                {
++                    new FSMovie().decodeFromData(bytes);
++                }
++
++                double duration = (System.currentTimeMillis() - before)/(double)iterations;
++
++                buffer.append(files[i]);
++                
++                int count = 35-files[i].length() - ((duration &gt; 10) ? 1 : 0);
++                
++                for (int k=0; k&lt;count; k++) {
++                	buffer.append(' ');
++                }
++                
++                buffer.append(duration).append(newline);
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testBenchmarkEncode()
++    {
++        log = new File(destDir, &quot;encode.log&quot;);
++
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++
++                FSMovie movie = new FSMovie(srcFile.getPath());
++
++                System.gc();
++
++                double before = (double)System.currentTimeMillis();
++
++                for (int j=0; j&lt;iterations; j++)
++                {
++                    movie.encode();
++                }
++
++                double duration = (System.currentTimeMillis() - before)/(double)iterations;
++
++                buffer.append(files[i]);
++                
++                int count = 35-files[i].length() - ((duration &gt; 10) ? 1 : 0);
++                
++                for (int k=0; k&lt;count; k++) {
++                	buffer.append(' ');
++                }
++
++                buffer.append(duration).append(newline);
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testBenchmarkLazyDecode()
++    {
++        log = new File(destDir, &quot;lazy_decode.log&quot;);
++
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File swfFile = new File(sourceDir, files[i]);
++
++                byte[] bytes = new byte[(int)swfFile.length()];
++
++                FileInputStream stream = new FileInputStream(swfFile);
++                stream.read(bytes);
++                stream.close();
++
++                System.gc();
++
++                double before = (double)System.currentTimeMillis();
++
++                for (int j=0; j&lt;iterations; j++)
++                {
++                    FSMovie movie = new FSMovie();
++                    movie.setDecodeActions(false);
++                    movie.setDecodeShapes(false);
++                    movie.setDecodeGlyphs(false);
++                    movie.decodeFromData(bytes);
++                }
++
++                double duration = (System.currentTimeMillis() - before)/(double)iterations;
++
++                buffer.append(files[i]);
++                
++                int count = 35-files[i].length() - ((duration &gt; 10) ? 1 : 0);
++                
++                for (int k=0; k&lt;count; k++) {
++                	buffer.append(' ');
++                }
++
++                buffer.append(duration).append(newline);
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++
++    public void testBenchmarkLazyEncode()
++    {
++        log = new File(destDir, &quot;lazy_encode.log&quot;);
++
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++
++                FSMovie movie = new FSMovie();
++
++                movie.setDecodeActions(false);
++                movie.setDecodeShapes(false);
++                movie.setDecodeGlyphs(false);
++
++                movie.decodeFromFile(srcFile.getPath());
++
++                System.gc();
++
++                double before = (double)System.currentTimeMillis();
++
++                for (int j=0; j&lt;iterations; j++)
++                {
++                    movie.encode();
++                }
++
++                double duration = (System.currentTimeMillis() - before)/(double)iterations;
++
++                buffer.append(files[i]);
++                
++                int count = 35-files[i].length() - ((duration &gt; 10) ? 1 : 0);
++                
++                for (int k=0; k&lt;count; k++) {
++                	buffer.append(' ');
++                }
++
++                buffer.append(duration).append(newline);
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
++    }
++}
+
+Modified: trunk/src/com/flagstone/transform/test/FSMovieTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSMovieTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSMovieTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,435 +1,230 @@
+ /*
+  * FSMovieTest.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package com.flagstone.transform.test;
+ 
+ import java.io.*;
+-import java.lang.reflect.*;
+ 
+ import com.flagstone.transform.*;
+-import com.flagstone.transform.tools.*;
+ 
+-public class FSMovieTest
++import junit.framework.Assert;
++import junit.framework.Test;
++import junit.framework.TestCase;
++import junit.framework.TestSuite;
++
++public class FSMovieTest extends TestCase
+ {
+-    private static String newline = System.getProperty(&quot;line.separator&quot;);
+-    private static int iterations = 100;
+-    
+     /**
+-     * The main method allows the tests to be run outside of the TestNG 
+-     * environment. Usage:
+-     * 
+-     *  FSMovieTest --test &lt;name&gt; --src &lt;path&gt; [--dst &lt;path&gt;] [--log &lt;path&gt;]
+-     *  
++     * The main method allows the tests to be run from the command line:
++     *
++     *  FSMovieTest &lt;source&gt; &lt;dest&gt;
++     *
+      *  where,
+-     * 
+-     *   --tst &lt;name&gt; - the name of the test to be executed.
+-     *   --src &lt;path&gt; - the source directory where the flash files may be found.
+-     *   --dst &lt;path&gt; - the destination directory where files will be written to.
+-     *   --log &lt;path&gt; - the path to a log file where information about the test is recorded. optional.
+-     *   
+-     * The --dst option is not used when tests decoding Flash files are run.
+-     * The --log option is only used when running the benchmark tests.
+-     *   
++     *
++     *   &lt;source&gt; the source directory where the flash files may be found.
++     *   &lt;dest&gt;   the destination directory where files will be written to.
++     *
+      * @param args arguments passed to the class when executed.
+      */
+     public static void main(String[] args)
+     {
+-        try
+-        {
+-            String testName = null;
+-            String srcPath = null;
+-            String dstPath = null;
+-            String logPath = null;
+-            
+-            int count = args.length-1;
+-            
+-            for (int i=0; i&lt;count; i++)
+-            {
+-                if (args[i].equals(&quot;--tst&quot;))
+-                    testName = args[i+1];
+-                else if (args[i].equals(&quot;--src&quot;))
+-                    srcPath = args[i+1];
+-                else if (args[i].equals(&quot;--dest&quot;))
+-                    dstPath = args[i+1];
+-                else if (args[i].equals(&quot;--log&quot;))
+-                    logPath = args[i+1];
+-            }
+-            
+-            FSMovieTest test = new FSMovieTest();
+-            Method method = test.getClass().getMethod(testName, new Class[] { String.class });        
+-            
+-            test.configure(srcPath, dstPath, logPath);
+-            Object[][] files = test.findFiles();
+-    
+-            for (int i=0; i&lt;files.length; i++) {
+-                method.invoke(test, files[i]);
+-            }
+-            
+-            test.finish();
+-        }
+-        catch (Throwable t)
+-        {
+-            System.err.println(t);
+-        }
++        junit.textui.TestRunner.run(suite(args[0], args[1]));
+     }
+-    
++
++    public static Test suite(String source, String dest)
++    {
++        TestSuite suite= new TestSuite();
++
++        suite.addTest(new FSMovieTest(source, dest, &quot;testDecode&quot;));
++        suite.addTest(new FSMovieTest(source, dest, &quot;testEncode&quot;));
++        suite.addTest(new FSMovieTest(source, dest, &quot;testClone&quot;));
++        suite.addTest(new FSMovieTest(source, dest, &quot;testLazyDecode&quot;));
++        suite.addTest(new FSMovieTest(source, dest, &quot;testLazyEncode&quot;));
++
++        return suite;
++    }
++
+     private File sourceDir = null;
+     private File destDir = null;
+-    private File log = null;
+-    
+-    private StringBuffer buffer = null;
+-    
+-    private String extension = &quot;.swf&quot;;
+-    
++    private String[] files = null;
++
+     public FSMovieTest()
+     {
++        sourceDir = new File(&quot;test/data/swf&quot;);
++        destDir = new File(&quot;test/results/FSMovie&quot;);
+     }
+-    /**
+-     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     * @testng.parameters value = &quot;srcDir dstDir logFile&quot;
+-     */
+-    public void configure(String srcDir, String dstDir, String logFile)
++
++    public FSMovieTest(String srcDir, String dstDir, String method)
+     {
+-        assert srcDir != null &amp;&amp; srcDir.length() &gt; 0 : &quot;No source directory specified&quot;;
+-        
+-        sourceDir = new File(srcDir);
++    	super(method);
+ 
+-        if (dstDir != null &amp;&amp; dstDir.length() &gt; 0)
++    	sourceDir = new File(srcDir);
++        destDir = new File(dstDir);
++    }
++
++    protected void setUp()
++    {
++        FilenameFilter filter = new FilenameFilter()
+         {
+-            destDir = new File(dstDir);
+-            
+-            if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create destination directory: &quot;+destDir;
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.swf&quot;);
++            }
++        };
++
++        assertTrue(&quot;Source directory does not exist&quot;, sourceDir.exists());
++
++        files = sourceDir.list(filter);
++
++        if (destDir.exists() == false) {
++            assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+         }
+-            
+-        if (logFile != null &amp;&amp; logFile.length() &gt; 0)
+-        {
+-            log = new File(logFile);
+-            buffer = new StringBuffer();
+-        }
+     }
+-    /**
+-     * @testng.configuration afterTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     */
+-    public void finish()
++
++    public void testDecode()
+     {
+-        if (log != null)
+-        {
++    	for (int i=0; i&lt;files.length; i++)
++    	{
+             try
+             {
+-                FileOutputStream stream = new FileOutputStream(log);
+-                stream.write(buffer.toString().getBytes());
+-                stream.close();
++                new FSMovie(new File(sourceDir, files[i]).getPath());
+             }
+-            catch (IOException e)
++            catch (Exception e)
+             {
+-                assert false : &quot;Cannot write log file: &quot;+log.getPath();
++                fail(files[i]+&quot;: &quot;+e.toString());
+             }
+-        }
++    	}
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void decode(String file)
+-    {
+-        try 
+-        {
+-            new FSMovie(new File(sourceDir, file).getPath());
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void encode(String file)
+-    {
+-        try 
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            File destFile = new File(destDir, file);
+-            
+-            FSMovie movie = new FSMovie(srcFile.getPath());
+ 
+-            movie.encodeToFile(destFile.getPath());
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void lazyDecode(String file)
++    public void testEncode()
+     {
+-        try 
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            
+-            FSMovie movie = new FSMovie();
+-            
+-            movie.setDecodeActions(false);
+-            movie.setDecodeShapes(false);
+-            movie.setDecodeGlyphs(false);
+-            
+-            movie.decodeFromFile(srcFile.getPath());            
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void lazyEncode(String file)
+-    {
+-        try 
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            File destFile = new File(destDir, file);
+-            
+-            FSMovie movie = new FSMovie();
+-            
+-            movie.setDecodeActions(false);
+-            movie.setDecodeShapes(false);
+-            movie.setDecodeGlyphs(false);
+-            
+-            movie.decodeFromFile(srcFile.getPath());            
+- 
+-            movie.encodeToFile(destFile.getPath());
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void clone(String file)
+-    {
+-        try 
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            File destFile = new File(destDir, file);
+-            
+-            FSMovie movie = new FSMovie(srcFile.getPath());
+-            
+-            FSMovie clone = (FSMovie)movie.clone();
+-            clone.encodeToFile(destFile.getPath());
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void toText(String file)
+-    {
+-        try
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            File dstFile = new File(destDir, file.substring(0, file.length()-3)+&quot;txt&quot;);
+-            
+-            new TextDump(new String[] {
+-                            &quot;--fileIn&quot;, srcFile.getPath(), 
+-                            &quot;--fileOut&quot;, dstFile.getPath()});
+-        }
+-        catch (Throwable e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
++		File dir = new File(destDir, &quot;encode&quot;);
+ 
+-    /*
+-     * Methods for benchmarking
+-     */
+-    
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void benchmarkDecode(String file)
+-    {
+-        try 
+-        {
+-            File swfFile = new File(sourceDir, file);
+-            
+-            byte[] bytes = new byte[(int)swfFile.length()];
+-            
+-            FileInputStream stream = new FileInputStream(swfFile);            
+-            stream.read(bytes);
+-            stream.close();
+-            
+-            System.gc();
+-            
+-            double before = (double)System.currentTimeMillis();
+-            
+-            for (int i=0; i&lt;iterations; i++)
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++		for (int i=0; i&lt;files.length; i++)
++    	{
++            try
+             {
+-                new FSMovie().decodeFromData(bytes);
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSMovie movie = new FSMovie(srcFile.getPath());
++
++                movie.encodeToFile(destFile.getPath());
+             }
+-            
+-            double duration = (System.currentTimeMillis() - before)/(double)iterations;
+-            
+-            buffer.append(file).append('\t').append(duration).append(newline);
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void benchmarkEncode(String file)
++
++    public void testClone()
+     {
+-        try 
+-        {
+-            File srcFile = new File(sourceDir, file);
+-           
+-            FSMovie movie = new FSMovie(srcFile.getPath());
++		File dir = new File(destDir, &quot;clone&quot;);
+ 
+-            System.gc();
+-            
+-            double before = (double)System.currentTimeMillis();
+-            
+-            for (int i=0; i&lt;iterations; i++)
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
+             {
+-                movie.encode();
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSMovie movie = new FSMovie(srcFile.getPath());
++
++                FSMovie clone = (FSMovie)movie.clone();
++                clone.encodeToFile(destFile.getPath());
++           }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
+             }
+-            
+-            double duration = (System.currentTimeMillis() - before)/(double)iterations;
+-            
+-            buffer.append(file).append('\t').append(duration).append(newline);
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
++    	}
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void benchmarkLazyDecode(String file)
++
++    public void testLazyDecode()
+     {
+-        try 
+-        {
+-            File swfFile = new File(sourceDir, file);
+-            
+-            byte[] bytes = new byte[(int)swfFile.length()];
+-            
+-            FileInputStream stream = new FileInputStream(swfFile);            
+-            stream.read(bytes);
+-            stream.close();
+-            
+-            System.gc();
+-            
+-            double before = (double)System.currentTimeMillis();
+-            
+-            for (int i=0; i&lt;iterations; i++)
++    	for (int i=0; i&lt;files.length; i++)
++    	{
++            try
+             {
++                File srcFile = new File(sourceDir, files[i]);
++
+                 FSMovie movie = new FSMovie();
++
+                 movie.setDecodeActions(false);
+                 movie.setDecodeShapes(false);
+                 movie.setDecodeGlyphs(false);
+-                movie.decodeFromData(bytes);
++
++                movie.decodeFromFile(srcFile.getPath());
+             }
+-            
+-            double duration = (System.currentTimeMillis() - before)/(double)iterations;
+-            
+-            buffer.append(file).append('\t').append(duration).append(newline);
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void benchmarkLazyEncode(String file)
+-    {
+-        try 
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            
+-            FSMovie movie = new FSMovie();
+-            
+-            movie.setDecodeActions(false);
+-            movie.setDecodeShapes(false);
+-            movie.setDecodeGlyphs(false);
+-            
+-            movie.decodeFromFile(srcFile.getPath());            
+- 
+-            System.gc();
+-            
+-            double before = (double)System.currentTimeMillis();
+-            
+-            for (int i=0; i&lt;iterations; i++)
++            catch (Exception e)
+             {
+-                movie.encode();
++                fail(files[i]+&quot;: &quot;+e.toString());
+             }
+-            
+-            double duration = (System.currentTimeMillis() - before)/(double)iterations;
+-            
+-            buffer.append(file).append('\t').append(duration).append(newline);
+-        }
+-        catch (Exception e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
++    	}
+     }
+-    /**
+-     * @testng.data-provider name=&quot;files&quot;
+-     */
+-    public Object[][] findFiles()
++
++    public void testLazyEncode()
+     {
+-        FilenameFilter filter = new FilenameFilter() 
+-        {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(extension);
+-            }
+-        };
+-        
+-        String[] files = sourceDir.list(filter);       
++		File dir = new File(destDir, &quot;lazyEncode&quot;);
+ 
+-        Object[][] parameters = new Object[files.length][1];
+-        
+-        for (int i=0; i&lt;files.length; i++)
+-            parameters[i] = new Object[] { files[i] };
+-        
+-        return parameters;
++		if (!dir.exists()) {
++			assertTrue(dir.mkdirs());
++		}
++
++		for (int i=0; i&lt;files.length; i++)
++    	{
++            try
++            {
++                File srcFile = new File(sourceDir, files[i]);
++                File destFile = new File(dir, files[i]);
++
++                FSMovie movie = new FSMovie();
++
++                movie.setDecodeActions(false);
++                movie.setDecodeShapes(false);
++                movie.setDecodeGlyphs(false);
++
++                movie.decodeFromFile(srcFile.getPath());
++                movie.encodeToFile(destFile.getPath());
++            }
++            catch (Exception e)
++            {
++                fail(files[i]+&quot;: &quot;+e.toString());
++            }
++    	}
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSProtectTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSProtectTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSProtectTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,159 +1,165 @@
+ /*
+  * FSProtectTest.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package com.flagstone.transform.test;
+ 
+-import com.flagstone.transform.*;
++import com.flagstone.transform.FSMovieObject;
++import com.flagstone.transform.FSProtect;
++import com.flagstone.transform.FSCoder;
+ 
+-public class FSProtectTest extends FSClassTest
+-{    
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++public class FSProtectTest extends TestCase
++{
+     private static String[] passwords = new String[] {
+         null,
+         &quot;&quot;,
+         &quot;5F4DCC3B5AA765D61D8327DEB882CF99&quot;, // &quot;password&quot;
+     };
+-           
++
+     private static int[][] encodedObjects = new int[][] {
+-        { 0x00, 0x06 },         
+-        { 0x00, 0x06 },         
+-        { 0x23, 0x06, 0x00, 0x00, 
+-          0x35, 0x46, 0x34, 0x44, 0x43, 0x43, 0x33, 0x42, 
+-          0x35, 0x41, 0x41, 0x37, 0x36, 0x35, 0x44, 0x36, 
+-          0x31, 0x44, 0x38, 0x33, 0x32, 0x37, 0x44, 0x45, 
+-          0x42, 0x38, 0x38, 0x32, 0x43, 0x46, 0x39, 0x39, 0x00}, 
++        { 0x00, 0x06 },
++        { 0x00, 0x06 },
++        { 0x23, 0x06, 0x00, 0x00,
++          0x35, 0x46, 0x34, 0x44, 0x43, 0x43, 0x33, 0x42,
++          0x35, 0x41, 0x41, 0x37, 0x36, 0x35, 0x44, 0x36,
++          0x31, 0x44, 0x38, 0x33, 0x32, 0x37, 0x44, 0x45,
++          0x42, 0x38, 0x38, 0x32, 0x43, 0x46, 0x39, 0x39, 0x00},
+     };
+-    
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkConstructors()
++
++    public void testConstructors()
+     {
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+             FSProtect background = new FSProtect(passwords[i]);
+-            
+-            checkType(FSMovieObject.Protect, background.getType());
+-            checkEqual(passwords[i], background.getPassword());
++
++            assertEquals(FSMovieObject.Protect, background.getType());
++            assertEquals(passwords[i], background.getPassword());
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkCopyConstructor()
++
++    public void testCopyConstructor()
+     {
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+             FSProtect original = new FSProtect(passwords[i]);
+             FSProtect copy = new FSProtect(original);
+-            
+-            checkEqual(passwords[i], copy.getPassword());
+-            checkNotIdentical(passwords[i], copy.getPassword());
++
++            assertEquals(passwords[i], copy.getPassword());
++            assertNotSame(passwords[i], copy.getPassword());
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkClone()
++
++    public void testClone()
+     {
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+             FSProtect original = new FSProtect(passwords[i]);
+             FSProtect clone = (FSProtect)original.clone();
+-            
+-            checkEqual(original, clone);
+-            checkNotIdentical(original, clone);
++
++            assertEquals(original, clone);
++            assertNotSame(original, clone);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, accessors&quot;
+-     */
++
+     public void checkAccessors()
+     {
+         FSProtect original = new FSProtect(&quot;&quot;);
+-        
++
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+             original.setPassword(passwords[i]);
+-            checkEqual(passwords[i], original.getPassword());
++            assertEquals(passwords[i], original.getPassword());
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, utilities&quot;
+-     */
++
+     public void checkEquals()
+     {
+         for (int i=0; i&lt;passwords.length; i++)
+         {
+             FSProtect a = new FSProtect(passwords[i]);
+             FSProtect b = new FSProtect(passwords[i]);
+-            
+-            checkEqual(a, b);
++
++            assertEquals(a, b);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, encode&quot;
+-     */
+-    public void checkEncode()
++
++    public void testEncode()
+     {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);            
+-        coder.setContext(FSCoder.Version, 5);
++        FSCoder coder;
+ 
+-        for (int i=0; i&lt;encodedObjects.length; i++) {
+-            checkEncode(coder, new FSProtect(passwords[i]), encodedObjects[i]);
++        for (int i=0; i&lt;encodedObjects.length; i++)
++        {
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++            new FSProtect(passwords[i]).encode(coder);
++
++            assertEquals(coder, initCoder(encodedObjects[i], true));
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, decode&quot;
+-     */
+-    public void checkDecode()
+-    {       
+-        for (int i=0; i&lt;encodedObjects.length; i++) 
++
++    public void testDecode()
++    {
++        for (int i=0; i&lt;encodedObjects.length; i++)
+         {
+-            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(encodedObjects[i]));            
+-            coder.setContext(FSCoder.Version, 5);
++            FSCoder coder = initCoder(encodedObjects[i], false);
+ 
+             /*
+              * If a password is an empty string then the object is encoded as
+              * if the password was null. Therefore if the expected value is an
+-             * empty string then it must be replaced by null for the test to 
++             * empty string then it must be replaced by null for the test to
+              * pass.
+              */
+             String expectedValue = passwords[i];
+-            
++
+             if (expectedValue != null &amp;&amp; expectedValue.length() == 0)
+                 expectedValue = null;
+ 
+             FSProtect obj = new FSProtect(coder);
+-            
+-            checkDecode(coder, encodedObjects[i].length);
+-            checkType(FSMovieObject.Protect, obj.getType());
+-            checkEqual(expectedValue, obj.getPassword());
++
++            assertEquals(coder.getPointer()&gt;&gt;&gt;3, encodedObjects[i].length);
++            assertEquals(FSMovieObject.Protect, obj.getType());
++            assertEquals(expectedValue, obj.getPassword());
+         }
+     }
++    
++    private FSCoder initCoder(int[] data, boolean atEnd)
++    {
++    	FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++
++        for (int i=0; i&lt;data.length; i++) {
++            coder.writeWord(data[i], 1);
++        }
++
++        if (!atEnd) {
++        	coder.setPointer(0);
++        }
++        return coder;
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSSetBackgroundColorTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,38 +1,45 @@
+ /*
+  * FSSetBackgroundColorTest.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package com.flagstone.transform.test;
+ 
+-import com.flagstone.transform.*;
++import com.flagstone.transform.FSMovieObject;
++import com.flagstone.transform.FSProtect;
++import com.flagstone.transform.FSSetBackgroundColor;
++import com.flagstone.transform.FSColor;
++import com.flagstone.transform.FSCoder;
+ 
+-public class FSSetBackgroundColorTest extends FSClassTest
+-{    
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++public class FSSetBackgroundColorTest extends TestCase
++{
+     private static FSColor[] colours = new FSColor[] {
+         new FSColor(  0,   0,   0),
+         new FSColor(255,   0,   0),
+@@ -43,115 +50,110 @@
+         new FSColor(255,   0, 255),
+         new FSColor(255, 255, 255),
+     };
+-           
++
+     private static int[][] encodedObjects = new int[][] {
+-        { 0x43, 0x02, 0x00, 0x00, 0x00 }, 
+-        { 0x43, 0x02, 0xFF, 0x00, 0x00 }, 
+-        { 0x43, 0x02, 0xFF, 0xFF, 0x00 }, 
+-        { 0x43, 0x02, 0x00, 0xFF, 0x00 }, 
+-        { 0x43, 0x02, 0x00, 0xFF, 0xFF }, 
+-        { 0x43, 0x02, 0x00, 0x00, 0xFF }, 
+-        { 0x43, 0x02, 0xFF, 0x00, 0xFF }, 
+-        { 0x43, 0x02, 0xFF, 0xFF, 0xFF }, 
++        { 0x43, 0x02, 0x00, 0x00, 0x00 },
++        { 0x43, 0x02, 0xFF, 0x00, 0x00 },
++        { 0x43, 0x02, 0xFF, 0xFF, 0x00 },
++        { 0x43, 0x02, 0x00, 0xFF, 0x00 },
++        { 0x43, 0x02, 0x00, 0xFF, 0xFF },
++        { 0x43, 0x02, 0x00, 0x00, 0xFF },
++        { 0x43, 0x02, 0xFF, 0x00, 0xFF },
++        { 0x43, 0x02, 0xFF, 0xFF, 0xFF },
+     };
+-    
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkConstructors()
++
++    public void testConstructors()
+     {
+         for (int i=0; i&lt;colours.length; i++)
+         {
+             FSSetBackgroundColor background = new FSSetBackgroundColor(colours[i]);
+-            
+-            checkType(FSMovieObject.SetBackgroundColor, background.getType());
+-            checkEqual(colours[i], background.getColor());
++
++            assertEquals(FSMovieObject.SetBackgroundColor, background.getType());
++            assertEquals(colours[i], background.getColor());
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkCopyConstructor()
++
++    public void testCopyConstructor()
+     {
+         for (int i=0; i&lt;colours.length; i++)
+         {
+             FSSetBackgroundColor original = new FSSetBackgroundColor(colours[i]);
+             FSSetBackgroundColor copy = new FSSetBackgroundColor(original);
+-            
+-            checkEqual(colours[i], copy.getColor());
+-            checkNotIdentical(colours[i], copy.getColor());
++
++            assertEquals(colours[i], copy.getColor());
++            assertNotSame(colours[i], copy.getColor());
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkContainsReference()
++
++    public void testClone()
+     {
+         FSColor colour = new FSColor(0, 0, 0);
+         FSSetBackgroundColor background = new FSSetBackgroundColor(colour);
+-        
+-        checkIdentical(colour, background.getColor());
+-    }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, constructors&quot;
+-     */
+-    public void checkClone()
+-    {
+-        FSColor colour = new FSColor(0, 0, 0);
+-        FSSetBackgroundColor background = new FSSetBackgroundColor(colour);
+         FSSetBackgroundColor clone = (FSSetBackgroundColor)background.clone();
+-        
+-        checkEqual(background, clone);
+-        checkNotIdentical(background, clone);
++
++        assertEquals(background, clone);
++        assertNotSame(background, clone);
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, accessors&quot;
+-     */
+-    public void checkAccessors()
++
++    public void testAccessors()
+     {
+         FSSetBackgroundColor background = new FSSetBackgroundColor(new FSColor(-1, -1, -1));
+-        
++
+         for (int i=0; i&lt;colours.length; i++)
+         {
+             background.setColor(colours[i]);
+-            checkEqual(colours[i], background.getColor());
++            assertEquals(colours[i], background.getColor());
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, utilities&quot;
+-     */
+-    public void checkEquals()
++
++    public void testEquals()
+     {
+         for (int i=0; i&lt;colours.length; i++)
+         {
+             FSSetBackgroundColor a = new FSSetBackgroundColor(colours[i]);
+             FSSetBackgroundColor b = new FSSetBackgroundColor(colours[i]);
+-            
+-            checkEqual(a, b);
++
++            assertEquals(a, b);
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, encode&quot;
+-     */
+-    public void checkEncode()
++
++    public void testEncode()
+     {
+-        for (int i=0; i&lt;encodedObjects.length; i++) {
+-            checkEncode(new FSSetBackgroundColor(colours[i]), encodedObjects[i]);
++        FSCoder coder;
++
++        for (int i=0; i&lt;encodedObjects.length; i++)
++        {
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++            new FSSetBackgroundColor(colours[i]).encode(coder);
++
++            assertEquals(coder, initCoder(encodedObjects[i], true));
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;setbackgroundcolor, decode&quot;
+-     */
+-    public void checkDecode()
+-    {       
+-        for (int i=0; i&lt;encodedObjects.length; i++) 
++
++    public void testDecode()
++    {
++        for (int i=0; i&lt;encodedObjects.length; i++)
+         {
+-            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(encodedObjects[i]));            
++            FSCoder coder = initCoder(encodedObjects[i], false);
+             FSSetBackgroundColor background = new FSSetBackgroundColor(coder);
+ 
+-            checkDecode(coder, encodedObjects[i].length);
+-            checkType(FSMovieObject.SetBackgroundColor, background.getType());
+-            checkEqual(colours[i], background.getColor());
++            assertEquals(coder.getPointer()&gt;&gt;&gt;3, encodedObjects[i].length);
++            assertEquals(FSMovieObject.SetBackgroundColor, background.getType());
++            assertEquals(colours[i], background.getColor());
+         }
+     }
++    
++    private FSCoder initCoder(int[] data, boolean atEnd)
++    {
++    	FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++
++        for (int i=0; i&lt;data.length; i++) {
++            coder.writeWord(data[i], 1);
++        }
++
++        if (!atEnd) {
++        	coder.setPointer(0);
++        }
++        return coder;
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSShapeConstructorTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -5,59 +5,52 @@
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.util.*;
+ 
+-public class FSShapeConstructorTest
++import junit.framework.TestCase;
++
++public class FSShapeConstructorTest extends TestCase
+ {
+     private File destDir = null;
+-    
+-    public FSShapeConstructorTest()
++
++    public void setup()
+     {
++        destDir = new File(&quot;test/results/FSShapeConstructor&quot;);
+     }
+-    /**
+-     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     * @testng.parameters value = &quot;dstDir&quot;
+-     */
+-    public void configure(String dstDir)
++
++    public void testBasicShapes()
+     {
+-        destDir = new File(dstDir);
+-    }
+-	/**
+-     * @testng.test
+-	 */
+-    public void basicShapes()
+-    {
+-        try 
++        try
+         {
+             File dstFile = new File(destDir, &quot;BasicShapes.swf&quot;);
+-            
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
+ 
+             FSShapeConstructor path = new FSShapeConstructor();
+             FSMovie movie = new FSMovie();
+-            
++
+             path.COORDINATES_ARE_PIXELS = true;
+-            
++
+             int width = 150;
+             int height = 100;
+             int cornerRadius = 10;
+-            
++
+             int identifier = 0;
+-            
++
+             path.add(new FSSolidLine(20, FSColorTable.black()));
+             path.add(new FSSolidFill(FSColorTable.red()));
+-            
++
+             movie.setFrameRate(1.0f);
+             movie.setFrameSize(new FSBounds(-4000, -4000, 4000, 4000));
+             movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+-            
++
+             identifier = movie.newIdentifier();
+-            
++
+             path.selectStyle(0, 0);
+             path.rect(width/2, -height/2, width, height);
+             movie.add(path.defineShape(identifier));
+             movie.add(new FSPlaceObject2(identifier, 1, 0, 0));
+             movie.add(new FSShowFrame());
+-            
++
+             /*
+              * Draw a rectangle with rounded corners
+              */
+@@ -81,7 +74,7 @@
+             movie.add(path.defineShape(identifier));
+             movie.add(new FSPlaceObject2(identifier, 1));
+             movie.add(new FSShowFrame());
+-            
++
+             /*
+              * Draw a elipse
+              */
+@@ -93,17 +86,17 @@
+             movie.add(path.defineShape(identifier));
+             movie.add(new FSPlaceObject2(identifier, 1));
+             movie.add(new FSShowFrame());
+-            
++
+             /*
+              * Draw a polyline
+              */
+             identifier = movie.newIdentifier();
+ 
+-            int[] points = new int[] { 
+-                0, -100, 
+-                10, 0, 
+-                0, 90, 
+-                90, 0, 
++            int[] points = new int[] {
++                0, -100,
++                10, 0,
++                0, 90,
++                90, 0,
+                 0, 20,
+                 -90, 0,
+                 0, 90,
+@@ -122,7 +115,7 @@
+             movie.add(path.defineShape(identifier));
+             movie.add(new FSPlaceObject2(identifier, 1));
+             movie.add(new FSShowFrame());
+-            
++
+             /*
+              * Draw a cubic bezier curve
+              */
+@@ -135,7 +128,7 @@
+             movie.add(path.defineShape(identifier));
+             movie.add(new FSPlaceObject2(identifier, 1));
+             movie.add(new FSShowFrame());
+-    
++
+             movie.encodeToFile(dstFile.getPath());
+         }
+         catch (Exception e)
+
+Modified: trunk/src/com/flagstone/transform/test/FSShowFrameTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSShowFrameTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSShowFrameTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,104 +1,117 @@
+ /*
+  * FSSetBackgroundColorTest.java
+  * Transform
+- * 
++ *
+  * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+  *
+- * Redistribution and use in source and binary forms, with or without modification, 
++ * Redistribution and use in source and binary forms, with or without modification,
+  * are permitted provided that the following conditions are met:
+  *
+  *  * Redistributions of source code must retain the above copyright notice, this
+  *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
++ *  * Redistributions in binary form must reproduce the above copyright notice,
++ *    this list of conditions and the following disclaimer in the documentation
+  *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
++ *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors
++ *    may be used to endorse or promote products derived from this software
+  *    without specific prior written permission.
+  *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
++ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
++ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+  * OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package com.flagstone.transform.test;
+ 
+-import com.flagstone.transform.*;
++import com.flagstone.transform.FSMovieObject;
++import com.flagstone.transform.FSProtect;
++import com.flagstone.transform.FSShowFrame;
++import com.flagstone.transform.FSCoder;
+ 
+-public class FSShowFrameTest extends FSClassTest
+-{    
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
++public class FSShowFrameTest extends TestCase
++{
+     private static int[][] encodedObjects = new int[][] {
+-        { 0x40, 0x00 }, 
++        { 0x40, 0x00 },
+     };
+-    
+-    /**
+-     * @testng.test groups=&quot;showframe, constructors&quot;
+-     */
+-    public void checkConstructors()
++
++    public void testConstructors()
+     {
+         FSShowFrame obj = new FSShowFrame();
+-        
+-        checkType(FSMovieObject.ShowFrame, obj.getType());
++
++        assertEquals(FSMovieObject.ShowFrame, obj.getType());
+     }
+-    /**
+-     * @testng.test groups=&quot;showframe, constructors&quot;
+-     */
+-    public void checkCopyConstructor()
++
++    public void testCopyConstructor()
+     {
+         FSShowFrame original = new FSShowFrame();
+         FSShowFrame copy = new FSShowFrame(original);
+-        
+-        checkEqual(original, copy);
+-        checkNotIdentical(original, copy);
++
++        assertEquals(original, copy);
++        assertNotSame(original, copy);
+     }
+-    /**
+-     * @testng.test groups=&quot;showframe, constructors&quot;
+-     */
+-    public void checkClone()
++
++    public void testClone()
+     {
+         FSShowFrame original = new FSShowFrame();
+         FSShowFrame clone = (FSShowFrame)original.clone();
+-        
+-        checkEqual(original, clone);
+-        checkNotIdentical(original, clone);
++
++        assertEquals(original, clone);
++        assertNotSame(original, clone);
+     }
+-    /**
+-     * @testng.test groups=&quot;showframe, utilities&quot;
+-     */
++
+     public void checkEquals()
+     {
+         FSShowFrame a = new FSShowFrame();
+         FSShowFrame b = new FSShowFrame();
+-        
+-        checkEqual(a, b);
++
++        assertEquals(a, b);
+     }
+-    /**
+-     * @testng.test groups=&quot;showframe, encode&quot;
+-     */
++
+     public void checkEncode()
+     {
+-        for (int i=0; i&lt;encodedObjects.length; i++) {
+-            checkEncode(new FSShowFrame(), encodedObjects[i]);
++        FSCoder coder;
++
++        for (int i=0; i&lt;encodedObjects.length; i++)
++        {
++            coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++            new FSShowFrame().encode(coder);
++
++            assertEquals(coder, initCoder(encodedObjects[i], true));
+         }
+     }
+-    /**
+-     * @testng.test groups=&quot;showframe, decode&quot;
+-     */
++
+     public void checkDecode()
+-    {       
+-        for (int i=0; i&lt;encodedObjects.length; i++) 
++    {
++        for (int i=0; i&lt;encodedObjects.length; i++)
+         {
+-            FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, compact(encodedObjects[i]));            
++            FSCoder coder = initCoder(encodedObjects[i], false);
+             FSShowFrame obj = new FSShowFrame(coder);
+ 
+-            checkDecode(coder, encodedObjects[i].length);
+-            checkType(FSMovieObject.ShowFrame, obj.getType());
++            assertEquals(coder.getPointer()&gt;&gt;&gt;3, encodedObjects[i].length);
++            assertEquals(FSMovieObject.ShowFrame, obj.getType());
+         }
+     }
++    
++    private FSCoder initCoder(int[] data, boolean atEnd)
++    {
++    	FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, 0);
++
++        for (int i=0; i&lt;data.length; i++) {
++            coder.writeWord(data[i], 1);
++        }
++
++        if (!atEnd) {
++        	coder.setPointer(0);
++        }
++        return coder;
++    }
+ }
+
+Modified: trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSSoundConstructorTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,110 +1,115 @@
+ package com.flagstone.transform.test;
+ 
+-import java.io.*;
++import java.io.File;
++import java.io.FilenameFilter;
++import java.util.zip.DataFormatException;
+ 
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.util.*;
+ 
+-public class FSSoundConstructorTest
++public class FSSoundConstructorTest extends TestCase
+ {
+-    private File sourceDir = null;
+-    private File destDir = null;
+-    private String extension = null;
+-    
+-    public FSSoundConstructorTest()
++    public void testEventSound()
+     {
+-    }
+-    /**
+-     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     * @testng.parameters value = &quot;srcDir dstDir ext&quot;
+-     */
+-    public void configure(String srcDir, String dstDir, String ext)
+-    {
+-        sourceDir = new File(srcDir);
+-        destDir = new File(dstDir);
+-        extension = ext;
+-    }
+-	/**
+-     * @testng.test dataProvider=&quot;files&quot;
+-	 */
+-    public void playEventSound(String sndFile)
+-    {
+-        try 
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.wav&quot;);
++            }
++        };
++
++        try
+         {
+-            File srcFile = new File(sourceDir, sndFile);
+-            File destFile = new File(destDir, sndFile.substring(0, sndFile.lastIndexOf('.')) + &quot;.swf&quot;);
+- 
++            File sourceDir = new File(&quot;/windows/media&quot;);
++            File destDir = new File(&quot;test/results/FSSoundConstructor/event/windows&quot;);
++
++            assertTrue(sourceDir.exists());
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            FSSoundConstructor soundGenerator = new FSSoundConstructor(srcFile.getPath());
+-            encodeEventSoundToFile(soundGenerator, destFile);
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	try
++            	{
++	            	sourceFile = new File(sourceDir, files[i]);
++	            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++	
++	            	FSSoundConstructor soundGenerator = new FSSoundConstructor(sourceFile.getPath());
++	            	encodeEventSoundToFile(soundGenerator, destFile);
++            	}
++                catch (DataFormatException e)
++                {
++                    System.err.println(sourceFile+&quot;: &quot;+e.toString());
++                }
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void playStreamingSound(String sndFile)
++
++    public void testStreamingSound()
+     {
+-        try 
++        try
+         {
+-            File srcFile = new File(sourceDir, sndFile);
+-            File destFile = new File(destDir, sndFile.substring(0, sndFile.lastIndexOf('.')) + &quot;.swf&quot;);
+- 
++            FilenameFilter filter = new FilenameFilter() {
++                public boolean accept(File directory, String name) {
++                    return name.endsWith(&quot;.wav&quot;);
++                }
++            };
++
++            File sourceDir = new File(&quot;/windows/media&quot;);
++            File destDir = new File(&quot;test/results/FSSoundConstructor/streaming/windows&quot;);
++
++            assertTrue(sourceDir.exists());
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            FSSoundConstructor soundGenerator = new FSSoundConstructor(srcFile.getPath());
+-            encodeStreamingSoundToFile(soundGenerator, destFile);
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	try
++            	{
++	            	sourceFile = new File(sourceDir, files[i]);
++	                destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++	
++		            FSSoundConstructor soundGenerator = new FSSoundConstructor(sourceFile.getPath());
++		            encodeStreamingSoundToFile(soundGenerator, destFile);
++            	}
++                catch (DataFormatException e)
++                {
++                    System.err.println(sourceFile+&quot;: &quot;+e.toString());
++                }
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.data-provider name=&quot;files&quot;
+-     */
+-    public Object[][] findFiles()
+-    {
+-        FilenameFilter filter = new FilenameFilter() 
+-        {
+-            public boolean accept(File directory, String name) 
+-            {
+-                String ext = name.substring(name.length()-extension.length()).toLowerCase();
+-                
+-                return ext.equals(extension);
+-            }
+-        };
+-        
+-        Object[][] parameters = new Object[0][0];
+-        
+-        if (sourceDir.exists())
+-        {
+-            String[] files = sourceDir.list(filter);       
+-    
+-            parameters = new Object[files.length][1];
+-            
+-            for (int i=0; i&lt;files.length; i++)
+-                parameters[i] = new Object[] { files[i] };
+-        }
+-        
+-        return parameters;
+-    }
+-      
++
+     private void encodeEventSoundToFile(FSSoundConstructor soundGenerator, File file) throws Exception
+     {
+         FSMovie movie = new FSMovie();
+-        
++
+         float framesPerSecond = 12.0f;
+ 
+         movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
+         movie.setFrameRate(framesPerSecond);
+-    
++
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+ 
+         int soundId = movie.newIdentifier();
+@@ -115,18 +120,18 @@
+          */
+         float duration = ((float) soundGenerator.getSamplesPerChannel()) / ((float) soundGenerator.getSampleRate());
+         int numberOfFrames = (int) (duration * framesPerSecond);
+-        
++
+         /*
+          * Add the sound definition and the FSStartSound object which is used to start
+          * the sound playing.
+          */
+-        
++
+         FSDefineSound sound = soundGenerator.defineSound(soundId);
+-        
++
+         movie.add(sound);
+         movie.add(new FSStartSound(new FSSound(soundId, FSSound.Start)));
+ 
+-        /* 
++        /*
+          * Add frames to give the sound time to play.
+          */
+         for (int j=0; j&lt;numberOfFrames; j++)
+@@ -134,6 +139,7 @@
+ 
+         movie.encodeToFile(file.getPath());
+     }
++
+     private void encodeStreamingSoundToFile(FSSoundConstructor soundGenerator, File file) throws Exception
+     {
+         float framesPerSecond = 12.0f;
+@@ -142,7 +148,7 @@
+ 
+         movie.setFrameSize(new FSBounds(0, 0, 8000, 4000));
+         movie.setFrameRate(framesPerSecond);
+-    
++
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+ 
+         /*
+@@ -154,13 +160,13 @@
+         int samplesPerBlock = soundGenerator.getSampleRate() / (int) framesPerSecond;
+         int numberOfBlocks = soundGenerator.getSamplesPerChannel() / samplesPerBlock;
+ 
+-        /* 
++        /*
+          * An FSSoundStreamHeader2 object defines the attributes of the streaming sound.
+          */
+         movie.add(soundGenerator.streamHeader(samplesPerBlock));
+ 
+-        /* 
+-         * Add a streaming block for each frame so the sound is played as each frame 
++        /*
++         * Add a streaming block for each frame so the sound is played as each frame
+          * is displayed.
+          */
+         for (int j=0; j&lt;numberOfBlocks; j++)
+
+Modified: trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/FSTextConstructorTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -4,245 +4,257 @@
+ import java.util.*;
+ import java.awt.*;
+ 
++import junit.framework.TestCase;
++import junit.framework.Assert;
++
+ import com.flagstone.transform.*;
+ import com.flagstone.transform.util.*;
+ 
+-public class FSTextConstructorTest
++public class FSTextConstructorTest extends TestCase
+ {
+-    private File sourceDir = null;
+-    private File destDir = null;
+-    private String extension = null;
+-    
+-    public FSTextConstructorTest()
++    public void testAWTFont()
+     {
+-    }
+-    /**
+-     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     * @testng.parameters value = &quot;srcDir dstDir ext&quot;
+-     */
+-    public void configure(String srcDir, String dstDir, String ext)
+-    {
+-        sourceDir = new File(srcDir);
+-        destDir = new File(dstDir);
+-        extension = ext;
+-    }
+-	/**
+-     * @testng.test
+-	 */
+-    public void displayAWTFont()
+-    {
+-        try 
++        try
+         {
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/awt&quot;);
+             Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+ 
+             for (int i=0; i&lt;fonts.length; i++)
+             {
+                 String fontName = fonts[i].getFontName();
+-    
++
+                 File destFile = new File(destDir, fontName + &quot;.swf&quot;);
+-     
++
+                 if (destDir.exists() == false)
+-                    assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-                
+-                FSTextConstructor textGenerator = new FSTextConstructor(1, fontName);            
++                    assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, fontName);
+                 encodeFontToFile(textGenerator, destFile);
+             }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-	/**
+-     * @testng.test dataProvider=&quot;files&quot;
+-	 */
+-    public void displayTrueTypeFont(String fontFile)
++
++    public void testTrueTypeFont()
+     {
+-        try 
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
+         {
+-            File srcFile = new File(sourceDir, fontFile);
+-            File destFile = new File(destDir, fontFile.substring(0, fontFile.lastIndexOf('.')) + &quot;.swf&quot;);
+- 
++            File sourceDir = new File(&quot;test/data/ttf&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/ttf&quot;);
++
++            assertTrue(sourceDir.exists());
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            FSTextConstructor textGenerator = new FSTextConstructor(1, srcFile.getPath());          
+-            encodeFontToFile(textGenerator, destFile);
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, sourceFile.getPath());
++                encodeFontToFile(textGenerator, destFile);
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;character-sets&quot;
+-     */
+-    public void displayCharacterSets(Integer code, String name)
++
++    public void testWindowsFont()
+     {
+-        try 
++        FilenameFilter filter = new FilenameFilter() {
++            public boolean accept(File directory, String name) {
++                return name.endsWith(&quot;.ttf&quot;);
++            }
++        };
++
++        try
+         {
+-            File destFile = new File(destDir, name+&quot;.swf&quot;);
+-            
+-            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-         
++            File sourceDir = new File(&quot;/windows/fonts&quot;);
++            File destDir = new File(&quot;test/results/FSTextConstructor/fonts/win&quot;);
++
++            assertTrue(sourceDir.exists());
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            encodeCharacterSet(textGenerator, 
+-                FSCharacterTable.characterSet(code.intValue()), destFile);
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            String[] files = sourceDir.list(filter);
++            File sourceFile = null;
++            File destFile = null;
++
++            for (int i=0; i&lt;files.length; i++)
++            {
++            	sourceFile = new File(sourceDir, files[i]);
++            	destFile = new File(destDir, files[i].substring(0, files[i].lastIndexOf('.')) + &quot;.swf&quot;);
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, sourceFile.getPath());
++                encodeFontToFile(textGenerator, destFile);
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;locales&quot;
+-     */
+-    public void boundedCharacters(Locale locale, String name)
++
++    public void testCharacterSets(Integer code, String name)
+     {
+-        try 
++        try
+         {
+-            File destFile = new File(destDir, name+&quot;.swf&quot;);
+-            
+-            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-         
++            Object[][] parameters = new Object[][] {
++                new Object[] { new Integer(FSCharacterTable.euro), &quot;euro&quot; },
++                new Object[] { new Integer(FSCharacterTable.iso_646), &quot;iso-646&quot; },
++                new Object[] { new Integer(FSCharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/character-sets&quot;);
++            File destFile = null;
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            encodeBoundedCharacterSet(textGenerator, 
+-                FSCharacterTable.characterSetForLocale(locale), destFile);
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++                encodeCharacterSet(textGenerator, FSCharacterTable.characterSet(((Integer)parameters[i][1]).intValue()), destFile);
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;locales&quot;
+-     */
+-    public void displayLocales(Locale locale, String name)
++
++    public void testBoundedCharacters(Locale locale, String name)
+     {
+-        try 
++        try
+         {
+-            File destFile = new File(destDir, name+&quot;.swf&quot;);
+-            
+-            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-         
++            Object[][] parameters = new Object[][] {
++                new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },
++                new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },
++                new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },
++                new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },
++                new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },
++                new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/locales&quot;);
++            File destFile = null;
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            encodeCharacterSet(textGenerator, 
+-                FSCharacterTable.characterSetForLocale(locale), destFile);
+-        }
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++
++                encodeBoundedCharacterSet(textGenerator,
++                                FSCharacterTable.characterSetForLocale((Locale)parameters[i][1]), destFile);
++            }
++       }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.test dataProvider=&quot;strings&quot;
+-     */
+-    public void displayStrings(String str, String title)
++
++    public void testLocales(Locale locale, String name)
+     {
+-        try 
++        try
+         {
+-            File destFile = new File(destDir, title+&quot;.swf&quot;);
+-            
+-            FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
+-         
++            Object[][] parameters = new Object[][] {
++                new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },
++                new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },
++                new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },
++                new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },
++                new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },
++                new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },
++                new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/locales&quot;);
++            File destFile = null;
++
+             if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            encodeString(textGenerator, str, destFile);
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            for (int i=0; i&lt;parameters.length; i++)
++            {
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++
++                encodeCharacterSet(textGenerator,
++                                FSCharacterTable.characterSetForLocale((Locale)parameters[i][0]), destFile);
++            }
+         }
+         catch (Exception e)
+         {
+-            assert false;
++            fail(e.toString());
+         }
+     }
+-    /**
+-     * @testng.data-provider name=&quot;files&quot;
+-     */
+-    public Object[][] findFiles()
++
++    public void testStrings(String str, String title)
+     {
+-        FilenameFilter filter = new FilenameFilter() 
++        try
+         {
+-            public boolean accept(File directory, String name) 
++            Object[][] parameters = new Object[][] {
++                new Object[] { &quot;The quick brown, fox jumped over the lazy dog.&quot;, &quot;atoz&quot; },
++                new Object[] { &quot;This line contains the same no. of characters.&quot;, &quot;fixed&quot; },
++                new Object[] { &quot;Lorem ipsum dolor sit amet, consectetuer elit.&quot;, &quot;latin&quot; },
++                new Object[] { &quot;Rato roeu a rolha da garrafa do rei da Russia.&quot;, &quot;rhyme&quot; },
++            };
++
++            File destDir = new File(&quot;test/results/FSTextConstructor/strings&quot;);
++            File destFile = null;
++
++            if (destDir.exists() == false)
++                assertTrue(&quot;Count not create destination directory: &quot;+destDir, destDir.mkdirs());
++
++            for (int i=0; i&lt;parameters.length; i++)
+             {
+-                String ext = name.substring(name.length()-extension.length()).toLowerCase();
+-                
+-                return ext.equals(extension);
+-            }
+-        };
+-        
+-        Object[][] parameters = new Object[0][0];
+-        
+-        if (sourceDir.exists())
++                destFile = new File(destDir, parameters[i][1]+&quot;.swf&quot;);
++
++                FSTextConstructor textGenerator = new FSTextConstructor(1, &quot;Arial&quot;);
++                encodeString(textGenerator, (String)parameters[i][0], destFile);
++           }
++        }
++        catch (Exception e)
+         {
+-            String[] files = sourceDir.list(filter);       
+-    
+-            parameters = new Object[files.length][1];
+-            
+-            for (int i=0; i&lt;files.length; i++)
+-                parameters[i] = new Object[] { files[i] };
++            fail(e.toString());
+         }
+-        
+-        return parameters;
+     }
+-    /**
+-     * @testng.data-provider name=&quot;character-sets&quot;
+-     */
+-    public Object[][] characterSets()
+-    {
+-        Object[][] parameters = new Object[][] {
+-            new Object[] { new Integer(FSCharacterTable.euro), &quot;euro&quot; },                       
+-            new Object[] { new Integer(FSCharacterTable.iso_646), &quot;iso-646&quot; },                       
+-            new Object[] { new Integer(FSCharacterTable.iso_8859_1), &quot;iso-8859-1&quot; },                       
+-        };
+-        
+-        return parameters;
+-    }
+-    /**
+-     * @testng.data-provider name=&quot;locales&quot;
+-     */
+-    public Object[][] locales()
+-    {
+-        Object[][] parameters = new Object[][] {
+-            new Object[] { new Locale(&quot;de&quot;, &quot;DE&quot;), &quot;de_DE&quot; },                       
+-            new Object[] { new Locale(&quot;dk&quot;, &quot;DK&quot;), &quot;dk_DK&quot; },                       
+-            new Object[] { new Locale(&quot;en&quot;, &quot;GB&quot;), &quot;en_GB&quot; },                       
+-            new Object[] { new Locale(&quot;en&quot;, &quot;UK&quot;), &quot;en_UK&quot; },                       
+-            new Object[] { new Locale(&quot;en&quot;, &quot;US&quot;), &quot;en_US&quot; },                       
+-            new Object[] { new Locale(&quot;es&quot;, &quot;ES&quot;), &quot;es_ES&quot; },                       
+-            new Object[] { new Locale(&quot;fi&quot;, &quot;FI&quot;), &quot;fi_FI&quot; },                       
+-            new Object[] { new Locale(&quot;fr&quot;, &quot;FR&quot;), &quot;fr_FR&quot; },                       
+-            new Object[] { new Locale(&quot;pt&quot;, &quot;PT&quot;), &quot;pt_PT&quot; },                       
+-        };
+-        
+-        return parameters;
+-    }
+-    /**
+-     * @testng.data-provider name=&quot;strings&quot;
+-     */
+-    public Object[][] strings()
+-    {
+-        Object[][] parameters = new Object[][] {
+-            new Object[] { &quot;The quick brown, fox jumped over the lazy dog.&quot;, &quot;atoz&quot; },                       
+-            new Object[] { &quot;This line contains the same no. of characters.&quot;, &quot;fixed&quot; },                       
+-            new Object[] { &quot;Lorem ipsum dolor sit amet, consectetuer elit.&quot;, &quot;latin&quot; },                       
+-            new Object[] { &quot;Rato roeu a rolha da garrafa do rei da Russia.&quot;, &quot;rhyme&quot; },                       
+-        };
+-        
+-        return parameters;
+-    }
+-    
++
+     private void encodeFontToFile(FSTextConstructor textGenerator, File file) throws Exception
+     {
+         int fontSize = 280;
+-        int lineSpacing = fontSize;        
++        int lineSpacing = fontSize;
+         int margin = fontSize;
+-                
++
+         FSMovie movie = new FSMovie();
+         ArrayList lines = new ArrayList();
+         char c = 0;
+@@ -250,24 +262,24 @@
+         for (int i=0; i&lt;32; i++)
+         {
+             StringBuffer line = new StringBuffer();
+-            
++
+             for (int j=0; j&lt;64; j++, c++)
+ 
+                 line.append((char)c);
+ 
+             lines.add(line.toString());
+         }
+-        
++
+         int fontId = movie.newIdentifier();
+-        
++
+         FSDefineText2 text = textGenerator.defineTextBlock(movie.newIdentifier(), lines, fontSize, FSColorTable.black(), lineSpacing);
+         FSDefineFont2 font = textGenerator.defineFont();
+-        
++
+         font.setIdentifier(fontId);
+ 
+         int screenWidth = text.getBounds().getWidth() + margin + margin;
+         int screenHeight = text.getBounds().getHeight() + margin + margin;
+-            
++
+         movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
+         movie.setFrameRate(1.0f);
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+@@ -281,14 +293,12 @@
+     private void encodeCharacterSet(FSTextConstructor textGenerator, char[] chars, File file) throws Exception
+     {
+         int fontSize = 280;
+-        int lineSpacing = fontSize;        
++        int lineSpacing = fontSize;
+         int margin = fontSize;
+         int charsPerline = 32;
+-                
++
+         FSMovie movie = new FSMovie();
+         ArrayList lines = new ArrayList();
+-        
+-        char c = 0;
+ 
+         StringBuffer line = new StringBuffer();
+ 
+@@ -302,23 +312,23 @@
+                 line = new StringBuffer();
+             }
+         }
+-        
++
+         if (line.length() &gt; 0)
+             lines.add(line.toString());
+-            
+-        
++
++
+         int fontId = movie.newIdentifier();
+-        
++
+         textGenerator.willDisplay(chars);
+-        
++
+         FSDefineFont2 font = textGenerator.defineFont();
+         FSDefineText2 text = textGenerator.defineTextBlock(movie.newIdentifier(), lines, fontSize, FSColorTable.black(), lineSpacing);
+-        
++
+         font.setIdentifier(fontId);
+ 
+         int screenWidth = text.getBounds().getWidth() + margin + margin;
+         int screenHeight = text.getBounds().getHeight() + margin + margin;
+-            
++
+         movie.setFrameSize(new FSBounds(0, 0, screenWidth, screenHeight));
+         movie.setFrameRate(1.0f);
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+@@ -332,9 +342,9 @@
+         int shapeId = movie.newIdentifier();
+ 
+         path.add(new FSSolidLine(1, FSColorTable.darkblue()));
+-        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
+                         textWidth, textHeight);
+-        
++
+         movie.add(path.defineShape(shapeId));
+         movie.add(new FSPlaceObject2(shapeId, 2, margin+textWidth/2, margin+textHeight/2));
+         movie.add(new FSShowFrame());
+@@ -344,23 +354,23 @@
+     private void encodeBoundedCharacterSet(FSTextConstructor textGenerator, char[] chars, File file) throws Exception
+     {
+         int fontSize = 280;
+-        int lineSpacing = fontSize;        
++        int lineSpacing = fontSize;
+         int margin = fontSize;
+         int charsPerLine = 32;
+         int layer = 1;
+-                
++
+         FSMovie movie = new FSMovie();
+         FSShapeConstructor path = new FSShapeConstructor();
+-         
++
+         textGenerator.willDisplay(chars);
+-        
+-        int maxWidth = 0;                        
++
++        int maxWidth = 0;
+         int x = margin;
+         int y = margin;
+ 
+         int fontId = movie.newIdentifier();
+         FSDefineFont2 font = textGenerator.defineFont();
+-        font.setIdentifier(fontId);        
++        font.setIdentifier(fontId);
+ 
+         movie.setFrameSize(new FSBounds(0, 0, 0, 0));
+         movie.setFrameRate(1.0f);
+@@ -369,29 +379,29 @@
+ 
+         for (int i=0; i&lt;chars.length; i++)
+         {
+-            FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), String.valueOf(chars[i]), fontSize, FSColorTable.black());        
++            FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), String.valueOf(chars[i]), fontSize, FSColorTable.black());
+ 
+             int textWidth = text.getBounds().getWidth();
+             int textHeight = text.getBounds().getHeight();
+             int advance = textGenerator.advanceForChar(chars[i], fontSize) + 40;
+-                
++
+             int shapeId = movie.newIdentifier();
+-            
++
+             path.newPath();
+             path.add(new FSSolidLine(1, FSColorTable.darkblue()));
+-            path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++            path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
+                             textWidth, textHeight);
+-            
++
+             movie.add(path.defineShape(shapeId));
+-            movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));        
+-             
++            movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));
++
+             movie.add(text);
+             movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
+ 
+             if (i % charsPerLine == charsPerLine-1)
+             {
+                 maxWidth = x+advance+margin &gt; maxWidth ? x+advance+margin : maxWidth;
+-                
++
+                 x = margin;
+                 y += lineSpacing;
+             }
+@@ -412,34 +422,34 @@
+         int layer = 1;
+         int x = margin;
+         int y = margin;
+-                
++
+         FSMovie movie = new FSMovie();
+         FSShapeConstructor path = new FSShapeConstructor();
+-         
++
+         textGenerator.willDisplay(str.toCharArray());
+-        
++
+         int fontId = movie.newIdentifier();
+         FSDefineFont2 font = textGenerator.defineFont();
+-        font.setIdentifier(fontId);        
++        font.setIdentifier(fontId);
+ 
+         movie.setFrameRate(1.0f);
+         movie.add(new FSSetBackgroundColor(FSColorTable.lightblue()));
+         movie.add(font);
+ 
+-        FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), str, fontSize, FSColorTable.black());        
++        FSDefineText2 text = textGenerator.defineText(movie.newIdentifier(), str, fontSize, FSColorTable.black());
+ 
+         int textWidth = text.getBounds().getWidth();
+-        int textHeight = text.getBounds().getHeight();            
++        int textHeight = text.getBounds().getHeight();
+         int shapeId = movie.newIdentifier();
+-        
++
+         path.newPath();
+         path.add(new FSSolidLine(1, FSColorTable.darkblue()));
+-        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(), 
++        path.rect(text.getBounds().getMinX(), text.getBounds().getMinY(),
+                         textWidth, textHeight);
+-        
++
+         movie.add(path.defineShape(shapeId));
+-        movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));        
+-         
++        movie.add(new FSPlaceObject2(shapeId, layer++, x+textWidth/2, y+textHeight/2));
++
+         movie.add(text);
+         movie.add(new FSPlaceObject2(text.getIdentifier(), layer++, x, y));
+         movie.add(new FSShowFrame());
+
+Added: trunk/src/com/flagstone/transform/test/MovieObjectTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/MovieObjectTests.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/MovieObjectTests.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -0,0 +1,16 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class MovieObjectTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSProtectTest.class);
++        suite.addTestSuite(FSSetBackgroundColorTest.class);
++        suite.addTestSuite(FSShowFrameTest.class);
++        return suite;
++    }
++}
+
+Added: trunk/src/com/flagstone/transform/test/MovieTests.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/MovieTests.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/MovieTests.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -0,0 +1,15 @@
++package com.flagstone.transform.test;
++
++import junit.framework.Test;
++import junit.framework.TestSuite;
++
++public class MovieTests
++{
++    public static Test suite()
++    {
++        TestSuite suite= new TestSuite();
++        suite.addTestSuite(FSMovieTest.class);
++        suite.addTestSuite(FSMovieBenchmark.class);
++        return suite;
++    }
++}
+
+Deleted: trunk/src/com/flagstone/transform/test/TextDumpTest.java
+===================================================================
+--- trunk/src/com/flagstone/transform/test/TextDumpTest.java	2007-12-22 15:40:05 UTC (rev 265)
++++ trunk/src/com/flagstone/transform/test/TextDumpTest.java	2007-12-22 15:41:10 UTC (rev 266)
+@@ -1,97 +0,0 @@
+-/*
+- * TextDumpTest.java
+- * Transform
+- * 
+- * Copyright (c) 2001-2006 Flagstone Software Ltd. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without modification, 
+- * are permitted provided that the following conditions are met:
+- *
+- *  * Redistributions of source code must retain the above copyright notice, this
+- *    list of conditions and the following disclaimer.
+- *  * Redistributions in binary form must reproduce the above copyright notice, 
+- *    this list of conditions and the following disclaimer in the documentation 
+- *    and/or other materials provided with the distribution.
+- *  * Neither the name of Flagstone Software Ltd. nor the names of its contributors 
+- *    may be used to endorse or promote products derived from this software 
+- *    without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND 
+- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+- * IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+- * OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-package com.flagstone.transform.test;
+-
+-import java.io.*;
+-
+-import com.flagstone.transform.tools.*;
+-
+-public class TextDumpTest
+-{
+-    private File sourceDir = null;
+-    private File destDir = null;
+-    private String extension = &quot;.swf&quot;;
+-    
+-    public TextDumpTest()
+-    {
+-    }
+-    /**
+-     * @testng.configuration beforeTest = &quot;true&quot; alwaysRun = &quot;true&quot; 
+-     * @testng.parameters value = &quot;srcDir dstDir&quot;
+-     */
+-    public void configure(String srcDir, String dstDir)
+-    {
+-        sourceDir = new File(srcDir);
+-        destDir = new File(dstDir);
+-    }
+-    /**
+-     * @testng.test dataProvider=&quot;files&quot;
+-     */
+-    public void toText(String file)
+-    {
+-        try
+-        {
+-            File srcFile = new File(sourceDir, file);
+-            File dstFile = new File(destDir, file.substring(0, file.length()-3)+&quot;txt&quot;);
+-            
+-            if (destDir.exists() == false)
+-                assert destDir.mkdirs() : &quot;Count not create directory: &quot;+destDir;
+-            
+-            new TextDump(new String[] {
+-                            &quot;--fileIn&quot;, srcFile.getPath(), 
+-                            &quot;--fileOut&quot;, dstFile.getPath()});
+-        }
+-        catch (Throwable e)
+-        {
+-            assert false : file+&quot;: &quot;+e.toString();
+-        }
+-    }
+-    /**
+-     * @testng.data-provider name=&quot;files&quot;
+-     */
+-    public Object[][] findFiles()
+-    {
+-        FilenameFilter filter = new FilenameFilter() 
+-        {
+-            public boolean accept(File directory, String name) {
+-                return name.endsWith(extension);
+-            }
+-        };
+-        
+-        String[] files = sourceDir.list(filter);       
+-
+-        Object[][] parameters = new Object[files.length][1];
+-        
+-        for (int i=0; i&lt;files.length; i++)
+-            parameters[i] = new Object[] { files[i] };
+-        
+-        return parameters;
+-    }
+-}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000201.html">[Transform-svn] r265 - trunk/doc
+</A></li>
+	<LI>Next message: <A HREF="000203.html">[Transform-svn] r267 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#202">[ date ]</a>
+              <a href="thread.html#202">[ thread ]</a>
+              <a href="subject.html#202">[ subject ]</a>
+              <a href="author.html#202">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,527 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r99 - in trunk: src/com/flagstone/transform test/suites
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r99%20-%20in%20trunk%3A%20src/com/flagstone/transform%20test/suites&In-Reply-To=%3C200603011647.k21GlBmk011164%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000039.html">
+   <LINK REL="Next"  HREF="000041.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r99 - in trunk: src/com/flagstone/transform test/suites</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r99%20-%20in%20trunk%3A%20src/com/flagstone/transform%20test/suites&In-Reply-To=%3C200603011647.k21GlBmk011164%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r99 - in trunk: src/com/flagstone/transform test/suites">smackay at berlios.de
+       </A><BR>
+    <I>Wed Mar  1 17:47:11 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000039.html">[Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites
+</A></li>
+        <LI>Next message: <A HREF="000041.html">[Transform-svn] r100 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-01 17:46:57 +0100 (Wed, 01 Mar 2006)
+New Revision: 99
+
+Modified:
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSExceptionHandler.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+   trunk/src/com/flagstone/transform/FSMovie.java
+   trunk/test/suites/FSMovie.xml
+Log:
+Fixed a bug where the zero byte indicating the end of an array 
+of actions was being included in the encoded data.
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -186,7 +186,7 @@
+     FSButtonEvent(FSCoder coder, int length)
+     {
+         if (coder.context[FSCoder.DecodeActions] == 0)
+-            encodedActions = new byte[length-2];
++            encodedActions = new byte[length-3];
+         
+         decode(coder);
+     }
+@@ -426,5 +426,6 @@
+         {
+             coder.readBytes(encodedActions);
+         }
++        coder.readWord(1, false);
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -458,7 +458,7 @@
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+-        }
++         }
+         else
+         {
+             length += encodedActions.length;
+@@ -554,8 +554,9 @@
+         }
+         else
+         {
+-            encodedActions = new byte[length];
++            encodedActions = new byte[length-1];
+             coder.readBytes(encodedActions);
+         }
++        coder.readWord(1, false);
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -414,9 +414,10 @@
+         }
+         else
+         {
+-            encodedActions = new byte[(coder.getPointer()-start) &gt;&gt;&gt; 3];
++            encodedActions = new byte[((coder.getPointer()-start) &gt;&gt;&gt; 3)-1];
+             coder.readBytes(encodedActions);
+         }
++        coder.readWord(1, false);
+         coder.endObject(name());
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -238,12 +238,12 @@
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
++            length += 1;
+         }
+         else
+         {
+             length += encodedActions.length;
+         }
+-        length += 1;
+         
+         return length;
+     }
+@@ -276,12 +276,12 @@
+                 }
+                 coder.setPointer(next);
+             }
++            coder.writeWord(0, 1);
+         }
+         else
+         {
+             coder.writeBytes(encodedActions);
+         }
+-        coder.writeWord(0, 1);
+ 
+         coder.endObject(name());
+     }
+
+Modified: trunk/src/com/flagstone/transform/FSExceptionHandler.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSExceptionHandler.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -559,6 +559,11 @@
+                 tryLength -= anAction.getLength() + ((anAction.getType() &gt;= 128) ? 3 : 1);
+                 tryActions.add(anAction);
+             }
++            else
++            {
++                coder.adjustPointer(8);
++                tryLength =- 1;
++            }
+         }
+         if (containsCatch)
+         {
+@@ -571,6 +576,11 @@
+                     catchLength -= anAction.getLength() + ((anAction.getType() &gt;= 128) ? 3 : 1);
+                     catchActions.add(anAction);
+                 }
++                else
++                {
++                    coder.adjustPointer(8);
++                    tryLength =- 1;
++                }
+             }
+         }
+         if (containsFinal)
+@@ -584,6 +594,11 @@
+                     finalLength -= anAction.getLength() + ((anAction.getType() &gt;= 128) ? 3 : 1);
+                     finalActions.add(anAction);
+                 }
++                else
++                {
++                    coder.adjustPointer(8);
++                    tryLength =- 1;
++                }
+             }
+         }
+ 
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -330,9 +330,10 @@
+         }
+         else
+         {
+-            encodedActions = new byte[length-2];
++            encodedActions = new byte[length-3];
+             coder.readBytes(encodedActions);
+         }
++        coder.readWord(1, false);
+         coder.endObject(name());
+     }
+ }
+\ No newline at end of file
+
+Modified: trunk/src/com/flagstone/transform/FSMovie.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSMovie.java	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/src/com/flagstone/transform/FSMovie.java	2006-03-01 16:46:57 UTC (rev 99)
+@@ -426,10 +426,6 @@
+     
+         if (type == 0)
+         {
+-            /*
+-             * Skip over the End object so it does not generate an event.
+-             */ 
+-            coder.setPointer(next);
+             return anAction;
+         }
+         
+
+Modified: trunk/test/suites/FSMovie.xml
+===================================================================
+--- trunk/test/suites/FSMovie.xml	2006-03-01 15:43:15 UTC (rev 98)
++++ trunk/test/suites/FSMovie.xml	2006-03-01 16:46:57 UTC (rev 99)
+@@ -2,64 +2,65 @@
+   
+ &lt;suite name=&quot;FSMovie&quot;&gt;
+ 	
+-    &lt;!--
+-        Decode then encode a movie. 
++  	
++   &lt;!--
++        Lazy decoding and encoding of actions and shapes in a movie. 
+     --&gt;
+-    &lt;test name=&quot;Encode SWF4&quot;&gt;
++    &lt;test name=&quot;Lazy Coding SWF4&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf4&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;encode&quot;/&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
+-    &lt;test name=&quot;Encode SWF5&quot;&gt;
++    &lt;test name=&quot;Lazy Coding SWF5&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf5&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;encode&quot;/&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
+-    &lt;test name=&quot;Encode SWF6&quot;&gt;
++    &lt;test name=&quot;Lazy Coding SWF6&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf6&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;encode&quot;/&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
+-    &lt;test name=&quot;Encode SWF7&quot;&gt;
++    &lt;test name=&quot;Lazy Coding SWF7&quot;&gt;
+ 		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf7&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+-      				&lt;include name=&quot;encode&quot;/&gt;
++      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+       			&lt;/methods&gt;
+       		&lt;/class&gt;
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
+     &lt;!--
+-        Convert the results from the encode test to text to compare against
++        Convert the results from the lazy coding test to text to compare against
+         the reference files. 
+     --&gt;
+     &lt;test name=&quot;Encode ToText SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf4&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf4&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf4&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -70,8 +71,8 @@
+   	&lt;/test&gt;
+ 
+     &lt;test name=&quot;Encode ToText SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf5&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf5&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf5&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -82,8 +83,8 @@
+   	&lt;/test&gt;
+ 
+     &lt;test name=&quot;Encode ToText SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf6&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf6&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf6&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -94,8 +95,8 @@
+   	&lt;/test&gt;
+ 
+     &lt;test name=&quot;Encode ToText SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/encode/swf7&quot;/&gt;
++		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf7&quot;/&gt;
++		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf7&quot;/&gt;
+ 		&lt;classes&gt;
+       		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+       			&lt;methods&gt;
+@@ -105,156 +106,5 @@
+ 		&lt;/classes&gt;
+   	&lt;/test&gt;
+ 
+-    &lt;!--
+-        Decode, clone then encode a movie. 
+-    --&gt;
+-    &lt;test name=&quot;Clone SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;clone&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Clone SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;clone&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Clone SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;clone&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Clone SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;clone&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-
+-    &lt;test name=&quot;Clone ToText SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf4&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;toText&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Clone ToText SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf5&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;toText&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Clone ToText SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf6&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;toText&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Clone ToText SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/clone/swf7&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;toText&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-  	
+-   &lt;!--
+-        Lazy decoding and encoding of actions and shapes in a movie. 
+-    --&gt;
+-    &lt;test name=&quot;Lazy Coding SWF4&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf4&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf4&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Lazy Coding SWF5&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf5&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf5&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Lazy Coding SWF6&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf6&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf6&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+-    &lt;test name=&quot;Lazy Coding SWF7&quot;&gt;
+-		&lt;parameter name=&quot;srcDir&quot; value=&quot;test/data/movies/swf7&quot;/&gt;
+-		&lt;parameter name=&quot;dstDir&quot; value=&quot;test/results/FSMovie/lazyCoding/swf7&quot;/&gt;
+-		&lt;classes&gt;
+-      		&lt;class name=&quot;com.flagstone.transform.test.FSMovieTest&quot;&gt;
+-      			&lt;methods&gt;
+-      				&lt;include name=&quot;lazyCoding&quot;/&gt;
+-      			&lt;/methods&gt;
+-      		&lt;/class&gt;
+-		&lt;/classes&gt;
+-  	&lt;/test&gt;
+-
+ &lt;/suite&gt;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000039.html">[Transform-svn] r98 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/test test/suites
+</A></li>
+	<LI>Next message: <A HREF="000041.html">[Transform-svn] r100 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,594 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r272 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r272%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221602.lBMG2STF010424%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000207.html">
+   <LINK REL="Next"  HREF="000209.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r272 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r272%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200712221602.lBMG2STF010424%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r272 - trunk/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 22 17:02:28 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000207.html">[Transform-svn] r271 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000209.html">[Transform-svn] r273 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#208">[ date ]</a>
+              <a href="thread.html#208">[ thread ]</a>
+              <a href="subject.html#208">[ subject ]</a>
+              <a href="author.html#208">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2007-12-22 17:02:14 +0100 (Sat, 22 Dec 2007)
+New Revision: 272
+
+Modified:
+   trunk/src/com/flagstone/transform/FSButtonEvent.java
+   trunk/src/com/flagstone/transform/FSClipEvent.java
+   trunk/src/com/flagstone/transform/FSDefineButton.java
+   trunk/src/com/flagstone/transform/FSDoAction.java
+   trunk/src/com/flagstone/transform/FSInitialize.java
+Log:
+Fixed bug 9806. End Of Action markers (0x00) in the middle of a sequence of actions are now handled and the complete set of actions is decoded correctly.
+
+Modified: trunk/src/com/flagstone/transform/FSButtonEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonEvent.java	2007-12-22 16:00:25 UTC (rev 271)
++++ trunk/src/com/flagstone/transform/FSButtonEvent.java	2007-12-22 16:02:14 UTC (rev 272)
+@@ -184,26 +184,15 @@
+     private ArrayList actions = null;
+     private byte[] encodedActions = null;
+    
+-    /*
+-     * This constructor is used only then lazily decoding actions.
+-     */
+-    FSButtonEvent(FSCoder coder, int len)
+-    {
+-        length = len-2;
+-        
+-        if (coder.context[FSCoder.DecodeActions] == 0)
+-            encodedActions = new byte[len-3];
+-        
+-        decode(coder);
+-    }
+     /**
+-     * Construct an FSButtonEvent object, initalizing it with values 
++     * Construct an FSButtonEvent object, initializing it with values 
+      * decoded from an encoded object.
+      * 
+      * @param coder an FSCoder containing the binary data.
+      */
+-    public FSButtonEvent(FSCoder coder)
++    public FSButtonEvent(FSCoder coder, int len)
+     {
++        length = len-2;
+         decode(coder);
+     }
+     /** Constructs an FSButtonEvent object that defines the array of actions that will be executed when a particular event occurs.
+@@ -397,20 +386,28 @@
+     
+         if (actions != null)
+         {
++        	FSActionObject currentAction = null;
++        	
+             for (Iterator i = actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject currentAction = (FSActionObject)i.next();
++                currentAction = (FSActionObject)i.next();
+             
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
++            
++            if (currentAction.getType() != FSAction.End) {
++            	length += 1;
++            }
+         }
+         else
+         {
+             length += encodedActions.length;
+-        }
+-        length += 1;
+-        
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            	length += 1;
++            }
++        }        
+         return length;
+     }
+     
+@@ -420,9 +417,11 @@
+ 
+         if (actions != null)
+         {
++        	FSActionObject action = null;
++        	
+             for (Iterator i=actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject action = (FSActionObject)i.next();
++                action = (FSActionObject)i.next();
+                 
+                 int objStart = coder.getPointer();
+                 int length = action.getLength();
+@@ -443,12 +442,19 @@
+                     coder.context[FSCoder.Delta] = delta;
+                 }
+             }
++            
++            if (action.getType() != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+         else
+         {
+             coder.writeBytes(encodedActions);
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+-        coder.writeWord(0, 1);
+     }
+     
+     public void decode(FSCoder coder)
+@@ -461,7 +467,7 @@
+ 
+             int start;
+             
+-            while (length &gt; 1) 
++            while (length &gt; 0) 
+             {
+                 start = coder.getPointer();
+                 
+@@ -471,8 +477,8 @@
+         }
+         else
+         {
++            encodedActions = new byte[length];
+             coder.readBytes(encodedActions);
+         }
+-        coder.readWord(1, false);
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSClipEvent.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSClipEvent.java	2007-12-22 16:00:25 UTC (rev 271)
++++ trunk/src/com/flagstone/transform/FSClipEvent.java	2007-12-22 16:02:14 UTC (rev 272)
+@@ -482,20 +482,28 @@
+     
+         if (actions != null)
+         {
++        	FSActionObject currentAction = null;
++        	
+             for (Iterator i = actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject currentAction = (FSActionObject)i.next();
++                currentAction = (FSActionObject)i.next();
+             
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
+-         }
++            
++            if (currentAction.getType() != FSAction.End) {
++            	length += 1;
++            }
++        }
+         else
+         {
+             length += encodedActions.length;
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            	length += 1;
++            }
+         }
+-        length += 1;
+-
+         return length;
+     }
+     
+@@ -506,18 +514,28 @@
+         int offset = 1; // End of actions marker
+         
+         if (actions != null)
+-        {        
++        {       
++        	FSActionObject currentAction = null;
++        	
+             for (Iterator i = actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject currentAction = (FSActionObject)i.next();
++            	currentAction = (FSActionObject)i.next();
+             
+                 offset += currentAction.getLength();
+                 offset += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
++            
++            if (currentAction.getType() != FSAction.End) {
++            	offset += 1;
++            }
+         }
+         else
+         {
+             offset += encodedActions.length;
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            	offset += 1;
++            }
+         }
+ 
+ // Flash 6
+@@ -534,9 +552,11 @@
+         
+         if (actions != null)
+         { 
++        	FSActionObject action = null;
++        	
+             for (Iterator i=actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject action = (FSActionObject)i.next();
++                action = (FSActionObject)i.next();
+                 
+                 int objStart = coder.getPointer();
+                 int length = action.getLength();
+@@ -557,12 +577,19 @@
+                     coder.context[FSCoder.Delta] = delta;
+                 }
+             }
++            
++            if (action.getType() != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+         else
+         {
+            coder.writeBytes(encodedActions);
++
++           if (encodedActions[encodedActions.length-1] != FSAction.End) {
++               coder.writeWord(0, 1);
++           }
+         }
+-        coder.writeWord(0, 1);
+     }
+     
+     public void decode(FSCoder coder)
+@@ -585,7 +612,7 @@
+             
+             int start;
+             
+-            while (length &gt; 1) 
++            while (length &gt; 0) 
+             {
+                 start = coder.getPointer();
+                 
+@@ -595,9 +622,8 @@
+         }
+         else
+         {
+-            encodedActions = new byte[length-1];
++            encodedActions = new byte[length];
+             coder.readBytes(encodedActions);
+         }
+-        coder.readWord(1, false);
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDefineButton.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineButton.java	2007-12-22 16:00:25 UTC (rev 271)
++++ trunk/src/com/flagstone/transform/FSDefineButton.java	2007-12-22 16:02:14 UTC (rev 272)
+@@ -373,19 +373,28 @@
+     
+         if (actions != null)
+         {
++        	FSActionObject currentAction = null;
++        	
+             for (Iterator i = actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject currentAction = (FSActionObject)i.next();
++                currentAction = (FSActionObject)i.next();
+             
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
++            
++            if (currentAction.getType() != FSAction.End) {
++            	length += 1;
++            }
+         }
+         else
+         {
+             length += encodedActions.length;
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            	length += 1;
++            }
+         }
+-        length += 1;
+ 
+         return length;
+     }
+@@ -401,9 +410,11 @@
+     
+         if (actions != null)
+         {
++        	FSActionObject action = null;
++        	
+             for (Iterator i=actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject action = (FSActionObject)i.next();
++                action = (FSActionObject)i.next();
+                     
+                 int objStart = coder.getPointer();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+@@ -423,12 +434,19 @@
+                     coder.context[FSCoder.Delta] = delta;
+                 }
+             }
++            
++            if (action.getType() != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+         else
+         {
+             coder.writeBytes(encodedActions);
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+-        coder.writeWord(0, 1);
+         coder.endObject(name());
+     }
+     
+@@ -436,7 +454,7 @@
+     {
+         super.decode(coder);
+         
+-        int start = coder.getPointer();
++        int start = coder.getPointer() - 16;
+         
+         buttonRecords = new ArrayList();
+         
+@@ -445,28 +463,25 @@
+             
+         coder.readWord(1, false); // character end
+         
+-        int actionsLength = (coder.getPointer()-start) &gt;&gt;&gt; 3;
++        int actionsLength = length - ((coder.getPointer()-start) &gt;&gt;&gt; 3);
+         
+         if (coder.context[FSCoder.DecodeActions] == 1)
+         {
+             actions = new ArrayList();
+             
+-            int len = actionsLength;
+-            
+-            while (len &gt; 1) 
++            while (actionsLength &gt; 0) 
+             {
+                 start = coder.getPointer();
+                 
+                 actions.add(FSMovie.decodeAction(coder));
+-                len -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
++                actionsLength -= (coder.getPointer() - start) &gt;&gt;&gt; 3;
+             }
+         }
+         else
+         {
+-            encodedActions = new byte[actionsLength-1];
++            encodedActions = new byte[actionsLength];
+             coder.readBytes(encodedActions);
+         }
+-        coder.readWord(1, false);
+         coder.endObject(name());
+     }
+ }
+
+Modified: trunk/src/com/flagstone/transform/FSDoAction.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDoAction.java	2007-12-22 16:00:25 UTC (rev 271)
++++ trunk/src/com/flagstone/transform/FSDoAction.java	2007-12-22 16:02:14 UTC (rev 272)
+@@ -275,19 +275,28 @@
+ 
+         if (actions != null)
+         {
++        	FSActionObject currentAction = null;
++        	
+             for (int i=0; i&lt;actions.size(); i++)
+             {
+-                FSActionObject currentAction = (FSActionObject)actions.get(i);
++                currentAction = (FSActionObject)actions.get(i);
+             
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
++            
++            if (currentAction.getType() != FSAction.End) {
++            	length += 1;
++            }
+         }
+         else
+         {
+             length += encodedActions.length;
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            	length += 1;
++            }
+         }
+-        length += 1;
+         return length;
+     }
+     
+@@ -297,9 +306,11 @@
+         
+         if (actions != null)
+         {
++        	FSActionObject action = null;
++        	
+             for (Iterator i=actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject action = (FSActionObject)i.next();
++                action = (FSActionObject)i.next();
+                 
+                 int objStart = coder.getPointer();
+                 int start = coder.getPointer() + ((action.getType() &gt; 128) ? 24 : 8);
+@@ -319,12 +330,19 @@
+                 }
+                 coder.setPointer(next);
+             }
++            
++            if (action.getType() != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+         else
+         {
+             coder.writeBytes(encodedActions);
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+-        coder.writeWord(0, 1);
+         coder.endObject(name());
+     }
+     
+
+Modified: trunk/src/com/flagstone/transform/FSInitialize.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSInitialize.java	2007-12-22 16:00:25 UTC (rev 271)
++++ trunk/src/com/flagstone/transform/FSInitialize.java	2007-12-22 16:02:14 UTC (rev 272)
+@@ -295,20 +295,28 @@
+ 
+         if (actions != null)
+         {
++        	FSActionObject currentAction = null;
++        	
+             for (Iterator i = actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject currentAction = (FSActionObject)i.next();
++                currentAction = (FSActionObject)i.next();
+             
+                 length += currentAction.length(coder);
+                 length += (currentAction.getType() &gt; 128) ? 3 : 1;
+             }
++            
++            if (currentAction.getType() != FSAction.End) {
++            	length += 1;
++            }
+         }
+         else
+         {
+             length += encodedActions.length;
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++            	length += 1;
++            }
+         }
+-        length += 1;
+-        
+         return length;
+     }
+     
+@@ -320,9 +328,11 @@
+ 
+         if (actions != null)
+         {
++        	FSActionObject action = null;
++        	
+             for (Iterator i=actions.iterator(); i.hasNext();)
+             {
+-                FSActionObject action = (FSActionObject)i.next();
++                action = (FSActionObject)i.next();
+                 
+                 int objStart = coder.getPointer();
+                 int length = action.getLength();
+@@ -343,13 +353,19 @@
+                     coder.context[FSCoder.Delta] = delta;
+                 }
+             }
++            
++            if (action.getType() != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+         else
+         {
+             coder.writeBytes(encodedActions);
++
++            if (encodedActions[encodedActions.length-1] != FSAction.End) {
++                coder.writeWord(0, 1);
++            }
+         }
+-        coder.writeWord(0, 1);
+-
+         coder.endObject(name());
+     }
+     
+@@ -366,7 +382,7 @@
+             int len = length-2;
+             int start;
+             
+-            while (len &gt; 1) 
++            while (len &gt; 0) 
+             {
+                 start = coder.getPointer();
+                 
+@@ -376,10 +392,9 @@
+         }
+         else
+         {
+-            encodedActions = new byte[length-3];
++            encodedActions = new byte[length-2];
+             coder.readBytes(encodedActions);
+         }
+-        coder.readWord(1, false);
+         coder.endObject(name());
+     }
+ }
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000207.html">[Transform-svn] r271 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000209.html">[Transform-svn] r273 - trunk/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#208">[ date ]</a>
+              <a href="thread.html#208">[ thread ]</a>
+              <a href="subject.html#208">[ subject ]</a>
+              <a href="author.html#208">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

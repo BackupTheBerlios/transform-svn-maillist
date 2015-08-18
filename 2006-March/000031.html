@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r90 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r90%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200602282351.k1SNpmBA001588%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000032.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r90 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r90%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200602282351.k1SNpmBA001588%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r90 - trunk/src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Wed Mar  1 00:51:48 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000032.html">[Transform-svn] r91 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-01 00:51:42 +0100 (Wed, 01 Mar 2006)
+New Revision: 90
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+Log:
+Updated documentation to remove doxygen directives. 
+Removed redundant FileNotFoundException specification - already 
+covered by IOException.
+
+Modified: trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-02-28 13:20:03 UTC (rev 89)
++++ trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-02-28 23:51:42 UTC (rev 90)
+@@ -62,12 +62,12 @@
+  * interleaved for each sample. For example a stereo sound the order of the samples and 
+  * channels levels are:
+  *
+- *\verbatim
++ *&lt;pre&gt;
+  * Sample       0          1          2
+  *          +---+---+  +---+---+  +---+---+
+  *          | 1 | 2 |  | 1 | 2 |  | 1 | 2 | ....
+  *          +---+---+  +---+---+  +---+---+
+- *\endverbatim
++ *&lt;/pre&gt;
+  *
+  * NOTE: The byte order for the PCM data in WAVE sound files may vary according to the 
+  * platform on which the sound file was created. The FSSoundConstructor currently only
+@@ -80,7 +80,7 @@
+  *
+  * 1. Playing an uncompressed WAVE file.\n
+  *
+- *\verbatim
++ *&lt;pre&gt;
+  * int soundId = movie.newIdentifier();
+  *
+  * // Generate an FSDefineSound object using the attributes defined in the wave file.
+@@ -90,7 +90,7 @@
+  *
+  * movie.add(soundGenerator.defineSound(soundId));
+  * movie.add(new FSSound(soundId, FSSound.Start));
+- *\endverbatim
++ *&lt;/pre&gt;
+  *
+  * 2. Streaming Sounds.\n
+  *
+@@ -98,7 +98,7 @@
+  * sequence of blocks which is synchronised with the frames as they are displayed. Typically 
+  * block of sound data is generated for each frame displayed.
+  *
+- *\verbatim
++ *&lt;pre&gt;
+  * int framesPerSecond = 12;
+  *
+  * FSSoundConstructor soundGenerator = new FSSoundGenerator(&quot;soundTrack.wav&quot;);
+@@ -119,7 +119,7 @@
+  *     movie.add(soundGenerator.streamBlock(i, samplesPerBlock));
+  *     movie.add(new FSShowFrame());
+  * }
+- * \endverbatim
++ * &lt;/pre&gt;
+  *
+  */
+ public final class FSSoundConstructor
+@@ -162,30 +162,32 @@
+     private int[][] frameTable = null;
+     private int samplesPerFrame = 0;
+ 
++    /**
++     * Creates a new uninitialized FSSoundConstructor object.  Use setSound to 
++     * provide the content.
++     */
++    public FSSoundConstructor() 
++    {
++    }
+     /** 
+-     * Creates a new FSSoundConstructor object initialised with the contents of the specified 
+-     * sound file.
++     * Creates a new FSSoundConstructor object initialised with the contents of 
++     * the specified sound file.
+      *
+      * @param fileName the name of the file containing the sound.
+      * 
+-     * @throws FileNotFoundException - if the file does not exist, is a directory rather than 
+-     * a regular file, or for some other reason cannot be opened for reading.
++     * @throws FileNotFoundException - if the file does not exist, is a 
++     * directory rather than a regular file, or for some other reason cannot be 
++     * opened for reading.
+      * 
+      * @throws IOException - if an I/O error occurs while reading the file.
+      * 
+-     * @throws DataFormatException if the Flash file does not start with a valid signature.
++     * @throws DataFormatException if the file contains a sound format not 
++     * supported by the FSSoundConstructor.
+      */
+-    public FSSoundConstructor(String fileName) throws FileNotFoundException, IOException, DataFormatException
++    public FSSoundConstructor(String fileName) throws IOException, DataFormatException
+     {
+         setSound(fileName);
+     }
+-
+-    /**
+-     * Creates a new uninitialized FSSoundConstructor object.  Use setSound to provide the content.
+-     */
+-    public FSSoundConstructor() {
+-    }
+-    
+     /** 
+      * Accessor method returning the format for the encoded sound data.
+      *
+@@ -262,34 +264,42 @@
+     /** 
+      * Initialises the FSSoundConstructor with the contents of the specified file.
+      * 
+-     * @param filename a file containing encoded sound data.
++     * @param filename the name of a file containing encoded sound data.
+      * 
+      * @throws FileNotFoundException - if the file does not exist, is a directory 
+-     * rather than a regular file, or for some other reason cannot be opened for reading.
++     * rather than a regular file, or for some other reason cannot be opened for 
++     * reading.
+      * 
+      * @throws IOException - if an I/O error occurs while reading the file.
+      * 
+-     * @throws DataFormatException if the file contains a sound format not supported 
+-     * by the FSSoundConstructor.
++     * @throws DataFormatException if the file contains a sound format not 
++     * supported by the FSSoundConstructor.
+      */
+-    public void setSound(String filename) throws FileNotFoundException, IOException, DataFormatException
++    public void setSound(String filename) throws IOException, DataFormatException
+     {
+-        if (filename.toLowerCase().endsWith(&quot;mp3&quot;))
++        if (filename.toLowerCase().endsWith(&quot;.mp3&quot;))
+             decodeMP3(dataFromFile(filename));
+-        else if (filename.toLowerCase().endsWith(&quot;wav&quot;))
++        else if (filename.toLowerCase().endsWith(&quot;.wav&quot;))
+             decodeWAV(filename);
+     }
+-    
+     /** 
+-     * Initialises the FSSoundConstructor with the sound data and set of parameters. This method
+-     * can be used to update the sound following processing for example to convert a stereo sound
+-     * to mono to reduce the size of the encoded data.
++     * Initialises the FSSoundConstructor with the sound data and set of 
++     * parameters. This method can be used to update the sound following 
++     * processing for example to convert a stereo sound to mono to reduce the 
++     * size of the encoded data.
+      * 
+-     * @param format the format of the encoded sound either FSSound.PCM, FSSound.ADPCM or FSSound.MP3.
++     * @param format the format of the encoded sound either FSSound.PCM, 
++     * FSSound.ADPCM or FSSound.MP3.
++     * 
+      * @param channelCount the number of sound channels, 1 = mono, 2 = stereo.
+      * @param sampleCount the number of samples in each channel.
+-     * @param sampleRate the rate at which the sound is played in kiloHertz. Flash supports 5512, 11025, 22050 or 44100.
+-     * @param sampleSize the number of bytes for each uncompressed sound sample, either 1 or 2.
++     * 
++     * @param sampleRate the rate at which the sound is played in kiloHertz. 
++     * Flash supports 5512, 11025, 22050 or 44100.
++     * 
++     * @param sampleSize the number of bytes for each uncompressed sound sample, 
++     * either 1 or 2.
++     * 
+      * @param bytes an array of sound samples encoding in the specified format.
+      */
+     public void setSound(int format, int channelCount, int sampleCount, int sampleRate, int sampleSize, byte[] bytes)
+@@ -585,7 +595,7 @@
+         }
+     }
+     
+-    private byte[] dataFromFile(String filename) throws FileNotFoundException, IOException
++    private byte[] dataFromFile(String filename) throws IOException
+     {
+         File aFile = new File(filename);
+         FileInputStream imageContents = null;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000032.html">[Transform-svn] r91 - trunk/src/com/flagstone/transform/util
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

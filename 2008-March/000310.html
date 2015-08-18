@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r374%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182119.m2ILJCnP030766%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000309.html">
+   <LINK REL="Next"  HREF="000311.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r374%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803182119.m2ILJCnP030766%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r374 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 22:19:12 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000309.html">[Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000311.html">[Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#310">[ date ]</a>
+              <a href="thread.html#310">[ thread ]</a>
+              <a href="subject.html#310">[ subject ]</a>
+              <a href="author.html#310">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 22:19:10 +0100 (Tue, 18 Mar 2008)
+New Revision: 374
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java
+Log:
+removed identifier attribute - will be implemented definition objects.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java	2008-03-18 17:11:57 UTC (rev 373)
++++ dev/dev-2-4/src/com/flagstone/transform/FSMovieObject.java	2008-03-18 21:19:10 UTC (rev 374)
+@@ -339,7 +339,6 @@
+ 		int type = coder.scanWord(2, false) &gt;&gt; 6;
+ 		int length = coder.scanWord(2, false) &amp; 0x3F;
+ 		int next = coder.getPointer() + 16 + (length &lt;&lt; 3);
+-		int identifier = 0;
+ 
+ 		if (type == 0)
+ 		{
+@@ -366,7 +365,6 @@
+ 				break;
+ 			case DefineShape:
+ 				currentObject = new FSDefineShape(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case PlaceObject:
+ 				currentObject = new FSPlaceObject(coder);
+@@ -376,11 +374,9 @@
+ 				break;
+ 			case DefineJPEGImage:
+ 				currentObject = new FSDefineJPEGImage(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineButton:
+ 				currentObject = new FSDefineButton(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case JPEGTables:
+ 				currentObject = new FSJPEGEncodingTable(coder);
+@@ -390,11 +386,9 @@
+ 				break;
+ 			case DefineFont:
+ 				currentObject = new FSDefineFont(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineText:
+ 				currentObject = new FSDefineText(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DoAction:
+ 				currentObject = new FSDoAction(coder);
+@@ -404,7 +398,6 @@
+ 				break;
+ 			case DefineSound:
+ 				currentObject = new FSDefineSound(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case StartSound:
+ 				currentObject = new FSStartSound(coder);
+@@ -421,15 +414,12 @@
+ 				break;
+ 			case DefineImage:
+ 				currentObject = new FSDefineImage(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineJPEGImage2:
+ 				currentObject = new FSDefineJPEGImage2(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineShape2:
+ 				currentObject = new FSDefineShape2(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case ButtonColorTransform:
+ 				currentObject = new FSButtonColorTransform(coder);
+@@ -449,27 +439,21 @@
+ 				break;
+ 			case DefineShape3:
+ 				currentObject = new FSDefineShape3(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineText2:
+ 				currentObject = new FSDefineText2(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineButton2:
+ 				currentObject = new FSDefineButton2(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineJPEGImage3:
+ 				currentObject = new FSDefineJPEGImage3(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineImage2:
+ 				currentObject = new FSDefineImage2(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineMovieClip:
+ 				currentObject = new FSDefineMovieClip(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case FrameLabel:
+ 				currentObject = new FSFrameLabel(coder);
+@@ -479,11 +463,9 @@
+ 				break;
+ 			case DefineMorphShape:
+ 				currentObject = new FSDefineMorphShape(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case DefineFont2:
+ 				currentObject = new FSDefineFont2(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			// Flash 4
+ 			case PathsArePostscript:
+@@ -492,7 +474,6 @@
+ 				break;
+ 			case DefineTextField:
+ 				currentObject = new FSDefineTextField(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case QuicktimeMovie:
+ 				currentObject = new FSQuicktimeMovie(coder);
+@@ -519,7 +500,6 @@
+ 				break;
+ 			case DefineVideo:
+ 				currentObject = new FSDefineVideo(coder);
+-				identifier = ((FSDefineObject) currentObject).getIdentifier();
+ 				break;
+ 			case VideoFrame:
+ 				currentObject = new FSVideoFrame(coder);
+@@ -547,13 +527,8 @@
+ 						Class&lt;FSMovieObject&gt; obj = table.get(key);
+ 						currentObject = (FSMovieObject) obj.newInstance();
+ 						currentObject.decode(coder);
+-
+-						if (currentObject instanceof FSDefineObject)
+-						{
+-							identifier = ((FSDefineObject) currentObject)
+-											.getIdentifier();
+-						}
+-					} catch (Exception e)
++					} 
++					catch (Exception e)
+ 					{
+ 						currentObject = new FSUnknownObject(coder);
+ 					}
+@@ -577,10 +552,6 @@
+ 
+ 		coder.setPointer(next);
+ 
+-		if (identifier != 0)
+-			coder.context[FSCoder.Identifier] = Math.max(
+-							coder.context[FSCoder.Identifier], identifier);
+-
+ 		return currentObject;
+ 	}
+ 
+@@ -621,7 +592,6 @@
+ 	}
+ 
+ 	protected int type;
+-	protected int identifier;
+ 	protected int length;
+ 	protected boolean extendLength;
+ 
+@@ -634,7 +604,6 @@
+ 	protected FSMovieObject(int aType)
+ 	{
+ 		type = aType;
+-		identifier = 0;
+ 	}
+ 
+ 	/**
+@@ -646,8 +615,6 @@
+ 	protected FSMovieObject(FSMovieObject obj)
+ 	{
+ 		type = obj.type;
+-		identifier = obj.identifier;
+-
+ 		length = obj.length;
+ 		extendLength = obj.extendLength;
+ 	}
+@@ -664,19 +631,6 @@
+ 	}
+ 
+ 	/**
+-	 * Returns the unique identifier assigned to this object if it contains a
+-	 * definition of a shape, image, button, text or sound. If the object is not
+-	 * a definition then zero is returned.
+-	 * 
+-	 * @return the unique identifier for the object if the object contains a
+-	 *         definition otherwise returns zero.
+-	 */
+-	public int getIdentifier()
+-	{
+-		return identifier;
+-	}
+-
+-	/**
+ 	 * Returns true if anObject is equal to this one. Objects are considered
+ 	 * equal if they would generate identical binary data when they are encoded
+ 	 * to a Flash file.
+@@ -718,7 +672,8 @@
+ 		try
+ 		{
+ 			anObject = super.clone();
+-		} catch (CloneNotSupportedException e)
++		} 
++		catch (CloneNotSupportedException e)
+ 		{
+ 			throw new InternalError();
+ 		}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000309.html">[Transform-svn] r373 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000311.html">[Transform-svn] r375 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#310">[ date ]</a>
+              <a href="thread.html#310">[ thread ]</a>
+              <a href="subject.html#310">[ subject ]</a>
+              <a href="author.html#310">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

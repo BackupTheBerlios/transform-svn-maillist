@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r59 - trunk/src/com/flagstone/transform/tools
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r59%20-%20trunk/src/com/flagstone/transform/tools&In-Reply-To=%3C200602202020.k1KKKmP7029585%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000001.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r59 - trunk/src/com/flagstone/transform/tools</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r59%20-%20trunk/src/com/flagstone/transform/tools&In-Reply-To=%3C200602202020.k1KKKmP7029585%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r59 - trunk/src/com/flagstone/transform/tools">smackay at berlios.de
+       </A><BR>
+    <I>Mon Feb 20 21:20:48 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000001.html">[Transform-svn] r60 - trunk/src/com/flagstone/transform/tools
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-20 21:20:34 +0100 (Mon, 20 Feb 2006)
+New Revision: 59
+
+Modified:
+   trunk/src/com/flagstone/transform/tools/Tool.java
+Log:
+Tool constructor is now public so tools can be accessed by classes outside of the Transform framework.
+
+Modified: trunk/src/com/flagstone/transform/tools/Tool.java
+===================================================================
+--- trunk/src/com/flagstone/transform/tools/Tool.java	2006-02-20 13:05:36 UTC (rev 58)
++++ trunk/src/com/flagstone/transform/tools/Tool.java	2006-02-20 20:20:34 UTC (rev 59)
+@@ -18,7 +18,7 @@
+     
+     protected String extension = null; 
+     
+-    Tool(String[] args)
++    public Tool(String[] args)
+     {
+         getOptions(args);
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000001.html">[Transform-svn] r60 - trunk/src/com/flagstone/transform/tools
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#0">[ date ]</a>
+              <a href="thread.html#0">[ thread ]</a>
+              <a href="subject.html#0">[ subject ]</a>
+              <a href="author.html#0">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

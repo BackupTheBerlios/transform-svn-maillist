@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r133 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r133%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%20src/com/flagstone/transform/util&In-Reply-To=%3C200603101855.k2AItq4N009100%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000072.html">
+   <LINK REL="Next"  HREF="000074.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r133 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r133%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform%20src/com/flagstone/transform/util&In-Reply-To=%3C200603101855.k2AItq4N009100%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r133 - in trunk: doc src/com/flagstone/transform src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Fri Mar 10 19:55:52 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000072.html">[Transform-svn] r132 - trunk/test/suites
+</A></li>
+        <LI>Next message: <A HREF="000074.html">[Transform-svn] r134 - in trunk: . doc doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-03-10 19:55:44 +0100 (Fri, 10 Mar 2006)
+New Revision: 133
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSCoder.java
+   trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+Log:
+Fixed the infinite loop problem when decoding MP3 files.
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-03-10 18:51:36 UTC (rev 132)
++++ trunk/doc/CHANGES.txt	2006-03-10 18:55:44 UTC (rev 133)
+@@ -1,3 +1,14 @@
++2006-03-10 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Fixed the inifinite loop problem when decoding MP3 files. Also updated 
++      FSCodec.adjustPointer so it clamps to the start/end of buffer instead 
++      of throwing an exception so we can safely handle MP3 frames that end 
++      prematurely.
++    
++2006-03-07 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
++
++    * Released 2.1.
++    
+ 2006-03-06 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Finished release notes for 2.1.
+
+Modified: trunk/src/com/flagstone/transform/FSCoder.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSCoder.java	2006-03-10 18:51:36 UTC (rev 132)
++++ trunk/src/com/flagstone/transform/FSCoder.java	2006-03-10 18:55:44 UTC (rev 133)
+@@ -452,18 +452,20 @@
+     }
+     /**
+      * Adds offset, in bits, to the internal pointer to change the location 
+-     * where the next value will be read or written. If the offset falls outside 
+-     * of the range supported by the buffer then an IllegalArgumentException 
+-     * will be thrown.
++     * where the next value will be read or written. If the adjust causes the 
++     * point to fall outside the bounds of the internal data then the value 
++     * is clamped to either the start of end of the array.
+      *  
+      * @param offset the offset in bits from the start of the array of bytes.
+      */
+     public void adjustPointer(int offset)
+     {
+-        if (ptr+offset &lt; 0 || ptr+offset &gt; end)
+-            throw new IllegalArgumentException();
++        ptr += offset;
+ 
+-        ptr += offset;
++        if (ptr &lt; 0)
++            ptr = 0;
++        else if (ptr &gt;= end)
++            ptr = end;
+     }
+     /**
+      * Moves the internal pointer forward so it is aligned on a byte boundary. 
+@@ -983,6 +985,7 @@
+     public boolean findBits(int value, int numberOfBits, int step)
+     {
+         boolean found = false;
++        int start = ptr;
+         
+         for (; ptr &lt; end; ptr += step)
+         {
+@@ -992,6 +995,9 @@
+                 break;
+             }
+         }
++        if (found == false)
++            ptr = start;
++            
+         return found;
+     }
+     /**
+
+Modified: trunk/src/com/flagstone/transform/util/FSSoundConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-03-10 18:51:36 UTC (rev 132)
++++ trunk/src/com/flagstone/transform/util/FSSoundConstructor.java	2006-03-10 18:55:44 UTC (rev 133)
+@@ -519,28 +519,68 @@
+ 
+     private void decodeMP3(byte[] bytes) throws DataFormatException
+     {
+-        FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++        FSCoder coder = new FSCoder(FSCoder.BIG_ENDIAN, bytes);
+         
++        int numberOfFrames = 0;
++        int frameStart = 0;
++
+         format = FSSound.MP3;
+         sampleSize = 2;
+         
+-        coder.findBits(0x7FF, 11, 8);
++        while (coder.eof() == false)
++        {        
++            if (coder.scanWord(3, false) == 0x494433) // ID3
++            {
++                coder.adjustPointer(24); // ID3 signature                
++                coder.adjustPointer(8); // version number
++                coder.adjustPointer(8); // revision number
++                
++                coder.adjustPointer(1); // unsynchronized
++                coder.adjustPointer(1); // extendedHeader
++                coder.adjustPointer(1); // experimental
++                int hasFooter = coder.readBits(1, false);
++                
++                coder.adjustPointer(4);
++                
++                int totalLength = (hasFooter == 1) ? 10 : 0;
++
++                totalLength += coder.readWord(1, false) &lt;&lt; 23;
++                totalLength += coder.readWord(1, false) &lt;&lt; 15;
++                totalLength += coder.readWord(1, false) &lt;&lt; 7;
++                totalLength += coder.readWord(1, false);
++
++                coder.adjustPointer(totalLength&lt;&lt;3);
++            }
++            else if (coder.scanWord(3, false) == 0x544147) // ID3 V1
++            {
++                coder.adjustPointer(128&lt;&lt;3);
++            }
++            else if (coder.scanBits(11, false) == 0x7FF) // MP3 frame
++            {
++                if (numberOfFrames == 0)
++                    frameStart = coder.getPointer();
++                
++                coder.adjustPointer(MP3FrameSize(coder) &lt;&lt; 3);
++                numberOfFrames++;
++            }
++            else
++            {
++                /*
++                 * If we get here it means we jumped into the middle of either 
++                 * a frame or tag information. This appears to be a common
++                 * occurrence. Goto the end of the file so we can keep the 
++                 * frames found so far.
++                 */
++                coder.setPointer(bytes.length&lt;&lt;3);
++            }
++        }
++
++        int dataLength = bytes.length - (frameStart &gt;&gt; 3);
+         
+-        int frameStart = coder.getPointer();
+-        int dataLength = coder.getCapacity() - (coder.getPointer() &gt;&gt; 3);
+-        
+         sound = new byte[dataLength];
+         
+-        System.arraycopy(coder.getData(), (coder.getPointer() &gt;&gt; 3), sound, 0, dataLength);
++        System.arraycopy(bytes, frameStart&gt;&gt;3, sound, 0, dataLength);
+         
+-        int numberOfFrames = 0;
+-        
+-        while (coder.findBits(0x7FF, 11, 8))
+-        {
+-            coder.adjustPointer(MP3FrameSize(coder) &lt;&lt; 3);
+-            numberOfFrames++;
+-        }
+-        
+         frameTable = new int[numberOfFrames][2];
+         
+         for (int i=0; i&lt;numberOfFrames; i++)
+@@ -548,7 +588,7 @@
+             frameTable[i][0] = -1;
+             frameTable[i][1] = 0;
+         }
+-            
++
+         coder.setPointer(frameStart);
+         
+         int frameNumber = 0;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000072.html">[Transform-svn] r132 - trunk/test/suites
+</A></li>
+	<LI>Next message: <A HREF="000074.html">[Transform-svn] r134 - in trunk: . doc doc/releases
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

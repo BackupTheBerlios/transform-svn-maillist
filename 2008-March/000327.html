@@ -1,0 +1,1170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r393%20-%20dev/dev-2-4/src/com/flagstone/transform/util&In-Reply-To=%3C200803271216.m2RCGVWn006559%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000326.html">
+   <LINK REL="Next"  HREF="000328.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r393%20-%20dev/dev-2-4/src/com/flagstone/transform/util&In-Reply-To=%3C200803271216.m2RCGVWn006559%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r393 - dev/dev-2-4/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar 27 13:16:31 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000326.html">[Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000328.html">[Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#327">[ date ]</a>
+              <a href="thread.html#327">[ thread ]</a>
+              <a href="subject.html#327">[ subject ]</a>
+              <a href="author.html#327">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-27 13:16:25 +0100 (Thu, 27 Mar 2008)
+New Revision: 393
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/util/Canvas.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Font.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Image.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Sound.java
+   dev/dev-2-4/src/com/flagstone/transform/util/Text.java
+Log:
+Methods are now static. Added method to return image as blocks to Image.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Canvas.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Canvas.java	2008-03-27 11:52:28 UTC (rev 392)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Canvas.java	2008-03-27 12:16:25 UTC (rev 393)
+@@ -176,9 +176,9 @@
+     
+     private int lineWidth = 0;
+     
+-    ArrayList objects = new ArrayList();
+-    ArrayList lineStyles = new ArrayList();
+-    ArrayList fillStyles = new ArrayList();
++    ArrayList&lt;FSShapeObject&gt; objects = new ArrayList&lt;FSShapeObject&gt;();
++    ArrayList&lt;FSLineStyle&gt; lineStyles = new ArrayList&lt;FSLineStyle&gt;();
++    ArrayList&lt;FSFillStyle&gt; fillStyles = new ArrayList&lt;FSFillStyle&gt;();
+     
+     /**
+      * Creates an FSShapeConstructor object with no path defined.
+@@ -187,168 +187,108 @@
+     {
+     }
+     
+-    /** Sets the line style at the index in the array of line styles.
+-
+-        @param index the position in the array of line styles.
+-        @param aLineStyle and FSLineStyle object.
+-        @throws ArrayIndexOutOfBounds if the index &lt; 0 or index &gt; array size.
+-        */
+-    public void set(int index, FSLineStyle aLineStyle)
++    
++    /**
++     * Generates the bounding box that encloses the current path.
++     *
++     * @return an FSBounds object representing the bounding box that encloses the path.
++     */
++    public FSBounds getBounds()
+     {
+-        lineStyles.set(index, aLineStyle);
++        return new FSBounds(minX, minY, maxX, maxY);
+     }
+ 
+-    /** Add a FSLineStyle object to the array of line styles.
+-
+-        @param aLineStyle and FSLineStyle object.
+-        */
+-    public void add(FSLineStyle aLineStyle)
+-    {
+-        lineStyles.add(aLineStyle);
+-    }
+-
+-    /** Sets the fill style at the index in the array of fill styles.
+-
+-        @param index the position in the array of fill styles.
+-        @param aFillStyle an FSFillStyle object.
+-        @throws ArrayIndexOutOfBounds if the index &lt; 0 or index &gt; array size.
+-        */
+-    public void set(int index, FSFillStyle aFillStyle)
+-    {
+-        fillStyles.set(index, aFillStyle);
+-    }
+-
+-    /** Add the fill style object to the array of fill styles.
+-
+-        @param aFillStyle and FSFillStyle object.
+-        */
+-    public void add(FSFillStyle aFillStyle)
+-    {
+-        fillStyles.add(aFillStyle);
+-    }
+-    
+     /** Gets the array line styles.
+ 
+         @return the line styles used in the shape.
+         */
+-    public ArrayList getLineStyles() 
++    public ArrayList&lt;FSLineStyle&gt; getLineStyles() 
+     { 
+-        return lineStyles; 
+-    }
++    	ArrayList&lt;FSLineStyle&gt; array = new ArrayList&lt;FSLineStyle&gt;(lineStyles.size());
++    	
++    	for (Iterator&lt;FSLineStyle&gt;i=lineStyles.iterator(); i.hasNext();) {
++    		array.add((FSLineStyle)i.next().clone());
++    	}
+ 
+-    /** Sets the line styles.
+-
+-        @param anArray set the line styles for the shape.
+-        */
+-    public void setLineStyles(ArrayList anArray)
+-    {
+-        lineStyles = anArray;
++    	return array; 
+     }
+ 
+     /** Gets the array fill styles.
+ 
+         @return the fill styles used in the shape.
+         */
+-    public ArrayList getFillStyles()
++    public ArrayList&lt;FSFillStyle&gt; getFillStyles()
+     {
+-        return fillStyles;
+-    }
++    	ArrayList&lt;FSFillStyle&gt; array = new ArrayList&lt;FSFillStyle&gt;(fillStyles.size());
++    	
++    	for (Iterator&lt;FSFillStyle&gt;i=fillStyles.iterator(); i.hasNext();) {
++    		array.add((FSFillStyle)i.next().clone());
++    	}
+ 
+-    /** Sets the fill styles.
+-
+-        @param anArray set the fill styles for the shape.
+-        */
+-    public void setFillStyles(ArrayList anArray)
+-    {
+-        fillStyles = anArray;
++        return array;
+     }
+-
+-    /**
+-     * Selects the style used to draw the outline of the shape from the array of 
+-     * line styles.
+-     * 
+-     * @param index the position of the style used to draw the shape.
+-     */
+-    public void selectLineStyle(int index)
+-    {
+-        lineWidth = ((FSLineStyle)lineStyles.get(index)).getWidth();
+-
+-        objects.add(new FSShapeStyle(index+1, Transform.VALUE_NOT_SET, Transform.VALUE_NOT_SET));
+-    }
+     
+     /**
+-     * Selects the style used to fill the contents of the shape from the array of 
+-     * fill styles.
+-     * 
+-     * @param index the position of the style used to fill the shape.
++     * Gets the FSShape object containing the objects used to draw the current path.
++     *
++     * @return an FSShape object contain the FSLine, FSCurve and FSShapeStyle objects used to 
++     * construct the current path.
+      */
+-    public void selectFillStyle(int index)
++    public FSShape getShape()
+     {
+-        objects.add(new FSShapeStyle(Transform.VALUE_NOT_SET, index+1, Transform.VALUE_NOT_SET));
++    	ArrayList&lt;FSShapeObject&gt; array = new ArrayList&lt;FSShapeObject&gt;(objects.size());
++    	
++    	for (Iterator&lt;FSShapeObject&gt;i=objects.iterator(); i.hasNext();) {
++    		array.add((FSShapeObject)i.next().clone());
++    	}
++    		
++        return new FSShape(array);
+     }
+-    
+-    /**
+-     * Selects the style used to fill overlapping areas of the shape from the 
+-     * array of fill styles.
+-     * 
+-     * @param index the position of the style used to fill overlapping areas.
+-     */
+-    public void selectAltStyle(int index)
++
++    public void setLineStyle(FSLineStyle style)
+     {
+-        objects.add(new FSShapeStyle(Transform.VALUE_NOT_SET, Transform.VALUE_NOT_SET, index+1));
++    	int index;
++    	
++    	if (lineStyles.contains(style)) {
++    		index = lineStyles.indexOf(style);
++    	}
++    	else {
++    		index = lineStyles.size();
++    		lineStyles.add(style);
++    	}
++    	lineWidth = style.getWidth();
++        objects.add(new FSShapeStyle(index, -1, -1));
+     }
+     
+-    /**
+-     * Selects the styles used to draw the outline and fill the contents of the 
+-     * shape from the array of line and fill styles.
+-     * 
+-     * @param lineIndex the position of the style used to draw the outline of the shape.
+-     * @param fillIndex the position of the style used to fill the shape.
+-     */
+-    public void selectStyle(int lineIndex, int fillIndex)
++    public void setFillStyle(FSFillStyle style)
+     {
+-        lineWidth = ((FSLineStyle)lineStyles.get(lineIndex)).getWidth();
+-        
+-        objects.add(new FSShapeStyle(lineIndex+1, fillIndex+1, Transform.VALUE_NOT_SET));
++    	int index;
++    	
++    	if (fillStyles.contains(style)) {
++    		index = fillStyles.indexOf(style);
++    	}
++    	else {
++    		index = fillStyles.size();
++    		fillStyles.add(style);
++    	}
++        objects.add(new FSShapeStyle(-1, index, -1));
+     }
+     
+-    /**
+-     * Selects the styles used to draw the outline and fill the contents of the 
+-     * shape, including overlapping area, from the array of line and fill styles.
+-     * 
+-     * @param lineIndex the position of the style used to draw the outline of the shape.
+-     * @param fillIndex the position of the style used to fill the shape.
+-     * @param altIndex the position of the style used to fill overlapping areas of the shape.
+-     */
+-    public void selectStyle(int lineIndex, int fillIndex, int altIndex)
++    public void setAltStyle(FSFillStyle style)
+     {
+-        lineWidth = ((FSLineStyle)lineStyles.get(lineIndex)).getWidth();
+- 
+-        objects.add(new FSShapeStyle(lineIndex+1, fillIndex+1, altIndex+1));
++    	int index;
++    	
++    	if (fillStyles.contains(style)) {
++    		index = fillStyles.indexOf(style);
++    	}
++    	else {
++    		index = fillStyles.size();
++    		fillStyles.add(style);
++    	}
++        objects.add(new FSShapeStyle(-1, index, -1));
+     }
+     
+     /**
+-     * Generates the bounding box that encloses the current path.
+-     *
+-     * @return an FSBounds object representing the bounding box that encloses the path.
+-     */
+-    public FSBounds bounds()
+-    {
+-        return new FSBounds(minX, minY, maxX, maxY);
+-    }
+-
+-    /**
+-     * Generates an FSShape object containing the objects used to draw the current path.
+-     *
+-     * @return an FSShape object contain the FSLine, FSCurve and FSShapeStyle objects used to 
+-     * construct the current path.
+-     */
+-    public FSShape shape()
+-    {
+-        return new FSShape((ArrayList)objects.clone());
+-    }
+-
+-    /**
+      * Generates a shape containing the current path and styles.
+      *
+      * The shape is constructed with copies of the style arrays and the shape representing the 
+@@ -359,7 +299,7 @@
+      */
+      public FSDefineShape2 defineShape(int identifier)
+      {
+-        return new FSDefineShape2(identifier, bounds(), (ArrayList)fillStyles.clone(), (ArrayList)lineStyles.clone(), new FSShape((ArrayList)objects.clone()));
++    	return new FSDefineShape2(identifier, getBounds(), getFillStyles(), getLineStyles(), getShape());
+      }
+      
+     /**
+@@ -373,13 +313,13 @@
+      */
+      public FSDefineShape3 defineTransparentShape(int identifier)
+      {
+-        return new FSDefineShape3(identifier, bounds(), (ArrayList)fillStyles.clone(), (ArrayList)lineStyles.clone(), new FSShape((ArrayList)objects.clone()));
++        return new FSDefineShape3(identifier, getBounds(), getFillStyles(), getLineStyles(), getShape());
+      }
+      
+     /**
+      * Creates a new path, discarding any path elements drawn.
+      */
+-    public void newPath()
++    public void clear()
+     {
+         pathInProgress = false;
+         
+@@ -388,6 +328,8 @@
+         setControl(0, 0);
+         setBounds(0, 0, 0, 0);
+         
++        fillStyles.clear();
++        lineStyles.clear();
+         objects.clear();
+ 
+         lineWidth = 0;
+@@ -397,7 +339,7 @@
+      * Closes the current path by drawing a line from the current point to the starting point of the 
+      * path. 
+      */
+-    public void closePath()
++    public void close()
+     {
+         int dx = initialX - currentX;
+         int dy = initialY - currentY;
+@@ -777,14 +719,11 @@
+      */
+     public void rect(int x, int y, int width, int height)
+     {
+-        newPath();
+-        selectStyle(0, 0);
+         move(x-width/2, y-height/2);
+         rline(width, 0);
+         rline(0, height);
+         rline(-width, 0);
+         rline(0, -height);
+-        closePath();
+     }
+ 
+     /**
+@@ -829,8 +768,6 @@
+         if (radius &gt; shortestSide/2)
+             radius = shortestSide/2;
+     
+-        newPath();
+-        selectStyle(0, 0);
+         move(x, y-height/2);
+         rline(width/2-radius, 0);
+         rcurve(radius, 0, 0, radius);
+@@ -840,7 +777,6 @@
+         rcurve(-radius, 0, 0, -radius);
+         rline(0, -(height-2*radius));
+         rcurve(0, -radius, radius, 0);
+-        closePath();
+     }
+ 
+     /**
+@@ -901,8 +837,6 @@
+         int cx = (int) (0.414 * rx);
+         int cy = (int) (0.414 * ry);
+             
+-        newPath();
+-        selectStyle(0, 0);
+         move(startX, startY);
+         rcurve(-ax, ay, -cx, 0);
+         rcurve(-cx, 0, -ax, -ay);
+@@ -912,7 +846,6 @@
+         rcurve(cx, 0,  ax, ay);
+         rcurve(ax, ay, 0, cy);
+         rcurve(0, cy, -ax, ay);
+-        closePath();
+         
+         if (wasInPixels)
+         {
+@@ -997,12 +930,12 @@
+         for (i=2; i&lt;length; i+=2)
+             rline(points[i], points[i+1]);
+             
+-        closePath();
++        close();
+     }
+     /**
+      * Create a closed shape with vertices defines by pairs of coordinates from the array argument.
+      * The first pair of points in the array specifies a move. Line segments a drawn using 
+-     * abolute coordinates. The current point which is updated after each segment is drawn.
++     * absolute coordinates. The current point which is updated after each segment is drawn.
+      * 
+      * If the number of points is an odd number then the last point will be ignored.
+      * 
+@@ -1025,7 +958,7 @@
+         for (i=2; i&lt;length; i+=2)
+             line(points[i], points[i+1]);
+             
+-        closePath();
++        close();
+     }
+ 
+     private void setInitial(int x, int y)
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Font.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Font.java	2008-03-27 11:52:28 UTC (rev 392)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Font.java	2008-03-27 12:16:25 UTC (rev 393)
+@@ -567,7 +567,7 @@
+             switch (segmentType)
+             {
+                 case PathIterator.SEG_MOVETO:
+-                    path.closePath();
++                    path.close();
+                     path.move(p1, p2);
+                     break;
+                 case PathIterator.SEG_LINETO:
+@@ -580,7 +580,7 @@
+                     path.curve(p1, p2, p3, p4, p5, p6);
+                     break;
+                 case PathIterator.SEG_CLOSE:
+-                    path.closePath();
++                    path.close();
+                     break;
+             }
+             pathIter.next();
+@@ -592,7 +592,7 @@
+             style.setLineStyle(0);
+             style.setAltFillStyle(1);
+         }
+-        return path.shape();
++        return path.getShape();
+     }
+ 
+     private void decodeHEAD(FSCoder coder)
+@@ -1173,7 +1173,7 @@
+                 }
+                 else
+                 {
+-                    path.closePath();
++                    path.close();
+                 } 
+                 contourStart = true;
+                 offPoint = false;
+@@ -1183,7 +1183,7 @@
+             }
+         }
+         
+-        glyphTable[glyphIndex] = new Glyph(path.shape(),new FSBounds(xMin, -yMax, xMax, -yMin), 0);
++        glyphTable[glyphIndex] = new Glyph(path.getShape(),new FSBounds(xMin, -yMax, xMax, -yMin), 0);
+ 
+         //glyphTable[glyphIndex].xCoordinates = xCoordinates;
+         //glyphTable[glyphIndex].yCoordinates = yCoordinates;
+@@ -1380,7 +1380,7 @@
+                     }
+                     else
+                     {
+-                        path.closePath();
++                        path.close();
+                     } 
+                     contourStart = true;
+                     offPoint = false;
+@@ -1389,7 +1389,7 @@
+                     contour++;
+                 }
+             }
+-            shape.getObjects().addAll(path.shape().getObjects());
++            shape.getObjects().addAll(path.getShape().getObjects());
+               
+         } while ((flags &amp; MORE_COMPONENTS) &gt; 0);
+ 
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Image.java	2008-03-27 11:52:28 UTC (rev 392)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Image.java	2008-03-27 12:16:25 UTC (rev 393)
+@@ -34,6 +34,7 @@
+ import java.util.*;
+ import java.util.zip.*;
+ 
++import com.flagstone.transform.Displayable;
+ import com.flagstone.transform.FSDefineObject;
+ import com.flagstone.transform.FSDefineImage;
+ import com.flagstone.transform.FSDefineImage2;
+@@ -42,6 +43,7 @@
+ import com.flagstone.transform.FSDefineJPEGImage3;
+ import com.flagstone.transform.FSDefineShape3;
+ 
++import com.flagstone.transform.FSImageBlock;
+ import com.flagstone.transform.FSMovieObject;
+ import com.flagstone.transform.FSShape;
+ import com.flagstone.transform.FSCoordTransform;
+@@ -217,15 +219,8 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+     
+-    /**
+-     * Constructs an FSImageConstructor object with no image.
+-     */
+-    public Image()
++    public static FSDefineObject defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
+     {
+-    }
+-    
+-    FSDefineObject defineImage(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
+-    {
+     	FSDefineObject object = null;
+     	
+     	ImageInfo ii = new ImageInfo();
+@@ -285,7 +280,7 @@
+     	return object;
+     }
+     
+-    private byte[] adjustScan(int width, int height, byte[] image)
++    private static byte[] adjustScan(int width, int height, byte[] image)
+     {
+         int src = 0;
+         int dst = 0;
+@@ -310,7 +305,7 @@
+         return formattedImage;
+     }
+     
+-    private byte[] packColours(int width, int height, byte[] image)
++    private static byte[] packColours(int width, int height, byte[] image)
+     {
+         int src = 0;
+         int dst = 0;
+@@ -342,7 +337,7 @@
+         return formattedImage;
+     }
+     
+-    private void orderAlpha(byte[] image)
++    private static void orderAlpha(byte[] image)
+     {
+     	byte alpha;
+     	
+@@ -357,7 +352,7 @@
+         }
+     }
+ 
+-    private void applyAlpha(byte[] image)
++    private static void applyAlpha(byte[] image)
+     {
+     	int alpha; 
+     	
+@@ -371,7 +366,7 @@
+     	}
+     }
+     
+-    private byte[] merge(byte[] image, byte[] table)
++    private static byte[] merge(byte[] image, byte[] table)
+     {
+         byte[] merged = new byte[(table.length/4)*3+image.length];
+         int dst = 0;
+@@ -388,9 +383,8 @@
+ 
+         return merged;
+     }
+-
+-    
+-    private byte[] mergeAlpha(byte[] image, byte[] table)
++  
++    private static byte[] mergeAlpha(byte[] image, byte[] table)
+     {
+         byte[] merged = new byte[table.length+image.length];
+         int dst = 0;
+@@ -427,36 +421,12 @@
+      * @param borderStyle the style drawn around the border of the image. May be null if no 
+      * border is drawn.
+      */
+-    public FSDefineShape3 defineEnclosingShape(int identifier, FSDefineObject image, int xOrigin, int yOrigin, FSLineStyle borderStyle)
++    public static FSDefineShape3 defineEnclosingShape(int identifier, FSDefineObject image, int xOrigin, int yOrigin, FSLineStyle borderStyle)
+     {
+-    	int width = 0;
+-    	int height = 0;
++    	int width = ((Displayable)image).getWidth();
++    	int height = ((Displayable)image).getHeight();
+         int lineWidth = 0;
+-        
+-        switch (image.getType())
+-        {
+-        	case FSMovieObject.DefineImage:
+-        		width = ((FSDefineImage)image).getWidth();
+-        		height = ((FSDefineImage)image).getHeight();
+-        		break;
+-        	case FSMovieObject.DefineImage2:
+-        		width = ((FSDefineImage2)image).getWidth();
+-        		height = ((FSDefineImage2)image).getHeight();
+-        		break;
+-        	case FSMovieObject.DefineJPEGImage:
+-        		width = ((FSDefineJPEGImage)image).getWidth();
+-        		height = ((FSDefineJPEGImage)image).getHeight();
+-        		break;
+-        	case FSMovieObject.DefineJPEGImage2:
+-        		width = ((FSDefineJPEGImage2)image).getWidth();
+-        		height = ((FSDefineJPEGImage2)image).getHeight();
+-        		break;
+-        	case FSMovieObject.DefineJPEGImage3:
+-        		width = ((FSDefineJPEGImage3)image).getWidth();
+-        		height = ((FSDefineJPEGImage3)image).getHeight();
+-        		break;
+-        }
+-        
++                
+         if (borderStyle != null)
+             lineWidth = borderStyle.getWidth() / 2;
+         
+@@ -481,8 +451,134 @@
+ 
+         return definition;
+     }
+-        
+-    private byte[] zip(byte[] image)
++      
++    /**
++     * Return the image as an array of FSImageBlock objects that can be used
++     * when creating ScreenVideo streams.
++     * 
++     * The image is divided by tiling blocks of the specified width and height 
++     * across the image. For blocks at the right and bottom edges the size of 
++     * the block may be reduced so that it fits the image exactly. In other 
++     * words the blocks are not padded with extra pixel information.
++     * 
++     * @param blockWidth the width of a block in pixels.
++     * @param blockHeight the height of a block in pixels
++     * @return an array of FMImageBlock objects.
++     */   
++	public static ArrayList&lt;FSImageBlock&gt; getImageAsBlocks(int blockWidth, int blockHeight, String path) throws FileNotFoundException, IOException, DataFormatException
++	{
++		ArrayList&lt;FSImageBlock&gt; blocks = new ArrayList&lt;FSImageBlock&gt;();
++    	FSDefineObject object = null;
++    	
++    	ImageInfo ii = new ImageInfo();
++    	ii.setInput(new RandomAccessFile(path, &quot;r&quot;));
++    	ii.setDetermineImageNumber(true);
++    	
++    	if (!ii.check()) 
++    	{
++    		throw new DataFormatException();
++    	}
++    	
++    	if (decoders.containsKey(ii.getFormatName()))
++    	{
++			try
++			{
++				Class&lt;ImageDecoder&gt; obj = decoders.get(ii.getFormatName());
++				ImageDecoder decoder = (ImageDecoder) obj.newInstance();
++				decoder.decode(path);
++				
++				int format = decoder.getFormat();
++				int width = decoder.getWidth();
++				int height = decoder.getHeight();
++				
++				byte[] colourTable = decoder.getTable();
++				byte[] image = decoder.getImage();
++
++		    	int row = 0;
++		        int col = 0;
++		        
++		        int src = 0;
++		        int dst = 0;
++
++		        byte[] formattedImage = new byte[width*height*3];
++		        
++		        switch (format)
++		        {
++		            case IDX8:
++		            case IDXA: 
++		                for (row=height-1; row&gt;=0; row--)
++		                {
++		                	src = row*width;
++		                	
++		                    for (col=0; col&lt;width; col++, src+=4) 
++		                    {                  	
++		                        formattedImage[dst++] = colourTable[image[src+2]];
++		                        formattedImage[dst++] = colourTable[image[src+1]];
++		                        formattedImage[dst++] = colourTable[image[src]];                    	
++		                    }
++		                }
++		                break;
++		            case RGB5: 
++		            case RGB8: 
++		            case RGBA: 
++		                for (row=height-1; row&gt;=0; row--)
++		                {
++		                	src = row*width;
++		                	
++		                    for (col=0; col&lt;width; col++, src+=4)
++		                    {
++		                        formattedImage[dst++] = image[src+2];
++		                        formattedImage[dst++] = image[src+1];
++		                        formattedImage[dst++] = image[src];
++		                    }
++		                }
++		                break;
++		        }
++
++				int columns = (width+blockWidth-1)/blockWidth;
++				int rows = (height+blockHeight-1)/blockHeight;
++				
++				byte[] blockData = new byte[blockHeight*blockWidth*3];
++				
++				for (int i=0; i&lt;rows; i++)
++				{
++					for (int j=0; j&lt;columns; j++)
++					{
++						int xOffset = j*blockWidth;
++						int yOffset = i*blockHeight;
++						
++						int xSpan = (width-xOffset &gt; blockWidth) ? blockWidth : width-xOffset;
++						int ySpan = (height-yOffset &gt; blockHeight) ? blockHeight : height-yOffset;
++						int offset = 0;
++						
++						int idx;
++						
++						for (int k=0; k&lt;ySpan; k++) 
++						{
++							for (int l=0; l&lt;xSpan; l++, offset+=3) 
++							{
++								idx = (yOffset+k)*(width*3)+(xOffset+l)*3;
++								
++								blockData[offset] = formattedImage[idx];					
++								blockData[offset+1] = formattedImage[idx+1];					
++								blockData[offset+2] = formattedImage[idx+2];					
++							}
++						}
++						
++						blocks.add(new FSImageBlock(xSpan, ySpan, zip(blockData, offset)));
++					}
++				}
++			} 
++			catch (Exception e)
++			{
++				throw new DataFormatException();
++			}
++    	}
++
++		return blocks;
++	}
++
++    private static byte[] zip(byte[] image)
+     {
+         Deflater deflater = new Deflater();
+         deflater.setInput(image);
+@@ -499,4 +595,20 @@
+         return newData;
+     }
+ 
++	private static byte[] zip(byte[] image, int length)
++	{
++		Deflater deflater = new Deflater();
++		deflater.setInput(image, 0, length);
++		deflater.finish();
++
++		byte[] compressedData = new byte[image.length];
++		int bytesCompressed = deflater.deflate(compressedData);
++
++		byte[] newData = new byte[bytesCompressed];
++
++		for (int i = 0; i &lt; bytesCompressed; i++)
++			newData[i] = compressedData[i];
++
++		return newData;
++	}
+ }
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Sound.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Sound.java	2008-03-27 11:52:28 UTC (rev 392)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Sound.java	2008-03-27 12:16:25 UTC (rev 393)
+@@ -31,6 +31,7 @@
+ package com.flagstone.transform.util;
+ 
+ import java.io.*;
++import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.zip.*;
+ 
+@@ -151,7 +152,7 @@
+ 		decoders.put(format.toUpperCase(), aClass);
+ 	}
+ 
+-    FSDefineSound defineSound(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
++    public static FSDefineSound defineSound(int identifier, String path) throws FileNotFoundException, IOException, DataFormatException
+     {
+     	FSDefineSound object = null;
+     	String extension = null;
+@@ -196,19 +197,10 @@
+     	return object;
+     }
+     
+-    public FSSoundStreamHead2 streamHeader(FSDefineSound sound, int frameRate)
+-    {
+-    	int format = sound.getFormat();
+-    	int rate = sound.getPlaybackRate();
+-    	int channels = sound.getPlaybackChannels();
+-    	int size = sound.getPlaybackSampleSize();
+-    	
+-        return new FSSoundStreamHead2(format, rate, channels, size, rate, channels, size, rate/frameRate);
+-    }
+-
+-    
+     /** 
+-     * Generates an FSSoundStreamBlock object containing a block sound data. This method is 
++     * Generates all the objects required to stream a sound. 
++     * 
++     * The object containing a block sound data. This method is 
+      * used to divide the encoded sound into a sequence of blocks to allow a sound to be 
+      * streamed to the Flash Player.
+      *
+@@ -223,132 +215,148 @@
+      * @return an FSSoundStreamBlock object containing a block of bytes from the encoded 
+      * sound.
+      */
+-    public FSSoundStreamBlock[] streamBlock(FSDefineSound sound, int frameRate)
++    public static ArrayList&lt;FSMovieObject&gt; streamSound(String path, int frameRate) throws FileNotFoundException, IOException, DataFormatException
+     {
+-        int firstSample = 0;
+-        int firstSampleOffset = 0;
+-        int bytesPerBlock = 0;
+-        int bytesRemaining = 0;
+-        int numberOfBytes = 0;
+-        
+-        int framesToSend = 0;
+-        int framesSent = 0;
+-        int frameCount = 0;
+-        int sampleCount = 0;
+-        int seek = 0;
+-        
+-        byte[] data = sound.getSoundData();
+-        byte[] bytes = null;
++    	String extension = null;
++    	ArrayList&lt;FSMovieObject&gt;array = new ArrayList&lt;FSMovieObject&gt;();
++    	
++    	if (decoders.containsKey(extension))
++    	{
++			try
++			{
++				Class&lt;SoundDecoder&gt; obj = decoders.get(extension);
++				SoundDecoder decoder = (SoundDecoder) obj.newInstance();
++				decoder.decode(path);
++				
++		        int firstSample = 0;
++		        int firstSampleOffset = 0;
++		        int bytesPerBlock = 0;
++		        int bytesRemaining = 0;
++		        int numberOfBytes = 0;
++		        
++		        int framesToSend = 0;
++		        int framesSent = 0;
++		        int frameCount = 0;
++		        int sampleCount = 0;
++		        int seek = 0;
++		        
++				int format = decoder.getFormat();
++			    int channels = decoder.getNumberOfChannels();
++			    int samples = decoder.getSamplesPerChannel();
++			    int rate = decoder.getSampleRate();
++			    int size = decoder.getSampleSize();
++			    byte[] sound = decoder.getSound();
++			    byte[] bytes = null;
++			    
++		    	int samplesPerBlock = rate/frameRate;
++			 	int numberOfBlocks = samples/samplesPerBlock;
+ 
+-    	int format = sound.getFormat();
+-    	int rate = sound.getPlaybackRate();
+-    	int channels = sound.getPlaybackChannels();
+-    	int size = sound.getPlaybackSampleSize();
+-    	int samples = sound.getSampleCount();
++			    int[][] frameTable = null;
++			    int samplesPerFrame = 0;
+ 
+-    	int samplesPerBlock = rate/frameRate;
+-	 	int numberOfBlocks = samples/samplesPerBlock;
++			    array.add(new FSSoundStreamHead2(format, rate, channels, size, rate, channels, size, samplesPerBlock));
+ 
+-	    int[][] frameTable = null;
+-	    int samplesPerFrame = 0;
+-	    
+-	    FSSoundStreamBlock[] blocks = new FSSoundStreamBlock[numberOfBlocks];
+-	    
+-	 	switch (format)
+-        {
+-            case FSSoundInfo.PCM:
+-        	    for (int i=0; i&lt;numberOfBlocks; i++)
+-        	    {
+-	                firstSample = i*samplesPerBlock;
+-	                firstSampleOffset = firstSample * size * channels;
+-	                bytesPerBlock = samplesPerBlock * size * channels;
+-	                bytesRemaining = data.length - firstSampleOffset;
+-	                
+-	                numberOfBytes = (bytesRemaining &lt; bytesPerBlock) ? bytesRemaining : bytesPerBlock;
+-	            
+-	                bytes = new byte[numberOfBytes];
+-	                System.arraycopy(data, firstSampleOffset, bytes, 0, numberOfBytes);
+-	                
+-	                blocks[i] = new FSSoundStreamBlock(bytes);
+-        	    }
+-                break;
+-            case FSSoundInfo.ADPCM:
+-                break;
+-            case FSSoundInfo.MP3:
+-                FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
+-                
+-                coder.findBits(0x7FF, 11, 8);
+-                
+-                int frameStart = coder.getPointer();
+-                int numberOfFrames = 0;
+-                
+-                while (coder.findBits(0x7FF, 11, 8))
+-                {
+-                    coder.adjustPointer(MP3FrameSize(coder) &lt;&lt; 3);
+-                    numberOfFrames++;
+-                }
+-                
+-                frameTable = new int[numberOfFrames][2];
+-                
+-                coder.setPointer(frameStart);
+-                
+-                int frameNumber = 0;
+-                
+-                while (coder.findBits(0x7FF, 11, 8))
+-                {
+-                    frameTable[frameNumber][0] = (coder.getPointer()- frameStart + 16) &gt;&gt; 3;
+-                    
+-                    coder.adjustPointer(11); // skip start of frame marker
++			 	switch (format)
++		        {
++		            case FSSoundInfo.PCM:
++		        	    for (int i=0; i&lt;numberOfBlocks; i++)
++		        	    {
++			                firstSample = i*samplesPerBlock;
++			                firstSampleOffset = firstSample * size * channels;
++			                bytesPerBlock = samplesPerBlock * size * channels;
++			                bytesRemaining = sound.length - firstSampleOffset;
++			                
++			                numberOfBytes = (bytesRemaining &lt; bytesPerBlock) ? bytesRemaining : bytesPerBlock;
++			            
++			                bytes = new byte[numberOfBytes];
++			                System.arraycopy(sound, firstSampleOffset, bytes, 0, numberOfBytes);
++			                
++			                array.add(new FSSoundStreamBlock(bytes));
++		        	    }
++		                break;
++		            case FSSoundInfo.ADPCM:
++		                break;
++		            case FSSoundInfo.MP3:
++		                FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, bytes);
++		                
++		                coder.findBits(0x7FF, 11, 8);
++		                
++		                int frameStart = coder.getPointer();
++		                int numberOfFrames = 0;
++		                
++		                while (coder.findBits(0x7FF, 11, 8))
++		                {
++		                    coder.adjustPointer(MP3FrameSize(coder) &lt;&lt; 3);
++		                    numberOfFrames++;
++		                }
++		                
++		                frameTable = new int[numberOfFrames][2];
++		                
++		                coder.setPointer(frameStart);
++		                
++		                int frameNumber = 0;
++		                
++		                while (coder.findBits(0x7FF, 11, 8))
++		                {
++		                    frameTable[frameNumber][0] = (coder.getPointer()- frameStart + 16) &gt;&gt; 3;
++		                    
++		                    coder.adjustPointer(11); // skip start of frame marker
+ 
+-                    int version = coder.readBits(2, false);
+-                    
+-                    coder.adjustPointer(3);
+-                    
+-                    int bitRate = bitRates[version][coder.readBits(4, false)];
+-                    int samplingRate = samplingRates[version][coder.readBits(2, false)];
+-                    int padding = coder.readBits(1, false);
++		                    int version = coder.readBits(2, false);
++		                    
++		                    coder.adjustPointer(3);
++		                    
++		                    int bitRate = bitRates[version][coder.readBits(4, false)];
++		                    int samplingRate = samplingRates[version][coder.readBits(2, false)];
++		                    int padding = coder.readBits(1, false);
+ 
+-                    frameTable[frameNumber++][1] = 4 + (((version == MPEG1) ? 144 : 72) * bitRate*1000 / samplingRate + padding) - 4;
+-            
+-                    coder.adjustPointer((MP3FrameSize(coder) &lt;&lt; 3)-23);
+-                }
++		                    frameTable[frameNumber++][1] = 4 + (((version == MPEG1) ? 144 : 72) * bitRate*1000 / samplingRate + padding) - 4;
++		            
++		                    coder.adjustPointer((MP3FrameSize(coder) &lt;&lt; 3)-23);
++		                }
+ 
+-                for (int i=0; i&lt;numberOfBlocks; i++)
+-        	    {            	
+-	                framesToSend = ((i+1) * samplesPerBlock) / samplesPerFrame;
+-	                framesSent = (i * samplesPerBlock) / samplesPerFrame;
+-	                frameCount = framesToSend - framesSent;
+-	                sampleCount = frameCount * samplesPerFrame;
+-	                seek = (i * samplesPerBlock) - (framesSent * samplesPerFrame);
+-	            
+-	                numberOfBytes = 4;
+-	                
+-	                for (int j=0, k=framesSent; j&lt;frameCount; j++, k++)
+-	                     numberOfBytes += frameTable[k][1];
+-	                
+-	                bytes = new byte[numberOfBytes];
+-	            
+-	                bytes[0] = (byte)sampleCount;
+-	                bytes[1] = (byte)(sampleCount &gt;&gt; 8);
+-	                bytes[2] = (byte)seek;
+-	                bytes[3] = (byte)(seek &gt;&gt; 8);
+-	                
+-	                int offset = 4; 
+-	                
+-	                for (int j=0, k=framesSent; j&lt;frameCount; j++, k++)
+-	                {
+-	                    System.arraycopy(sound, frameTable[k][0], bytes, offset, frameTable[k][1]);
+-	                    offset += frameTable[k][1];
+-	                }
+-	                
+-	                blocks[i] = new FSSoundStreamBlock(bytes);
+-        	    }
+-                break;
+-	    }
+-    	return blocks;
+-    }
++		                for (int i=0; i&lt;numberOfBlocks; i++)
++		        	    {            	
++			                framesToSend = ((i+1) * samplesPerBlock) / samplesPerFrame;
++			                framesSent = (i * samplesPerBlock) / samplesPerFrame;
++			                frameCount = framesToSend - framesSent;
++			                sampleCount = frameCount * samplesPerFrame;
++			                seek = (i * samplesPerBlock) - (framesSent * samplesPerFrame);
++			            
++			                numberOfBytes = 4;
++			                
++			                for (int j=0, k=framesSent; j&lt;frameCount; j++, k++)
++			                     numberOfBytes += frameTable[k][1];
++			                
++			                bytes = new byte[numberOfBytes];
++			            
++			                bytes[0] = (byte)sampleCount;
++			                bytes[1] = (byte)(sampleCount &gt;&gt; 8);
++			                bytes[2] = (byte)seek;
++			                bytes[3] = (byte)(seek &gt;&gt; 8);
++			                
++			                int offset = 4; 
++			                
++			                for (int j=0, k=framesSent; j&lt;frameCount; j++, k++)
++			                {
++			                    System.arraycopy(sound, frameTable[k][0], bytes, offset, frameTable[k][1]);
++			                    offset += frameTable[k][1];
++			                }
++			                
++			                array.add(new FSSoundStreamBlock(bytes));
++		        	    }
++		                break;
++			    }
++			} 
++			catch (Exception e)
++			{
++				throw new DataFormatException();
++			}
++    	}
++    	return array;
++     }
+ 
+-    private int MP3FrameSize(FSCoder coder)
++    private static int MP3FrameSize(FSCoder coder)
+     {
+         int frameSize = 4;
+         
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/util/Text.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/util/Text.java	2008-03-27 11:52:28 UTC (rev 392)
++++ dev/dev-2-4/src/com/flagstone/transform/util/Text.java	2008-03-27 12:16:25 UTC (rev 393)
+@@ -36,7 +36,7 @@
+ 
+ public class Text
+ {
+-    public FSBounds boundsForText(String text, FSDefineFont2 font, int size)
++    public static FSBounds boundsForText(String text, FSDefineFont2 font, int size)
+     {
+         ArrayList&lt;Integer&gt;codes = font.getCodes();
+         ArrayList&lt;Integer&gt;advances = font.getAdvances();
+@@ -57,7 +57,7 @@
+         return new FSBounds(0, -(int)(font.getAscent()/scale), advance, (int)(font.getDescent()/scale));
+     }
+ 
+-    public ArrayList&lt;FSCharacter&gt; charactersForText(String text, FSDefineFont2 font, int size)
++    public static ArrayList&lt;FSCharacter&gt; charactersForText(String text, FSDefineFont2 font, int size)
+     {
+         ArrayList&lt;FSCharacter&gt;characters = new ArrayList&lt;FSCharacter&gt;(text.length());
+         ArrayList&lt;Integer&gt;codes = font.getCodes();
+@@ -78,7 +78,7 @@
+         return characters;
+     }
+ 
+-	public FSSpan defineSpan(String text, FSDefineFont2 font, int size, FSColor color)
++	public static FSSpan defineSpan(String text, FSDefineFont2 font, int size, FSColor color)
+     {
+         float scale = size/1024.0f;
+         
+@@ -88,7 +88,7 @@
+         return new FSSpan(font.getIdentifier(), color, x, y, size, charactersForText(text, font, size));
+     }
+ 
+-    public FSDefineText2 defineText(int anIdentifier, String text, FSDefineFont2 font, int size, FSColor color)
++    public static FSDefineText2 defineText(int anIdentifier, String text, FSDefineFont2 font, int size, FSColor color)
+     {
+         FSCoordTransform transform = new FSCoordTransform(0, 0);
+         ArrayList&lt;FSSpan&gt; spans = new ArrayList&lt;FSSpan&gt;();
+@@ -98,7 +98,7 @@
+         return new FSDefineText2(anIdentifier, boundsForText(text, font, size), transform, spans);
+     }
+ 
+-    public FSDefineText2 defineTextBlock(int anIdentifier, ArrayList&lt;String&gt; lines, FSDefineFont2 font, int size, FSColor color, int lineSpacing)
++    public static FSDefineText2 defineTextBlock(int anIdentifier, ArrayList&lt;String&gt; lines, FSDefineFont2 font, int size, FSColor color, int lineSpacing)
+     {
+         FSCoordTransform transform = new FSCoordTransform(0, 0);
+         float scale = size/1024.0f;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000326.html">[Transform-svn] r392 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000328.html">[Transform-svn] r394 - dev/dev-2-4/src/com/flagstone/transform/test
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#327">[ date ]</a>
+              <a href="thread.html#327">[ thread ]</a>
+              <a href="subject.html#327">[ subject ]</a>
+              <a href="author.html#327">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

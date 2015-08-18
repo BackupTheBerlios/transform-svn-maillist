@@ -1,0 +1,552 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r356 - dev/dev-2-4/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-March/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r356%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181425.m2IEPOvp027247%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000291.html">
+   <LINK REL="Next"  HREF="000293.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r356 - dev/dev-2-4/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r356%20-%20dev/dev-2-4/src/com/flagstone/transform&In-Reply-To=%3C200803181425.m2IEPOvp027247%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r356 - dev/dev-2-4/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar 18 15:25:24 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000291.html">[Transform-svn] r355 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000293.html">[Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#292">[ date ]</a>
+              <a href="thread.html#292">[ thread ]</a>
+              <a href="subject.html#292">[ subject ]</a>
+              <a href="author.html#292">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-03-18 15:25:21 +0100 (Tue, 18 Mar 2008)
+New Revision: 356
+
+Modified:
+   dev/dev-2-4/src/com/flagstone/transform/FSCharacter.java
+Log:
+added checks when setting accessors, updated to use new class hierarchy and interfaces.
+
+Modified: dev/dev-2-4/src/com/flagstone/transform/FSCharacter.java
+===================================================================
+--- dev/dev-2-4/src/com/flagstone/transform/FSCharacter.java	2008-03-18 14:21:50 UTC (rev 355)
++++ dev/dev-2-4/src/com/flagstone/transform/FSCharacter.java	2008-03-18 14:25:21 UTC (rev 356)
+@@ -31,210 +31,291 @@
+ package com.flagstone.transform;
+ 
+ /**
+-The FSCharacter class is used to identify the glyph that is displayed for a given 
+-character in a line of text. 
++ * The FSCharacter class is used to identify the glyph that is displayed for a
++ * given character in a line of text.
++ * 
++ * &lt;p&gt;
++ * The spacing to the next character is also defined.
++ * &lt;/p&gt;
++ * 
++ * &lt;table class=&quot;datasheet&quot;&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;glyphIndex&lt;/td&gt;
++ * &lt;td&gt;An index into the array of FSShape objects that define the glyphs for a
++ * given font.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * 
++ * &lt;tr&gt;
++ * &lt;td&gt;advance&lt;/td&gt;
++ * &lt;td&gt;The distance, in twips, from the origin of the glyph representing the
++ * current character to the next glyph to be displayed.&lt;/td&gt;
++ * &lt;/tr&gt;
++ * &lt;/table&gt;
++ * 
++ * &lt;p&gt;
++ * A single lines of text is displayed using an FSText object which contains an
++ * array of FSCharacter objects. Blocks of text can be created by combining one
++ * or more FSText objects. The size, colour and relative position of each line
++ * within the block is defined by the FSText object. The FSText objects are
++ * added to an FSDefineText object or an FSDefineText2 object (which supports
++ * transparent colours) which is then used to define the final size and
++ * orientation of the text when it is placed on the Display List.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * This greatly simplified example illustrates how text strings are created.
++ * First the array of glyphs for each character is defined.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ *  ArrayList alphabet = new ArrayList();
++ * 
++ *  FSShape space = new Shape(...);  // Glyph for ' '
++ *  FSShape a = new Shape(...);      // Glyph for 'a'
++ *  FSShape b = new Shape(...);      // Glyph for 'b'
++ *  ...
++ *  FSShape z = new Shape(...);      // Glyph for 'z'
++ * 
++ *  alphabet.add(space);
++ *  alphabet.add(a);
++ *  alphabet.add(b);
++ *  ...
++ *  alphabet.add(z);
++ * 
++ *  // Create the font containing the glyphs for each character
++ *  movie.add(new FSDefineFont(movie.newIdentifier(), alphabet));
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * Now created the array of FSCharacter objects representing 'a string' Assume
++ * the font is a fixed width such as Courier and the spacing between characters
++ * is 160 twips - 8 pixels.
++ * &lt;/p&gt;
++ * 
++ * &lt;pre&gt;
++ * ArrayList characters = new ArrayList();
++ * 
++ * characters.add(new FSCharacter(1, 120)); // 'a'
++ * characters.add(new FSCharacter(0, 120)); // ' '
++ * characters.add(new FSCharacter(19, 120)); // 's'
++ * characters.add(new FSCharacter(10, 120)); // 't'
++ * characters.add(new FSCharacter(18, 120)); // 'r'
++ * characters.add(new FSCharacter(9, 120)); // 'i'
++ * characters.add(new FSCharacter(14, 120)); // 'n'
++ * characters.add(new FSCharacter(6, 120)); // 'g'
++ * 
++ * FSText string = new FSText(characters);
++ * &lt;/pre&gt;
++ * 
++ * &lt;p&gt;
++ * It should be immediately clear that creating strings and font definitions
++ * from scratch is a huge task requiring knowledge of drawing glyphs and how to
++ * layout glyphs to generate aesthetically pleasing text. Transform is a
++ * low-level library and such complicated code should be avoided at all costs.
++ * Fortunately it is 'relatively' easy to use convert existing font definitions
++ * such as those encoded in True Type Font files to into the font and text
++ * definition objects that can be used to create Flash files. Another useful
++ * approach is to use an existing font definition from a Flash file to obtain
++ * the glyph definitions, character codes and advance information.
++ * &lt;/p&gt;
++ * 
++ * &lt;p&gt;
++ * Creating such font and text definitions is outside the scope of the
++ * documentation for this library. However refer to the Transform Utilities
++ * framework for Transform available on Flagstone Software's web site for ways
++ * to perform these tasks.
++ * &lt;/p&gt;
++ * 
++ * &lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++ * 
++ * &lt;p&gt;
++ * The FSCharacter class represents the GlyphEntry structure from Macromedia
++ * Flash (SWF) File Format Specification. It was introduced in Flash 1.
++ * &lt;/p&gt;
++ */
++public class FSCharacter implements Cloneable, Codeable
++{
++	private int glyphIndex = 0;
+ 
+-&lt;p&gt;The spacing to the next character is also defined.&lt;/p&gt;
++	private int advance = 0;
+ 
+-&lt;table class=&quot;datasheet&quot;&gt;
++	/**
++	 * Construct an FSCharacter object, initalizing it with values decoded from
++	 * an encoded object.
++	 * 
++	 * @param coder
++	 *            an FSCoder containing the binary data.
++	 */
++	public FSCharacter(FSCoder coder)
++	{
++		decode(coder);
++	}
+ 
+-&lt;tr&gt;&lt;th align=&quot;left&quot; colspan=&quot;2&quot;&gt;Attributes&lt;/th&gt;&lt;/tr&gt;
++	/**
++	 * Constructs an FSCharacter specifying the index of the glyph to be
++	 * displayed and the spacing to the next glyph.
++	 * 
++	 * @param anIndex
++	 *            the index into the array of FSShapes in a font definition
++	 *            object that defines the glyph that represents the character to
++	 *            be displayed.
++	 * 
++	 * @param anAdvance
++	 *            the relative position in twips, from the origin of the glyph
++	 *            representing this character to the next glyph to be displayed.
++	 */
++	public FSCharacter(int anIndex, int anAdvance)
++	{
++		setGlyphIndex(anIndex);
++		setAdvance(anAdvance);
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSCharacter_0&quot;&gt;glyphIndex&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;An index into the array of FSShape objects that define the glyphs for a given font.&lt;/td&gt;
+-&lt;/tr&gt;
++	/**
++	 * Constructs an FSCharacter object by copying values from an existing
++	 * object.
++	 * 
++	 * @param obj
++	 *            an FSCharacter object.
++	 */
++	public FSCharacter(FSCharacter obj)
++	{
++		glyphIndex = obj.glyphIndex;
++		advance = obj.advance;
++	}
+ 
+-&lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSCharacter_1&quot;&gt;advance&lt;/a&gt;&lt;/td&gt;
+-&lt;td&gt;The distance, in twips, from the origin of the glyph representing the current character to the next glyph to be displayed.&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
++	/**
++	 * Gets the index of the glyph, in a font definition object, that will
++	 * displayed to represent this character.
++	 * 
++	 * @return the index of the glyph that represents the character to be
++	 *         displayed.
++	 */
++	public int getGlyphIndex()
++	{
++		return glyphIndex;
++	}
+ 
+-&lt;p&gt;A single lines of text is displayed using an FSText object which contains an array of FSCharacter objects. Blocks of text can be created by combining one or more FSText objects. The size, colour and relative position of each line within the block is defined by the FSText object. The FSText objects are added to an FSDefineText object or an FSDefineText2 object (which supports transparent colours) which is then used to define the final size and orientation of the text when it is placed on the Display List.&lt;/p&gt;
++	/**
++	 * Gets the spacing in twips between the glyph representing this character
++	 * and the next.
++	 * 
++	 * @return the distance in twips to the next glyph.
++	 */
++	public int getAdvance()
++	{
++		return advance;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;Example&lt;/h1&gt;
++	/**
++	 * Sets the index of the glyph, contained in the array of FSShape object
++	 * contained in a font definition object, that represents the character to
++	 * be displayed.
++	 * 
++	 * @param anIndex
++	 *            the index of the glyph that represents the character to be
++	 *            displayed.
++	 *            
++	 * @throws IllegalArgumentException if the argument is negative.
++	 */
++	public void setGlyphIndex(int anIndex)
++	{
++		if (anIndex &lt; 0) {
++			throw new IllegalArgumentException(&quot;Index cannot be negative.&quot;);
++		}
++		glyphIndex = anIndex;
++	}
+ 
+-&lt;p&gt;This greatly simplified example illustrates how text strings are created. First the array of glyphs for each character is defined.&lt;/p&gt;
++	/**
++	 * Sets the spacing in twips between the glyph representing this character
++	 * and the next glyph to be displayed.
++	 * 
++	 * @param aNumber
++	 *            the relative position in twips from the origin of the glyph
++	 *            representing this character to the next glyph.
++	 */
++	public void setAdvance(int aNumber)
++	{
++		advance = aNumber;
++	}
+ 
+-&lt;pre&gt;
+-ArrayList alphabet = new ArrayList();
++	/**
++	 * Returns true if anObject is equal to this one. Objects are considered
++	 * equal if they would generate identical binary data when they are encoded
++	 * to a Flash file.
++	 * 
++	 * @return true if this object would be identical to anObject when encoded.
++	 */
++	public boolean equals(Object anObject)
++	{
++		boolean result = false;
+ 
+-FSShape space = new Shape(...);  // Glyph for ' '
+-FSShape a = new Shape(...);      // Glyph for 'a'
+-FSShape b = new Shape(...);      // Glyph for 'b'
+-...
+-FSShape z = new Shape(...);      // Glyph for 'z'
++		if (super.equals(anObject))
++		{
++			FSCharacter typedObject = (FSCharacter) anObject;
+ 
+-alphabet.add(space);
+-alphabet.add(a);
+-alphabet.add(b);
+-...
+-alphabet.add(z);
++			result = glyphIndex == typedObject.glyphIndex;
++			result = result &amp;&amp; advance == typedObject.advance;
++		}
++		return result;
++	}
+ 
+-// Create the font containing the glyphs for each character
+-movie.add(new FSDefineFont(movie.newIdentifier(), alphabet));
+-&lt;/pre&gt;
++	/**
++	 * Creates a deep copy of the entire object.
++	 * 
++	 * @return a copy of the object.
++	 */
++	public Object clone()
++	{
++		Object anObject = null;
+ 
+-&lt;p&gt;Now created the array of FSCharacter objects representing 'a string' Assume the font is a fixed width such as Courier and the spacing between characters is 160 twips - 8 pixels.&lt;/p&gt;
++		try {
++			anObject = super.clone();
++		} 
++		catch (CloneNotSupportedException e) {
++			throw new InternalError();
++		}
++		return anObject;
++	}
+ 
+-&lt;pre&gt;
+-ArrayList characters = new ArrayList();
++	public String toString()
++	{
++		StringBuffer buffer = new StringBuffer();
+ 
+-characters.add(new FSCharacter(1, 120));  // 'a'
+-characters.add(new FSCharacter(0, 120));  // ' '
+-characters.add(new FSCharacter(19, 120)); // 's'
+-characters.add(new FSCharacter(10, 120)); // 't'
+-characters.add(new FSCharacter(18, 120)); // 'r'
+-characters.add(new FSCharacter(9, 120));  // 'i'
+-characters.add(new FSCharacter(14, 120)); // 'n'
+-characters.add(new FSCharacter(6, 120));  // 'g'
++		buffer.append(&quot;FSCharacter: { &quot;);
++		buffer.append(&quot;glyphIndex = &quot;).append(glyphIndex).append(&quot;; &quot;);
++		buffer.append(&quot;advance = &quot;).append(advance).append(&quot;; &quot;);
++		buffer.append(&quot;}&quot;);
+ 
+-FSText string = new FSText(characters);
+-&lt;/pre&gt;
++		return buffer.toString();
++	}
+ 
+-&lt;p&gt;It should be immediately clear that creating strings and font definitions from scratch is a huge task requiring knowledge of drawing glyphs and how to layout glyphs to generate aesthetically pleasing text. Transform is a low-level library and such complicated code should be avoided at all costs. Fortunately it is 'relatively' easy to use convert existing font definitions such as those encoded in True Type Font files to into the font and text definition objects that can be used to create Flash files. Another useful approach is to use an existing font definition from a Flash file to obtain the glyph definitions, character codes and advance information.&lt;/p&gt;
++	public int length(FSCoder coder)
++	{
++		int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
++		int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+ 
+-&lt;p&gt;Creating such font and text definitions is outside the scope of the documentation for this library. However refer to the Transform Utilities framework for Transform available on Flagstone Software's web site for ways to perform these tasks.&lt;/p&gt;
++		return numberOfGlyphBits + numberOfAdvanceBits;
++	}
+ 
+-&lt;h1 class=&quot;datasheet&quot;&gt;History&lt;/h1&gt;
++	public void encode(FSCoder coder)
++	{
++		coder.writeBits(glyphIndex, coder.context[FSCoder.NumberOfGlyphBits]);
++		coder.writeBits(advance, coder.context[FSCoder.NumberOfAdvanceBits]);
++	}
+ 
+-&lt;p&gt;The FSCharacter class represents the GlyphEntry structure from Macromedia Flash (SWF) File Format Specification. It was introduced in Flash 1.&lt;/p&gt;
+- */
+-public class FSCharacter extends FSTransformObject
+-{
+-    private int glyphIndex = 0;
+-    private int advance = 0;
++	public void decode(FSCoder coder)
++	{
++		int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
++		int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+ 
+-    /**
+-     * Construct an FSCharacter object, initalizing it with values decoded from 
+-     * an encoded object.
+-     * 
+-     * @param coder an FSCoder containing the binary data.
+-     */
+-    public FSCharacter(FSCoder coder)
+-    {
+-        decode(coder);
+-    }
+-    /** 
+-     * Constructs an FSCharacter specifying the index of the glyph to be displayed 
+-     * and the spacing to the next glyph.
+-
+-        @param anIndex the index into the array of FSShapes in a font definition
+-        object that defines the glyph that represents the character to be displayed.
+-        
+-        @param anAdvance the relative position in twips, from the origin of the 
+-        glyph representing this character to the next glyph to be displayed.
+-        */
+-    public FSCharacter(int anIndex, int anAdvance)
+-    {
+-        setGlyphIndex(anIndex);
+-        setAdvance(anAdvance);
+-    }
+-    /**
+-     * Constructs an FSCharacter object by copying values from an existing object.
+-     *
+-     * @param obj an FSCharacter object.
+-     */
+-    public FSCharacter(FSCharacter obj)
+-    {
+-        glyphIndex = obj.glyphIndex;
+-        advance = obj.advance;
+-    }
+-
+-    /** 
+-     * Gets the index of the glyph, in a font definition object, that will 
+-     * displayed to represent this character.
+-
+-        @return the index of the glyph that represents the character to be displayed.
+-        */
+-    public int getGlyphIndex() { return glyphIndex; }
+-
+-    /** Gets the spacing in twips between the glyph representing this character and the next.
+-
+-        @return the distance in twips to the next glyph.
+-        */
+-    public int getAdvance() { return advance; }
+-
+-    /** 
+-     * Sets the index of the glyph, contained in the array of FSShape object 
+-     * contained in a font definition object, that represents the character to 
+-     * be displayed.
+-
+-        @param anIndex the index of the glyph that represents the character to 
+-        be displayed.
+-     */
+-    public void setGlyphIndex(int anIndex)
+-    {
+-        glyphIndex = anIndex;
+-    }
+-
+-    /** 
+-     * Sets the spacing in twips between the glyph representing this character 
+-     * and the next glyph to be displayed.
+-
+-        @param aNumber the relative position in twips from the origin of the 
+-        glyph representing this character to the next glyph.
+-     */
+-    public void setAdvance(int aNumber)
+-    {
+-        advance = aNumber;
+-    }
+-
+-    /** 
+-     * Returns true if anObject is equal to this one. Objects are considered 
+-     * equal if they would generate identical binary data when they are encoded 
+-     * to a Flash file.
+-     *
+-     * @return true if this object would be identical to anObject when encoded.
+-     */
+-    public boolean equals(Object anObject)
+-    {
+-        boolean result = false;
+-        
+-        if (super.equals(anObject))
+-        {
+-            FSCharacter typedObject = (FSCharacter)anObject;
+-            
+-            result = glyphIndex == typedObject.glyphIndex;
+-            result = result &amp;&amp; advance == typedObject.advance;
+-        }
+-        return result;
+-    }
+-
+-    public void appendDescription(StringBuffer buffer, int depth)
+-    {
+-        buffer.append(name());
+-
+-        if (depth &gt; 0)
+-        {
+-            buffer.append(&quot;: { &quot;);
+-            Transform.append(buffer, &quot;glyphIndex&quot;, glyphIndex);
+-            Transform.append(buffer, &quot;advance&quot;, advance);
+-            buffer.append(&quot;}&quot;);
+-        }
+-    }
+-
+-    public int length(FSCoder coder)
+-    {
+-        int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
+-        int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+-        
+-        return numberOfGlyphBits + numberOfAdvanceBits;
+-    }
+-    
+-    public void encode(FSCoder coder)
+-    {
+-        coder.writeBits(glyphIndex, coder.context[FSCoder.NumberOfGlyphBits]);
+-        coder.writeBits(advance, coder.context[FSCoder.NumberOfAdvanceBits]);
+-    }
+-    
+-    public void decode(FSCoder coder)
+-    {
+-        int numberOfGlyphBits = coder.context[FSCoder.NumberOfGlyphBits];
+-        int numberOfAdvanceBits = coder.context[FSCoder.NumberOfAdvanceBits];
+-        
+-        glyphIndex = coder.readBits(numberOfGlyphBits, false);
+-        advance = coder.readBits(numberOfAdvanceBits, true);
+-    }
++		glyphIndex = coder.readBits(numberOfGlyphBits, false);
++		advance = coder.readBits(numberOfAdvanceBits, true);
++	}
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000291.html">[Transform-svn] r355 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000293.html">[Transform-svn] r357 - dev/dev-2-4/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#292">[ date ]</a>
+              <a href="thread.html#292">[ thread ]</a>
+              <a href="subject.html#292">[ subject ]</a>
+              <a href="author.html#292">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

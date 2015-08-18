@@ -1,0 +1,920 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r436 - dev/dev-3-0/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r436%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804030725.m337Peh0028543%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000370.html">
+   <LINK REL="Next"  HREF="000373.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r436 - dev/dev-3-0/src/com/flagstone/transform/util</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r436%20-%20dev/dev-3-0/src/com/flagstone/transform/util&In-Reply-To=%3C200804030725.m337Peh0028543%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r436 - dev/dev-3-0/src/com/flagstone/transform/util">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Apr  3 09:25:40 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000370.html">[Transform-svn] r435 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+        <LI>Next message: <A HREF="000373.html">[Transform-svn] r437 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#372">[ date ]</a>
+              <a href="thread.html#372">[ thread ]</a>
+              <a href="subject.html#372">[ subject ]</a>
+              <a href="author.html#372">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-03 09:25:36 +0200 (Thu, 03 Apr 2008)
+New Revision: 436
+
+Added:
+   dev/dev-3-0/src/com/flagstone/transform/util/BufferedImageDecoder.java
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+Log:
+Refactored code for BufferedImages into a deparate decoder.
+
+Added: dev/dev-3-0/src/com/flagstone/transform/util/BufferedImageDecoder.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/BufferedImageDecoder.java	2008-04-02 22:58:02 UTC (rev 435)
++++ dev/dev-3-0/src/com/flagstone/transform/util/BufferedImageDecoder.java	2008-04-03 07:25:36 UTC (rev 436)
+@@ -0,0 +1,459 @@
++package com.flagstone.transform.util;
++
++import java.awt.image.BufferedImage;
++import java.awt.image.ColorModel;
++import java.awt.image.DataBuffer;
++import java.awt.image.DataBufferByte;
++import java.awt.image.DataBufferInt;
++import java.awt.image.DataBufferUShort;
++import java.awt.image.IndexColorModel;
++import java.util.zip.DataFormatException;
++
++import com.flagstone.transform.FSCoder;
++
++public class BufferedImageDecoder
++{
++    private int format;
++    private int width;
++    private int height;
++    private byte[] table;
++    private byte[] image;
++   
++    /**
++     * Constructs an BufferedImageDecoder object with no image.
++     */
++    public BufferedImageDecoder()
++    {
++    }
++           
++    /**
++     * Construct an BufferedImageDecoder object with the image from the specified file. 
++     *
++     * @throws DataFormatException if the file contains an unsupported image 
++     * format or if an error occurs while decoding the image in the file.
++     */
++    public BufferedImageDecoder(BufferedImage image) throws DataFormatException
++    {
++        decode(image);
++    }   
++    
++    /**
++     * Returns a constant identifying the format for the way the pixels are encoded.
++     *
++     * @return the image format.
++     */
++    public int getFormat()
++    {
++        return format;
++    }
++
++    /**
++     * Returns the width of the image in pixels.
++     * 
++     * @return the image width in pixels.
++     */
++    public int getWidth()
++    {
++        return width;
++    }
++    /**
++     * Returns the height of the image in pixels.
++     * 
++     * @return the image height in pixels.
++     */
++    public int getHeight()
++    {
++        return height;
++    }   
++    
++    /**
++     * Returns a copy of the colour table used in an indexed image. Each entry in the 
++     * colour table contains 4 bytes with one byte for the alpha channel and each
++     * of the three colour channels, red, green and blue. The alpha channel occupied the 
++     * most significant byte (3) followed by red, green and blue (the least significant byte).
++     * 
++     * For images in IDX8 format the alpha channel defaults to 255 (completely opaque).
++     * 
++     * If the image format is JPEG or one of the true colour formats (RGB5, RGB8, RGBA)
++     * then the colour table returned is null.
++     *
++     * @return a two-dimensional array of bytes containing the colours used in an indexed image.
++     */
++    public byte[] getTable()
++    {
++        byte[] bytes = null;
++        
++        if (table != null)
++        {
++        	bytes = new byte[table.length];
++        
++            for (int i=0; i&lt;table.length; i++)
++            {
++                bytes[i] = table[i];            
++            }
++        }
++        return bytes;
++    }
++    
++    public byte[] getImage()
++    {
++        byte[] bytes = null;
++        
++        if (image != null)
++        {
++            bytes = new byte[image.length];
++        
++            for (int i=0; i&lt;image.length; i++)
++            {
++                bytes[i] = image[i];            
++            }
++        }
++        return image;
++    }
++
++    public void decode(BufferedImage bi) throws DataFormatException
++	{
++		DataBuffer buffer = (DataBuffer) bi.getData().getDataBuffer();
++
++		width = bi.getWidth();
++		height = bi.getHeight();
++		
++		int index;
++
++		if (buffer.getDataType() == DataBuffer.TYPE_INT)
++		{
++			int[] pixels = ((DataBufferInt) buffer).getData();
++
++			switch (bi.getType())
++			{
++				case BufferedImage.TYPE_INT_ARGB:
++					format = Image.RGBA;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int pixel = pixels[y * width + x];
++
++							image[index+3] = (byte) (pixel &gt;&gt; 24);
++							image[index+2] = (byte) (pixel &gt;&gt; 16);
++							image[index+1] = (byte) (pixel &gt;&gt; 8);
++							image[index] = (byte) pixel;
++						}
++					}
++					break;
++				case BufferedImage.TYPE_INT_ARGB_PRE:
++					format = Image.RGBA;
++				    image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int pixel = pixels[y * width + x];
++
++							image[index+3] = (byte) (pixel &gt;&gt; 24);
++							image[index+2] = (byte) (pixel &gt;&gt; 16);
++							image[index+1] = (byte) (pixel &gt;&gt; 8);
++							image[index] = (byte) pixel;
++						}
++					}
++					break;
++				case BufferedImage.TYPE_INT_BGR:
++					format = Image.RGB8;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int pixel = pixels[y * width + x];
++
++							image[index+3] = -1;
++							image[index+2] = (byte) (pixel &gt;&gt; 16);
++							image[index+1] = (byte) (pixel &gt;&gt; 8);
++							image[index] = (byte) pixel;
++						}
++					}
++					break;
++				case BufferedImage.TYPE_INT_RGB:
++					format = Image.RGB8;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index +=4)
++						{
++							int pixel = pixels[y * width + x];
++
++							image[index+3] = -1;
++							image[index] = (byte) (pixel &gt;&gt; 16);
++							image[index+1] = (byte) (pixel &gt;&gt; 8);
++							image[index+2] = (byte) pixel;
++						}
++					}
++					break;
++				default:
++					throw new DataFormatException(&quot;Unsupported BufferedImage format: &quot;+ bi.getType());
++			}
++
++		} 
++		else if (buffer.getDataType() == DataBuffer.TYPE_BYTE)
++		{
++			byte[] pixels = ((DataBufferByte) buffer).getData();
++
++			switch (bi.getType())
++			{
++				case BufferedImage.TYPE_3BYTE_BGR:
++					format = Image.RGB8;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int offset = 3 * (y * width + x);
++
++							image[index+3] = -1;
++							image[index+2] = pixels[offset];
++							image[index+1] = pixels[offset + 1];
++							image[index] = pixels[offset + 2];
++						}
++					}
++					break;
++				case BufferedImage.TYPE_CUSTOM:
++					if (width * height * 3 == pixels.length)
++					{
++						format = Image.RGBA;
++						image = new byte[height*width*4];
++						index = 0;
++						
++						for (int y = 0; y &lt; height; y++)
++						{
++							for (int x = 0; x &lt; width; x++, index +=4)
++							{
++								int offset = 3 * (y * width + x);
++
++								image[index] = pixels[offset];
++								image[index+1] = pixels[offset + 1];
++								image[index+2] = pixels[offset + 2];
++								image[index+3] = -1;
++							}
++						}
++					}
++					if (width * height * 4 == pixels.length)
++					{
++						format = Image.RGBA;
++						image = new byte[height*width*4];
++						index = 0;
++						for (int y = 0; y &lt; height; y++)
++						{
++							for (int x = 0; x &lt; width; x++, index+=4)
++							{
++								int offset = 4 * (y * width + x);
++
++								image[index] = pixels[offset];
++								image[index+1] = pixels[offset + 1];
++								image[index+2] = pixels[offset + 2];
++								image[index+3] = pixels[offset + 3];
++							}
++						}
++					}
++					break;
++				case BufferedImage.TYPE_4BYTE_ABGR:
++					format = Image.RGBA;
++					image = new byte[height*width*4];
++					index = 0;
++					
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int offset = 4 * (y * width + x);
++
++							image[index+3] = pixels[offset];
++							image[index+2] = pixels[offset + 1];
++							image[index+1] = pixels[offset + 2];
++							image[index] = pixels[offset + 3];
++						}
++					}
++					break;
++				case BufferedImage.TYPE_4BYTE_ABGR_PRE:
++					format = Image.RGBA;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int offset = 4 * (y * width + x);
++
++							image[index+3] = pixels[offset];
++							image[index+2] = pixels[offset + 1];
++							image[index+1] = pixels[offset + 2];
++							image[index] = pixels[offset + 3];
++						}
++					}
++					break;
++				case BufferedImage.TYPE_BYTE_BINARY:
++					format = Image.IDX8;
++					image = new byte[height*width];
++					int depth = bi.getColorModel().getPixelSize();
++					ColorModel model = (bi.getColorModel());
++					index = 0;
++					
++					if (model instanceof IndexColorModel)
++					{
++					    IndexColorModel indexModel = (IndexColorModel)model;
++
++					    table = new byte[indexModel.getMapSize()*4];
++
++					    byte[] reds = new byte[indexModel.getMapSize()];
++					    byte[] blues = new byte[indexModel.getMapSize()];
++					    byte[] greens = new byte[indexModel.getMapSize()];
++
++					    indexModel.getReds(reds);
++					    indexModel.getGreens(greens);
++					    indexModel.getBlues(blues);
++
++					    for (int i=0; i&lt;table.length; i++, index+=4)
++					    {
++							table[index] = reds[i];
++							table[index+1] = greens[i];
++							table[index+2] = blues[i];
++							table[index+3] = -1;
++					    }
++					}
++
++					index = 0;
++					FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, pixels);
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						int bitsRead = 0;
++
++						for (int x = 0; x &lt; width; x++, index++)
++						{
++							image[index] = (byte) coder.readBits(depth, false);
++							bitsRead += depth;
++						}
++						if (bitsRead % 32 &gt; 0)
++							coder.adjustPointer(32 - (bitsRead % 32));
++					}
++					break;
++				case BufferedImage.TYPE_BYTE_GRAY:
++					format = Image.RGB8;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							int offset = (y * width + x);
++
++							image[index+3] = -1;
++							image[index+2] = pixels[offset];
++							image[index+1] = pixels[offset];
++							image[index] = pixels[offset];
++						}
++					}
++					break;
++				case BufferedImage.TYPE_BYTE_INDEXED:
++					format = Image.IDX8;
++					image = new byte[height*width];
++					depth = bi.getColorModel().getPixelSize();
++					model = (bi.getColorModel());
++					index = 0;
++					
++					if (model instanceof IndexColorModel)
++					{
++					    IndexColorModel indexModel = (IndexColorModel)model;
++
++					    table = new byte[indexModel.getMapSize()*4];
++
++					    byte[] reds = new byte[indexModel.getMapSize()];
++					    byte[] blues = new byte[indexModel.getMapSize()];
++					    byte[] greens = new byte[indexModel.getMapSize()];
++
++					    indexModel.getReds(reds);
++					    indexModel.getGreens(greens);
++					    indexModel.getBlues(blues);
++
++					    for (int i=0; i&lt;table.length; i++, index+=4)
++					    {
++							table[index] = reds[i];
++							table[index+1] = greens[i];
++							table[index+2] = blues[i];
++							table[index+3] = -1;
++					    }
++					}
++
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index++)
++						{
++							int offset = (y * width + x);
++
++							image[index] = pixels[offset];
++						}
++					}
++					break;
++				default:
++					throw new DataFormatException(
++									&quot;Unsupported BufferedImage format: &quot;+ bi.getType());
++			}
++		} else if (buffer.getDataType() == DataBuffer.TYPE_USHORT)
++		{
++			short[] pixels = ((DataBufferUShort) buffer).getData();
++
++			switch (bi.getType())
++			{
++				case BufferedImage.TYPE_USHORT_555_RGB:
++					throw new DataFormatException(
++									&quot;Unsupported BufferedImage format: &quot;
++													+ bi.getType());
++				case BufferedImage.TYPE_USHORT_565_RGB:
++					throw new DataFormatException(
++									&quot;Unsupported BufferedImage format: &quot;
++													+ bi.getType());
++				case BufferedImage.TYPE_USHORT_GRAY:
++					format = Image.RGB8;
++					image = new byte[height*width*4];
++					index = 0;
++
++					for (int y = 0; y &lt; height; y++)
++					{
++						for (int x = 0; x &lt; width; x++, index+=4)
++						{
++							// int row = height-y-1;
++							int offset = (y * width + x);
++
++							image[index+3] = -1;
++							image[index+2] = (byte) pixels[offset];
++							image[index+1] = (byte) pixels[offset];
++							image[index] = (byte) pixels[offset];
++						}
++					}
++					break;
++				default:
++					throw new DataFormatException(
++									&quot;Unsupported BufferedImage format: &quot;
++													+ bi.getType());
++			}
++		} else
++		{
++			throw new DataFormatException(&quot;Unsupported BufferedImage format: &quot;
++							+ bi.getType());
++		}
++	}
++}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/util/Image.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-02 22:58:02 UTC (rev 435)
++++ dev/dev-3-0/src/com/flagstone/transform/util/Image.java	2008-04-03 07:25:36 UTC (rev 436)
+@@ -374,365 +374,28 @@
+ 
+     public static Definition defineImage(int identifier, BufferedImage bi) throws DataFormatException
+ 	{
+-		DataBuffer buffer = (DataBuffer) bi.getData().getDataBuffer();
+-
+-		int width = bi.getWidth();
+-		int height = bi.getHeight();
+-		
+-		int format = 0;
+-		byte[] image = null;
+-		byte[] table = null;
+-
+-		int index;
+-
+-		if (buffer.getDataType() == DataBuffer.TYPE_INT)
+-		{
+-			int[] pixels = ((DataBufferInt) buffer).getData();
+-
+-			switch (bi.getType())
+-			{
+-				case BufferedImage.TYPE_INT_ARGB:
+-					format = RGBA;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int pixel = pixels[y * width + x];
+-
+-							image[index+3] = (byte) (pixel &gt;&gt; 24);
+-							image[index+2] = (byte) (pixel &gt;&gt; 16);
+-							image[index+1] = (byte) (pixel &gt;&gt; 8);
+-							image[index] = (byte) pixel;
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_INT_ARGB_PRE:
+-					format = RGBA;
+-				    image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int pixel = pixels[y * width + x];
+-
+-							image[index+3] = (byte) (pixel &gt;&gt; 24);
+-							image[index+2] = (byte) (pixel &gt;&gt; 16);
+-							image[index+1] = (byte) (pixel &gt;&gt; 8);
+-							image[index] = (byte) pixel;
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_INT_BGR:
+-					format = RGB8;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int pixel = pixels[y * width + x];
+-
+-							image[index+3] = -1;
+-							image[index+2] = (byte) (pixel &gt;&gt; 16);
+-							image[index+1] = (byte) (pixel &gt;&gt; 8);
+-							image[index] = (byte) pixel;
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_INT_RGB:
+-					format = RGB8;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index +=4)
+-						{
+-							int pixel = pixels[y * width + x];
+-
+-							image[index+3] = -1;
+-							image[index] = (byte) (pixel &gt;&gt; 16);
+-							image[index+1] = (byte) (pixel &gt;&gt; 8);
+-							image[index+2] = (byte) pixel;
+-						}
+-					}
+-					break;
+-				default:
+-					throw new DataFormatException(&quot;Unsupported BufferedImage format: &quot;+ bi.getType());
+-			}
+-
+-		} 
+-		else if (buffer.getDataType() == DataBuffer.TYPE_BYTE)
+-		{
+-			byte[] pixels = ((DataBufferByte) buffer).getData();
+-
+-			switch (bi.getType())
+-			{
+-				case BufferedImage.TYPE_3BYTE_BGR:
+-					format = RGB8;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int offset = 3 * (y * width + x);
+-
+-							image[index+3] = -1;
+-							image[index+2] = pixels[offset];
+-							image[index+1] = pixels[offset + 1];
+-							image[index] = pixels[offset + 2];
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_CUSTOM:
+-					if (width * height * 3 == pixels.length)
+-					{
+-						format = RGBA;
+-						image = new byte[height*width*4];
+-						index = 0;
+-						
+-						for (int y = 0; y &lt; height; y++)
+-						{
+-							for (int x = 0; x &lt; width; x++, index +=4)
+-							{
+-								int offset = 3 * (y * width + x);
+-
+-								image[index] = pixels[offset];
+-								image[index+1] = pixels[offset + 1];
+-								image[index+2] = pixels[offset + 2];
+-								image[index+3] = -1;
+-							}
+-						}
+-					}
+-					if (width * height * 4 == pixels.length)
+-					{
+-						format = RGBA;
+-						image = new byte[height*width*4];
+-						index = 0;
+-						for (int y = 0; y &lt; height; y++)
+-						{
+-							for (int x = 0; x &lt; width; x++, index+=4)
+-							{
+-								int offset = 4 * (y * width + x);
+-
+-								image[index] = pixels[offset];
+-								image[index+1] = pixels[offset + 1];
+-								image[index+2] = pixels[offset + 2];
+-								image[index+3] = pixels[offset + 3];
+-							}
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_4BYTE_ABGR:
+-					format = RGBA;
+-					image = new byte[height*width*4];
+-					index = 0;
+-					
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int offset = 4 * (y * width + x);
+-
+-							image[index+3] = pixels[offset];
+-							image[index+2] = pixels[offset + 1];
+-							image[index+1] = pixels[offset + 2];
+-							image[index] = pixels[offset + 3];
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_4BYTE_ABGR_PRE:
+-					format = RGBA;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int offset = 4 * (y * width + x);
+-
+-							image[index+3] = pixels[offset];
+-							image[index+2] = pixels[offset + 1];
+-							image[index+1] = pixels[offset + 2];
+-							image[index] = pixels[offset + 3];
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_BYTE_BINARY:
+-					format = IDX8;
+-					image = new byte[height*width];
+-					int depth = bi.getColorModel().getPixelSize();
+-					ColorModel model = (bi.getColorModel());
+-					index = 0;
+-					
+-					if (model instanceof IndexColorModel)
+-					{
+-					    IndexColorModel indexModel = (IndexColorModel)model;
+-
+-					    table = new byte[indexModel.getMapSize()*4];
+-
+-					    byte[] reds = new byte[indexModel.getMapSize()];
+-					    byte[] blues = new byte[indexModel.getMapSize()];
+-					    byte[] greens = new byte[indexModel.getMapSize()];
+-
+-					    indexModel.getReds(reds);
+-					    indexModel.getGreens(greens);
+-					    indexModel.getBlues(blues);
+-
+-					    for (int i=0; i&lt;table.length; i++, index+=4)
+-					    {
+-							table[index] = reds[i];
+-							table[index+1] = greens[i];
+-							table[index+2] = blues[i];
+-							table[index+3] = -1;
+-					    }
+-					}
+-
+-					index = 0;
+-					FSCoder coder = new FSCoder(FSCoder.LITTLE_ENDIAN, pixels);
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						int bitsRead = 0;
+-
+-						for (int x = 0; x &lt; width; x++, index++)
+-						{
+-							image[index] = (byte) coder.readBits(depth, false);
+-							bitsRead += depth;
+-						}
+-						if (bitsRead % 32 &gt; 0)
+-							coder.adjustPointer(32 - (bitsRead % 32));
+-					}
+-					break;
+-				case BufferedImage.TYPE_BYTE_GRAY:
+-					format = RGB8;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							int offset = (y * width + x);
+-
+-							image[index+3] = -1;
+-							image[index+2] = pixels[offset];
+-							image[index+1] = pixels[offset];
+-							image[index] = pixels[offset];
+-						}
+-					}
+-					break;
+-				case BufferedImage.TYPE_BYTE_INDEXED:
+-					format = IDX8;
+-					image = new byte[height*width];
+-					depth = bi.getColorModel().getPixelSize();
+-					model = (bi.getColorModel());
+-					index = 0;
+-					
+-					if (model instanceof IndexColorModel)
+-					{
+-					    IndexColorModel indexModel = (IndexColorModel)model;
+-
+-					    table = new byte[indexModel.getMapSize()*4];
+-
+-					    byte[] reds = new byte[indexModel.getMapSize()];
+-					    byte[] blues = new byte[indexModel.getMapSize()];
+-					    byte[] greens = new byte[indexModel.getMapSize()];
+-
+-					    indexModel.getReds(reds);
+-					    indexModel.getGreens(greens);
+-					    indexModel.getBlues(blues);
+-
+-					    for (int i=0; i&lt;table.length; i++, index+=4)
+-					    {
+-							table[index] = reds[i];
+-							table[index+1] = greens[i];
+-							table[index+2] = blues[i];
+-							table[index+3] = -1;
+-					    }
+-					}
+-
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index++)
+-						{
+-							int offset = (y * width + x);
+-
+-							image[index] = pixels[offset];
+-						}
+-					}
+-					break;
+-				default:
+-					throw new DataFormatException(
+-									&quot;Unsupported BufferedImage format: &quot;+ bi.getType());
+-			}
+-		} else if (buffer.getDataType() == DataBuffer.TYPE_USHORT)
+-		{
+-			short[] pixels = ((DataBufferUShort) buffer).getData();
+-
+-			switch (bi.getType())
+-			{
+-				case BufferedImage.TYPE_USHORT_555_RGB:
+-					throw new DataFormatException(
+-									&quot;Unsupported BufferedImage format: &quot;
+-													+ bi.getType());
+-				case BufferedImage.TYPE_USHORT_565_RGB:
+-					throw new DataFormatException(
+-									&quot;Unsupported BufferedImage format: &quot;
+-													+ bi.getType());
+-				case BufferedImage.TYPE_USHORT_GRAY:
+-					format = RGB8;
+-					image = new byte[height*width*4];
+-					index = 0;
+-
+-					for (int y = 0; y &lt; height; y++)
+-					{
+-						for (int x = 0; x &lt; width; x++, index+=4)
+-						{
+-							// int row = height-y-1;
+-							int offset = (y * width + x);
+-
+-							image[index+3] = -1;
+-							image[index+2] = (byte) pixels[offset];
+-							image[index+1] = (byte) pixels[offset];
+-							image[index] = (byte) pixels[offset];
+-						}
+-					}
+-					break;
+-				default:
+-					throw new DataFormatException(
+-									&quot;Unsupported BufferedImage format: &quot;
+-													+ bi.getType());
+-			}
+-		} else
+-		{
+-			throw new DataFormatException(&quot;Unsupported BufferedImage format: &quot;
+-							+ bi.getType());
+-		}
+-
+ 		Definition object = null;
+ 		
++		BufferedImageDecoder decoder = new BufferedImageDecoder();
++		decoder.decode(bi);
++		
++		int format = decoder.getFormat();
++		int width = decoder.getWidth();
++		int height = decoder.getHeight();
++		
++		byte[] colourTable = decoder.getTable();
++		byte[] image = decoder.getImage();
++
+ 		switch (format)
+         {
+             case JPEG: 
+             	object = new FSDefineJPEGImage2(identifier, image); 
+             	break;
+             case IDX8: 
+-            	object = new FSDefineImage(identifier, width, height, table.length, zip(merge(adjustScan(width, height, image), table))); 
++            	object = new FSDefineImage(identifier, width, height, colourTable.length, zip(merge(adjustScan(width, height, image), colourTable))); 
+             	break;
+             case IDXA: 
+-            	object = new FSDefineImage2(identifier, width, height, table.length, zip(mergeAlpha(adjustScan(width, height, image), table))); 
++            	object = new FSDefineImage2(identifier, width, height, colourTable.length, zip(mergeAlpha(adjustScan(width, height, image), colourTable))); 
+             	break;
+             case RGB5: 
+             	object = new FSDefineImage(identifier, width, height, zip(packColours(width, height, image)), 16); 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000370.html">[Transform-svn] r435 - dev/dev-3-0/src/com/flagstone/transform/util
+</A></li>
+	<LI>Next message: <A HREF="000373.html">[Transform-svn] r437 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#372">[ date ]</a>
+              <a href="thread.html#372">[ thread ]</a>
+              <a href="subject.html#372">[ subject ]</a>
+              <a href="author.html#372">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

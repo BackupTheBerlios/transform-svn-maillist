@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r181 - trunk/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-June/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r181%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200606281533.k5SFXa3C024842%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000119.html">
+   <LINK REL="Next"  HREF="000121.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r181 - trunk/src/com/flagstone/transform</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r181%20-%20trunk/src/com/flagstone/transform&In-Reply-To=%3C200606281533.k5SFXa3C024842%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r181 - trunk/src/com/flagstone/transform">smackay at berlios.de
+       </A><BR>
+    <I>Wed Jun 28 17:33:36 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000119.html">[Transform-svn] r180 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000121.html">[Transform-svn] r182 - in trunk/doc: . web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#120">[ date ]</a>
+              <a href="thread.html#120">[ thread ]</a>
+              <a href="subject.html#120">[ subject ]</a>
+              <a href="author.html#120">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-06-28 17:33:24 +0200 (Wed, 28 Jun 2006)
+New Revision: 181
+
+Modified:
+   trunk/src/com/flagstone/transform/FSButtonSound.java
+Log:
+Corrected a bug where the FSSound objects for the RollOver and 
+RollOut button events were swapped.
+
+Modified: trunk/src/com/flagstone/transform/FSButtonSound.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSButtonSound.java	2006-06-27 10:34:01 UTC (rev 180)
++++ trunk/src/com/flagstone/transform/FSButtonSound.java	2006-06-28 15:33:24 UTC (rev 181)
+@@ -36,8 +36,8 @@
+ &lt;p&gt;A sound is played for only a subset of the events that a button responds to:&lt;/p&gt;
+ 
+ &lt;table&gt;
++&lt;tr&gt;&lt;td&gt;rollOut&lt;/td&gt;&lt;td&gt;The cursor exits the active area of the button.&lt;/td&gt;&lt;/tr&gt; 
+ &lt;tr&gt;&lt;td&gt;rollOver&lt;/td&gt;&lt;td&gt;The cursor enters the active area of the button.&lt;/td&gt;&lt;/tr&gt; 
+-&lt;tr&gt;&lt;td&gt;rollOut&lt;/td&gt;&lt;td&gt;The cursor exits the active area of the button.&lt;/td&gt;&lt;/tr&gt; 
+ &lt;tr&gt;&lt;td&gt;press&lt;/td&gt;&lt;td&gt;The mouse button is clicked and the cursor is inside the active area of the button.&lt;/td&gt;&lt;/tr&gt; 
+ &lt;tr&gt;&lt;td&gt;release&lt;/td&gt;&lt;td&gt;The mouse button is released while the cursor is inside the active area of the button.&lt;/td&gt;&lt;/tr&gt;
+ &lt;/table&gt;
+@@ -57,12 +57,12 @@
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSButtonSound_2&quot;&gt;sound[rollOver]&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSButtonSound_3&quot;&gt;sound[rollOut]&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;An FSSound object that describes how the sound will be played for a rollOver event.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr&gt;
+-&lt;td&gt;&lt;a name=&quot;FSButtonSound_3&quot;&gt;sound[rollOut]&lt;/a&gt;&lt;/td&gt;
++&lt;td&gt;&lt;a name=&quot;FSButtonSound_2&quot;&gt;sound[rollOver]&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;An FSSound object that describes how the sound will be played for a rollOver event.&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+@@ -147,9 +147,9 @@
+     {
+         FSSound aSound = null;
+         
+-        if (eventCode == FSButtonEvent.RollOver)
++        if (eventCode == FSButtonEvent.RollOut)
+             aSound = sound[0];
+-        else if (eventCode == FSButtonEvent.RollOut)
++        else if (eventCode == FSButtonEvent.RollOver)
+             aSound = sound[1];
+         else if (eventCode == FSButtonEvent.Press)
+             aSound = sound[2];
+@@ -175,9 +175,9 @@
+         */
+     public void setSoundForEvent(int eventCode, FSSound aSound)
+     {
+-        if (eventCode == FSButtonEvent.RollOver)
++        if (eventCode == FSButtonEvent.RollOut)
+             sound[0] = aSound;
+-        else if (eventCode == FSButtonEvent.RollOut)
++        else if (eventCode == FSButtonEvent.RollOver)
+             sound[1] = aSound;
+         else if (eventCode == FSButtonEvent.Press)
+             sound[2] = aSound;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000119.html">[Transform-svn] r180 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000121.html">[Transform-svn] r182 - in trunk/doc: . web
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#120">[ date ]</a>
+              <a href="thread.html#120">[ thread ]</a>
+              <a href="subject.html#120">[ subject ]</a>
+              <a href="author.html#120">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

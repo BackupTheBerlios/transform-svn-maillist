@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r153 - in trunk: doc src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r153%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200604040525.k345PuBZ010197%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000092.html">
+   <LINK REL="Next"  HREF="000094.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r153 - in trunk: doc src/com/flagstone/transform</H1>
+    <B>denis_bohm at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r153%20-%20in%20trunk%3A%20doc%20src/com/flagstone/transform&In-Reply-To=%3C200604040525.k345PuBZ010197%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r153 - in trunk: doc src/com/flagstone/transform">denis_bohm at berlios.de
+       </A><BR>
+    <I>Tue Apr  4 07:25:56 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000092.html">[Transform-svn] r152 - in trunk/doc: . releases
+</A></li>
+        <LI>Next message: <A HREF="000094.html">[Transform-svn] r154 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: denis_bohm
+Date: 2006-04-04 07:25:36 +0200 (Tue, 04 Apr 2006)
+New Revision: 153
+
+Modified:
+   trunk/doc/CHANGES.txt
+   trunk/src/com/flagstone/transform/FSDefineImage2.java
+Log:
+Always use 6 byte header for DefineLosslessImage2 (FSDefineImage2) because of bug in Flash players (same was already being done for FSDefineImage).
+
+Modified: trunk/doc/CHANGES.txt
+===================================================================
+--- trunk/doc/CHANGES.txt	2006-04-03 17:33:51 UTC (rev 152)
++++ trunk/doc/CHANGES.txt	2006-04-04 05:25:36 UTC (rev 153)
+@@ -1,3 +1,8 @@
++2006-04-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">denis at fireflydesign.com</A>
++
++    * Always use 6 byte header for DefineLosslessImage2 (FSDefineImage2) because
++      of bug in Flash players (same was already being done for FSDefineImage).
++
+ 2006-04-03 - <A HREF="https://lists.berlios.de/mailman/listinfo/transform-svn">smackay at flagstonesoftware.com</A>
+ 
+     * Released 2.1.2.
+
+Modified: trunk/src/com/flagstone/transform/FSDefineImage2.java
+===================================================================
+--- trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-04-03 17:33:51 UTC (rev 152)
++++ trunk/src/com/flagstone/transform/FSDefineImage2.java	2006-04-04 05:25:36 UTC (rev 153)
+@@ -105,6 +105,7 @@
+     public FSDefineImage2(FSCoder coder)
+     {
+         super(DefineImage2, 0);
++        extendLength = true;
+         decode(coder);
+     }
+     /** Constructs an FSDefineImage2 object defining a colour-mapped image.
+@@ -118,6 +119,7 @@
+     public FSDefineImage2(int anIdentifier, int width, int height, int tableSize, byte[] compressedBytes)
+     {
+         super(DefineImage2, anIdentifier);
++        extendLength = true;
+         setWidth(width);
+         setHeight(height);
+         setPixelSize(8);
+@@ -135,6 +137,7 @@
+     public FSDefineImage2(int anIdentifier, int width, int height, byte[] compressedBytes)
+     { 
+         super(DefineImage2, anIdentifier);
++        extendLength = true;
+         setWidth(width);
+         setHeight(height);
+         setPixelSize(32);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000092.html">[Transform-svn] r152 - in trunk/doc: . releases
+</A></li>
+	<LI>Next message: <A HREF="000094.html">[Transform-svn] r154 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

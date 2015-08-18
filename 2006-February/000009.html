@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r68 - trunk/src/com/flagstone/transform/util
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r68%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200602211750.k1LHoMvW025502%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000008.html">
+   <LINK REL="Next"  HREF="000010.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r68 - trunk/src/com/flagstone/transform/util</H1>
+    <B>smackay at berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r68%20-%20trunk/src/com/flagstone/transform/util&In-Reply-To=%3C200602211750.k1LHoMvW025502%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r68 - trunk/src/com/flagstone/transform/util">smackay at berlios.de
+       </A><BR>
+    <I>Tue Feb 21 18:50:22 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000008.html">[Transform-svn] r67 - trunk/src/com/flagstone/transform/test
+</A></li>
+        <LI>Next message: <A HREF="000010.html">[Transform-svn] r69 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2006-02-21 18:50:13 +0100 (Tue, 21 Feb 2006)
+New Revision: 68
+
+Modified:
+   trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+Log:
+Font files with upper case files names are now handled.
+
+Modified: trunk/src/com/flagstone/transform/util/FSTextConstructor.java
+===================================================================
+--- trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-21 17:49:30 UTC (rev 67)
++++ trunk/src/com/flagstone/transform/util/FSTextConstructor.java	2006-02-21 17:50:13 UTC (rev 68)
+@@ -342,11 +342,11 @@
+         for (int i=0; i&lt;65536; i++)
+             orderTable[i] = -1;
+             
+-        if (fontName.endsWith(&quot;.swf&quot;))
++        if (fontName.toLowerCase().endsWith(&quot;.swf&quot;))
+             decodeSWFFont(fontName);
+-        else if (fontName.endsWith(&quot;.otf&quot;))
++        else if (fontName.toLowerCase().endsWith(&quot;.otf&quot;))
+             decodeOpenTypeFont(fontName);
+-        else if (fontName.endsWith(&quot;.ttf&quot;))
++        else if (fontName.toLowerCase().endsWith(&quot;.ttf&quot;))
+             decodeOpenTypeFont(fontName);
+         else
+              decodeAWTFont(fontName);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000008.html">[Transform-svn] r67 - trunk/src/com/flagstone/transform/test
+</A></li>
+	<LI>Next message: <A HREF="000010.html">[Transform-svn] r69 - trunk/test/suites
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

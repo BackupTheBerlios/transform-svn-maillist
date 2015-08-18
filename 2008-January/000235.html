@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r299 - trunk/doc/releases
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r299%20-%20trunk/doc/releases&In-Reply-To=%3C200801311129.m0VBTZZH029732%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000234.html">
+   <LINK REL="Next"  HREF="000236.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r299 - trunk/doc/releases</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r299%20-%20trunk/doc/releases&In-Reply-To=%3C200801311129.m0VBTZZH029732%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r299 - trunk/doc/releases">smackay at mail.berlios.de
+       </A><BR>
+    <I>Thu Jan 31 12:29:35 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000234.html">[Transform-svn] r298 - trunk/src/com/flagstone/transform
+</A></li>
+        <LI>Next message: <A HREF="000236.html">[Transform-svn] r300 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#235">[ date ]</a>
+              <a href="thread.html#235">[ thread ]</a>
+              <a href="subject.html#235">[ subject ]</a>
+              <a href="author.html#235">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-01-31 12:29:32 +0100 (Thu, 31 Jan 2008)
+New Revision: 299
+
+Added:
+   trunk/doc/releases/transform-2.2.0.txt
+Modified:
+   trunk/doc/releases/transform-pre-2.2.0.txt
+Log:
+Updated release notes for version 2.2
+
+Added: trunk/doc/releases/transform-2.2.0.txt
+===================================================================
+--- trunk/doc/releases/transform-2.2.0.txt	2008-01-31 11:26:18 UTC (rev 298)
++++ trunk/doc/releases/transform-2.2.0.txt	2008-01-31 11:29:32 UTC (rev 299)
+@@ -0,0 +1,129 @@
++----------------------------------------------------------
++  Release Notes for Transform SWF for Java, Version 2.2.
++----------------------------------------------------------
++
++The release adds new classes to make it easier to construct movies and get 
++information about flash file. New methods are added to JPEG images to get 
++width and height.
++
++
++Bug Fixes
++    FSColorTransform method isUnityTransform is now correctly spelled.
++    Trailing null byte is now removed from password string in FSProtect.
++
++Class Changes
++    JPEG Images have width and height.
++    FSShapeConstructor - polygon() now handles absolute coordinates.
++    FSFrame - a new class for organising the time-line within movies.
++    FSLayer - a new class for organising the animation of objects within movies.
++    FSHeader - a new class for just getting information about a flash file.
++    
++Documentation Changes
++    FSPlaceObject2 - corrected documentation on setting the morph ratio.
++
++Testing Changes
++    None scheduled
++    
++Package Changes
++    None scheduled
++
++  
++-------------
++  Bug Fixes  
++-------------
++
++1. FSColorTransform method isUnityTransform is now correctly spelled.
++
++In previous releases the 't' was missing from 'Unity' i.e. isUniyTransform. This 
++is now corrected to isUnityTransform.
++
++2. Trailing null byte is now removed from password string in FSProtect.
++
++If the password string in FSProtect contained a trailing null byte marking the
++end of the string then it was included in the string when it was decoded using 
++the UTF-8 character set. The null byte is no longer included.
++
++-----------------
++  Class Changes  
++-----------------
++
++1. JPEG Images have width and height.
++
++Accessor methods to get the width and height of a JPEG encoded image are 
++added to the FSDefineJPEGImage, FSDefineJPEGImage2 and FSDefineJPEGImage3
++classes.
++
++    public int getWidth();
++    public int getHeight();
++
++No set methods are added, the width and height are decoded from the image data 
++whenver the object is decoded or the setImage() method is used.
++
++2. FSShapeConstructor - polygon() now handles absolute coordinates.
++
++The coordinates passed to the polygon(int[]) method on FSShapeConstructor are 
++now absolute. A new method rpolygon(int[]) was added to allow polygons to be 
++drawn using relative coordinates.
++
++3. FSFrame - a new class for organising the time-line within movies.
++
++FSFrame is an upgraded version of the Frame class currently available on the 
++Useful Code page with the addition of a frame number attribute. 
++
++Grouping together all the objects associated with a frame simplifies greatly the 
++task of creation and editing a movie. However supported numbered frames becomes
++really useful when combined with the new FSLayer class.
++
++4. FSLayer - a new class for organising the animation of objects within movies.
++
++Currently all the objects must be created and positioned for successive frames.
++This makes creating of complex animations with Transform next to impossible 
++without careful coding.
++
++With the FSLayer class, separate time-lines can be created for each object. With
++each frame numbered using the FSFrame class all the layers can easily be aligned 
++and flattened to create the final animation. 
++
++5. FSHeader - a new class for just getting information about a flash file.
++
++FSHeader decodes the header block of a flash file that contains the following 
++information about a movie:
++
++    signature, indicates whether a file was compressed &quot;CWS&quot; or not &quot;FWS&quot;.
++	version, the version of Flash used.
++	length, the length of the movie in bytes when uncompressed.
++ 	minX, the x-coordinate of the top left corner of the screen.
++ 	maxX, the x-coordinate of the bottom right corner of the screen.
++ 	minY, the y-coordinate of the top left corner of the screen.
++ 	maxY, the y-coordinate of the bottom right corner of the screen.
++ 	frameRate, the rate at which the movie is played, in frames per second.
++ 	frameCount, the number of frames in the movie.
++ 	
++FSHeader only the header information is decoded, the rest of the data structures 
++are ignored so the class can be used to get the attributes of a movie without
++paying the penalty of using FSMovie where all the data structures are decoded.
++
++-------------------------
++  Documentation Changes  
++-------------------------
++
++1. FSPlaceObject2 - corrected documentation on setting the morph ratio.
++
++The javadoc comments on methods that set the morph ratio for an object specified
++the range as 0..65535, this is the actual number encoded in the Flash file 
++however Transform uses a floating point value in the range 0..1 which is more 
++intuitive to use - the value in converted when the object is encoded or decoded.
++The documentation was updated to refer to the floating point range. 
++
++-------------------
++  Testing Changes  
++-------------------
++
++None
++
++-------------------
++  Package Changes  
++-------------------
++
++None
++
+
+Modified: trunk/doc/releases/transform-pre-2.2.0.txt
+===================================================================
+--- trunk/doc/releases/transform-pre-2.2.0.txt	2008-01-31 11:26:18 UTC (rev 298)
++++ trunk/doc/releases/transform-pre-2.2.0.txt	2008-01-31 11:29:32 UTC (rev 299)
+@@ -9,6 +9,7 @@
+ 
+ Bug Fixes
+     FSColorTransform method isUnityTransform is now correctly spelled.
++    Trailing null byte is now removed from password string in FSProtect.
+ 
+ Class Changes
+     JPEG Images have width and height.
+@@ -36,6 +37,12 @@
+ In previous releases the 't' was missing from 'Unity' i.e. isUniyTransform. This 
+ is now corrected to isUnityTransform.
+ 
++2. Trailing null byte is now removed from password string in FSProtect.
++
++If the password string in FSProtect contained a trailing null byte marking the
++end of the string then it was included in the string when it was decoded using 
++the UTF-8 character set. The null byte is no longer included.
++
+ -----------------
+   Class Changes  
+ -----------------
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000234.html">[Transform-svn] r298 - trunk/src/com/flagstone/transform
+</A></li>
+	<LI>Next message: <A HREF="000236.html">[Transform-svn] r300 - trunk/doc
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#235">[ date ]</a>
+              <a href="thread.html#235">[ thread ]</a>
+              <a href="subject.html#235">[ subject ]</a>
+              <a href="author.html#235">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>

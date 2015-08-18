@@ -1,0 +1,498 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Transform-svn] r460 - dev/dev-3-0/src/com/flagstone/transform
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/transform-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r460%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804161603.m3GG3C0g012521%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000395.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Transform-svn] r460 - dev/dev-3-0/src/com/flagstone/transform</H1>
+    <B>smackay at mail.berlios.de</B> 
+    <A HREF="mailto:transform-svn%40lists.berlios.de?Subject=Re%3A%20%5BTransform-svn%5D%20r460%20-%20dev/dev-3-0/src/com/flagstone/transform&In-Reply-To=%3C200804161603.m3GG3C0g012521%40sheep.berlios.de%3E"
+       TITLE="[Transform-svn] r460 - dev/dev-3-0/src/com/flagstone/transform">smackay at mail.berlios.de
+       </A><BR>
+    <I>Wed Apr 16 18:03:12 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000395.html">[Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#396">[ date ]</a>
+              <a href="thread.html#396">[ thread ]</a>
+              <a href="subject.html#396">[ subject ]</a>
+              <a href="author.html#396">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: smackay
+Date: 2008-04-16 18:03:07 +0200 (Wed, 16 Apr 2008)
+New Revision: 460
+
+Added:
+   dev/dev-3-0/src/com/flagstone/transform/StringReference.java
+Removed:
+   dev/dev-3-0/src/com/flagstone/transform/FSString.java
+Modified:
+   dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+   dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java
+   dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+   dev/dev-3-0/src/com/flagstone/transform/FSTable.java
+Log:
+Renamed FSString to StringReference.
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-16 15:04:59 UTC (rev 459)
++++ dev/dev-3-0/src/com/flagstone/transform/FSDefineTextField.java	2008-04-16 16:03:07 UTC (rev 460)
+@@ -340,7 +340,7 @@
+ 	private int indent = 0;
+ 	private int leading = 0;
+ 	private String variableName = &quot;&quot;;
+-	private FSString initialText = new FSString(&quot;&quot;);
++	private StringReference initialText = new StringReference(&quot;&quot;);
+ 
+ 	/**
+ 	 * Construct an FSDefineTextField object, initialising it with values decoded
+@@ -441,7 +441,7 @@
+ 		indent = obj.indent;
+ 		leading = obj.leading;
+ 		variableName = new String(obj.variableName);
+-		initialText = new FSString(obj.initialText);
++		initialText = new StringReference(obj.initialText);
+ 	}
+ 
+ 	public int getWidth() 
+@@ -686,6 +686,17 @@
+ 	}
+ 
+ 	/**
++	 * Return a reference to the String that contains text displayed in the 
++	 * field. The reference allows the text to be edited indirectly.
++	 * 
++	 * @return a StringReference to the text displayed in the field.
++	 */
++	public StringReference getInitialTextReference()
++	{
++		return initialText;
++	}
++
++	/**
+ 	 * Gets the list of attributes for the object. The Map contains a list
+ 	 * of key-value pairs. The key is one of the pre-defined attribute names
+ 	 * while the value is an instance of a wrapper class (Boolean, Integer or
+@@ -997,7 +1008,7 @@
+ 	 */
+ 	public void setInitialText(String aString)
+ 	{
+-		initialText = new FSString(aString);
++		initialText = new StringReference(aString);
+ 	}
+ 
+ 	/**
+@@ -1293,7 +1304,7 @@
+ 		variableName = coder.readString();
+ 
+ 		if (_containsText)
+-			initialText = new FSString(coder.readString());
++			initialText = new StringReference(coder.readString());
+ 
+ 		context.transparent = false;
+ 	}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java	2008-04-16 15:04:59 UTC (rev 459)
++++ dev/dev-3-0/src/com/flagstone/transform/FSGetUrl.java	2008-04-16 16:03:07 UTC (rev 460)
+@@ -166,8 +166,8 @@
+  */
+ public class FSGetUrl extends FSActionObject
+ {
+-	private FSString url;
+-	private FSString target;
++	private StringReference url;
++	private StringReference target;
+ 
+ 	FSGetUrl()
+ 	{
+@@ -220,7 +220,7 @@
+ 	{
+ 		super(GetUrl);
+ 		setUrl(urlString);
+-		target = new FSString(&quot;&quot;);
++		target = new StringReference(&quot;&quot;);
+ 	}
+ 
+ 	/**
+@@ -232,8 +232,8 @@
+ 	public FSGetUrl(FSGetUrl obj)
+ 	{
+ 		super(GetUrl);
+-		url = new FSString(obj.url);
+-		target = new FSString(obj.target);
++		url = new StringReference(obj.url);
++		target = new StringReference(obj.target);
+ 	}
+ 
+ 	/**
+@@ -246,7 +246,13 @@
+ 		return url.getString();
+ 	}
+ 	
+-	public FSString getIndexableUrl()
++	/**
++	 * Return a reference to the String that contains the URL to load. The 
++	 * reference allows the URL to be edited indirectly.
++	 * 
++	 * @return a StringReference to the URL
++	 */
++	public StringReference getUrlReference()
+ 	{
+ 		return url;
+ 	}
+@@ -279,7 +285,7 @@
+ 		if (aString.length() == 0) {
+ 			throw new IllegalArgumentException(&quot;URL cannot be an empty string.&quot;);
+ 		}
+-		url = new FSString(aString);
++		url = new StringReference(aString);
+ 	}
+ 
+ 	/**
+@@ -299,7 +305,7 @@
+ 		if (aString == null) {
+ 			throw new NullPointerException(&quot;Target cannot be null.&quot;);
+ 		}
+-		target = new FSString(aString);
++		target = new StringReference(aString);
+ 	}
+ 
+ 	public boolean equals(Object anObject)
+@@ -352,7 +358,7 @@
+ 	public void decode(FSCoder coder, FSContext context)
+ 	{
+ 		super.decode(coder, context);
+-		url = new FSString(coder.readString());
+-		target = new FSString(coder.readString());
++		url = new StringReference(coder.readString());
++		target = new StringReference(coder.readString());
+ 	}
+ }
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSPush.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-16 15:04:59 UTC (rev 459)
++++ dev/dev-3-0/src/com/flagstone/transform/FSPush.java	2008-04-16 16:03:07 UTC (rev 460)
+@@ -680,7 +680,7 @@
+ 		if (value == null) {
+ 			throw new NullPointerException(&quot;Argument cannot be null.&quot;);
+ 		}
+-		values.add(new FSString(value));
++		values.add(new StringReference(value));
+ 	}
+ 
+ 	/**
+@@ -732,8 +732,8 @@
+ 		{
+ 			obj = i.next();
+ 			
+-			if (obj instanceof FSString) {
+-				list.add(((FSString)obj).getString());
++			if (obj instanceof StringReference) {
++				list.add(((StringReference)obj).getString());
+ 			}
+ 			else {
+ 				list.add(obj);
+@@ -742,17 +742,23 @@
+ 		return list;
+ 	}
+ 
+-	public List&lt;FSString&gt; getStrings()
++	/**
++	 * Return a list of references to the Strings that in this object. The 
++	 * reference allows each String to be edited indirectly.
++	 * 
++	 * @return a list of references to the Strings stored in this object.
++	 */
++	public List&lt;StringReference&gt; getStringReferences()
+ 	{
+-		List&lt;FSString&gt;list = new ArrayList&lt;FSString&gt;();
++		List&lt;StringReference&gt;list = new ArrayList&lt;StringReference&gt;();
+ 		Object obj;
+ 		
+ 		for (Iterator&lt;Object&gt;i = values.iterator(); i.hasNext();) 
+ 		{
+ 			obj = i.next();
+ 			
+-			if (obj instanceof FSString) {
+-				list.add((FSString)obj);
++			if (obj instanceof StringReference) {
++				list.add((StringReference)obj);
+ 			}
+ 		}
+ 		return list;
+@@ -784,7 +790,7 @@
+ 			obj = i.next();
+ 			
+ 			if (obj instanceof String) {
+-				values.add(new FSString((String)obj));
++				values.add(new StringReference((String)obj));
+ 			}
+ 			else {
+ 				values.add(obj);
+@@ -866,8 +872,8 @@
+ 				length += 5;
+ 			else if (anObject instanceof Double)
+ 				length += 9;
+-			else if (anObject instanceof FSString)
+-				length += 1 + FSCoder.strlen(((FSString) anObject).getString(), true);
++			else if (anObject instanceof StringReference)
++				length += 1 + FSCoder.strlen(((StringReference) anObject).getString(), true);
+ 			else if (anObject instanceof FSNull)
+ 				length += 1;
+ 			else if (anObject instanceof FSVoid)
+@@ -912,7 +918,7 @@
+ 			} else if (anObject instanceof String)
+ 			{
+ 				coder.writeWord(0, 1);
+-				coder.writeString(((FSString) anObject).getString());
++				coder.writeString(((StringReference) anObject).getString());
+ 				coder.writeWord(0, 1);
+ 			} else if (anObject instanceof FSNull)
+ 			{
+@@ -961,7 +967,7 @@
+ 						;
+ 
+ 					coder.setPointer(start);
+-					values.add(new FSString(coder.readString(strlen)));
++					values.add(new StringReference(coder.readString(strlen)));
+ 					coder.adjustPointer(8);
+ 					valuesLength -= strlen + 2;
+ 					break;
+
+Deleted: dev/dev-3-0/src/com/flagstone/transform/FSString.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSString.java	2008-04-16 15:04:59 UTC (rev 459)
++++ dev/dev-3-0/src/com/flagstone/transform/FSString.java	2008-04-16 16:03:07 UTC (rev 460)
+@@ -1,26 +0,0 @@
+-package com.flagstone.transform;
+-
+-public class FSString
+-{
+-	private String string;
+-	
+-	public FSString(String value)
+-	{
+-		string = value;
+-	}
+-	
+-	public FSString(FSString obj)
+-	{
+-		string = obj.string;
+-	}
+-	
+-	public String getString()
+-	{
+-		return string;
+-	}
+-	
+-	public void setString(String value) 
+-	{
+-		string = value;
+-	}
+-}
+
+Modified: dev/dev-3-0/src/com/flagstone/transform/FSTable.java
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSTable.java	2008-04-16 15:04:59 UTC (rev 459)
++++ dev/dev-3-0/src/com/flagstone/transform/FSTable.java	2008-04-16 16:03:07 UTC (rev 460)
+@@ -123,7 +123,7 @@
+  */
+ public class FSTable extends FSActionObject
+ {
+-	private List&lt;FSString&gt; values;
++	private List&lt;StringReference&gt; values;
+ 
+ 	/**
+ 	 * Construct an FSTable object, initialising it with values decoded from an
+@@ -144,7 +144,7 @@
+ 	public FSTable()
+ 	{
+ 		super(Table);
+-		values = new ArrayList&lt;FSString&gt;();
++		values = new ArrayList&lt;StringReference&gt;();
+ 	}
+ 
+ 	/**
+@@ -171,10 +171,10 @@
+ 	{
+ 		super(Table);
+ 
+-		values = new ArrayList&lt;FSString&gt;(obj.values.size());
++		values = new ArrayList&lt;StringReference&gt;(obj.values.size());
+ 
+-		for (Iterator&lt;FSString&gt; i = obj.values.iterator(); i.hasNext();)
+-			values.add(new FSString(i.next()));
++		for (Iterator&lt;StringReference&gt; i = obj.values.iterator(); i.hasNext();)
++			values.add(new StringReference(i.next()));
+ 	}
+ 
+ 	/**
+@@ -187,15 +187,16 @@
+ 	 */
+ 	public void add(String aString)
+ 	{
+-		values.add(new FSString(aString));
++		values.add(new StringReference(aString));
+ 	}
+ 
+ 	/**
+-	 * Gets the array of IndeableStrings stored in the variable table.
++	 * Gets an array of references to the string stored in the table. The 
++	 * reference allows each String to be edited indirectly.
+ 	 * 
+-	 * @return the array of indexable string objects.
++	 * @return the array of references to the strings in the table.
+ 	 */
+-	public List&lt;FSString&gt; getIndexableValues()
++	public List&lt;StringReference&gt; getReferences()
+ 	{
+ 		return values;
+ 	}
+@@ -209,7 +210,7 @@
+ 	{
+ 		List&lt;String&gt;list = new ArrayList&lt;String&gt;(values.size());
+ 		
+-		for (Iterator&lt;FSString&gt;i = values.iterator(); i.hasNext();) {
++		for (Iterator&lt;StringReference&gt;i = values.iterator(); i.hasNext();) {
+ 			list.add(i.next().getString());
+ 		}
+ 		return list;
+@@ -232,7 +233,7 @@
+ 		values.clear();
+ 		
+ 		for (Iterator&lt;String&gt;i = anArray.iterator(); i.hasNext();) {
+-			values.add(new FSString(i.next()));
++			values.add(new StringReference(i.next()));
+ 		}
+ 	}
+ 
+@@ -240,10 +241,10 @@
+ 	{
+ 		FSTable anObject = (FSTable) super.clone();
+ 
+-		anObject.values = new ArrayList&lt;FSString&gt;();
++		anObject.values = new ArrayList&lt;StringReference&gt;();
+ 
+-		for (Iterator&lt;FSString&gt; i = values.iterator(); i.hasNext();)
+-			anObject.values.add(new FSString(i.next()));
++		for (Iterator&lt;StringReference&gt; i = values.iterator(); i.hasNext();)
++			anObject.values.add(new StringReference(i.next()));
+ 
+ 		return anObject;
+ 	}
+@@ -275,7 +276,7 @@
+ 
+ 		length += 2;
+ 
+-		for (Iterator&lt;FSString&gt; i = values.iterator(); i.hasNext();)
++		for (Iterator&lt;StringReference&gt; i = values.iterator(); i.hasNext();)
+ 			length += FSCoder.strlen(i.next().getString(), true);
+ 
+ 		return length;
+@@ -289,7 +290,7 @@
+ 
+ 		if (values.size() &gt; 0)
+ 		{
+-			for (Iterator&lt;FSString&gt; i = values.iterator(); i.hasNext();)
++			for (Iterator&lt;StringReference&gt; i = values.iterator(); i.hasNext();)
+ 			{
+ 				coder.writeString(i.next().getString());
+ 				coder.writeWord(0, 1);
+@@ -305,10 +306,10 @@
+ 
+ 		if (attributeCount &gt; 0)
+ 		{
+-			values = new ArrayList&lt;FSString&gt;();
++			values = new ArrayList&lt;StringReference&gt;();
+ 
+ 			for (int i = 0; i &lt; attributeCount; i++)
+-				values.add(new FSString(coder.readString()));
++				values.add(new StringReference(coder.readString()));
+ 		} 
+ 		else
+ 		{
+@@ -317,7 +318,7 @@
+ 			 * hide code following an empty table.
+ 			 */
+ 			length = 2;
+-			values = new ArrayList&lt;FSString&gt;();
++			values = new ArrayList&lt;StringReference&gt;();
+ 		}
+ 	}
+ }
+
+Copied: dev/dev-3-0/src/com/flagstone/transform/StringReference.java (from rev 458, dev/dev-3-0/src/com/flagstone/transform/FSString.java)
+===================================================================
+--- dev/dev-3-0/src/com/flagstone/transform/FSString.java	2008-04-16 15:02:09 UTC (rev 458)
++++ dev/dev-3-0/src/com/flagstone/transform/StringReference.java	2008-04-16 16:03:07 UTC (rev 460)
+@@ -0,0 +1,26 @@
++package com.flagstone.transform;
++
++public class StringReference
++{
++	private String string;
++	
++	public StringReference(String value)
++	{
++		string = value;
++	}
++	
++	public StringReference(StringReference obj)
++	{
++		string = obj.string;
++	}
++	
++	public String getString()
++	{
++		return string;
++	}
++	
++	public void setString(String value) 
++	{
++		string = value;
++	}
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000395.html">[Transform-svn] r459 - dev/dev-3-0/src/com/flagstone/transform
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#396">[ date ]</a>
+              <a href="thread.html#396">[ thread ]</a>
+              <a href="subject.html#396">[ subject ]</a>
+              <a href="author.html#396">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/transform-svn">More information about the Transform-svn
+mailing list</a><br>
+</body></html>
